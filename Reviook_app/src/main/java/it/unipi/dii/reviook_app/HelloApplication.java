@@ -11,7 +11,7 @@ import javafx.scene.Parent;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent fxmlLoader =  FXMLLoader.load(getClass().getResource("author-interface.fxml"));
+        Parent fxmlLoader =  FXMLLoader.load(getClass().getResource("updateAccount.fxml"));
        // Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
         stage.setScene(new Scene(fxmlLoader));
