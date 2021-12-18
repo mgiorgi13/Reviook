@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="cc9f6e0d-9b09-48c3-b56c-20cb016ad311" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/HelloApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/HelloApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/AuthorInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/AuthorInterfaceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/author-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/author-interface.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/user-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/user-interface.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +27,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectId" id="22KO4P8rfLU3HJlr9eOrJOtCe59" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -77,7 +81,7 @@
       <workItem from="1639588406645" duration="82000" />
       <workItem from="1639679091746" duration="1461000" />
       <workItem from="1639681487001" duration="22000" />
-      <workItem from="1639827407723" duration="9051000" />
+      <workItem from="1639827407723" duration="11070000" />
     </task>
     <servers />
   </component>
