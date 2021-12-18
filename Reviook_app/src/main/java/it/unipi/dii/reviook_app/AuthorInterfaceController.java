@@ -27,7 +27,7 @@ public class AuthorInterfaceController {
     }
 
     @FXML
-    void changeAuthor(ActionEvent event) throws IOException{
+    protected void changeAuthor(ActionEvent event) throws IOException{
         Parent userInterface = FXMLLoader.load(getClass().getResource("user-interface.fxml"));
         Stage actual_stage = (Stage) button.getScene().getWindow();
         actual_stage.setScene(new Scene(userInterface));
