@@ -1,4 +1,4 @@
-package it.unipi.dii.reviook_app;
+package it.unipi.dii.reviook_app.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

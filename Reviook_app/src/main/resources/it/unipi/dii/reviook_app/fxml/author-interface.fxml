@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/11.0.2" fx:controller="it.unipi.dii.reviook_app.Controllers.AuthorInterfaceController" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER" />
+   </right>
+   <top>
+      <HBox prefHeight="138.0" prefWidth="912.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="41.0" layoutY="27.0" mnemonicParsing="false" prefHeight="69.0" prefWidth="101.0" text="MY PROFILE" />
+               </children>
+            </Pane>
+            <Pane prefHeight="138.0" prefWidth="512.0">
+               <children>
+                  <CheckBox layoutX="308.0" layoutY="31.0" mnemonicParsing="false" text="follow" />
+                  <Text layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AUTHOR PROFILE" />
+                  <Text layoutX="116.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FOLLOW" />
+                  <Text layoutX="226.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LIKES" />
+                  <Text layoutX="335.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FOLLOWER" />
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <Pane prefHeight="675.0" prefWidth="512.0" BorderPane.alignment="CENTER">
+         <children>
+            <TabPane layoutX="-1.0" layoutY="-1.0" prefHeight="599.0" prefWidth="516.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="TO READ">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                <Tab text="READED">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="597.0" prefWidth="516.0" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <Button fx:id="button" layoutX="232.0" layoutY="620.0" mnemonicParsing="false" onAction="#changeAuthor" text="HOME" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

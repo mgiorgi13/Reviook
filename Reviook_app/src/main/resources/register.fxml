@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane alignment="center" hgap="10" prefHeight="261.0" prefWidth="522.0" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.UpdateController">
+<GridPane alignment="center" hgap="10" prefHeight="261.0" prefWidth="522.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="it.unipi.dii.reviook_app.Controllers.RegisterController">
   <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
    <Label text="Password" translateX="30.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
   <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="3" GridPane.rowIndex="5">
-    <Button onAction="#deleteAccountButton" text="Delete account" />
+    <Button onAction="#openLoginScene" text="Login" />
   </HBox>
 
   <Text fx:id="actiontarget" GridPane.columnIndex="3" GridPane.rowIndex="7" />
@@ -34,7 +34,7 @@
    <Label text="Name" GridPane.rowIndex="1" />
    <Label text="Surname" GridPane.rowIndex="2" />
    <Label text="e-mail" GridPane.rowIndex="3" />
-   <Button mnemonicParsing="false" onAction="#updateAccountButton" scaleX="2.0" text="Update" translateX="25.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+   <Button mnemonicParsing="false" onAction="#registerButton" scaleX="2.0" text="Register" translateX="25.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    <columnConstraints>
       <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
       <ColumnConstraints maxWidth="176.7999969482422" minWidth="76.0000244140625" prefWidth="119.20002441406251" />

@@ -1,4 +1,4 @@
-package it.unipi.dii.reviook_app;
+package it.unipi.dii.reviook_app.Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,13 +21,13 @@ public class RegisterController {
     @FXML
     void openLoginScene(ActionEvent event) throws IOException {
 
-        Parent login = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Parent login = FXMLLoader.load(getClass().getResource("/login.fxml"));
         Stage stage = new Stage();
         Scene sceneLogin = new Scene(login, 300, 275);
         stage.setTitle("Login");
         stage.setScene(sceneLogin);
         stage.show();
-        // Hide this current window (if this is what you want)
         ((Node)(event.getSource())).getScene().getWindow().hide();
+
     }
 }

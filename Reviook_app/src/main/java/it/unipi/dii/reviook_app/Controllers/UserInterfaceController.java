@@ -1,4 +1,4 @@
-package it.unipi.dii.reviook_app;
+package it.unipi.dii.reviook_app.Controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
