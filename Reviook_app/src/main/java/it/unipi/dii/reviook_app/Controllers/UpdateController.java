@@ -1,4 +1,4 @@
-package it.unipi.dii.reviook_app;
+package it.unipi.dii.reviook_app.Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ public class UpdateController {
     }
     @FXML
     void deleteAccountButton(ActionEvent event) throws IOException {
-        Parent deleteAccount = FXMLLoader.load(getClass().getResource("securityDelete.fxml"));
+        Parent deleteAccount = FXMLLoader.load(getClass().getResource("/usecurityDelete.fxml"));
         Stage stage = new Stage();
         Scene sceneSure = new Scene(deleteAccount);
         stage.setTitle("Are you sure you want to delete your account?");
@@ -45,7 +45,7 @@ public class UpdateController {
     }
     @FXML
     void negateDeleteButton(ActionEvent event) throws IOException {
-        Parent updateAccount = FXMLLoader.load(getClass().getResource("updateAccount.fxml"));
+        Parent updateAccount = FXMLLoader.load(getClass().getResource("/updateAccount.fxml"));
         Stage stage = new Stage();
         Scene sceneUpdate = new Scene(updateAccount);
         stage.setTitle("Update Account");

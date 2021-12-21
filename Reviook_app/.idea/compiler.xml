@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Reviook_app" target="17" />
+      <module name="Reviook_app" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

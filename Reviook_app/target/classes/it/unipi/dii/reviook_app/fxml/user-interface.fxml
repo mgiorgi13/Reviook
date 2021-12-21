@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" fx:controller="it.unipi.dii.reviook_app.UserInterfaceController" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" fx:controller="it.unipi.dii.reviook_app.Controllers.UserInterfaceController" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: grey;" BorderPane.alignment="CENTER" />
    </left>
