@@ -36,7 +36,7 @@ public class LoginController {
 
             Stage stage = new Stage();;
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/register.fxml"));
+            loader.setLocation(getClass().getResource("/it/unipi/dii/reviook_app/fxml/register.fxml"));
             Pane rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
             stage.setScene(scene);

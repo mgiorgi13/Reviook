@@ -21,7 +21,7 @@ public class RegisterController {
     @FXML
     void openLoginScene(ActionEvent event) throws IOException {
 
-        Parent login = FXMLLoader.load(getClass().getResource("/login.fxml"));
+        Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         Stage stage = new Stage();
         Scene sceneLogin = new Scene(login, 300, 275);
         stage.setTitle("Login");

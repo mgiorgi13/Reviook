@@ -34,6 +34,6 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-        
+
     }
 }

@@ -45,7 +45,7 @@ public class UpdateController {
     }
     @FXML
     void negateDeleteButton(ActionEvent event) throws IOException {
-        Parent updateAccount = FXMLLoader.load(getClass().getResource("/updateAccount.fxml"));
+        Parent updateAccount = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/updateAccount.fxml"));
         Stage stage = new Stage();
         Scene sceneUpdate = new Scene(updateAccount);
         stage.setTitle("Update Account");

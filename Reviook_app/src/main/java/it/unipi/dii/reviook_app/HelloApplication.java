@@ -20,7 +20,7 @@ public class HelloApplication extends Application {
 
 
         FXMLLoader a = new FXMLLoader();
-        scene = new Scene(a.load(getClass().getResource("/author-interface.fxml")));
+        scene = new Scene(a.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/register.fxml")));
         //scene.getStylesheets().add(getClass().getResource("css/BalanceUS.css").toExternalForm());
         stage.setTitle("SingIn");
         //stage.setResizable(false);
