@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cc9f6e0d-9b09-48c3-b56c-20cb016ad311" name="Changes" comment="" />
+    <list default="true" id="cc9f6e0d-9b09-48c3-b56c-20cb016ad311" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Reviook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Reviook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/author-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/author-interface.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/user-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/user-interface.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/author-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/author-interface.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -119,7 +126,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
