@@ -1,6 +1,7 @@
 module it.unipi.dii.reviook_app {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.xml.bind;
 
 
     opens it.unipi.dii.reviook_app to javafx.fxml;

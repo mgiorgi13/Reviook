@@ -21,12 +21,15 @@ import java.net.URL;
 
 public class LoginController {
     @FXML private Text actiontarget;
-    @FXML
+
+    @FXML Button signInButton, ID_loginButton;
+
     private ImageView logout;
     @FXML
     protected void loginButton(ActionEvent event) {
         actiontarget.setText("Sign in button pressed");
     }
+
     @FXML protected void openRegisterScene(ActionEvent event)  throws IOException {
         String current = new java.io.File( "." ).getCanonicalPath();
         System.out.println("Current dir:"+current);
@@ -34,13 +37,17 @@ public class LoginController {
 
            ;
 
-            Stage stage = new Stage();;
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/it/unipi/dii/reviook_app/fxml/register.fxml"));
-            Pane rootLayout = loader.load();
-            Scene scene = new Scene(rootLayout);
-            stage.setScene(scene);
+
+            Parent register = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/register.fxml"));
+            Scene sceneLogin = new Scene(register);
+            Stage stage = (Stage) signInButton.getScene().getWindow();
+            System.out.print("mbareeee");
+            stage.setTitle("Login");
+            stage.setScene(sceneLogin);
+            stage.setResizable(false);
             stage.show();
+
+
 
         }
         catch(Exception e )
