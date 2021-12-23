@@ -14,8 +14,8 @@
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.Controllers.LoginController">
    <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
    <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-      <Button mnemonicParsing="false" onAction="#loginButton" text="Login" />
-      <Button onAction="#openRegisterScene" text="Sign In" />
+      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButton" text="Login" />
+      <Button fx:id="registerButton" onAction="#openRegisterScene" text="Sign Up" />
    </HBox>
 
    <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />

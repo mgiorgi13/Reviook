@@ -19,7 +19,7 @@ public class UpdateController {
     }
     @FXML
     void deleteAccountButton(ActionEvent event) throws IOException {
-        Parent deleteAccount = FXMLLoader.load(getClass().getResource("/usecurityDelete.fxml"));
+        Parent deleteAccount = FXMLLoader.load(getClass().getResource("/fxml/usecurityDelete.fxml"));
         Stage stage = new Stage();
         Scene sceneSure = new Scene(deleteAccount);
         stage.setTitle("Are you sure you want to delete your account?");
@@ -32,7 +32,7 @@ public class UpdateController {
     }
     @FXML
     void acceptDeleteButton(ActionEvent event) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Parent login = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
         Stage stage = new Stage();
         Scene sceneLogin = new Scene(login, 300, 275);
         stage.setTitle("Create new account");

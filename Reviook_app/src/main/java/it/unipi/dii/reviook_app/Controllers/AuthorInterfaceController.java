@@ -1,15 +1,17 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
-import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
+import com.jfoenix.controls.JFXListView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import com.jfoenix.controls.JFXButton;
+import javafx.scene.control.ListView;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class AuthorInterfaceController {
@@ -17,23 +19,51 @@ public class AuthorInterfaceController {
     private ResourceBundle resources;
 
     @FXML
-    private URL location;
+    private JFXButton button;
 
     @FXML
-    private Button button;
+    private Text followCount;
 
     @FXML
-    void initialize() {
-
-    }
+    private Text followersCount;
 
     @FXML
-    protected void changeAuthor(ActionEvent event) throws IOException{
-        Parent userInterface = FXMLLoader.load(getClass().getResource("/user-interface.fxml"));
+    private Text likesCount;
+
+    @FXML
+    private JFXListView listToRead;
+
+    @FXML
+    private JFXListView listReaded;
+
+    @FXML
+    void changeAuthor(ActionEvent event) throws IOException {
+        Parent userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
         Stage actual_stage = (Stage) button.getScene().getWindow();
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-        
+
+    }
+
+    public void initialize() {
+        Random rand = new Random();
+        likesCount.setText(String.valueOf(rand.nextInt(9999)));
+        followCount.setText(String.valueOf(rand.nextInt(9999)));
+        followersCount.setText(String.valueOf(rand.nextInt(9999)));
+
+        listToRead.getItems().add("Book to read 1");
+        listToRead.getItems().add("Book to read 2");
+        listToRead.getItems().add("Book to read 3");
+
+        listReaded.getItems().add("Book readed 1");
+        listReaded.getItems().add("Book readed 2");
+        listReaded.getItems().add("Book readed 3");
+
+//        try {
+//            likesCount.setText("555555");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
