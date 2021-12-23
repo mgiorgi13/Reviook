@@ -20,39 +20,33 @@ import java.net.URL;
 
 
 public class LoginController {
-    @FXML private Text actiontarget;
-
-    @FXML Button signInButton, ID_loginButton;
-
-    private ImageView logout;
     @FXML
-    protected void loginButton(ActionEvent event) {
-        actiontarget.setText("Sign in button pressed");
+    private Text actiontarget;
+
+    @FXML
+    private ImageView logout;
+
+    @FXML
+    private Button registerButton;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    void loginButton(ActionEvent event) throws IOException {
+        Parent user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+        Stage actual_stage = (Stage) loginButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(user_scene));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 
-    @FXML protected void openRegisterScene(ActionEvent event)  throws IOException {
-        String current = new java.io.File( "." ).getCanonicalPath();
-        System.out.println("Current dir:"+current);
-        try {
-
-           ;
-
-
-            Parent register = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/register.fxml"));
-            Scene sceneLogin = new Scene(register);
-            Stage stage = (Stage) signInButton.getScene().getWindow();
-            System.out.print("mbareeee");
-            stage.setTitle("Login");
-            stage.setScene(sceneLogin);
-            stage.setResizable(false);
-            stage.show();
-
-
-
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
+    @FXML
+    void openRegisterScene(ActionEvent event) throws IOException {
+        Parent register_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/register.fxml"));
+        Stage actual_stage = (Stage) registerButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(register_scene));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 }
