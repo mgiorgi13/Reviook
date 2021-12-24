@@ -42,9 +42,9 @@ public class RegisterController {
 
     @FXML private Button loginButton;
     // Create a new javax.json.JSONObject instance.
-    String str = "[{\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\"},{\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\"},{\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\"}]";
-
-
+    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
+            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
+            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
 
 
 
@@ -56,12 +56,12 @@ public class RegisterController {
             JSONObject object = array.getJSONObject(i);
             if (object.getString("username").equals(nickname))
                 return true;
-          // System.out.println(object.getString("name"));
-          //  System.out.println(object.getString("surname"));
-          //  System.out.println(object.getString("email"));
         }
         return false;
     }
+
+
+
     public boolean verifyEmail(String email){
         //query a mongo se l'user esiste o meno
         JSONArray array = new JSONArray(str);
@@ -76,6 +76,8 @@ public class RegisterController {
         }
         return false;
     }
+
+
     public String SignIn(String name, String surname, String nickname,String email, String password, String repeatPsw){
         try {
             MessageDigest md;
@@ -113,6 +115,7 @@ public class RegisterController {
         }
         return "Registered";
     }
+
     Scanner myObj = new Scanner(System.in);
     String Name, surname,nickname,email, password,repeatPsw;
     @FXML protected void registerButton(ActionEvent event) throws IOException, InterruptedException {
@@ -133,6 +136,7 @@ public class RegisterController {
             actiontarget.setText(singIn);
             return;
         }
+
         newUser = new Users(Name, surname, nickname, email, password);
         actiontarget.setText(singIn);
         Thread.sleep(1000);

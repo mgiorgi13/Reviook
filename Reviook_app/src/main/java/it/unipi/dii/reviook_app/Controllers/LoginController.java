@@ -41,7 +41,9 @@ public class LoginController {
 
     @FXML
     private Button loginButton;
-    String str = "[{\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"},{\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"},{\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
+    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
+            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
+            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
 
     public boolean verifyUsername(String nickname){
         //query a mongo se l'user esiste o meno
@@ -71,6 +73,20 @@ public class LoginController {
         }
         return false;
     }
+    public String verifyType(String username)
+    {
+        JSONArray array = new JSONArray(str);
+        for(int i=0; i < array.length(); i++)
+        {
+            JSONObject object = array.getJSONObject(i);
+            if (object.getString("username").equals(username))
+                return object.getString("type");
+            // System.out.println(object.getString("name"));
+            //  System.out.println(object.getString("surname"));
+            //  System.out.println(object.getString("email"));
+        }
+        return null;
+    }
     public String logIn(String username,String password) throws NoSuchAlgorithmException {
         MessageDigest md;
         String pswHash;
@@ -85,7 +101,8 @@ public class LoginController {
 
         if(!verifyPassword(pswHash))
             return  "Wrong password";
-        return "ok";
+
+        return verifyType(username); //return type of user(author o normal user)
     }
 
     String username, password;
@@ -99,12 +116,17 @@ public class LoginController {
         }
         String login = logIn(username,password);
         actiontarget.setText(login);
-        if (!login.equals("ok"))
-            return;
 
 
-
-        Parent user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+        Parent user_scene;
+        if (login.equals("author")) {
+             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+        }
+        else if (login.equals("user"))
+        {
+             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+        }
+        else return;
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);
