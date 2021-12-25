@@ -3,6 +3,7 @@ package it.unipi.dii.reviook_app.Controllers;
 import java.io.IOException;
 import java.util.Random;
 import java.util.ResourceBundle;
+
 import com.jfoenix.controls.JFXListView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,9 @@ public class AuthorInterfaceController {
 
     @FXML
     private JFXButton button;
+
+    @FXML
+    private JFXButton searchButton;
 
     @FXML
     private Text followCount;
@@ -43,7 +47,15 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
+    }
 
+    @FXML
+    void searchInterface(ActionEvent event) throws IOException {
+        Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search-interface.fxml"));
+        Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(searchInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 
     public void initialize() {

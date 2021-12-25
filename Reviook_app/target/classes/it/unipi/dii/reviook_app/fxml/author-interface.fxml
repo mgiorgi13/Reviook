@@ -370,8 +370,10 @@
                         </Tab>
                     </tabs>
                 </TabPane>
-                <JFXButton fx:id="button" layoutX="232.0" layoutY="619.0" mnemonicParsing="false"
+                <JFXButton fx:id="button" layoutX="169.0" layoutY="619.0" mnemonicParsing="false"
                            onAction="#changeAuthor" text="HOME"/>
+                <JFXButton fx:id="searchButton" layoutX="332.0" layoutY="619.0" mnemonicParsing="false"
+                           onAction="#searchInterface" text="SEARCH"/>
             </children>
         </Pane>
     </center>
