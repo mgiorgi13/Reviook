@@ -100,7 +100,6 @@ public class RegisterController {
             if (!mpsw.find())
                 return "Password entered is at least 8 and maximum 20 characters long and contains at least one letter and at least one number";
 
-
             //Password Hash
             md = MessageDigest.getInstance("MD5");
             //md.update(signUpPassword.getText().getBytes());
@@ -108,8 +107,6 @@ public class RegisterController {
             byte[] digest = md.digest();
             pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
             System.out.println(pswHash);
-
-
         }catch(Exception e){
             e.printStackTrace();
         }

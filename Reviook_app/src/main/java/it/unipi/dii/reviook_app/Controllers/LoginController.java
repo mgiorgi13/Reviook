@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.Controllers;
 
+import it.unipi.dii.reviook_app.Data.Users;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -119,9 +120,9 @@ public class LoginController {
 
 
         Parent user_scene;
-        if (login.equals("author")) {
-             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
-        }
+        //  Users user = Users()
+        if (login.equals("author"))
+            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
         else if (login.equals("user"))
         {
              user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
