@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Reviook extends Application {
-        Scanner myObj = new Scanner(System.in);
-        String Name, username,nickname,email, password;
+    Scanner myObj = new Scanner(System.in);
+    String Name, username, nickname, email, password;
 //        public void UsersRegister(){
 //            // Enter username and press Enter
 //            System.out.println("Enter username");
