@@ -12,6 +12,7 @@
     <Button fx:id="loginButton" onAction="#openLoginScene" text="Login" />
   </HBox>
 
+
   <Text fx:id="actiontarget" GridPane.columnIndex="3" GridPane.rowIndex="7" />
 
   <Text text="Welcome" GridPane.columnIndex="1" GridPane.columnSpan="2" />

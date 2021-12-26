@@ -50,6 +50,7 @@ public class RegisterController {
 
     public boolean verifyUsername(String nickname) throws JSONException {
         //query a mongo se l'user esiste o meno
+        // TODO verificare username db con quello dato dall'utente per registrarsi
         JSONArray array = new JSONArray(str);
         for(int i=0; i < array.length(); i++)
         {
@@ -63,6 +64,7 @@ public class RegisterController {
 
 
     public boolean verifyEmail(String email) throws JSONException {
+        // TODO verificare email db con quella data dall'utente per registrarsi
         //query a mongo se l'user esiste o meno
         JSONArray array = new JSONArray(str);
         for(int i=0; i < array.length(); i++)
@@ -133,7 +135,7 @@ public class RegisterController {
             actiontarget.setText(singIn);
             return;
         }
-
+        //Todo inserire nuovo utente su db
         newUser = new Users(Name, surname, nickname, email, password);
         actiontarget.setText(singIn);
         Thread.sleep(1000);

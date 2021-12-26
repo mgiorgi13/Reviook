@@ -7,8 +7,22 @@ public class Session {
     private static Session session = null;
     private Boolean type;
     private Users logged = null;
-    private String registered = null;
-    private boolean deleted = false;
+
+    public static Session getSession() {
+        return session;
+    }
+
+    public Users getLogged() {
+        return logged;
+    }
+
+    public static void setSession(Session session) {
+        Session.session = session;
+    }
+
+    public void setLogged(Users logged) {
+        this.logged = logged;
+    }
 
     private Session() {}
 
@@ -22,16 +36,15 @@ public class Session {
             new RuntimeException("Session is not active.");
         } else
             this.type = type;
-
     }
 
     public static Session getInstance() {
         if(session == null) {
             session = new Session();
         }
-
         return session;
     }
+
     public void setLoggedUser(String name, String surname, String nickname,String email, String password) {
         if(session == null) {
             new RuntimeException("Session is not active.");
