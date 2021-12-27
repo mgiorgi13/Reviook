@@ -48,8 +48,3 @@ public class UserInterfaceController {
         actual_stage.setResizable(false);
         actual_stage.show();
     }
-
-
-
-
-}
