@@ -2,30 +2,28 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0"
-      prefWidth="769.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.unipi.dii.reviook_app.Controllers.SearchInterfaceController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.Controllers.SearchInterfaceController">
     <children>
         <VBox layoutX="6.0" layoutY="4.0" prefHeight="814.0" prefWidth="757.0">
             <children>
                 <Pane prefHeight="123.0" prefWidth="757.0">
                     <children>
-                        <TextField layoutX="26.0" layoutY="38.0" prefHeight="47.0" prefWidth="550.0"/>
-                        <JFXButton layoutX="631.0" layoutY="49.0" text="SEARCH"/>
+                        <TextField layoutX="26.0" layoutY="38.0" prefHeight="47.0" prefWidth="550.0" />
+                        <JFXButton layoutX="667.0" layoutY="46.0" text="SEARCH" />
+                  <CheckBox layoutX="591.0" layoutY="41.0" mnemonicParsing="false" text="Book" />
+                  <CheckBox layoutX="591.0" layoutY="66.0" mnemonicParsing="false" text="Author" />
                     </children>
                 </Pane>
                 <Pane prefHeight="672.0" prefWidth="757.0">
                     <children>
-                        <JFXListView fx:id="resultList" layoutX="22.0" layoutY="15.0" prefHeight="597.0"
-                                     prefWidth="713.0"/>
-                        <JFXButton fx:id="homeButton" layoutX="211.0" layoutY="633.0" onAction="#homeInterface"
-                                   text="HOME"/>
-                        <JFXButton fx:id="profileButton" layoutX="487.0" layoutY="633.0" onAction="#profileInterface"
-                                   text="PROFILE"/>
+                        <JFXListView fx:id="resultList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
+                        <JFXButton fx:id="homeButton" layoutX="211.0" layoutY="633.0" onAction="#homeInterface" text="HOME" />
+                        <JFXButton fx:id="profileButton" layoutX="487.0" layoutY="633.0" onAction="#profileInterface" text="PROFILE" />
                     </children>
                 </Pane>
             </children>
