@@ -16,4 +16,44 @@ public class Interaction {
         this.numberFollower = 0;
         this.numberUseful = 0;
     }
+
+    public ArrayList<String> getFollow() {
+        return follow;
+    }
+
+    public ArrayList<String> getFollower() {
+        return follower;
+    }
+
+    public int getNumberFollow() {
+        return numberFollow;
+    }
+
+    public int getNumberFollower() {
+        return numberFollower;
+    }
+
+    public int getNumberUseful() {
+        return numberUseful;
+    }
+
+    public void setFollow(String follow) {
+        this.follow.add(follow);
+    }
+
+    public void setFollower(String follower) {
+        this.follower.add(follower);
+    }
+
+    public void setNumberFollow(int numberFollow) {
+        this.numberFollow = numberFollow;
+    }
+
+    public void setNumberFollower(int numberFollower) {
+        this.numberFollower = numberFollower;
+    }
+
+    public void setNumberUseful(int numberUseful) {
+        this.numberUseful = numberUseful;
+    }
 }
