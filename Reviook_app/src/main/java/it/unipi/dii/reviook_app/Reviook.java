@@ -8,12 +8,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Reviook extends Application {
     Scanner myObj = new Scanner(System.in);
     String Name, username, nickname, email, password;
-//        public void UsersRegister(){
+
+    //        public void UsersRegister(){
 //            // Enter username and press Enter
 //            System.out.println("Enter username");
 //            Name = myObj.nextLine();
@@ -31,8 +37,8 @@ public class Reviook extends Application {
 //            newUser.SignIn(Name,username,nickname,email,password);
 //        }
     @Override
-    public void start(Stage stage) throws IOException {
-//        UsersRegister();
+    public void start(Stage stage) throws IOException, ParseException {
+
         Parent root = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         stage.setTitle("Reviook");
         stage.setResizable(false);
