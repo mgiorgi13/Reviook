@@ -68,8 +68,13 @@ public class UpdateController {
         for(int i=0; i < array.length(); i++)
         {
             JSONObject object = array.getJSONObject(i);
-            if (object.getString("username").equals(nickname) && !session.getLogged().getNickname().equals(nickname))
-                return true;
+            if(session.getType()) {
+                if (object.getString("username").equals(nickname) && !session.getLoggedAuthor().getNickname().equals(nickname))
+                    return true;
+            }else{
+                if (object.getString("username").equals(nickname) && !session.getLoggedUser().getNickname().equals(nickname))
+                    return true;
+            }
         }
         return false;
     }
@@ -83,8 +88,13 @@ public class UpdateController {
         for(int i=0; i < array.length(); i++)
         {
             JSONObject object = array.getJSONObject(i);
-            if (object.getString("email").equals(email) && !session.getLogged().getEmail().equals(email))
-                return true;
+            if(session.getType()) {
+                if (object.getString("email").equals(email) && !session.getLoggedAuthor().getEmail().equals(email))
+                    return true;
+            }else{
+                if (object.getString("email").equals(email) && !session.getLoggedUser().getEmail().equals(email))
+                    return true;
+            }
         }
         return false;
     }
@@ -134,14 +144,26 @@ public class UpdateController {
         password = passwordUpdate.getText();
         repeatPsw = repeatPasswordUpdate.getText();
         Session session = Session.getInstance();
-        if (nameUpdate.getText().isEmpty())
-            Name = session.getLogged().getName();
-        if(surnameUpdate.getText().isEmpty())
-            surname = session.getLogged().getSurname();
-        if(usernameUpdate.getText().isEmpty())
-            nickname =session.getLogged().getNickname();
-        if(emailUpdate.getText().isEmpty())
-            email = session.getLogged().getEmail();
+        if (session.getType()){
+            if (nameUpdate.getText().isEmpty())
+                Name = session.getLoggedAuthor().getName();
+            if (surnameUpdate.getText().isEmpty())
+                surname = session.getLoggedAuthor().getSurname();
+            if (usernameUpdate.getText().isEmpty())
+                nickname = session.getLoggedAuthor().getNickname();
+            if (emailUpdate.getText().isEmpty())
+                email = session.getLoggedAuthor().getEmail();
+        }
+        else{
+            if (nameUpdate.getText().isEmpty())
+                Name = session.getLoggedUser().getName();
+            if (surnameUpdate.getText().isEmpty())
+                surname = session.getLoggedUser().getSurname();
+            if (usernameUpdate.getText().isEmpty())
+                nickname = session.getLoggedUser().getNickname();
+            if (emailUpdate.getText().isEmpty())
+                email = session.getLoggedUser().getEmail();
+        }
         if(passwordUpdate.getText().isEmpty()) {
             actiontarget.setText("You must enter the new password");
             return;
@@ -157,7 +179,8 @@ public class UpdateController {
 
         // TODO: crea nuovo utente nel db
         session.setSession(null);
-        session.setLogged(null);
+        session.setLoggedUser(null);
+        session.setLoggedAuthor(null);
 
         Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         if (!singIn.equals("Registered")) {
@@ -178,7 +201,8 @@ public class UpdateController {
     void acceptDeleteButton(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
         session.setSession(null);
-        session.setLogged(null);
+        session.setLoggedUser(null);
+        session.setLoggedAuthor(null);
 
         // TODO eliminare l'utente dal db
         Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));

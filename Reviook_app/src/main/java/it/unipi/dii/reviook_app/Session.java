@@ -6,22 +6,24 @@ import it.unipi.dii.reviook_app.Data.Users;
 public class Session {
     private static Session session = null;
     private Boolean type;
-    private Users logged = null;
+    private Users loggedUser = null;
+    private Author loggedAuthor = null;
 
     public static Session getSession() {
         return session;
     }
 
-    public Users getLogged() {
-        return logged;
-    }
+
 
     public static void setSession(Session session) {
         Session.session = session;
     }
 
-    public void setLogged(Users logged) {
-        this.logged = logged;
+    public void setLoggedUser(Users logged) {
+        this.loggedUser = logged;
+    }
+    public void setLoggedAuthor(Author logged) {
+        this.loggedAuthor = logged;
     }
 
     private Session() {}
@@ -49,7 +51,7 @@ public class Session {
         if(session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.logged = new Users( name,  surname,  nickname, email,  password);
+            session.loggedUser = new Users( name,  surname,  nickname, email,  password);
         }
     }
 
@@ -57,7 +59,7 @@ public class Session {
         if(session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.logged = new Author( name,  surname,  nickname, email,  password);
+            session.loggedAuthor = new Author( name,  surname,  nickname, email,  password);
         }
     }
 
@@ -65,8 +67,14 @@ public class Session {
         if(session == null) {
             throw new RuntimeException("Session is not active.");
         } else {
-            return session.logged;
+            return session.loggedUser;
         }
     }
-
+    public Author getLoggedAuthor() {
+        if(session == null) {
+            throw new RuntimeException("Session is not active.");
+        } else {
+            return session.loggedAuthor;
+        }
+    }
 }
