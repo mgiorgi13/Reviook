@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Session;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.text.Text;
@@ -50,15 +52,31 @@ public class AuthorInterfaceController {
     private Button editButtonAuthor;
 
     @FXML
-    void viewEditButtonAuthor(ActionEvent event) throws IOException{
+    private CheckBox follow;
+
+    private String nickname;
+
+    public void setNickname(String nickname) {
+        //TODO caricaListeLibri()
+
+        this.nickname = nickname;
+        usernameAuthor.setText(this.nickname);
+
+        Session session = Session.getInstance();
+        if (session.getLoggedAuthor().getNickname().equals(nickname) == false){
+            follow.setVisible(true);
+            editButtonAuthor.setVisible(false);
+        }
+    }
+
+    @FXML
+    void viewEditButtonAuthor(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/updateAccount.fxml"));
         Stage actual_stage = (Stage) editButtonAuthor.getScene().getWindow();
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
     }
-
-
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -70,12 +88,18 @@ public class AuthorInterfaceController {
     }
 
     public void initialize() {
+        follow.setVisible(false);
+
         Session session = Session.getInstance();
         Random rand = new Random();
+
+        usernameAuthor.setText(session.getLoggedAuthor().getNickname());
+        usernameAuthor.setText(session.getLoggedAuthor().getNickname());
+
         likesCount.setText(String.valueOf(rand.nextInt(9999)));
         followCount.setText(String.valueOf(rand.nextInt(9999)));
         followersCount.setText(String.valueOf(rand.nextInt(9999)));
-        usernameAuthor.setText(session.getLoggedAuthor().getNickname());
+
         listToRead.getItems().add("Book to read 1");
         listToRead.getItems().add("Book to read 2");
         listToRead.getItems().add("Book to read 3");
@@ -85,4 +109,5 @@ public class AuthorInterfaceController {
         listReaded.getItems().add("Book readed 3");
 
     }
+
 }
