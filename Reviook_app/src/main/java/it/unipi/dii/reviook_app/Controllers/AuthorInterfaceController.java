@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
+import it.unipi.dii.reviook_app.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -20,7 +22,8 @@ public class AuthorInterfaceController {
     @FXML
     private ResourceBundle resources;
 
-
+    @FXML
+    private Text usernameAuthor;
 
     @FXML
     private JFXButton button;
@@ -67,11 +70,12 @@ public class AuthorInterfaceController {
     }
 
     public void initialize() {
+        Session session = Session.getInstance();
         Random rand = new Random();
         likesCount.setText(String.valueOf(rand.nextInt(9999)));
         followCount.setText(String.valueOf(rand.nextInt(9999)));
         followersCount.setText(String.valueOf(rand.nextInt(9999)));
-
+        usernameAuthor.setText(session.getLoggedAuthor().getNickname());
         listToRead.getItems().add("Book to read 1");
         listToRead.getItems().add("Book to read 2");
         listToRead.getItems().add("Book to read 3");

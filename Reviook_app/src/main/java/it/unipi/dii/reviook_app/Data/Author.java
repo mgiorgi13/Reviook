@@ -14,4 +14,5 @@ public class Author extends Users {
         this.likeNumber = 0;
     }
 
+
 }
