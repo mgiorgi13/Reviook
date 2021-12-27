@@ -5,47 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc9f6e0d-9b09-48c3-b56c-20cb016ad311" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_8_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json_json_20090211.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Session.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Session.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Reviook_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Reviook_app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/UpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/UpdateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Data/Author.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Data/Author.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Data/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Data/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/author-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/author-interface.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/securityDelete.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/securityDelete.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/updateAccount.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/updateAccount.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/user-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/user-interface.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/RegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/RegisterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UpdateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UpdateController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Author.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Author.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Users.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Users.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/author-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/author-interface.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/securityDelete.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/securityDelete.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/updateAccount.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/updateAccount.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/user-interface.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/user-interface.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
