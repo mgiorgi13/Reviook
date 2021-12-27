@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.text.Text;
@@ -33,6 +34,8 @@ public class AuthorInterfaceController {
 
     @FXML
     private Text followCount;
+    @FXML
+    private CheckBox follow;
 
     @FXML
     private Text followersCount;
@@ -76,6 +79,7 @@ public class AuthorInterfaceController {
         followCount.setText(String.valueOf(rand.nextInt(9999)));
         followersCount.setText(String.valueOf(rand.nextInt(9999)));
         usernameAuthor.setText(session.getLoggedAuthor().getNickname());
+        follow.setVisible(false);
         listToRead.getItems().add("Book to read 1");
         listToRead.getItems().add("Book to read 2");
         listToRead.getItems().add("Book to read 3");
