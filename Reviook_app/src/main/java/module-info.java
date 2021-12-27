@@ -3,6 +3,8 @@ module it.unipi.dii.reviook_app {
     requires javafx.fxml;
     requires com.jfoenix;
     requires jaxb.api;
+    requires gson;
+    requires json;
 
     opens it.unipi.dii.reviook_app to javafx.fxml;
     exports it.unipi.dii.reviook_app;

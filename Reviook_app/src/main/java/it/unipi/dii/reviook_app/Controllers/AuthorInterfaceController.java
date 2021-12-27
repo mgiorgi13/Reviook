@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import com.jfoenix.controls.JFXButton;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
 public class AuthorInterfaceController {
     @FXML
     private ResourceBundle resources;
+
+
 
     @FXML
     private JFXButton button;
@@ -41,13 +44,18 @@ public class AuthorInterfaceController {
     private JFXListView listReaded;
 
     @FXML
-    void changeAuthor(ActionEvent event) throws IOException {
-        Parent userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
-        Stage actual_stage = (Stage) button.getScene().getWindow();
-        actual_stage.setScene(new Scene(userInterface));
+    private Button editButtonAuthor;
+
+    @FXML
+    void viewEditButtonAuthor(ActionEvent event) throws IOException{
+        Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/updateAccount.fxml"));
+        Stage actual_stage = (Stage) editButtonAuthor.getScene().getWindow();
+        actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
     }
+
+
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -72,10 +80,5 @@ public class AuthorInterfaceController {
         listReaded.getItems().add("Book readed 2");
         listReaded.getItems().add("Book readed 3");
 
-//        try {
-//            likesCount.setText("555555");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 }
