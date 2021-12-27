@@ -133,7 +133,7 @@ public class LoginController {
             session.setType(true);
             session.setLoggedAuthor("Mattia", "Di Donato", "Mattiax", "mattia@unipi.it", "2C87C8312E5F752A0E79660511567505");
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
-            System.out.println(session.getLoggedAuthor().getNickname());
+            System.out.println("utente loggato: "+session.getLoggedAuthor().getNickname());
 
         }
         else if (login.equals("user"))
