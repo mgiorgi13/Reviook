@@ -33,9 +33,11 @@ public class LoginController {
     @FXML
     private Text actiontarget;
 
-    @FXML private TextField usernameLogin;
+    @FXML
+    private TextField usernameLogin;
 
-    @FXML private TextField passwordField;
+    @FXML
+    private TextField passwordField;
 
     @FXML
     private ImageView logout;
@@ -45,7 +47,6 @@ public class LoginController {
 
     @FXML
     private Button loginButton;
-
 
 
     String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
@@ -58,8 +59,7 @@ public class LoginController {
     public boolean verifyUsername(String nickname) throws JSONException {
         //query a mongo se l'user esiste o meno
         JSONArray array = new JSONArray(str);
-        for(int i=0; i < array.length(); i++)
-        {
+        for (int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             if (object.getString("username").equals(nickname))
                 return true;
@@ -69,11 +69,11 @@ public class LoginController {
         }
         return false;
     }
+
     public boolean verifyPassword(String password) throws JSONException {
         //query a mongo se l'user esiste o meno
         JSONArray array = new JSONArray(str);
-        for(int i=0; i < array.length(); i++)
-        {
+        for (int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             if (object.getString("password").equals(password))
                 return true;
@@ -83,10 +83,10 @@ public class LoginController {
         }
         return false;
     }
+
     public String verifyType(String username) throws JSONException {
         JSONArray array = new JSONArray(str);
-        for(int i=0; i < array.length(); i++)
-        {
+        for (int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             if (object.getString("username").equals(username))
                 return object.getString("type");
@@ -96,10 +96,11 @@ public class LoginController {
         }
         return null;
     }
-    public String logIn(String username,String password) throws NoSuchAlgorithmException, JSONException {
+
+    public String logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
         MessageDigest md;
         String pswHash;
-        if(!verifyUsername(username))
+        if (!verifyUsername(username))
             return "Existing username";
 
         //Hashing controll
@@ -108,13 +109,14 @@ public class LoginController {
         byte[] digest = md.digest();
         pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
 
-        if(!verifyPassword(pswHash))
-            return  "Wrong password";
+        if (!verifyPassword(pswHash))
+            return "Wrong password";
 
         return verifyType(username); //return type of user(author o normal user)
     }
 
     String username, password;
+
     @FXML
     void loginButton(ActionEvent event) throws IOException, NoSuchAlgorithmException, JSONException {
         username = usernameLogin.getText();
@@ -123,32 +125,29 @@ public class LoginController {
             actiontarget.setText("You must fill in all fields");
             return;
         }
-        String login = logIn(username,password);
+        String login = logIn(username, password);
         actiontarget.setText(login);
-
 
         Parent user_scene;
         Session session = Session.getInstance();
+        //TODO sessione settata con dati forzati, andranno recuperati tramite query al DB in base al username
         if (login.equals("author")) {
             session.setType(true);
             session.setLoggedAuthor("Mattia", "Di Donato", "Mattiax", "mattia@unipi.it", "2C87C8312E5F752A0E79660511567505");
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
-            System.out.println("utente loggato: "+session.getLoggedAuthor().getNickname());
-
-        }
-        else if (login.equals("user"))
-        {
+            System.out.println("utente loggato: " + session.getLoggedAuthor().getNickname());
+        } else if (login.equals("user")) {
             session.setType(false);
             session.setLoggedUser("Salvo", "Arancio Febbo", "Salvox", "salvo@unipi.it", "2C87C8312E5F752A0E79660511567505");
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
-        }
-        else return;
+        } else return;
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
     }
-    public Users getUsers(){
+
+    public Users getUsers() {
         return users;
     }
 
