@@ -56,6 +56,30 @@ public class AuthorInterfaceController {
 
     private String nickname;
 
+
+    @FXML public void addfollow(ActionEvent event) throws IOException{
+        Session session = Session.getInstance();
+
+        if (follow.isSelected()){
+            session.getLoggedAuthor().getInteractions().setFollow(usernameAuthor.getText());
+            session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
+
+            // TODO aggiungere un follow al nostro author
+            // TODO aggiungere un follower all'utente author
+           // System.out.println(session.getLoggedAuthor().getInteractions().getFollow());
+        }
+        else {
+            for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
+                    if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(usernameAuthor.getText())) {
+                        session.getLoggedAuthor().getInteractions().getFollow().remove(i);
+                        session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
+                    }
+            }
+            //System.out.println(session.getLoggedAuthor().getInteractions().getFollow());
+            //TODO rimuovere un follow al nostro author
+            //TODO rimuovere un follower all'utente author
+        }
+    }
     public void setNickname(String nickname) {
         //TODO caricaListeLibri()
 
@@ -66,6 +90,14 @@ public class AuthorInterfaceController {
         if (session.getLoggedAuthor().getNickname().equals(nickname) == false){
             follow.setVisible(true);
             editButtonAuthor.setVisible(false);
+        }
+        System.out.println(session.getLoggedAuthor().getInteractions().getFollow().isEmpty());
+        if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
+            for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
+                System.out.println(session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(this.nickname));
+                if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(this.nickname))
+                    follow.setSelected(true);
+            }
         }
     }
 
@@ -99,6 +131,7 @@ public class AuthorInterfaceController {
         likesCount.setText(String.valueOf(rand.nextInt(9999)));
         followCount.setText(String.valueOf(rand.nextInt(9999)));
         followersCount.setText(String.valueOf(rand.nextInt(9999)));
+
 
         listToRead.getItems().add("Book to read 1");
         listToRead.getItems().add("Book to read 2");
