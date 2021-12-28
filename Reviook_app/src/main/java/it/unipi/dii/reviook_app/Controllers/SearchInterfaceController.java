@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Books;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Session;
@@ -36,6 +37,9 @@ public class SearchInterfaceController {
     private CheckBox authorCheck;
 
     @FXML
+    private CheckBox userCheck;
+
+    @FXML
     private CheckBox bookCheck;
 
     @FXML
@@ -43,6 +47,9 @@ public class SearchInterfaceController {
 
     @FXML
     private JFXListView<Users> usersList;
+
+    @FXML
+    private JFXListView<Author> authorsList;
 
     @FXML
     private JFXButton homeButton;
@@ -82,11 +89,9 @@ public class SearchInterfaceController {
             controller.setNickname(nickSelected);
         } else {
             //userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
-            String nickSelected = "Gianni bello bello";
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
             userInterface = (Parent) fxmlLoader.load();
-            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-            controller.setNickname(nickSelected);
+            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
         }
 
 
@@ -101,12 +106,14 @@ public class SearchInterfaceController {
 
         usersList.getItems().clear();
         bookList.getItems().clear();
+        authorsList.getItems().clear();
 
         if (bookCheck.isSelected()) {
             //TODO implementare query per prendere lista oggetti dal DB
 
-            usersList.setVisible(false);
             bookList.setVisible(true);
+            authorsList.setVisible(false);
+            usersList.setVisible(false);
 
             ObservableList<String> booksList = FXCollections.observableArrayList();
             for (int i = 0; i < 30; i++) {
@@ -116,7 +123,7 @@ public class SearchInterfaceController {
             bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 ) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail-interface.fxml"));
@@ -131,17 +138,17 @@ public class SearchInterfaceController {
                     }
                 }
             });
-        } else if (authorCheck.isSelected()) {
+        } else if (userCheck.isSelected()) {
             //TODO implementare query per prendere lista oggetti dal DB
 
             bookList.setVisible(false);
+            authorsList.setVisible(false);
             usersList.setVisible(true);
 
-            Users mattia = new Users("Mattia", "Di Donato", "Mattiax", "", "");
             Users salvo = new Users("Salvo", "Febbo", "Salvox", "", "");
             Users matteo = new Users("Matteo", "Giorgi", "Matteox", "", "");
             ObservableList<Users> listUser = FXCollections.observableArrayList();
-            listUser.addAll(mattia, salvo, matteo);
+            listUser.addAll(salvo, matteo);
             usersList.getItems().addAll(listUser);
             usersList.setCellFactory(new Callback<ListView<Users>, ListCell<Users>>() {
                 @Override
@@ -165,7 +172,55 @@ public class SearchInterfaceController {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                         Users selectedCell = (Users) usersList.getSelectionModel().getSelectedItem();
                         try {
-                            //sSystem.out.println(selectedCell.getNickname());
+                            //System.out.println(selectedCell.getNickname());
+
+                            Parent userInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                            controller.setNickname(selectedCell.getNickname());
+
+                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(userInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        } else if (authorCheck.isSelected()) {
+            bookList.setVisible(false);
+            authorsList.setVisible(true);
+            usersList.setVisible(false);
+
+            Author mattia = new Author("Mattia", "Di Donato", "Mattiax", "", "");
+            ObservableList<Author> listAuthor = FXCollections.observableArrayList();
+            listAuthor.addAll(mattia);
+            authorsList.getItems().addAll(listAuthor);
+            authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
+                @Override
+                public ListCell<Author> call(ListView<Author> listView) {
+                    return new ListCell<Author>() {
+                        @Override
+                        public void updateItem(Author item, boolean empty) {
+                            super.updateItem(item, empty);
+                            textProperty().unbind();
+                            if (item != null)
+                                setText(item.getNickname() + " " + item.getName());
+                            else
+                                setText(null);
+                        }
+                    };
+                }
+            });
+            authorsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                        Author selectedCell = (Author) authorsList.getSelectionModel().getSelectedItem();
+                        try {
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
@@ -190,13 +245,20 @@ public class SearchInterfaceController {
     public void selectBookCheckAction(ActionEvent actionEvent) {
         bookCheck.setSelected(true);
         authorCheck.setSelected(false);
+        userCheck.setSelected(false);
     }
 
     @FXML
     public void selectAuthorCheckAction(ActionEvent actionEvent) {
         bookCheck.setSelected(false);
+        userCheck.setSelected(false);
         authorCheck.setSelected(true);
     }
 
 
+    public void selectUserCheckAction(ActionEvent actionEvent) {
+        bookCheck.setSelected(false);
+        authorCheck.setSelected(false);
+        userCheck.setSelected(true);
+    }
 }

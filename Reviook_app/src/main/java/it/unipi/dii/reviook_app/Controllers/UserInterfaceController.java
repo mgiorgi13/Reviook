@@ -21,32 +21,41 @@ import javafx.stage.Stage;
 public class UserInterfaceController {
     @FXML
     private ResourceBundle resources;
+
     @FXML
     private Text usernameUser;
-    @FXML
-    private JFXButton button;
+
     @FXML
     private CheckBox follow;
-    @FXML
-    private URL location;
+
     @FXML
     private Button editButtonUser;
 
+    @FXML
+    private JFXButton searchButton;
+
     private String nickname;
 
-    @FXML public void addfollow(ActionEvent event) throws IOException{
+    @FXML
+    public void addfollow(ActionEvent event) throws IOException {
 
         Session session = Session.getInstance();
 
-        if (follow.isSelected()){
-            session.getLoggedUser().getInteractions().setFollow(usernameUser.getText());
-            session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
+        if (follow.isSelected()) {
+            if (session.getLoggedAuthor() != null) {
+                session.getLoggedAuthor().getInteractions().setFollow(usernameUser.getText());
+                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
+
+            } else if (session.getLoggedUser() != null) {
+                session.getLoggedUser().getInteractions().setFollow(usernameUser.getText());
+                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
+
+            }
 
             // TODO aggiungere un follow al nostro author
             // TODO aggiungere un follower all'utente author
             // System.out.println(session.getLoggedUser().getInteractions().getFollow());
-        }
-        else {
+        } else {
             for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
                 if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
                     session.getLoggedUser().getInteractions().getFollow().remove(i);
@@ -60,6 +69,7 @@ public class UserInterfaceController {
 
 
     }
+
     public void setNickname(String nickname) {
         //TODO caricaListeLibri()
 
@@ -67,27 +77,58 @@ public class UserInterfaceController {
         usernameUser.setText(this.nickname);
 
         Session session = Session.getInstance();
-        if (session.getLoggedUser().getNickname().equals(nickname) == false) {
-            follow.setVisible(true);
-            editButtonUser.setVisible(false);
-        }
-        System.out.println(session.getLoggedAuthor().getInteractions().getFollow().isEmpty());
-        if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
-            for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
-                System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
-                if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname))
-                    follow.setSelected(true);
+        if (session.getLoggedAuthor() != null) {
+            if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
+                follow.setVisible(true);
+                editButtonUser.setVisible(false);
+            }
+            if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
+                for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
+                    //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
+                    if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(this.nickname))
+                        follow.setSelected(true);
+                }
+            }
+        } else if (session.getLoggedUser() != null) {
+            if (session.getLoggedUser().getNickname().equals(nickname) == false) {
+                follow.setVisible(true);
+                editButtonUser.setVisible(false);
+            }
+            if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
+                for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
+                    //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
+                    if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname))
+                        follow.setSelected(true);
+                }
             }
         }
+        //System.out.println(session.getLoggedAuthor().getInteractions().getFollow().isEmpty());
+
     }
 
-
-
     public void initialize() {
-        Session session = Session.getInstance();
-        usernameUser.setText(session.getLoggedUser().getNickname());
         follow.setVisible(false);
-        // TODO caricare da DB tutti i follow e follower , numero follow e numero followe su struttura user
+
+        Session session = Session.getInstance();
+        Random rand = new Random();
+
+
+        if (session.getLoggedAuthor() != null) {
+            usernameUser.setText(session.getLoggedAuthor().getNickname());
+        } else if (session.getLoggedUser() != null) {
+            usernameUser.setText(session.getLoggedUser().getNickname());
+        }
+
+    
+    }
+
+    @FXML
+    void searchInterface(ActionEvent event) throws IOException {
+        Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search-interface.fxml"));
+        Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(searchInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 
     @FXML
