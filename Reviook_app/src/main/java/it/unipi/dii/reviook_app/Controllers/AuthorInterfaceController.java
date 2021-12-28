@@ -75,7 +75,7 @@ public class AuthorInterfaceController {
                         session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
                     }
             }
-            //System.out.println(session.getLoggedAuthor().getInteractions().getFollow());
+            System.out.println(session.getLoggedAuthor().getInteractions().getFollow());
             //TODO rimuovere un follow al nostro author
             //TODO rimuovere un follower all'utente author
         }
