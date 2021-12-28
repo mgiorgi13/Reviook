@@ -114,7 +114,7 @@ public class AuthorInterfaceController {
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
-                   // System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
+                    // System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname))
                         follow.setSelected(true);
                 }
@@ -147,13 +147,12 @@ public class AuthorInterfaceController {
 
         Session session = Session.getInstance();
         Random rand = new Random();
-
-
+        
         if (session.getLoggedAuthor() != null) {
             usernameAuthor.setText(session.getLoggedAuthor().getNickname());
-        } else if (session.getLoggedUser() != null) {
+        } /*else if (session.getLoggedUser() != null) {
             usernameAuthor.setText(session.getLoggedUser().getNickname());
-        }
+        }*/
 
         likesCount.setText(String.valueOf(rand.nextInt(9999)));
         followCount.setText(String.valueOf(rand.nextInt(9999)));

@@ -112,14 +112,12 @@ public class UserInterfaceController {
         Session session = Session.getInstance();
         Random rand = new Random();
 
-
-        if (session.getLoggedAuthor() != null) {
+        /*if (session.getLoggedAuthor() != null) {
             usernameUser.setText(session.getLoggedAuthor().getNickname());
-        } else if (session.getLoggedUser() != null) {
+        } else*/
+        if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
-
-    
     }
 
     @FXML
