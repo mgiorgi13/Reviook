@@ -359,6 +359,26 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
+                        <Tab  onSelectionChanged="#viewFollow" text="Follow">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <JFXListView fx:id="listFollow" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                     prefWidth="488.0"/>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Follower" >
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <JFXListView fx:id="listFollower" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                     prefWidth="488.0" />
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
                     </tabs>
                 </TabPane>
                 <JFXButton layoutX="169.0" layoutY="619.0" mnemonicParsing="false" text="HOME"/>
