@@ -1,12 +1,10 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
-import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,8 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -135,7 +131,7 @@ public class UserInterfaceController {
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
-        Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search-interface.fxml"));
+        Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search.fxml"));
         Stage actual_stage = (Stage) searchButton.getScene().getWindow();
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);

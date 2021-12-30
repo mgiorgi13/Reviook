@@ -5,25 +5,20 @@ import it.unipi.dii.reviook_app.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 
-import javafx.scene.layout.VBox;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -134,12 +129,12 @@ public class LoginController {
         if (login.equals("author")) {
             session.setType(true);
             session.setLoggedAuthor("Mattia", "Di Donato", "Mattiax", "mattia@unipi.it", "2C87C8312E5F752A0E79660511567505");
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             System.out.println("utente loggato: " + session.getLoggedAuthor().getNickname());
         } else if (login.equals("user")) {
             session.setType(false);
             session.setLoggedUser("Salvo", "Arancio Febbo", "Salvox", "salvo@unipi.it", "2C87C8312E5F752A0E79660511567505");
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
         } else return;
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
