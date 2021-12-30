@@ -135,7 +135,7 @@ public class AuthorInterfaceController {
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
-        Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search-interface.fxml"));
+        Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search.fxml"));
         Stage actual_stage = (Stage) searchButton.getScene().getWindow();
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);

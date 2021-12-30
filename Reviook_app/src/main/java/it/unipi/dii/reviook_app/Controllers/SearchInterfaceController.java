@@ -67,9 +67,9 @@ public class SearchInterfaceController {
         Session session = Session.getInstance();
         Parent homeInterface;
         if (session.getType())
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
         else
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
         Stage actual_stage = (Stage) homeButton.getScene().getWindow();
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
@@ -81,15 +81,15 @@ public class SearchInterfaceController {
         Session session = Session.getInstance();
         Parent userInterface;
         if (session.getType()) {
-//            userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+
             String nickSelected = "Gianni bello bello";
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
             controller.setNickname(nickSelected);
         } else {
-            //userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
         }
@@ -126,7 +126,7 @@ public class SearchInterfaceController {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         try {
                             Parent bookInterface;
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail-interface.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                             bookInterface = (Parent) fxmlLoader.load();
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(bookInterface));
@@ -175,7 +175,7 @@ public class SearchInterfaceController {
                             //System.out.println(selectedCell.getNickname());
 
                             Parent userInterface;
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
                             controller.setNickname(selectedCell.getNickname());
@@ -222,7 +222,7 @@ public class SearchInterfaceController {
                         Author selectedCell = (Author) authorsList.getSelectionModel().getSelectedItem();
                         try {
                             Parent userInterface;
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
                             controller.setNickname(selectedCell.getNickname());

@@ -134,12 +134,12 @@ public class LoginController {
         if (login.equals("author")) {
             session.setType(true);
             session.setLoggedAuthor("Mattia", "Di Donato", "Mattiax", "mattia@unipi.it", "2C87C8312E5F752A0E79660511567505");
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author-interface.fxml"));
+            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             System.out.println("utente loggato: " + session.getLoggedAuthor().getNickname());
         } else if (login.equals("user")) {
             session.setType(false);
             session.setLoggedUser("Salvo", "Arancio Febbo", "Salvox", "salvo@unipi.it", "2C87C8312E5F752A0E79660511567505");
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user-interface.fxml"));
+            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
         } else return;
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
