@@ -7,8 +7,6 @@
     <list default="true" id="cc9f6e0d-9b09-48c3-b56c-20cb016ad311" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +109,8 @@
       <workItem from="1640452036706" duration="1325000" />
       <workItem from="1640512926245" duration="5999000" />
       <workItem from="1640610333363" duration="1209000" />
-      <workItem from="1640697157515" duration="7802000" />
+      <workItem from="1640697157515" duration="9702000" />
+      <workItem from="1640721497760" duration="595000" />
     </task>
     <servers />
   </component>

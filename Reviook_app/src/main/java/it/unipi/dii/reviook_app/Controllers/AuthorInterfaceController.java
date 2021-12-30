@@ -147,7 +147,7 @@ public class AuthorInterfaceController {
 
         Session session = Session.getInstance();
         Random rand = new Random();
-        
+
         if (session.getLoggedAuthor() != null) {
             usernameAuthor.setText(session.getLoggedAuthor().getNickname());
         } /*else if (session.getLoggedUser() != null) {
