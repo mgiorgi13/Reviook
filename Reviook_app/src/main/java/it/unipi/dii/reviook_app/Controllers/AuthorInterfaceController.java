@@ -6,8 +6,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Session;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +15,8 @@ import javafx.scene.Scene;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -28,9 +29,6 @@ public class AuthorInterfaceController {
 
     @FXML
     private JFXButton button;
-
-    @FXML
-    private JFXListView<String> listFollow;
 
     @FXML
     private JFXButton searchButton;
@@ -116,7 +114,7 @@ public class AuthorInterfaceController {
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
-                   // System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
+                    // System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname))
                         follow.setSelected(true);
                 }
@@ -150,12 +148,11 @@ public class AuthorInterfaceController {
         Session session = Session.getInstance();
         Random rand = new Random();
 
-
         if (session.getLoggedAuthor() != null) {
             usernameAuthor.setText(session.getLoggedAuthor().getNickname());
-        } else if (session.getLoggedUser() != null) {
+        } /*else if (session.getLoggedUser() != null) {
             usernameAuthor.setText(session.getLoggedUser().getNickname());
-        }
+        }*/
 
         likesCount.setText(String.valueOf(rand.nextInt(9999)));
         followCount.setText(String.valueOf(rand.nextInt(9999)));
@@ -170,24 +167,5 @@ public class AuthorInterfaceController {
         listReaded.getItems().add("Book readed 3");
 
     }
-    @FXML
-    void viewFollow () {
-        listFollow.getItems().clear();
-        Session session = Session.getInstance();
-        ObservableList<String> listFollows = FXCollections.observableArrayList();
-        System.out.println(session.getLoggedAuthor().getInteractions().getFollow());
-        if (session.getLoggedUser() == null) {
-           // if (!(usernameAuthor.getText()).equals(session.getLoggedAuthor().getNickname()))
-                //TODO cerco nel db tutti i dati dell'utente e inserisco i follow(inserisco if su)
 
-            for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++)
-                listFollows.add(session.getLoggedAuthor().getInteractions().getFollow().get(i));
-            listFollow.getItems().addAll(listFollows);
-        }
-        if (session.getLoggedUser() != null) {
-            //TODO cerco nel db tutti i dati dell'utente e inserisco i follow(inserisco if su)
-
-            // devo prednere i follow dell'utente
-        }
-    }
 }

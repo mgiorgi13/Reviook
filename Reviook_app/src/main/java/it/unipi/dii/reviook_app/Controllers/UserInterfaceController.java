@@ -42,7 +42,6 @@ public class UserInterfaceController {
 
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
-
         Session session = Session.getInstance();
 
         if (follow.isSelected()) {
@@ -55,10 +54,8 @@ public class UserInterfaceController {
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
 
             }
-
             // TODO aggiungere un follow al nostro author
             // TODO aggiungere un follower all'utente author
-            // System.out.println(session.getLoggedUser().getInteractions().getFollow());
         } else {
             for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
                 if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
@@ -66,7 +63,6 @@ public class UserInterfaceController {
                     session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
                 }
             }
-            //System.out.println(session.getLoggedUser().getInteractions().getFollow());
             //TODO rimuovere un follow al nostro author
             //TODO rimuovere un follower all'utente author
         }
@@ -79,7 +75,6 @@ public class UserInterfaceController {
 
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
-
         Session session = Session.getInstance();
 
         if (session.getLoggedAuthor() != null) {
@@ -113,20 +108,14 @@ public class UserInterfaceController {
 
     public void initialize() {
         follow.setVisible(false);
-
         Session session = Session.getInstance();
         Random rand = new Random();
-
 
         if (session.getLoggedAuthor() != null) {
             usernameUser.setText(session.getLoggedAuthor().getNickname());
         } else if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
-
-
-
-
     }
 
     @FXML
@@ -148,23 +137,20 @@ public class UserInterfaceController {
     }
 
     @FXML
-    void viewFollow () {
+    void viewFollow() {
         listFollow.getItems().clear();
         Session session = Session.getInstance();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
         System.out.println(session.getLoggedUser().getInteractions().getFollow());
         if (session.getLoggedAuthor() == null) {
-            // if (!(getLoggedUser.getText()).equals(session.getLoggedUser().getNickname()))
             //TODO cerco nel db tutti i dati dell'utente e inserisco i follow(inserisco if su)
-
             for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++)
                 listFollows.add(session.getLoggedUser().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         }
         if (session.getLoggedAuthor() != null) {
             //TODO cerco nel db tutti i dati dell'autore e inserisco i follow(inserisco if su)
-
-            // devo prednere i follow dell'utente
+            // devo prendere i follow dell'utente
         }
     }
 }

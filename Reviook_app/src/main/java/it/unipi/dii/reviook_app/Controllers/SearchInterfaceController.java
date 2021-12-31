@@ -1,11 +1,14 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Books;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -21,6 +24,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -77,14 +81,14 @@ public class SearchInterfaceController {
         Session session = Session.getInstance();
         Parent userInterface;
         if (session.getType()) {
-//            userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+
             String nickSelected = "Gianni bello bello";
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
             controller.setNickname(nickSelected);
         } else {
-            //userInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
