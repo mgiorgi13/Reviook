@@ -1,10 +1,15 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
+import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +21,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -27,7 +34,7 @@ public class UserInterfaceController {
     private Text usernameUser;
 
     @FXML
-    private JFXListView<String> listFollow;
+    private JFXListView<String> listFollow, listFollower;
 
     @FXML
     private CheckBox follow;
@@ -40,31 +47,42 @@ public class UserInterfaceController {
 
     private String nickname;
 
+    private UserManager userManagerNJ = new UserManager();
+
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
-        Session session = Session.getInstance();
 
+        Session session = Session.getInstance();
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameUser.getText());
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-
+                userManagerNJ.following(session.getLoggedAuthor().getNickname(),true, usernameUser.getText() , false);
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().setFollow(usernameUser.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-
+                userManagerNJ.following(session.getLoggedUser().getNickname(),false, usernameUser.getText() , false);
             }
-            // TODO aggiungere un follow al nostro author
-            // TODO aggiungere un follower all'utente author
         } else {
-            for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
-                if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
-                    session.getLoggedUser().getInteractions().getFollow().remove(i);
-                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
+
+            if (session.getLoggedAuthor() != null) {
+                userManagerNJ.deleteFollowing(session.getLoggedAuthor().getNickname(),true, usernameUser.getText() , false);
+                for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
+                    if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
+                        session.getLoggedAuthor().getInteractions().getFollow().remove(i);
+                        session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
+                    }
+                }
+            } else if (session.getLoggedUser() != null) {
+                userManagerNJ.deleteFollowing(session.getLoggedUser().getNickname(),false, usernameUser.getText() , false);
+                for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
+                    if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
+                        session.getLoggedUser().getInteractions().getFollow().remove(i);
+                        session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
+                    }
                 }
             }
-            //TODO rimuovere un follow al nostro author
-            //TODO rimuovere un follower all'utente author
+
         }
 
 
@@ -75,6 +93,7 @@ public class UserInterfaceController {
 
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
+
         Session session = Session.getInstance();
 
         if (session.getLoggedAuthor() != null) {
@@ -108,14 +127,20 @@ public class UserInterfaceController {
 
     public void initialize() {
         follow.setVisible(false);
+
         Session session = Session.getInstance();
         Random rand = new Random();
+
 
         if (session.getLoggedAuthor() != null) {
             usernameUser.setText(session.getLoggedAuthor().getNickname());
         } else if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
+
+
+
+
     }
 
     @FXML
@@ -137,21 +162,71 @@ public class UserInterfaceController {
     }
 
     @FXML
-    void viewFollow() {
+    void viewFollow () {
         listFollow.getItems().clear();
         Session session = Session.getInstance();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
-        System.out.println(session.getLoggedUser().getInteractions().getFollow());
-        if (session.getLoggedAuthor() == null) {
-            //TODO cerco nel db tutti i dati dell'utente e inserisco i follow(inserisco if su)
-            for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++)
+
+        if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
+            session.getLoggedUser().getInteractions().delFollow();
+            List<String> Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
+            session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
+            for (int i = 0; i < Follow.size(); i++) {
+                session.getLoggedUser().getInteractions().setFollow(Follow.get(i));
+            }
+
+            for (int i = 0; i < session.getLoggedUser().getInteractions().getNumberFollow(); i++)
                 listFollows.add(session.getLoggedUser().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
+        } else {
+            Users user = new Users("", "", usernameUser.getText(), "", "");
+            user.getInteractions().delFollow();
+            List<String> Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
+            user.getInteractions().setNumberFollow(Follow.size());
+            for (int i = 0; i < Follow.size(); i++) {
+                user.getInteractions().setFollow(Follow.get(i));
+            }
+
+            for (int i = 0; i < user.getInteractions().getNumberFollow(); i++)
+                listFollows.add(user.getInteractions().getFollow().get(i));
+            listFollow.getItems().addAll(listFollows);
         }
-        if (session.getLoggedAuthor() != null) {
-            //TODO cerco nel db tutti i dati dell'autore e inserisco i follow(inserisco if su)
-            // devo prendere i follow dell'utente
+        listFollows.clear();
+
+    }
+
+    @FXML
+    void viewFollower () {
+        listFollower.getItems().clear();
+        Session session = Session.getInstance();
+        ObservableList<String> listFollowers = FXCollections.observableArrayList();
+
+        if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
+            session.getLoggedUser().getInteractions().delFollower();
+            List<String> Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
+            session.getLoggedUser().getInteractions().setNumberFollower(Follower.size());
+            for (int i = 0; i < Follower.size(); i++) {
+                session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
+            }
+
+            for (int i = 0; i < session.getLoggedUser().getInteractions().getNumberFollower(); i++)
+                listFollowers.add(session.getLoggedUser().getInteractions().getFollower().get(i));
+            listFollower.getItems().addAll(listFollowers);
+        } else {
+            Users users = new Users("", "", usernameUser.getText(), "", "");
+            users.getInteractions().delFollower();
+            List<String> Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
+            users.getInteractions().setNumberFollower(Follower.size());
+
+            for (int i = 0; i < Follower.size(); i++) {
+                users.getInteractions().setFollower(Follower.get(i));
+            }
+
+            for (int i = 0; i < users.getInteractions().getNumberFollower(); i++)
+                listFollowers.add(users.getInteractions().getFollower().get(i));
+            listFollower.getItems().addAll(listFollowers);
         }
+        listFollowers.clear();
+
     }
 }
-
