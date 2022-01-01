@@ -44,7 +44,14 @@ public class Interaction {
     public void setFollower(String follower) {
         this.follower.add(follower);
     }
-
+    public void delFollower() {
+        this.follower.clear();
+        this.numberFollower = 0;
+    }
+    public void delFollow() {
+        this.follow.clear();
+        this.numberFollow=0;
+    }
     public void setNumberFollow(int numberFollow) {
         this.numberFollow = numberFollow;
     }

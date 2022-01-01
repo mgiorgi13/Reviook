@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoginController {
@@ -47,7 +50,7 @@ public class LoginController {
 
     @FXML
     private Button loginButton;
-
+    private UserManager userManager = new UserManager();
 
     String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
             "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
@@ -130,16 +133,29 @@ public class LoginController {
 
         Parent user_scene;
         Session session = Session.getInstance();
-        //TODO sessione settata con dati forzati, andranno recuperati tramite query al DB in base al username
+
+        //Todo qui caricare il tipo da mongo ("Author/User")
+
         if (login.equals("author")) {
             session.setType(true);
             session.setLoggedAuthor("Mattia", "Di Donato", "Mattiax", "mattia@unipi.it", "2C87C8312E5F752A0E79660511567505");
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            System.out.println("utente loggato: " + session.getLoggedAuthor().getNickname());
         } else if (login.equals("user")) {
             session.setType(false);
             session.setLoggedUser("Salvo", "Arancio Febbo", "Salvox", "salvo@unipi.it", "2C87C8312E5F752A0E79660511567505");
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+            List<String> Follow = userManager.loadRelations("User",username);
+            session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
+            for(int i = 0; i<Follow.size(); i++)
+            {
+                session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
+            }
+            List<String> Follower= userManager.loadRelationsFollower("User",username);
+            session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
+            for(int i = 0; i<Follower.size(); i++)
+            {
+                session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
+            }
         } else return;
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));

@@ -28,7 +28,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
 public class SearchInterfaceController {
     @FXML
     private ResourceBundle resources;
@@ -81,12 +80,10 @@ public class SearchInterfaceController {
         Session session = Session.getInstance();
         Parent userInterface;
         if (session.getType()) {
-
-            String nickSelected = "Gianni bello bello";
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-            controller.setNickname(nickSelected);
+           // controller.setNickname(nickSelected);
         } else {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));

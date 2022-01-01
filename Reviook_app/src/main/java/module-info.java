@@ -5,6 +5,11 @@ module it.unipi.dii.reviook_app {
     requires jaxb.api;
     requires gson;
     requires json;
+    requires org.neo4j.driver;
+    requires json.simple;
+    requires org.mongodb.driver.sync.client;
+    requires org.mongodb.bson;
+    requires org.mongodb.driver.core;
 
     opens it.unipi.dii.reviook_app to javafx.fxml;
     exports it.unipi.dii.reviook_app;
