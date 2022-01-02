@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
+@SuppressWarnings("unchecked")
 public class Reviook extends Application {
     Scanner myObj = new Scanner(System.in);
     String Name, username, nickname, email, password;

@@ -5,6 +5,7 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 
+@SuppressWarnings("unchecked")
 public class Neo4jDriver {
     private static Neo4jDriver neo = null;
     private final Driver driver;

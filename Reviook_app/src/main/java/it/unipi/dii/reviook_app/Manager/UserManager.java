@@ -1,24 +1,38 @@
 package it.unipi.dii.reviook_app.Manager;
 
 import com.mongodb.client.*;
+import com.mongodb.client.result.DeleteResult;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
+import org.json.simple.JSONObject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 import java.util.UUID;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static org.neo4j.driver.Values.parameters;
+
 
 public class UserManager {
     private MongoDriver md;
     private Neo4jDriver nd;
+    private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
+
+    private static final String usersCollection = "usersnew";
+    private static final String authorCollection = "authors";
+    private static final String bookCollection = "books";
+
+
+
+
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -35,6 +49,25 @@ public class UserManager {
                 return null;
             });
         }
+    }
+
+    public boolean deleteUserN4J(){
+        boolean result = false;
+        String username;
+        String type = this.session.getIsAuthor() ? "Author" : "User";
+
+        if(this.session.getIsAuthor())
+            username = this.session.getLoggedAuthor().getNickname();
+        else
+            username = this.session.getLoggedUser().getNickname();
+        try ( Session session = nd.getDriver().session() )
+        {
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                tx.run( "MATCH (n : "+type+" { username: '"+username+"'}) DETACH DELETE n");
+                return true;
+            });
+        }
+        return result;
     }
 
     public void following(String username1,boolean type1, String username2, boolean type2){
@@ -128,25 +161,40 @@ public class UserManager {
 
     //MongoDB
 
-    public boolean verifyUsername(String Username){
-        MongoCollection<Document> users = md.getCollection("usersnew");
-        MongoCollection<Document> authors = md.getCollection("authorsnew");
+    public int verifyUsername(String Username){
+        MongoCollection<Document> users = md.getCollection(usersCollection);
+        MongoCollection<Document> authors = md.getCollection(authorCollection);
         try (MongoCursor<Document> cursor = users.find( eq( "username",Username) ).iterator()) {
             while (cursor.hasNext()) {
-                return false;
+                Document user = cursor.next();
+                session.setLoggedUser(user.get("name").toString(),"",user.get("username").toString(),user.get("email").toString(),user.get("password").toString());
+                return 0;
             }
         }
         try (MongoCursor<Document> cursor = authors.find( eq( "username",Username) ).iterator()) {
             while (cursor.hasNext()) {
-                return false;
+                Document user = cursor.next();
+                session.setLoggedAuthor(user.get("name").toString(),"",user.get("username").toString(),user.get("email").toString(),user.get("password").toString());
+
+                return 1;
             }
         }
-        return true;
+        return -1;
+    }
+
+    public boolean verifyPassword(boolean type, String Username, String Password){
+        MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);
+        try (MongoCursor<Document> cursor = users.find(and(eq("username",Username), eq("password",Password) ) ).iterator()) {
+            while (cursor.hasNext()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean verifyEmail(String Email){
-        MongoCollection<Document> users = md.getCollection("usersnew");
-        MongoCollection<Document> authors = md.getCollection("authorsnew");
+        MongoCollection<Document> users = md.getCollection(usersCollection);
+        MongoCollection<Document> authors = md.getCollection(authorCollection);
         try (MongoCursor<Document> cursor = users.find( eq( "email",Email) ).iterator()) {
             while (cursor.hasNext()) {
                 return false;
@@ -174,13 +222,27 @@ public class UserManager {
 
         if(type.equals("Author")) {
             doc.append("author_id", id).append("avarage_reviewsSelf", "");
-            md.getCollection("authorsnew").insertOne(doc);
+            md.getCollection(authorCollection).insertOne(doc);
         }
         else{
             doc.append("user_id", id);
-            md.getCollection("usersnew").insertOne(doc);
+            md.getCollection(usersCollection).insertOne(doc);
         }
 
+    }
+
+    public boolean deleteUserMongo(){
+        MongoCollection<Document> user = md.getCollection(session.getIsAuthor() ? authorCollection : usersCollection);
+        String username;
+        if(session.getIsAuthor())
+            username = session.getLoggedAuthor().getNickname();
+        else
+            username = session.getLoggedUser().getNickname();
+
+        DeleteResult deleteResult = user.deleteOne(eq("username",username));
+        if(deleteResult.getDeletedCount() == 1)
+            return true;
+        return false;
     }
 
 }

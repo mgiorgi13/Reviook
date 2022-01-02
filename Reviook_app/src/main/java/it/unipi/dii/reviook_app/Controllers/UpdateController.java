@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,6 +41,9 @@ public class UpdateController {
     @FXML private TextField passwordUpdate;
 
     @FXML private TextField repeatPasswordUpdate;
+
+    private UserManager userManager = new UserManager();
+
     @FXML
     void updateAccountButton(ActionEvent event) throws IOException {
         actiontarget.setText("account updated");
@@ -68,7 +72,7 @@ public class UpdateController {
         for(int i=0; i < array.length(); i++)
         {
             JSONObject object = array.getJSONObject(i);
-            if(session.getType()) {
+            if(session.getIsAuthor()) {
                 if (object.getString("username").equals(nickname) && !session.getLoggedAuthor().getNickname().equals(nickname))
                     return true;
             }else{
@@ -88,7 +92,7 @@ public class UpdateController {
         for(int i=0; i < array.length(); i++)
         {
             JSONObject object = array.getJSONObject(i);
-            if(session.getType()) {
+            if(session.getIsAuthor()) {
                 if (object.getString("email").equals(email) && !session.getLoggedAuthor().getEmail().equals(email))
                     return true;
             }else{
@@ -144,7 +148,7 @@ public class UpdateController {
         password = passwordUpdate.getText();
         repeatPsw = repeatPasswordUpdate.getText();
         Session session = Session.getInstance();
-        if (session.getType()){
+        if (session.getIsAuthor()){
             if (nameUpdate.getText().isEmpty())
                 Name = session.getLoggedAuthor().getName();
             if (surnameUpdate.getText().isEmpty())
@@ -179,8 +183,8 @@ public class UpdateController {
 
         // TODO: crea nuovo utente nel db
         session.setSession(null);
-        session.setLoggedUser(null);
-        session.setLoggedAuthor(null);
+        session.setCurrentLoggedUser(null);
+        session.setCurrentLoggedAuthor(null);
 
         Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         if (!singIn.equals("Registered")) {
@@ -199,18 +203,21 @@ public class UpdateController {
 
     @FXML
     void acceptDeleteButton(ActionEvent event) throws IOException {
-        Session session = Session.getInstance();
-        session.setSession(null);
-        session.setLoggedUser(null);
-        session.setLoggedAuthor(null);
+        if(userManager.deleteUserMongo() && userManager.deleteUserN4J()) {
+            Session session = Session.getInstance();
+            session.setSession(null);
+            session.setCurrentLoggedUser(null);
+            session.setCurrentLoggedAuthor(null);
 
-        // TODO eliminare l'utente dal db
-        Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
-        Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
-        actual_stage.setScene(new Scene(login));
-        actual_stage.setResizable(false);
-        actual_stage.setTitle("Create new account");
-        actual_stage.show();
+            Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+            Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
+            actual_stage.setScene(new Scene(login));
+            actual_stage.setResizable(false);
+            actual_stage.setTitle("Create new account");
+            actual_stage.show();
+        }else{
+            actiontarget.setText("Error during delete");
+        }
     }
 
     @FXML

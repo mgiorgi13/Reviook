@@ -73,7 +73,7 @@ public class RegisterController {
             //convalid email
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher mEmail = p.matcher(email);
-            if (!userManager.verifyUsername(nickname))
+            if (userManager.verifyUsername(nickname) != -1)
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";
@@ -123,7 +123,6 @@ public class RegisterController {
             actiontarget.setText(singIn);
             return;
         }
-        //Todo inserire nuovo utente su mongo
         if (CheckAuthor.isSelected()) {
             userManager.addNewUsers("Author", nickname);
             userManager.register(Name, surname, email, nickname, password, "Author");

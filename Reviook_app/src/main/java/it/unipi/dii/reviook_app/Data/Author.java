@@ -13,13 +13,11 @@ public class Author extends Users {
     private ArrayList<String> writtenBookStatisitc;
     private int likeNumber;
 
-    public Author(String name, String surname, String nickname,String email, String password) {
+    public Author(String name, String surname, String nickname, String email, String password) {
         super( name,  surname,  nickname, email,  password);
         this.writtenBook = new ArrayList<String>();
         this.writtenBookStatisitc = new ArrayList<String>();
         this.likeNumber = 0;
     }
-
-
 
 }
