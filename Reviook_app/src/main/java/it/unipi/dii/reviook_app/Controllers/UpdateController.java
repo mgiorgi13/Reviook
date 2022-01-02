@@ -20,34 +20,39 @@ import org.json.JSONObject;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class UpdateController {
 
-    @FXML private Text actiontarget;
+    @FXML
+    private Text actiontarget;
 
-    @FXML private Button deleteButton, negateDelete, acceptDelete, updateButton;
+    @FXML
+    private Button deleteButton, negateDelete, acceptDelete, updateButton;
 
-    @FXML private TextField nameUpdate;
+    @FXML
+    private Text nameUpdate;
 
-    @FXML private TextField surnameUpdate;
+    @FXML
+    private Text emailUpdate;
 
-    @FXML private TextField emailUpdate;
+    @FXML
+    private Text usernameUpdate;
 
-    @FXML private TextField usernameUpdate;
+    @FXML
+    private TextField passwordUpdate;
 
-    @FXML private TextField passwordUpdate;
-
-    @FXML private TextField repeatPasswordUpdate;
+    @FXML
+    private TextField repeatPasswordUpdate;
 
     private UserManager userManager = new UserManager();
 
-    @FXML
-    void updateAccountButton(ActionEvent event) throws IOException {
-        actiontarget.setText("account updated");
-    }
+    private Session session = Session.getInstance();
+
+
     @FXML
     void deleteAccountButton(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/securityDelete.fxml"));
@@ -58,175 +63,67 @@ public class UpdateController {
         actual_stage.show();
     }
 
-    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
-
-
-
-    public boolean verifyUsername(String nickname) throws JSONException {
-        //query a mongo se l'user esiste o meno
-        // TODO verificare username db con quello dato dall'utente per l'update
-        Session session = Session.getInstance();
-        JSONArray array = new JSONArray(str);
-        for(int i=0; i < array.length(); i++)
-        {
-            JSONObject object = array.getJSONObject(i);
-            if(session.getIsAuthor()) {
-                if (object.getString("username").equals(nickname) && !session.getLoggedAuthor().getNickname().equals(nickname))
-                    return true;
-            }else{
-                if (object.getString("username").equals(nickname) && !session.getLoggedUser().getNickname().equals(nickname))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-
-
-    public boolean verifyEmail(String email) throws JSONException {
-        // TODO verificare email db con quella data dall'utente per l'update
-        Session session = Session.getInstance();
-        JSONArray array = new JSONArray(str);
-        for(int i=0; i < array.length(); i++)
-        {
-            JSONObject object = array.getJSONObject(i);
-            if(session.getIsAuthor()) {
-                if (object.getString("email").equals(email) && !session.getLoggedAuthor().getEmail().equals(email))
-                    return true;
-            }else{
-                if (object.getString("email").equals(email) && !session.getLoggedUser().getEmail().equals(email))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-
-    public String SignIn(String name, String surname, String nickname,String email, String password, String repeatPsw){
-        try {
-            MessageDigest md;
-            String pswHash;
-            //convalid email
-            Pattern p =  Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-            Matcher mEmail = p.matcher(email);
-            if(verifyUsername(nickname))
-                return "Existing username";
-            if (!mEmail.find())
-                return "Invalid email";
-            if(verifyEmail(email))
-                return "Existing e-mail";
-            if (!password.equals(repeatPsw))
-                return "Passwords must be the same";
-            //check if the password entered is at least 8
-            //and maximum 20 characters long and contains at least one letter and at least one number:
-            Pattern pattern = Pattern.compile("((?=.*[0-9])(?=.*[a-zA-Z]).{8,20})");
-            Matcher mpsw = pattern.matcher(password);
-            if (!mpsw.find())
-                return "Password entered is at least 8 and maximum 20 characters long and contains at least one letter and at least one number";
-
-            //Password Hash
-            md = MessageDigest.getInstance("MD5");
-            //md.update(signUpPassword.getText().getBytes());
-            md.update(password.getBytes());
-            byte[] digest = md.digest();
-            pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return "Registered";
-    }
-
     @FXML
-    void updateButtonFun(ActionEvent event) throws IOException{
-        String Name, surname,nickname,email, password,repeatPsw;
-        Name = nameUpdate.getText();
-        surname = surnameUpdate.getText();
-        email = emailUpdate.getText();
-        nickname = usernameUpdate.getText();
+    void updateButtonFun(ActionEvent event) throws IOException, NoSuchAlgorithmException {
+        String password, repeatPsw;
         password = passwordUpdate.getText();
         repeatPsw = repeatPasswordUpdate.getText();
         Session session = Session.getInstance();
-        if (session.getIsAuthor()){
-            if (nameUpdate.getText().isEmpty())
-                Name = session.getLoggedAuthor().getName();
-            if (surnameUpdate.getText().isEmpty())
-                surname = session.getLoggedAuthor().getSurname();
-            if (usernameUpdate.getText().isEmpty())
-                nickname = session.getLoggedAuthor().getNickname();
-            if (emailUpdate.getText().isEmpty())
-                email = session.getLoggedAuthor().getEmail();
-        }
-        else{
-            if (nameUpdate.getText().isEmpty())
-                Name = session.getLoggedUser().getName();
-            if (surnameUpdate.getText().isEmpty())
-                surname = session.getLoggedUser().getSurname();
-            if (usernameUpdate.getText().isEmpty())
-                nickname = session.getLoggedUser().getNickname();
-            if (emailUpdate.getText().isEmpty())
-                email = session.getLoggedUser().getEmail();
-        }
-        if(passwordUpdate.getText().isEmpty()) {
+
+        if (passwordUpdate.getText().isEmpty()) {
             actiontarget.setText("You must enter the new password");
             return;
         }
-
-
-        String singIn= SignIn(Name,surname,nickname,email,password,repeatPsw);
-        if (!singIn.equals("Registered")) {
-            actiontarget.setText(singIn);
+        if (!password.equals(repeatPsw)) {
+            actiontarget.setText("Passwords must be the same");
             return;
         }
-        // TODO: elimina utente dal db
 
-        // TODO: crea nuovo utente nel db
-        session.setSession(null);
-        session.setCurrentLoggedUser(null);
-        session.setCurrentLoggedAuthor(null);
+        // check if the password entered is at least 8
+        //and maximum 20 characters long and contains at least one letter and at least one number:
+        MessageDigest md;
+        String pswHash;
+        Pattern pattern = Pattern.compile("((?=.*[0-9])(?=.*[a-zA-Z]).{8,20})");
+        Matcher mpsw = pattern.matcher(password);
+        if (!mpsw.find())
+            actiontarget.setText("Password entered is at least 8 and maximum 20 characters long and contains at least one letter and at least one number");
 
-        Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
-        if (!singIn.equals("Registered")) {
-            actiontarget.setText(singIn);
-            return;
-        }
-        Stage actual_stage = (Stage) updateButton.getScene().getWindow();
-        actual_stage.setScene(new Scene(login));
-        actual_stage.setResizable(false);
-        actual_stage.setTitle("Create new account");
-        actual_stage.show();
+        //Password Hash
+        md = MessageDigest.getInstance("MD5");
+        //md.update(signUpPassword.getText().getBytes());
+        md.update(password.getBytes());
+        byte[] digest = md.digest();
+        pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
 
-
-
-    }
-
-    @FXML
-    void acceptDeleteButton(ActionEvent event) throws IOException {
-        if(userManager.deleteUserMongo() && userManager.deleteUserN4J()) {
-            Session session = Session.getInstance();
+        if (userManager.updatePassword(pswHash)) {
+            //update ok so go to login
             session.setSession(null);
             session.setCurrentLoggedUser(null);
             session.setCurrentLoggedAuthor(null);
 
             Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
-            Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
+
+            Stage actual_stage = (Stage) updateButton.getScene().getWindow();
             actual_stage.setScene(new Scene(login));
             actual_stage.setResizable(false);
-            actual_stage.setTitle("Create new account");
+            actual_stage.setTitle("Login");
             actual_stage.show();
-        }else{
-            actiontarget.setText("Error during delete");
+        } else {
+            actiontarget.setText("update failed");
         }
+
     }
 
     @FXML
-    void negateDeleteButton(ActionEvent event) throws IOException {
-        Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/updateAccount.fxml"));
-        Stage actual_stage = (Stage) negateDelete.getScene().getWindow();
-        actual_stage.setScene(new Scene(updateInterface));
-        actual_stage.setResizable(false);
-        actual_stage.setTitle("Are you sure you want to delete your account?");
-        actual_stage.show();
+    public void initialize() {
+        if (session.getIsAuthor()) {
+            nameUpdate.setText(session.getLoggedAuthor().getName());
+            emailUpdate.setText(session.getLoggedAuthor().getEmail());
+            usernameUpdate.setText(session.getLoggedAuthor().getNickname());
+        } else {
+            nameUpdate.setText(session.getLoggedUser().getName());
+            emailUpdate.setText(session.getLoggedUser().getEmail());
+            usernameUpdate.setText(session.getLoggedUser().getNickname());
+        }
     }
 }
