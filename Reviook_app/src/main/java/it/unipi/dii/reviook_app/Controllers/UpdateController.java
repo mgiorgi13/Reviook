@@ -31,7 +31,7 @@ public class UpdateController {
     private Text actiontarget;
 
     @FXML
-    private Button deleteButton, negateDelete, acceptDelete, updateButton;
+    private Button deleteButton, updateButton;
 
     @FXML
     private Text nameUpdate;
