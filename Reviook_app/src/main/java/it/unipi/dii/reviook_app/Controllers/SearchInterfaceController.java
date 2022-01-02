@@ -65,7 +65,7 @@ public class SearchInterfaceController {
     void homeInterface(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
         Parent homeInterface;
-        if (session.getType())
+        if (session.getIsAuthor())
             homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
         else
             homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
@@ -79,7 +79,7 @@ public class SearchInterfaceController {
     void profileInterface() throws IOException {
         Session session = Session.getInstance();
         Parent userInterface;
-        if (session.getType()) {
+        if (session.getIsAuthor()) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();

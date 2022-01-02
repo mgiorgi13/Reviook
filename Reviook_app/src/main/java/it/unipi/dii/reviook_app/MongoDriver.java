@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+@SuppressWarnings("unchecked")
 public class MongoDriver {
 
     private static MongoDriver driver = null;

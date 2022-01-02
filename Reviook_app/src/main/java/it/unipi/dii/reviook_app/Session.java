@@ -5,7 +5,7 @@ import it.unipi.dii.reviook_app.Data.Users;
 
 public class Session {
     private static Session session = null;
-    private Boolean type;
+    private Boolean isAuthor; // true : author , false : user
     private Users loggedUser = null;
     private Author loggedAuthor = null;
 
@@ -19,25 +19,25 @@ public class Session {
         Session.session = session;
     }
 
-    public void setLoggedUser(Users logged) {
+    public void setCurrentLoggedUser(Users logged) {
         this.loggedUser = logged;
     }
-    public void setLoggedAuthor(Author logged) {
+    public void setCurrentLoggedAuthor(Author logged) {
         this.loggedAuthor = logged;
     }
 
     private Session() {}
 
-    public Boolean getType() {
-        return type;
+    public Boolean getIsAuthor() {
+        return isAuthor;
     }
 
-    public void setType(Boolean type) {
+    public void setIsAuthor(Boolean type) {
         if(session == null)
         {
             new RuntimeException("Session is not active.");
         } else
-            this.type = type;
+            this.isAuthor = type;
     }
 
     public static Session getInstance() {
