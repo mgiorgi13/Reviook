@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Books;
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -55,6 +57,12 @@ public class SearchInterfaceController {
 
     @FXML
     private JFXButton profileButton;
+
+    @FXML
+    private TextField searchText;
+
+    private UserManager userManager = new UserManager();
+
 
     @FXML
     void initialize() {
@@ -142,11 +150,9 @@ public class SearchInterfaceController {
             authorsList.setVisible(false);
             usersList.setVisible(true);
 
-            Users salvo = new Users("Salvo", "Febbo", "Salvox", "", "");
-            Users matteo = new Users("Matteo", "Giorgi", "Matteox", "", "");
-            ObservableList<Users> listUser = FXCollections.observableArrayList();
-            listUser.addAll(salvo, matteo);
-            usersList.getItems().addAll(listUser);
+            ObservableList<Users> obsUserList = FXCollections.observableArrayList();
+            obsUserList.addAll(userManager.searchUser(searchText.getText()));
+            usersList.getItems().addAll(obsUserList);
             usersList.setCellFactory(new Callback<ListView<Users>, ListCell<Users>>() {
                 @Override
                 public ListCell<Users> call(ListView<Users> listView) {
@@ -192,10 +198,9 @@ public class SearchInterfaceController {
             authorsList.setVisible(true);
             usersList.setVisible(false);
 
-            Author mattia = new Author("Mattia", "Di Donato", "Mattiax", "", "");
-            ObservableList<Author> listAuthor = FXCollections.observableArrayList();
-            listAuthor.addAll(mattia);
-            authorsList.getItems().addAll(listAuthor);
+            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
+            obsUserList.addAll(userManager.searchAuthor(searchText.getText()));
+            authorsList.getItems().addAll(obsUserList);
             authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
                 @Override
                 public ListCell<Author> call(ListView<Author> listView) {
