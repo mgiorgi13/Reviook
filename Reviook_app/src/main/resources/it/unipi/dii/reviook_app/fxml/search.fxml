@@ -12,7 +12,7 @@
             <children>
                 <Pane prefHeight="123.0" prefWidth="757.0">
                     <children>
-                        <TextField layoutX="26.0" layoutY="38.0" prefHeight="47.0" prefWidth="550.0"/>
+                        <TextField fx:id="searchText" layoutX="26.0" layoutY="38.0" prefHeight="47.0" prefWidth="550.0"/>
                         <JFXButton layoutX="667.0" layoutY="46.0" onAction="#searchAction" text="SEARCH"/>
                         <CheckBox fx:id="bookCheck" layoutX="591.0" layoutY="30.0" mnemonicParsing="false"
                                   onAction="#selectBookCheckAction" text="Book"/>

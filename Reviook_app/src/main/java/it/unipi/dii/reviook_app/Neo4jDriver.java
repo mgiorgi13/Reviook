@@ -15,21 +15,21 @@ public class Neo4jDriver {
     }
 
     public static Neo4jDriver getInstance() {
-        if(neo == null)
+        if (neo == null)
             neo = new Neo4jDriver();
 
         return neo;
     }
 
     public Driver getDriver() {
-        if(neo == null)
+        if (neo == null)
             throw new RuntimeException("Connection doesn't exist.");
         else
             return neo.driver;
     }
 
     public void close() {
-        if(neo == null)
+        if (neo == null)
             throw new RuntimeException("Connection doesn't exist.");
         else
             neo.driver.close();

@@ -4,6 +4,8 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
@@ -244,6 +246,42 @@ public class UserManager {
         if (updateResult.getModifiedCount() == 1)
             return true;
         return false;
+    }
+
+    public void searchBooks(){
+
+    }
+
+    public ArrayList<Users> searchUser(String Username){
+        MongoCollection<Document> user = md.getCollection(usersCollection);
+        List<Document> queryResults;
+        if(Username.equals(""))
+            queryResults = user.find().into(new ArrayList());
+        else
+            queryResults = user.find(eq("username",Username)).into(new ArrayList());
+        ArrayList<Users> result = new ArrayList<>();
+
+        for (Document r:
+             queryResults) {
+            result.add(new Users(r.get("name").toString(),"",r.get("username").toString(),r.get("email").toString(),r.get("password").toString()));
+        }
+        return result;
+    }
+
+    public ArrayList<Author> searchAuthor(String Username){
+        MongoCollection<Document> author = md.getCollection(authorCollection);
+        List<Document> queryResults;
+        if(Username.equals(""))
+            queryResults = author.find().into(new ArrayList());
+        else
+            queryResults = author.find(eq("username",Username)).into(new ArrayList());
+        ArrayList<Author> result = new ArrayList<>();
+
+        for (Document r:
+             queryResults) {
+            result.add(new Author(r.get("name").toString(),"",r.get("username").toString(),r.get("email").toString(),r.get("password").toString()));
+        }
+        return result;
     }
 
 }
