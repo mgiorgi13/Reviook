@@ -17,7 +17,7 @@ public class MongoDriver {
 
     private MongoDriver() {
         client = MongoClients.create("mongodb://localhost:27017/");
-        database = client.getDatabase("reviook");
+        database = client.getDatabase("prova1");
     }
 
     public static MongoDriver getInstance() {
