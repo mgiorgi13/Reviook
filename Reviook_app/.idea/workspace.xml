@@ -6,7 +6,41 @@
   <component name="ChangeListManager">
     <list default="true" id="cc9f6e0d-9b09-48c3-b56c-20cb016ad311" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reviook_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Reviook_app.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Manager/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/Manager/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/MongoDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/unipi/dii/reviook_app/MongoDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/search.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/it/unipi/dii/reviook_app/fxml/search.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Components/DataListElem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Components/ListElem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/AuthorInterfaceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/BookDetailController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/BookDetailController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/RegisterController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$2$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$4$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SearchInterfaceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/SecurityController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UpdateController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Controllers/UserInterfaceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Author.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Books.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Interaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Data/Users.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Manager/UserManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/MongoDriver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Neo4jDriver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Reviook.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/Session.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/search.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/unipi/dii/reviook_app/fxml/search.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
