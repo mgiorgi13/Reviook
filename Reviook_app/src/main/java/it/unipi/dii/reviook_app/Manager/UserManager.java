@@ -1,15 +1,16 @@
 package it.unipi.dii.reviook_app.Manager;
 
+
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
-import org.json.simple.JSONObject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
@@ -30,7 +31,7 @@ public class UserManager {
     private Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
 
-    private static final String usersCollection = "users";
+    private static final String usersCollection = "usersnew";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
 
@@ -248,8 +249,54 @@ public class UserManager {
         return false;
     }
 
-    public void searchBooks(){
+    public ArrayList<Book> searchBooks(String searchField, String type) {
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        List<Document> queryResults = new ArrayList<>();
+        ArrayList<Book> result = new ArrayList<>();
 
+        //TODO add support to genres, authors, review
+        ArrayList<String> genres = new ArrayList<>();
+        ArrayList<Author> authors = new ArrayList<>();
+
+        genres.add("");
+        authors.add(new Author("","","","",""));
+         if (!searchField.equals("")){
+            switch (type) {
+                case "":
+                    queryResults = books.find().into(new ArrayList());
+                    break;
+                case "Title":
+                    queryResults = books.find(eq("title", searchField)).into(new ArrayList());
+                    break;
+                case "Genre":
+                    queryResults = books.find(in("genres",searchField)).into(new ArrayList());
+                    break;
+                case "Author":
+                    queryResults = books.find(in("authors.author_id",searchField)).into(new ArrayList());
+                    break;
+
+            }
+        }
+        for (Document r:
+             queryResults) {
+
+            result.add(new Book( r.get("isbn").toString(),
+                    r.get("language_code").toString(),
+                    r.get("asin").toString(),
+                    Float.valueOf(r.get("average_rating").toString()),
+                    r.get("description").toString(),
+                    r.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(r.get("num_pages").toString()),
+                    r.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(r.get("publication_day").toString()),
+                    r.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(r.get("publication_month").toString()),
+                    r.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(r.get("publication_year").toString()),
+                    r.get("image_url").toString(),
+                    r.get("book_id").toString(),
+                    r.get("ratings_count").toString().equals("") ? 0 : Integer.valueOf(r.get("ratings_count").toString()),
+                    r.get("title").toString(),
+                    authors,
+                    genres));
+        }
+        return result;
     }
 
     public ArrayList<Users> searchUser(String Username){
