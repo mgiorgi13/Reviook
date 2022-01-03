@@ -108,18 +108,15 @@ public class SearchInterfaceController {
 
     @FXML
     public void searchAction(ActionEvent actionEvent) {
-
         usersList.getItems().clear();
         bookList.getItems().clear();
         authorsList.getItems().clear();
-
         if (bookCheck.isSelected()) {
             //TODO implementare query per prendere lista oggetti dal DB
 
             bookList.setVisible(true);
             authorsList.setVisible(false);
             usersList.setVisible(false);
-
             ObservableList<String> booksList = FXCollections.observableArrayList();
             for (int i = 0; i < 30; i++) {
                 booksList.add("Book to read " + i);
@@ -149,7 +146,6 @@ public class SearchInterfaceController {
             bookList.setVisible(false);
             authorsList.setVisible(false);
             usersList.setVisible(true);
-
             ObservableList<Users> obsUserList = FXCollections.observableArrayList();
             obsUserList.addAll(userManager.searchUser(searchText.getText()));
             usersList.getItems().addAll(obsUserList);
@@ -176,13 +172,11 @@ public class SearchInterfaceController {
                         Users selectedCell = (Users) usersList.getSelectionModel().getSelectedItem();
                         try {
                             //System.out.println(selectedCell.getNickname());
-
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
                             controller.setNickname(selectedCell.getNickname());
-
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);

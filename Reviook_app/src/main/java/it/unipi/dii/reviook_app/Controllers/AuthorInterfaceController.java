@@ -67,7 +67,6 @@ public class AuthorInterfaceController {
 
     private UserManager userManagerNJ = new UserManager();
 
-
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
@@ -137,8 +136,6 @@ public class AuthorInterfaceController {
                 }
             }
         }
-
-
     }
 
     @FXML
