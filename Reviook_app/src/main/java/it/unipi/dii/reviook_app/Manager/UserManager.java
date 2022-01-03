@@ -30,7 +30,7 @@ public class UserManager {
     private Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
 
-    private static final String usersCollection = "usersnew";
+    private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
 
