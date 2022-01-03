@@ -33,6 +33,9 @@ public class BookDetailController {
     private JFXButton searchButton;
 
     @FXML
+    private JFXButton addReviewButton;
+
+    @FXML
     private ListView listView;
 
     private List<String> stringList = new ArrayList<>(5);
@@ -61,6 +64,10 @@ public class BookDetailController {
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
+    }
+
+    @FXML
+    public void addReviewAction(ActionEvent actionEvent) {
     }
 
     @FXML
