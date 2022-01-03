@@ -55,27 +55,27 @@ public class LoginController {
 
     private Session session = Session.getInstance();
 
-    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
-
-    public LoginController() {
-    }
-
-
-    public String verifyType(String username) throws JSONException {
-        JSONArray array = new JSONArray(str);
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            if (object.getString("username").equals(username))
-                return object.getString("type");
-            // System.out.println(object.getString("name"));
-            //  System.out.println(object.getString("surname"));
-            //  System.out.println(object.getString("email"));
-        }
-        return null;
-    }
-
+//    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
+//            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
+//            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
+//
+//    public LoginController() {
+//    }
+//
+//
+//    public String verifyType(String username) throws JSONException {
+//        JSONArray array = new JSONArray(str);
+//        for (int i = 0; i < array.length(); i++) {
+//            JSONObject object = array.getJSONObject(i);
+//            if (object.getString("username").equals(username))
+//                return object.getString("type");
+//            // System.out.println(object.getString("name"));
+//            //  System.out.println(object.getString("surname"));
+//            //  System.out.println(object.getString("email"));
+//        }
+//        return null;
+//    }
+//
     public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
         MessageDigest md;
         String pswHash;
@@ -90,7 +90,7 @@ public class LoginController {
         md.update(password.getBytes());
         byte[] digest = md.digest();
         pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-
+        Boolean c = userManager.verifyPassword(session.getIsAuthor(),username,pswHash);
         if (!userManager.verifyPassword(session.getIsAuthor(),username,pswHash))
             return false;
 
@@ -107,8 +107,11 @@ public class LoginController {
             actiontarget.setText("You must fill in all fields");
             return;
         }
+        if (!logIn(username, password)) {
+            actiontarget.setText( "Wrong Login");
+            return;
+        }
 
-        actiontarget.setText(logIn(username, password) ? "Connected" : "Wrong Login");
 
         Parent user_scene;
 
@@ -120,6 +123,7 @@ public class LoginController {
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
         }else{
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+
             List<String> Follow = userManager.loadRelations("User",username);
             session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
             for(int i = 0; i<Follow.size(); i++)
