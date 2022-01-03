@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="jpa" name="JPA">
-      <configuration>
-        <setting name="validation-enabled" value="true" />
-        <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping />
-        <naming-strategy-map />
-      </configuration>
-    </facet>
-  </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -22,16 +12,15 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.jfoenix:jfoenix:9.0.10" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:17-ea+11" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:17-ea+11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:mac:17-ea+11" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:17-ea+11" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:17-ea+11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:mac:17-ea+11" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:17-ea+11" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:17-ea+11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac:17-ea+11" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.1" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.stream:stax-api:1.0-2" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
@@ -41,7 +30,7 @@
     <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.owasp:java-file-io:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:17-ea+11" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:win:17-ea+11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac:17-ea+11" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:4.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:bson:4.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:4.4.0" level="project" />
@@ -54,5 +43,6 @@
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.9" level="project" />
   </component>
 </module>
