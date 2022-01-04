@@ -31,7 +31,7 @@ public class UserManager {
     private Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
 
-    private static final String usersCollection = "usersnew";
+    private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
 
@@ -235,7 +235,7 @@ public class UserManager {
         return false;
     }
 
-    public boolean updatePassword(String newPassword){
+    public boolean updatePassword(String newPassword) {
         MongoCollection<Document> user = md.getCollection(session.getIsAuthor() ? authorCollection : usersCollection);
         String username;
         if (session.getIsAuthor())
@@ -243,7 +243,7 @@ public class UserManager {
         else
             username = session.getLoggedUser().getNickname();
 
-        UpdateResult updateResult = user.updateOne(eq("username", username), Updates.set("password",newPassword));
+        UpdateResult updateResult = user.updateOne(eq("username", username), Updates.set("password", newPassword));
         if (updateResult.getModifiedCount() == 1)
             return true;
         return false;
@@ -259,8 +259,8 @@ public class UserManager {
         ArrayList<Author> authors = new ArrayList<>();
 
         genres.add("");
-        authors.add(new Author("","","","",""));
-         if (!searchField.equals("")){
+        authors.add(new Author("", "", "", "", ""));
+        if (!searchField.equals("")) {
             switch (type) {
                 case "":
                     queryResults = books.find().into(new ArrayList());
@@ -269,18 +269,16 @@ public class UserManager {
                     queryResults = books.find(eq("title", searchField)).into(new ArrayList());
                     break;
                 case "Genre":
-                    queryResults = books.find(in("genres",searchField)).into(new ArrayList());
+                    queryResults = books.find(in("genres", searchField)).into(new ArrayList());
                     break;
                 case "Author":
-                    queryResults = books.find(in("authors.author_id",searchField)).into(new ArrayList());
+                    queryResults = books.find(in("authors.author_id", searchField)).into(new ArrayList());
                     break;
-
             }
         }
-        for (Document r:
-             queryResults) {
-
-            result.add(new Book( r.get("isbn").toString(),
+        for (Document r : queryResults) {
+            result.add(new Book(
+                    r.get("isbn").toString(),
                     r.get("language_code").toString(),
                     r.get("asin").toString(),
                     Float.valueOf(r.get("average_rating").toString()),
@@ -299,34 +297,34 @@ public class UserManager {
         return result;
     }
 
-    public ArrayList<Users> searchUser(String Username){
+    public ArrayList<Users> searchUser(String Username) {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
-        if(Username.equals(""))
+        if (Username.equals(""))
             queryResults = user.find().into(new ArrayList());
         else
-            queryResults = user.find(eq("username",Username)).into(new ArrayList());
+            queryResults = user.find(eq("username", Username)).into(new ArrayList());
         ArrayList<Users> result = new ArrayList<>();
 
-        for (Document r:
-             queryResults) {
-            result.add(new Users(r.get("name").toString(),"",r.get("username").toString(),r.get("email").toString(),r.get("password").toString()));
+        for (Document r :
+                queryResults) {
+            result.add(new Users(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
         return result;
     }
 
-    public ArrayList<Author> searchAuthor(String Username){
+    public ArrayList<Author> searchAuthor(String Username) {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         List<Document> queryResults;
-        if(Username.equals(""))
+        if (Username.equals(""))
             queryResults = author.find().into(new ArrayList());
         else
-            queryResults = author.find(eq("username",Username)).into(new ArrayList());
+            queryResults = author.find(eq("username", Username)).into(new ArrayList());
         ArrayList<Author> result = new ArrayList<>();
 
-        for (Document r:
-             queryResults) {
-            result.add(new Author(r.get("name").toString(),"",r.get("username").toString(),r.get("email").toString(),r.get("password").toString()));
+        for (Document r :
+                queryResults) {
+            result.add(new Author(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
         return result;
     }
