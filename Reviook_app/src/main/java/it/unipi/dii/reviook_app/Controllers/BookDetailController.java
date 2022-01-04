@@ -15,17 +15,14 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.*;
-
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javafx.util.Callback;
 
 
@@ -99,8 +96,8 @@ public class BookDetailController {
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
         // AUTHORS LIST
-        ArrayList<Author> authors = bookSelected.getAuthors();
-        this.author = authors.get(0).getNickname(); // TODO per ora prendo solo il primo ma poi andranno elencati tutti
+        ArrayList<String> authors = bookSelected.getAuthors();
+        this.author = authors.get(0); // TODO per ora prendo solo il primo ma poi andranno elencati tutti
         bookAuthor.setText(this.author);
         // CATEGORIES LIST
         ArrayList<String> genres = bookSelected.getGenres();
