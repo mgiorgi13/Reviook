@@ -133,10 +133,14 @@ public class SearchInterfaceController {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        Book selectedCell = (Book) bookList.getSelectionModel().getSelectedItem();
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                             bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(selectedCell);
+
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(bookInterface));
                             actual_stage.setResizable(false);

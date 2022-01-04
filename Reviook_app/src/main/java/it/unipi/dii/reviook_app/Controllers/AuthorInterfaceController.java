@@ -67,7 +67,6 @@ public class AuthorInterfaceController {
 
     private UserManager userManagerNJ = new UserManager();
 
-
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
@@ -76,16 +75,16 @@ public class AuthorInterfaceController {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameAuthor.getText());
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-                userManagerNJ.following(session.getLoggedAuthor().getNickname(),true, usernameAuthor.getText() , true);
+                userManagerNJ.following(session.getLoggedAuthor().getNickname(), true, usernameAuthor.getText(), true);
 
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().setFollow(usernameAuthor.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManagerNJ.following(session.getLoggedUser().getNickname(),false, usernameAuthor.getText() , true);
+                userManagerNJ.following(session.getLoggedUser().getNickname(), false, usernameAuthor.getText(), true);
             }
         } else {
             if (session.getLoggedAuthor() != null) {
-                userManagerNJ.deleteFollowing(session.getLoggedAuthor().getNickname(),true, usernameAuthor.getText() , true);
+                userManagerNJ.deleteFollowing(session.getLoggedAuthor().getNickname(), true, usernameAuthor.getText(), true);
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(usernameAuthor.getText())) {
                         session.getLoggedAuthor().getInteractions().getFollow().remove(i);
@@ -93,7 +92,7 @@ public class AuthorInterfaceController {
                     }
                 }
             } else if (session.getLoggedUser() != null) {
-                userManagerNJ.deleteFollowing(session.getLoggedUser().getNickname(),false, usernameAuthor.getText() , true);
+                userManagerNJ.deleteFollowing(session.getLoggedUser().getNickname(), false, usernameAuthor.getText(), true);
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameAuthor.getText())) {
                         session.getLoggedUser().getInteractions().getFollow().remove(i);
@@ -137,8 +136,6 @@ public class AuthorInterfaceController {
                 }
             }
         }
-
-
     }
 
     @FXML
@@ -161,7 +158,7 @@ public class AuthorInterfaceController {
 
 
     @FXML
-    void viewFollow () {
+    void viewFollow() {
         listFollow.getItems().clear();
         Session session = Session.getInstance();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
@@ -195,7 +192,7 @@ public class AuthorInterfaceController {
     }
 
     @FXML
-    void viewFollower () {
+    void viewFollower() {
         listFollower.getItems().clear();
         Session session = Session.getInstance();
         ObservableList<String> listFollowers = FXCollections.observableArrayList();
@@ -230,10 +227,8 @@ public class AuthorInterfaceController {
 
     public void initialize() {
         follow.setVisible(false);
-
         Session session = Session.getInstance();
         Random rand = new Random();
-
         if (session.getLoggedAuthor() != null) {
             usernameAuthor.setText(session.getLoggedAuthor().getNickname());
         } /*else if (session.getLoggedUser() != null) {

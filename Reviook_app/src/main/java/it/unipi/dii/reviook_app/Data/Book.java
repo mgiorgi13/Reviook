@@ -20,7 +20,7 @@ public class Book {
     private String title;
     private ArrayList<String> authors;
     private ArrayList<String> genres;
-//  private ArrayList<Review> genres;
+    private ArrayList<Review> reviews;
 
 
     public Book(String isbn, String language_code, String asin, Double average_rating, String description, Integer num_pages, Integer publication_day, Integer publication_month, Integer publication_year, String image_url, String book_id, Integer ratings_count, String title, ArrayList<String> authors, ArrayList<String> genres) {
@@ -33,6 +33,19 @@ public class Book {
         this.publication_day = publication_day;
         this.publication_month = publication_month;
         this.publication_year = publication_year;
+        this.image_url = image_url;
+        this.book_id = book_id;
+        this.ratings_count = ratings_count;
+        this.title = title;
+        this.authors = authors;
+        this.genres = genres;
+    }
+
+    public Book(String isbn, String asin, Double average_rating, String description, String image_url, String book_id, Integer ratings_count, String title, ArrayList<String> authors, ArrayList<String> genres) {
+        this.isbn = isbn;
+        this.asin = asin;
+        this.average_rating = average_rating;
+        this.description = description;
         this.image_url = image_url;
         this.book_id = book_id;
         this.ratings_count = ratings_count;
@@ -159,5 +172,13 @@ public class Book {
 
     public void setGenres(ArrayList<String> genres) {
         this.genres = genres;
+    }
+
+    public ArrayList<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
     }
 }
