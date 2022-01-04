@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.Manager;
 
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
@@ -235,7 +237,7 @@ public class UserManager {
         return false;
     }
 
-    public boolean updatePassword(String newPassword){
+    public boolean updatePassword(String newPassword) {
         MongoCollection<Document> user = md.getCollection(session.getIsAuthor() ? authorCollection : usersCollection);
         String username;
         if (session.getIsAuthor())
@@ -243,90 +245,94 @@ public class UserManager {
         else
             username = session.getLoggedUser().getNickname();
 
-        UpdateResult updateResult = user.updateOne(eq("username", username), Updates.set("password",newPassword));
+        UpdateResult updateResult = user.updateOne(eq("username", username), Updates.set("password", newPassword));
         if (updateResult.getModifiedCount() == 1)
             return true;
         return false;
     }
 
     public ArrayList<Book> searchBooks(String searchField, String type) {
+        //TODO add support to genres, authors, review
+        ArrayList<Document> authors;
+        ArrayList<Document> genres;
+
+
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        List<Document> queryResults = new ArrayList<>();
+        BasicDBObject query = new BasicDBObject();
+        MongoCursor<Document> cursor;
         ArrayList<Book> result = new ArrayList<>();
 
-        //TODO add support to genres, authors, review
-        ArrayList<String> genres = new ArrayList<>();
-        ArrayList<Author> authors = new ArrayList<>();
+        if (searchField.equals("") || type.equals(""))
+            cursor = books.find().iterator();
+        else {
+            query.put(type, Pattern.compile(searchField, Pattern.CASE_INSENSITIVE));
+            cursor = books.find(query).iterator();
+        }
+        while (cursor.hasNext()) {
+            Document document = cursor.next();
+            ArrayList<String> authorsLis = new ArrayList<>();
+            ArrayList<String> genresList = new ArrayList<>();
 
-        genres.add("");
-        authors.add(new Author("","","","",""));
-         if (!searchField.equals("")){
-            switch (type) {
-                case "":
-                    queryResults = books.find().into(new ArrayList());
-                    break;
-                case "Title":
-                    queryResults = books.find(eq("title", searchField)).into(new ArrayList());
-                    break;
-                case "Genre":
-                    queryResults = books.find(in("genres",searchField)).into(new ArrayList());
-                    break;
-                case "Author":
-                    queryResults = books.find(in("authors.author_id",searchField)).into(new ArrayList());
-                    break;
+            authors = (ArrayList<Document>) document.get("authors");
+            genresList = (ArrayList<String>) document.getList("genres", String.class);
 
+            //TODO inserisci nome dell'autore nel db
+            //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
+            for (Document a :
+                    authors) {
+                authorsLis.add(a.getString("author_id"));
             }
-        }
-        for (Document r:
-             queryResults) {
 
-            result.add(new Book( r.get("isbn").toString(),
-                    r.get("language_code").toString(),
-                    r.get("asin").toString(),
-                    Float.valueOf(r.get("average_rating").toString()),
-                    r.get("description").toString(),
-                    r.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(r.get("num_pages").toString()),
-                    r.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(r.get("publication_day").toString()),
-                    r.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(r.get("publication_month").toString()),
-                    r.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(r.get("publication_year").toString()),
-                    r.get("image_url").toString(),
-                    r.get("book_id").toString(),
-                    r.get("ratings_count").toString().equals("") ? 0 : Integer.valueOf(r.get("ratings_count").toString()),
-                    r.get("title").toString(),
-                    authors,
-                    genres));
+
+            result.add(new Book(document.get("isbn").toString(),
+                    document.get("language_code").toString(),
+                    document.get("asin").toString(),
+                    Double.valueOf(document.get("average_rating").toString()),
+                    document.get("description").toString(),
+                    document.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(document.get("num_pages").toString()),
+                    document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
+                    document.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_month").toString()),
+                    document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
+                    document.get("image_url").toString(),
+                    document.get("book_id").toString(),
+                    document.get("ratings_count").toString().equals("") ? 0 : Integer.valueOf(document.get("ratings_count").toString()),
+                    document.get("title").toString(),
+                    authorsLis,
+                    genresList));
         }
+        cursor.close();
+
         return result;
     }
 
-    public ArrayList<Users> searchUser(String Username){
+    public ArrayList<Users> searchUser(String Username) {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
-        if(Username.equals(""))
+        if (Username.equals(""))
             queryResults = user.find().into(new ArrayList());
         else
-            queryResults = user.find(eq("username",Username)).into(new ArrayList());
+            queryResults = user.find(eq("username", Username)).into(new ArrayList());
         ArrayList<Users> result = new ArrayList<>();
 
-        for (Document r:
-             queryResults) {
-            result.add(new Users(r.get("name").toString(),"",r.get("username").toString(),r.get("email").toString(),r.get("password").toString()));
+        for (Document r :
+                queryResults) {
+            result.add(new Users(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
         return result;
     }
 
-    public ArrayList<Author> searchAuthor(String Username){
+    public ArrayList<Author> searchAuthor(String Username) {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         List<Document> queryResults;
-        if(Username.equals(""))
+        if (Username.equals(""))
             queryResults = author.find().into(new ArrayList());
         else
-            queryResults = author.find(eq("username",Username)).into(new ArrayList());
+            queryResults = author.find(eq("username", Username)).into(new ArrayList());
         ArrayList<Author> result = new ArrayList<>();
 
-        for (Document r:
-             queryResults) {
-            result.add(new Author(r.get("name").toString(),"",r.get("username").toString(),r.get("email").toString(),r.get("password").toString()));
+        for (Document r :
+                queryResults) {
+            result.add(new Author(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
         return result;
     }

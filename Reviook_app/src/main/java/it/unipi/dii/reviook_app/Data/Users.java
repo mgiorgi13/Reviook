@@ -99,11 +99,4 @@ public class Users {
         this.books = books;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "name='" + name + '\'' +
-                ", nickname='" + nickname + '\'' +
-                '}';
-    }
 }

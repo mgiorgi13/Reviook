@@ -62,7 +62,7 @@ public class SearchInterfaceController {
     @FXML
     private ChoiceBox bookFilter;
 
-    private ObservableList<String> availableChoices = FXCollections.observableArrayList("Title","Genre","Author");
+    private ObservableList<String> availableChoices = FXCollections.observableArrayList("title","genre","author");
 
     private UserManager userManager = new UserManager();
 
@@ -145,6 +145,22 @@ public class SearchInterfaceController {
                             e.printStackTrace();
                         }
                     }
+                }
+            });
+            bookList.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>() {
+                @Override
+                public ListCell<Book> call(ListView<Book> listView) {
+                    return new ListCell<Book>() {
+                        @Override
+                        public void updateItem(Book item, boolean empty) {
+                            super.updateItem(item, empty);
+                            textProperty().unbind();
+                            if (item != null)
+                                setText(item.getIsbn() + " " + item.getTitle() + " " + item.getGenres() + " " + item.getAuthors());
+                            else
+                                setText(null);
+                        }
+                    };
                 }
             });
         } else if (userCheck.isSelected()) {
