@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.Manager;
 
+import com.jfoenix.controls.JFXListView;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -15,6 +16,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -33,6 +35,7 @@ public class UserManager {
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
+    private static final String generBook = "geners";
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -150,7 +153,15 @@ public class UserManager {
     }
 
     //MongoDB
-
+    public boolean verifyISBN(String ISBN) {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
+            while (cursor.hasNext()) {
+                return true;
+            }
+        }
+        return false;
+    }
     public int verifyUsername(String Username) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -197,7 +208,29 @@ public class UserManager {
         }
         return true;
     }
+    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<String> UsernameTagged){
+            String concat =ISBN;
+        String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
+        UsernameTagged.add(session.getLoggedAuthor().getNickname());
+        Document doc = new Document("author", UsernameTagged)
+                .append("image_url", null)
+                .append("num_pages", "")
+                .append("ASIN", "")
+                .append("description", Description)
+                .append("average_rating", "")
+                .append("book_id",id)
+                .append("title", title)
+                .append("rating_count", "")
+                .append("language_code", "")
+                .append("publication_month", "")
+                .append("ISBN", ISBN)
+                .append("publication_year", "")
+                .append("reviews", "")
+                .append("genres", Genre)
+                .append("publication_day", "");
 
+        md.getCollection(bookCollection).insertOne(doc);
+    }
     public void register(String name, String surname, String email, String nickname, String password, String type) {
 
         Document doc = new Document("name", name + " " + surname)
@@ -248,8 +281,20 @@ public class UserManager {
         return false;
     }
 
-    public void searchBooks(){
+    public ArrayList<String> searchBooksAuthor(String Username){
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        List<Document> queryResults;
+        if(Username.equals(""))
+            queryResults = book.find().into(new ArrayList());
+        else
+            queryResults = book.find(in("author",Username)).into(new ArrayList());
+        ArrayList<String> result = new ArrayList<>();
 
+        for (Document r:
+                queryResults) {
+            result.add(new String(r.get("title").toString()));
+        }
+        return result;
     }
 
     public ArrayList<Users> searchUser(String Username){
@@ -284,4 +329,17 @@ public class UserManager {
         return result;
     }
 
+    public ArrayList<String> searchGeners(){
+        MongoCollection<Document> geners = md.getCollection(generBook);
+        List<Document> queryResults;
+
+            queryResults = geners.find().into(new ArrayList());
+        ArrayList<String> result = new ArrayList<>();
+
+        for (Document r:
+                queryResults) {
+            result.add(new String(r.get("_id").toString()));
+        }
+        return result;
+    }
 }
