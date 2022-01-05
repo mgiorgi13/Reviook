@@ -1,9 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Data.Author;
@@ -22,7 +20,8 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AuthorInterfaceController {
     @FXML
@@ -244,8 +243,31 @@ public class AuthorInterfaceController {
     public void publishedFunction(){
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
         obsUserList.addAll(userManager.searchBooksAuthor(usernameAuthor.getText()));
+        ObservableList<String> statistic = FXCollections.observableArrayList();
+        statistic.addAll(userManager.searchStatisticBooks(usernameAuthor.getText()));
+        if (session.getLoggedAuthor()!=null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
+            for (int i = 0; i < obsUserList.size(); i++)
+                session.getLoggedAuthor().setWrittenBook(obsUserList.get(i));
+            for (int i = 0; i < statistic.size(); i++)
+                session.getLoggedAuthor().setWrittenBookStatisitc(statistic.get(i));
+        }
         listPublished.getItems().addAll(obsUserList);
+        String gener;
+        Integer perc;
+       for (int i=0;i<statistic.size();i++) {
+           String[] split = statistic.get(i).split(":");
+           gener = split[0];
+           perc = Integer.valueOf(split[1]) * 100 /obsUserList.size();
+           System.out.println(gener +" "+ perc);
+       }
+
+
+
+
+//        System.out.println(session.getLoggedAuthor().getWrittenBookStatisitc());
     }
+
+
     public void initialize() {
         follow.setVisible(false);
 

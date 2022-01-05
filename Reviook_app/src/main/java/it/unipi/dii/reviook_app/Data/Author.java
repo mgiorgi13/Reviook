@@ -1,29 +1,41 @@
 package it.unipi.dii.reviook_app.Data;
 
-import com.jfoenix.controls.JFXButton;
-import it.unipi.dii.reviook_app.Neo4jDriver;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.neo4j.driver.Session;
-import org.neo4j.driver.TransactionWork;
-
-import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.neo4j.driver.Values.parameters;
 
 public class Author extends Users {
     private ArrayList<String> writtenBook;
-    private ArrayList<String> writtenBookStatisitc;
+    private ArrayList<String> writtenBookStatistic;
     private int likeNumber;
 
     public Author(String name, String surname, String nickname, String email, String password) {
         super( name,  surname,  nickname, email,  password);
         this.writtenBook = new ArrayList<String>();
-        this.writtenBookStatisitc = new ArrayList<String>();
+        this.writtenBookStatistic = new ArrayList<String>();
         this.likeNumber = 0;
     }
 
+    public ArrayList<String> getWrittenBook() {
+        return writtenBook;
+    }
+
+    public ArrayList<String> getWrittenBookStatisitc() {
+        return writtenBookStatistic;
+    }
+
+    public int getLikeNumber() {
+        return likeNumber;
+    }
+
+    public void setWrittenBook(String writtenBook) {
+        this.writtenBook.add(writtenBook);
+    }
+
+    public void setWrittenBookStatisitc(String writtenBookStatisitc) {
+
+            this.writtenBookStatistic.add(writtenBookStatisitc);
+    }
+
+    public void setLikeNumber(int likeNumber) {
+        this.likeNumber = likeNumber;
+    }
 }

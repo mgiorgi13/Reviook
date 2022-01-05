@@ -1,6 +1,5 @@
 package it.unipi.dii.reviook_app.Manager;
 
-import com.jfoenix.controls.JFXListView;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -10,7 +9,11 @@ import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
@@ -23,7 +26,12 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Accumulators.sum;
+import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Projections.computed;
+import static com.mongodb.client.model.Sorts.descending;
 import static org.neo4j.driver.Values.parameters;
 
 
@@ -307,6 +315,28 @@ public class UserManager {
             result.add(new String(r.get("title").toString()));
         }
         return result;
+    }
+
+    public ArrayList<String> searchStatisticBooks(String Username){
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        String queryResults;
+        ArrayList<String> Genres = new ArrayList<String>();
+
+            Bson match = match(in("author",Username));
+            Bson unwind = unwind("$genres");
+            Bson group = group("$genres",sum("counter", 1 ));
+            Bson project = project(fields(computed("genre","$_id"),include("counter"),exclude("_id")));
+
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match,unwind, group,project)).iterator();)
+        {
+
+            while (result.hasNext()) {
+                Document genre = result.next();
+                Genres.add(genre.getString("genre")+":"+genre.getInteger("counter"));
+                 }
+        }
+        return Genres ;
     }
 
     public ArrayList<Users> searchUser(String Username){

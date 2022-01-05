@@ -51,7 +51,7 @@ public class AddBookController {
     private Text actiontarget;
 
 
-    private Session session;
+    private Session session = Session.getInstance();
     private UserManager userManager = new UserManager();
     @FXML
     int contatoreUsername = 0;
@@ -220,6 +220,9 @@ public class AddBookController {
             return;
         }
         userManager.addBook(  Title,  ISBN_,  Description,  Genre, UsernameTagged);
+        session.getLoggedAuthor().setWrittenBook(Title);
+        for (int i= 0; i< Genre.size(); i++)
+            session.getLoggedAuthor().setWrittenBookStatisitc(Genre.get(i));
         actiontarget.setText("Congratulations you added a book!!");
 
 
