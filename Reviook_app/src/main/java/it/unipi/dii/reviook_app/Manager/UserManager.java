@@ -3,6 +3,8 @@ package it.unipi.dii.reviook_app.Manager;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -12,11 +14,13 @@ import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.mongodb.client.model.Aggregates.match;
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
@@ -33,7 +38,7 @@ public class UserManager {
     private Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
 
-    private static final String usersCollection = "usersnew";
+    private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
 
@@ -251,23 +256,45 @@ public class UserManager {
         return false;
     }
 
-    public ArrayList<Book> searchBooks(String searchField, String type) {
+    public ArrayList<Book> searchBooks(String searchField, String genre) {
         //TODO add support to genres, authors, review
         ArrayList<Document> authors;
-        ArrayList<Document> genres;
-
-
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        BasicDBObject query = new BasicDBObject();
         MongoCursor<Document> cursor;
         ArrayList<Book> result = new ArrayList<>();
 
-        if (searchField.equals("") || type.equals(""))
+        //
+        boolean titleSearch = true;
+        boolean genresSearch = true;
+
+        if(searchField == null || searchField.equals(""))
+            titleSearch = false;
+        if(genre == null || genre.equals(""))
+            genresSearch = false;
+
+        Bson titleFilter;
+        Bson genreFilter;
+
+        //global research
+        if(!titleSearch && !genresSearch)
             cursor = books.find().iterator();
-        else {
-            query.put(type, Pattern.compile(searchField, Pattern.CASE_INSENSITIVE));
-            cursor = books.find(query).iterator();
+        //search by title
+        else if(titleSearch && !genresSearch) {
+            titleFilter = text(searchField,new TextSearchOptions().caseSensitive(false));
+            cursor = books.find(titleFilter).iterator();
         }
+        //search by genre
+        else if(!titleSearch && genresSearch) {
+            genreFilter = in("genres",genre);
+            cursor = books.find(genreFilter).iterator();
+        }
+        //search by title & genre
+        else {
+            titleFilter = match(text(searchField,new TextSearchOptions().caseSensitive(false)));
+            genreFilter = match(in("genres",genre));
+            cursor = books.aggregate(Arrays.asList(titleFilter,genreFilter)).iterator();
+        }
+
         while (cursor.hasNext()) {
             Document document = cursor.next();
             ArrayList<String> authorsLis = new ArrayList<>();
@@ -282,7 +309,6 @@ public class UserManager {
                     authors) {
                 authorsLis.add(a.getString("author_id"));
             }
-
 
             result.add(new Book(document.get("isbn").toString(),
                     document.get("language_code").toString(),

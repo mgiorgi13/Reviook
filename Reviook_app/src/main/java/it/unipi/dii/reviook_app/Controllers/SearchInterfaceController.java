@@ -62,7 +62,7 @@ public class SearchInterfaceController {
     @FXML
     private ChoiceBox bookFilter;
 
-    private ObservableList<String> availableChoices = FXCollections.observableArrayList("title","genre","author");
+    private ObservableList<String> availableChoices = FXCollections.observableArrayList("","Science","Engineering","Medicine","Nonfiction","Business & Investing","Sports","young","graphic","Outdoors & Nature","Parenting & Families","Computers & Internet","mystery","Law","Health, Mind & Body","comics","romance","Travel","history","fantasy","Home & Garden","crime","children","Horror","Arts & Photography","Literature & Fiction","Biographies & Memoirs","poetry","Reference","Professional & Technical","biography","Cooking, Food & Wine","Teens","Religion & Spirituality","adult","thriller","Entertainment","Gay & Lesbian");
 
     private UserManager userManager = new UserManager();
 
