@@ -53,6 +53,7 @@ public class UserManager {
         }
     }
 
+
     public boolean deleteUserN4J() {
         boolean result = false;
         String username;
@@ -230,6 +231,12 @@ public class UserManager {
                 .append("publication_day", "");
 
         md.getCollection(bookCollection).insertOne(doc);
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("CREATE (ee: Book { ISBN : $ISBN, title: $ title})", parameters("ISBN", ISBN, "title", title));
+                return null;
+            });
+        }
     }
     public void register(String name, String surname, String email, String nickname, String password, String type) {
 
