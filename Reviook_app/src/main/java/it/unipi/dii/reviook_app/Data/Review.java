@@ -8,6 +8,21 @@ public class Review {
     private String user_id;
     private String rating;
 
+    private String review_text;
+    private String helpful;
+
+    public Review(String date_added, String review_id, String date_update, String n_votes, String user_id, String rating, String review_text, String helpful) {
+        this.date_added = date_added;
+        this.review_id = review_id;
+        this.date_update = date_update;
+        this.n_votes = n_votes;
+        this.user_id = user_id;
+        this.rating = rating;
+        this.review_text = review_text;
+        this.helpful = helpful;
+    }
+
+
     public String getDate_added() {
         return date_added;
     }
@@ -69,20 +84,6 @@ public class Review {
     }
 
     public void setHelpful(String helpful) {
-        this.helpful = helpful;
-    }
-
-    private String review_text;
-    private String helpful;
-
-    public Review(String date_added, String review_id, String date_update, String n_votes, String user_id, String rating, String review_text, String helpful) {
-        this.date_added = date_added;
-        this.review_id = review_id;
-        this.date_update = date_update;
-        this.n_votes = n_votes;
-        this.user_id = user_id;
-        this.rating = rating;
-        this.review_text = review_text;
         this.helpful = helpful;
     }
 

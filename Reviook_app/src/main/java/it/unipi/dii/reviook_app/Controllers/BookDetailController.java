@@ -5,6 +5,7 @@ import it.unipi.dii.reviook_app.Components.DataListElem;
 import it.unipi.dii.reviook_app.Components.ListElem;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
+import it.unipi.dii.reviook_app.Data.Review;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.util.Callback;
@@ -46,7 +48,7 @@ public class BookDetailController {
     private JFXButton addReviewButton;
 
     @FXML
-    private ListView listView;
+    private ListView<Review> listView;
 
     @FXML
     private Text bookAuthor;
@@ -61,21 +63,19 @@ public class BookDetailController {
     private Text bookTitle;
 
     private String title, author, categories, description, img_url;
+    private ArrayList<Review> reviewsList;
 
-    private List<String> stringList = new ArrayList<>(5);
+//    private List<String> stringList = new ArrayList<>(5);
 
-    private ObservableList observableList = FXCollections.observableArrayList();
+    private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
     public void setListView() {
-        for (int i = 0; i < 10; i++) {
-            stringList.add("");
-        }
-        observableList.setAll(stringList);
+        observableList.setAll(this.reviewsList);
         listView.setItems(observableList);
         listView.setCellFactory(
-                new Callback<ListView<String>, javafx.scene.control.ListCell<String>>() {
+                new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
                     @Override
-                    public ListCell<String> call(ListView<String> listView) {
+                    public ListCell<Review> call(ListView<Review> listView) {
                         return new ListElem();
                     }
                 });
@@ -116,14 +116,18 @@ public class BookDetailController {
         bookDescription.setText(this.description);
         // IMG BOOK
         this.img_url = bookSelected.getImage_url();
-        File file = new File(this.img_url);
-        Image image = new Image(this.img_url);
-        imageContainer.setImage(image);
+        if (!this.img_url.equals("null")) {
+            Image image = new Image(this.img_url);
+            imageContainer.setImage(image);
+        }
+        // REVIEW LIST
+        this.reviewsList = bookSelected.getReviews();
+        setListView();
     }
 
     @FXML
     void initialize() {
-        setListView();
+        // setListView();
     }
 }
 

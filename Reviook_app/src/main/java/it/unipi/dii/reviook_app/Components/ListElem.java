@@ -1,14 +1,15 @@
 package it.unipi.dii.reviook_app.Components;
 
+import it.unipi.dii.reviook_app.Data.Review;
 import javafx.scene.control.ListCell;
 
-public class ListElem extends ListCell<String> {
+public class ListElem extends ListCell<Review> {
     @Override
-    public void updateItem(String string, boolean empty) {
-        super.updateItem(string, empty);
-        if (string != null) {
+    public void updateItem(Review review, boolean empty) {
+        super.updateItem(review, empty);
+        if (review != null) {
             DataListElem dataListElem = new DataListElem();
-            dataListElem.setInfo(string);
+            dataListElem.setInfo(review);
             setGraphic(dataListElem.getPane());
         }
     }

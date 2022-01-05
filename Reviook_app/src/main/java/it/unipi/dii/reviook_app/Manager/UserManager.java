@@ -8,6 +8,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
+import it.unipi.dii.reviook_app.Data.Review;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
@@ -17,6 +18,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.nio.channels.DatagramChannel;
 import java.util.UUID;
 
 
@@ -252,6 +254,7 @@ public class UserManager {
         //TODO add support to genres, authors, review
         ArrayList<Document> authors;
         ArrayList<Document> genres;
+        ArrayList<Document> reviews;
 
         MongoCollection<Document> books = md.getCollection(bookCollection);
         BasicDBObject query = new BasicDBObject();
@@ -268,14 +271,32 @@ public class UserManager {
             Document document = cursor.next();
             ArrayList<String> authorsLis = new ArrayList<>();
             ArrayList<String> genresList = new ArrayList<>();
-            authors = (ArrayList<Document>) document.get("authors");
-           // genresList = (ArrayList<String>) document.getList("genres", String.class);
+            ArrayList<Review> reviewsList = new ArrayList<>();
 
-            //TODO inserisci nome dell'autore nel db
-            //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
-            for (Document a : authors) {
-                authorsLis.add(a.getString("author_id"));
+            authors = (ArrayList<Document>) document.get("authors");
+//            genres = (ArrayList<Document>) document.get("genres");
+
+            reviews = (ArrayList<Document>) document.get("reviews");
+
+            for (Document r : reviews) {
+                reviewsList.add(new Review(
+                        r.get("date_added").toString(),
+                        r.get("review_id").toString(),
+                        r.get("date_updated").toString(),
+                        r.get("n_votes").toString(),
+                        r.get("user_id").toString(),
+                        r.get("rating").toString(),
+                        r.get("review_text").toString(),
+                        r.get("helpful").toString()
+                ));
             }
+
+            for (Document a : authors) {
+                authorsLis.add(a.getString("author_name").toString());
+            }
+//            for (Document g : genres) {
+//                genresList.add(g.toString());
+//            }
             result.add(new Book(
                     document.get("isbn").toString(),
                     document.get("language_code").toString(),
@@ -291,7 +312,9 @@ public class UserManager {
                     document.get("ratings_count").toString().equals("") ? Integer.valueOf(0) : Integer.valueOf(document.get("ratings_count").toString()),
                     document.get("title").toString(),
                     authorsLis,
-                    genresList));
+                    genresList,
+                    reviewsList
+            ));
         }
         cursor.close();
 

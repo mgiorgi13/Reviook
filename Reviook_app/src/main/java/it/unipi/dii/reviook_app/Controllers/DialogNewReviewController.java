@@ -24,6 +24,6 @@ public class DialogNewReviewController {
 
     @FXML
     public void addReviewAction(ActionEvent actionEvent) {
-        
+
     }
 }
