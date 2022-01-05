@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import com.jfoenix.controls.JFXButton;
+import it.unipi.dii.reviook_app.Components.DataListElem;
 import it.unipi.dii.reviook_app.Components.ListElem;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
@@ -17,12 +18,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import javafx.util.Callback;
 
 
@@ -88,7 +91,12 @@ public class BookDetailController {
     }
 
     @FXML
-    public void addReviewAction(ActionEvent actionEvent) {
+    public void addReviewAction(ActionEvent actionEvent) throws IOException {
+        Stage dialogNewReviewStage = new Stage();
+        Parent dialogInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
+        Scene dialogScene = new Scene(dialogInterface);
+        dialogNewReviewStage.setScene(dialogScene);
+        dialogNewReviewStage.show();
     }
 
     public void setInfoBook(Book bookSelected) {

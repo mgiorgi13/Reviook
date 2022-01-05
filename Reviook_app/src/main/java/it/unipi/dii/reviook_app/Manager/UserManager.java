@@ -273,15 +273,14 @@ public class UserManager {
 
             //TODO inserisci nome dell'autore nel db
             //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
-            for (Document a :
-                    authors) {
+            for (Document a : authors) {
                 authorsLis.add(a.getString("author_id"));
             }
             result.add(new Book(
                     document.get("isbn").toString(),
                     document.get("language_code").toString(),
                     document.get("asin").toString(),
-                    Double.valueOf(document.get("average_rating").toString()),
+                    document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description").toString(),
                     document.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(document.get("num_pages").toString()),
                     document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
@@ -289,7 +288,7 @@ public class UserManager {
                     document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
                     document.get("image_url").toString(),
                     document.get("book_id").toString(),
-                    document.get("ratings_count").toString().equals("") ? 0 : Integer.valueOf(document.get("ratings_count").toString()),
+                    document.get("ratings_count").toString().equals("") ? Integer.valueOf(0) : Integer.valueOf(document.get("ratings_count").toString()),
                     document.get("title").toString(),
                     authorsLis,
                     genresList));

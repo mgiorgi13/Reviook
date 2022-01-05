@@ -96,13 +96,10 @@ public class SearchInterfaceController {
             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
             // controller.setNickname(nickSelected);
         } else {
-
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
         }
-
-
         Stage actual_stage = (Stage) profileButton.getScene().getWindow();
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
