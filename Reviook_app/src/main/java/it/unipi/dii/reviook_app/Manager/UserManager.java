@@ -210,13 +210,13 @@ public class UserManager {
         return true;
     }
     public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<String> UsernameTagged){
-            String concat =ISBN;
+            String concat =ISBN+title+UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
         UsernameTagged.add(session.getLoggedAuthor().getNickname());
         Document doc = new Document("author", UsernameTagged)
                 .append("image_url", null)
                 .append("num_pages", "")
-                .append("ASIN", "")
+                .append("asin", "")
                 .append("description", Description)
                 .append("average_rating", "")
                 .append("book_id",id)
@@ -224,7 +224,7 @@ public class UserManager {
                 .append("rating_count", "")
                 .append("language_code", "")
                 .append("publication_month", "")
-                .append("ISBN", ISBN)
+                .append("isbn", ISBN)
                 .append("publication_year", "")
                 .append("reviews", "")
                 .append("genres", Genre)
@@ -233,7 +233,12 @@ public class UserManager {
         md.getCollection(bookCollection).insertOne(doc);
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee: Book { ISBN : $ISBN, title: $ title})", parameters("ISBN", ISBN, "title", title));
+                tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
+                for (int i = 0; i<UsernameTagged.size(); i++ ) {
+                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.username = '" + UsernameTagged.get(i) + "' AND ee.book_id='" + id + "'" +
+                            "CREATE (dd)-[:WROTE]->(ee)");
+
+                }
                 return null;
             });
         }

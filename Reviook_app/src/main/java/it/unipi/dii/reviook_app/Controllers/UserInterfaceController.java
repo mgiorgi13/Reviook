@@ -31,7 +31,7 @@ public class UserInterfaceController {
     private ResourceBundle resources;
 
     @FXML
-    private Text usernameUser;
+    private Text usernameUser, followersCount, followCount;
 
     @FXML
     private JFXListView<String> listFollow, listFollower;
@@ -98,7 +98,6 @@ public class UserInterfaceController {
 
         if (session.getLoggedAuthor() != null) {
             if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
-                follow.setVisible(true);
                 editButtonUser.setVisible(false);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
@@ -127,6 +126,8 @@ public class UserInterfaceController {
 
     public void initialize() {
         follow.setVisible(false);
+        viewFollower();
+        viewFollow();
 
         Session session = Session.getInstance();
         Random rand = new Random();
@@ -166,10 +167,10 @@ public class UserInterfaceController {
         listFollow.getItems().clear();
         Session session = Session.getInstance();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
-
+        List<String> Follow;
         if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
             session.getLoggedUser().getInteractions().delFollow();
-            List<String> Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
+            Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
             session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollow(Follow.get(i));
@@ -181,7 +182,7 @@ public class UserInterfaceController {
         } else {
             Users user = new Users("", "", usernameUser.getText(), "", "");
             user.getInteractions().delFollow();
-            List<String> Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
+            Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 user.getInteractions().setFollow(Follow.get(i));
@@ -191,8 +192,8 @@ public class UserInterfaceController {
                 listFollows.add(user.getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         }
+        followCount.setText(String.valueOf(Follow.size()));
         listFollows.clear();
-
     }
 
     @FXML
@@ -200,10 +201,10 @@ public class UserInterfaceController {
         listFollower.getItems().clear();
         Session session = Session.getInstance();
         ObservableList<String> listFollowers = FXCollections.observableArrayList();
-
+        List<String> Follower;
         if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
             session.getLoggedUser().getInteractions().delFollower();
-            List<String> Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
+            Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
             session.getLoggedUser().getInteractions().setNumberFollower(Follower.size());
             for (int i = 0; i < Follower.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
@@ -215,7 +216,7 @@ public class UserInterfaceController {
         } else {
             Users users = new Users("", "", usernameUser.getText(), "", "");
             users.getInteractions().delFollower();
-            List<String> Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
+            Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
             users.getInteractions().setNumberFollower(Follower.size());
 
             for (int i = 0; i < Follower.size(); i++) {
@@ -226,6 +227,7 @@ public class UserInterfaceController {
                 listFollowers.add(users.getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         }
+        followersCount.setText(String.valueOf(Follower.size()));
         listFollowers.clear();
 
     }

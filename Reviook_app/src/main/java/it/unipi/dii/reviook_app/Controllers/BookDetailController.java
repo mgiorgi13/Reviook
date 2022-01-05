@@ -43,18 +43,7 @@ public class BookDetailController {
     private ObservableList observableList = FXCollections.observableArrayList();
 
     public void setListView() {
-        for (int i = 0; i < 10; i++) {
-            stringList.add("");
-        }
-        observableList.setAll(stringList);
-        listView.setItems(observableList);
-        listView.setCellFactory(
-                new Callback<ListView<String>, javafx.scene.control.ListCell<String>>() {
-                    @Override
-                    public ListCell<String> call(ListView<String> listView) {
-                        return new ListElem();
-                    }
-                });
+
     }
 
     @FXML
