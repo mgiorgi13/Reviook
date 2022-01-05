@@ -35,7 +35,7 @@ public class UserManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "books2";
+    private static final String bookCollection = "amazonBooks";
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -269,7 +269,7 @@ public class UserManager {
             ArrayList<String> authorsLis = new ArrayList<>();
             ArrayList<String> genresList = new ArrayList<>();
             authors = (ArrayList<Document>) document.get("authors");
-            genresList = (ArrayList<String>) document.getList("genres", String.class);
+           // genresList = (ArrayList<String>) document.getList("genres", String.class);
 
             //TODO inserisci nome dell'autore nel db
             //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
