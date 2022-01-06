@@ -62,10 +62,8 @@ public class SearchInterfaceController {
     @FXML
     private ChoiceBox bookFilter;
 
-    private ObservableList<String> availableChoices = FXCollections.observableArrayList("title", "genre", "author");
-
+    private ObservableList<String> availableChoices = FXCollections.observableArrayList("", "Science", "Engineering", "Medicine", "Nonfiction", "Business & Investing", "Sports", "young", "graphic", "Outdoors & Nature", "Parenting & Families", "Computers & Internet", "mystery", "Law", "Health, Mind & Body", "comics", "romance", "Travel", "history", "fantasy", "Home & Garden", "crime", "children", "Horror", "Arts & Photography", "Literature & Fiction", "Biographies & Memoirs", "poetry", "Reference", "Professional & Technical", "biography", "Cooking, Food & Wine", "Teens", "Religion & Spirituality", "adult", "thriller", "Entertainment", "Gay & Lesbian");
     private UserManager userManager = new UserManager();
-
 
     @FXML
     void initialize() {
@@ -100,6 +98,7 @@ public class SearchInterfaceController {
             userInterface = (Parent) fxmlLoader.load();
             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
         }
+
         Stage actual_stage = (Stage) profileButton.getScene().getWindow();
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
@@ -114,10 +113,13 @@ public class SearchInterfaceController {
         authorsList.getItems().clear();
 
         if (bookCheck.isSelected()) {
+
             bookList.setVisible(true);
             authorsList.setVisible(false);
             usersList.setVisible(false);
+
             String selectedChoice = (String) bookFilter.getSelectionModel().getSelectedItem();
+
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
             obsBooksList.addAll(userManager.searchBooks(searchText.getText(), selectedChoice));
             bookList.getItems().addAll(obsBooksList);

@@ -3,6 +3,8 @@ package it.unipi.dii.reviook_app.Manager;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -13,19 +15,18 @@ import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
-import java.nio.channels.DatagramChannel;
+import java.util.Arrays;
 import java.util.UUID;
-
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import static com.mongodb.client.model.Aggregates.match;
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
@@ -75,12 +76,14 @@ public class UserManager {
     public void following(String username1, boolean type1, String username2, boolean type2) {
         String typ1;
         String typ2;
-        if (type1) typ1 = "Author";
-        else typ1 = "User";
-        if (type2) typ2 = "Author";
-        else typ2 = "User";
-
-
+        if (type1)
+            typ1 = "Author";
+        else
+            typ1 = "User";
+        if (type2)
+            typ2 = "Author";
+        else
+            typ2 = "User";
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (n:" + typ1 + "),(nn:" + typ2 + ") WHERE n.username ='" + username1 + "' AND nn.username='" + username2 + "'" +
@@ -250,24 +253,45 @@ public class UserManager {
         return false;
     }
 
-    public ArrayList<Book> searchBooks(String searchField, String type) {
+    public ArrayList<Book> searchBooks(String searchField, String genre) {
         //TODO add support to genres, authors, review
         ArrayList<Document> authors;
-        ArrayList<Document> genres;
         ArrayList<Document> reviews;
 
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        BasicDBObject query = new BasicDBObject();
         MongoCursor<Document> cursor;
         ArrayList<Book> result = new ArrayList<>();
 
-        if (searchField.equals("") || type.equals(""))
+        //
+        boolean titleSearch = true;
+        boolean genresSearch = true;
+
+        if (searchField == null || searchField.equals(""))
+            titleSearch = false;
+        if (genre == null || genre.equals(""))
+            genresSearch = false;
+
+        Bson titleFilter;
+        Bson genreFilter;
+
+        //global research
+        if (!titleSearch && !genresSearch)
             cursor = books.find().iterator();
-        else if (type.equals("title")) {
-            query.put(type, Pattern.compile(searchField, Pattern.CASE_INSENSITIVE));
-            cursor = books.find(query).iterator();
-        } else {
-            cursor = books.find(in(type, searchField)).iterator();
+            //search by title
+        else if (titleSearch && !genresSearch) {
+            titleFilter = text(searchField, new TextSearchOptions().caseSensitive(false));
+            cursor = books.find(titleFilter).iterator();
+        }
+        //search by genre
+        else if (!titleSearch && genresSearch) {
+            genreFilter = in("genres", genre);
+            cursor = books.find(genreFilter).iterator();
+        }
+        //search by title & genre
+        else {
+            titleFilter = match(text(searchField, new TextSearchOptions().caseSensitive(false)));
+            genreFilter = match(in("genres", genre));
+            cursor = books.aggregate(Arrays.asList(titleFilter, genreFilter)).iterator();
         }
 
         while (cursor.hasNext()) {
@@ -294,7 +318,14 @@ public class UserManager {
             for (Document a : authors) {
                 authorsLis.add(a.getString("author_name"));
             }
-            genresList = (ArrayList<String>) document.getList("genres", String.class);
+            //genresList = (ArrayList<String>) document.getList("genres", String.class);
+
+            //TODO inserisci nome dell'autore nel db
+            //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
+            for (Document a :
+                    authors) {
+                authorsLis.add(a.getString("author_id"));
+            }
 
             result.add(new Book(
                     document.get("isbn").toString(),
