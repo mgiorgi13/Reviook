@@ -26,7 +26,7 @@ public class DataReviewCell {
     private Text user;
 
     public DataReviewCell() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/listElem.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/reviewCell.fxml"));
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();

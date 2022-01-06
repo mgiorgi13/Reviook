@@ -104,8 +104,10 @@ public class BookDetailController {
         bookAuthor.setText(this.author);
         // CATEGORIES LIST
         ArrayList<String> genres = bookSelected.getGenres();
-        categories = genres.size() > 0 ? genres.get(0) : ""; // TODO per ora prendo solo il primo ma poi andranno elencati tutti
-        bookCategories.setText(categories);
+        if (genres != null) {
+            categories = genres.size() > 0 ? genres.get(0) : ""; // TODO per ora prendo solo il primo ma poi andranno elencati tutti
+            bookCategories.setText(categories);
+        }
         // BOOK DESCRIPTION
         this.description = bookSelected.getDescription();
         bookDescription.setText(this.description);

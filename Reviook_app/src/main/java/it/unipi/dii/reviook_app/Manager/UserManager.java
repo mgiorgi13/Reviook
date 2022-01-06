@@ -323,13 +323,6 @@ public class UserManager {
                 authorsLis.add(a.getString("author_name"));
             }
 
-            //TODO inserisci nome dell'autore nel db
-            //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
-            for (Document a :
-                    authors) {
-                authorsLis.add(a.getString("author_id"));
-            }
-
             result.add(new Book(
                     document.get("isbn").toString(),
                     document.get("language_code").toString(),

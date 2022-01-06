@@ -127,17 +127,12 @@ public class UserInterfaceController {
         follow.setVisible(false);
 
         Session session = Session.getInstance();
-        Random rand = new Random();
-
 
         if (session.getLoggedAuthor() != null) {
             usernameUser.setText(session.getLoggedAuthor().getNickname());
         } else if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
-
-
-
 
     }
 

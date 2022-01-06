@@ -7,6 +7,9 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import it.unipi.dii.reviook_app.Components.ListAuthor;
+import it.unipi.dii.reviook_app.Components.ListBook;
+import it.unipi.dii.reviook_app.Components.ListUser;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
 
@@ -123,24 +126,13 @@ public class SearchInterfaceController {
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
             obsBooksList.addAll(userManager.searchBooks(searchText.getText(), selectedChoice));
             bookList.getItems().addAll(obsBooksList);
-            bookList.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>() {
-                @Override
-                public ListCell<Book> call(ListView<Book> listView) {
-                    return new ListCell<Book>() {
+            bookList.setCellFactory(
+                    new Callback<ListView<Book>, ListCell<Book>>() {
                         @Override
-                        public void updateItem(Book item, boolean empty) {
-                            super.updateItem(item, empty);
-                            textProperty().unbind();
-                            if (item != null) {
-                                setText(item.getIsbn() + " " + item.getTitle() + " " + item.getGenres() + " " + item.getAuthors());
-                            } else {
-                                setText(null);
-                            }
-
+                        public ListCell<Book> call(ListView<Book> listView) {
+                            return new ListBook();
                         }
-                    };
-                }
-            });
+                    });
             bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -173,17 +165,7 @@ public class SearchInterfaceController {
             usersList.setCellFactory(new Callback<ListView<Users>, ListCell<Users>>() {
                 @Override
                 public ListCell<Users> call(ListView<Users> listView) {
-                    return new ListCell<Users>() {
-                        @Override
-                        public void updateItem(Users item, boolean empty) {
-                            super.updateItem(item, empty);
-                            textProperty().unbind();
-                            if (item != null)
-                                setText(item.getNickname() + " " + item.getName());
-                            else
-                                setText(null);
-                        }
-                    };
+                    return new ListUser();
                 }
             });
             usersList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -217,17 +199,7 @@ public class SearchInterfaceController {
             authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
                 @Override
                 public ListCell<Author> call(ListView<Author> listView) {
-                    return new ListCell<Author>() {
-                        @Override
-                        public void updateItem(Author item, boolean empty) {
-                            super.updateItem(item, empty);
-                            textProperty().unbind();
-                            if (item != null)
-                                setText(item.getNickname() + " " + item.getName());
-                            else
-                                setText(null);
-                        }
-                    };
+                    return new ListAuthor();
                 }
             });
             authorsList.setOnMouseClicked(new EventHandler<MouseEvent>() {

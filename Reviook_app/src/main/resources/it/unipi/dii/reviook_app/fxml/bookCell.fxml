@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane fx:id="pane" prefHeight="69.0" prefWidth="613.0" style="-fx-background-color: #f8f8ff; -fx-background-radius: 10;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Circle fill="#ffffff00" layoutX="586.0" layoutY="53.0" radius="13.0" stroke="CORNFLOWERBLUE"
+                strokeType="INSIDE"/>
+        <Circle fill="#ffffff00" layoutX="473.0" layoutY="53.0" radius="13.0" stroke="CORNFLOWERBLUE"
+                strokeType="INSIDE"/>
+        <Text fx:id="reviewCounter" fill="CORNFLOWERBLUE" layoutX="467.0" layoutY="57.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375"/>
+        <Text fx:id="likeCounter" fill="CORNFLOWERBLUE" layoutX="580.0" layoutY="57.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375"/>
+        <Text fx:id="titleField" fill="CORNFLOWERBLUE" layoutX="20.0" layoutY="19.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" style="-fx-font-weight: bold;" text="book title" wrappingWidth="496.330078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
+        <Text fx:id="authorsField" fill="CORNFLOWERBLUE" layoutX="20.0" layoutY="49.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" style="-fx-font-weight: bold;" text="authors" wrappingWidth="324.330078125"/>
+        <Text fill="CORNFLOWERBLUE" layoutX="410.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="review"
+              textAlignment="CENTER" wrappingWidth="43.330078125"/>
+        <Text fill="CORNFLOWERBLUE" layoutX="514.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="likes"
+              textAlignment="CENTER" wrappingWidth="49.330078125"/>
+    </children>
+</Pane>
