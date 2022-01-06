@@ -14,6 +14,7 @@ import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
 
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -66,7 +67,8 @@ public class SearchInterfaceController {
     private ChoiceBox bookFilter;
 
     private ObservableList<String> availableChoices = FXCollections.observableArrayList("", "Science", "Engineering", "Medicine", "Nonfiction", "Business & Investing", "Sports", "young", "graphic", "Outdoors & Nature", "Parenting & Families", "Computers & Internet", "mystery", "Law", "Health, Mind & Body", "comics", "romance", "Travel", "history", "fantasy", "Home & Garden", "crime", "children", "Horror", "Arts & Photography", "Literature & Fiction", "Biographies & Memoirs", "poetry", "Reference", "Professional & Technical", "biography", "Cooking, Food & Wine", "Teens", "Religion & Spirituality", "adult", "thriller", "Entertainment", "Gay & Lesbian");
-    private UserManager userManager = new UserManager();
+
+    private SearchManager searchManager = new SearchManager();
 
     @FXML
     void initialize() {
@@ -124,7 +126,7 @@ public class SearchInterfaceController {
             String selectedChoice = (String) bookFilter.getSelectionModel().getSelectedItem();
 
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
-            obsBooksList.addAll(userManager.searchBooks(searchText.getText(), selectedChoice));
+            obsBooksList.addAll(searchManager.searchBooks(searchText.getText(), selectedChoice));
             bookList.getItems().addAll(obsBooksList);
             bookList.setCellFactory(
                     new Callback<ListView<Book>, ListCell<Book>>() {
@@ -160,7 +162,7 @@ public class SearchInterfaceController {
             authorsList.setVisible(false);
             usersList.setVisible(true);
             ObservableList<Users> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(userManager.searchUser(searchText.getText()));
+            obsUserList.addAll(searchManager.searchUser(searchText.getText()));
             usersList.getItems().addAll(obsUserList);
             usersList.setCellFactory(new Callback<ListView<Users>, ListCell<Users>>() {
                 @Override
@@ -194,7 +196,7 @@ public class SearchInterfaceController {
             authorsList.setVisible(true);
             usersList.setVisible(false);
             ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(userManager.searchAuthor(searchText.getText()));
+            obsUserList.addAll(searchManager.searchAuthor(searchText.getText()));
             authorsList.getItems().addAll(obsUserList);
             authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
                 @Override
