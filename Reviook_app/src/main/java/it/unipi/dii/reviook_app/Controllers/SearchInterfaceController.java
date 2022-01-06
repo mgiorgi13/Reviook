@@ -129,10 +129,12 @@ public class SearchInterfaceController {
                         public void updateItem(Book item, boolean empty) {
                             super.updateItem(item, empty);
                             textProperty().unbind();
-                            if (item != null)
+                            if (item != null) {
                                 setText(item.getIsbn() + " " + item.getTitle() + " " + item.getGenres() + " " + item.getAuthors());
-                            else
+                            } else {
                                 setText(null);
+                            }
+
                         }
                     };
                 }

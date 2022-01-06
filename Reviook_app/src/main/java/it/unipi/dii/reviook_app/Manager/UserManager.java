@@ -263,10 +263,13 @@ public class UserManager {
 
         if (searchField.equals("") || type.equals(""))
             cursor = books.find().iterator();
-        else {
+        else if (type.equals("title")) {
             query.put(type, Pattern.compile(searchField, Pattern.CASE_INSENSITIVE));
             cursor = books.find(query).iterator();
+        } else {
+            cursor = books.find(in(type, searchField)).iterator();
         }
+
         while (cursor.hasNext()) {
             Document document = cursor.next();
             ArrayList<String> authorsLis = new ArrayList<>();
@@ -274,8 +277,6 @@ public class UserManager {
             ArrayList<Review> reviewsList = new ArrayList<>();
 
             authors = (ArrayList<Document>) document.get("authors");
-//            genres = (ArrayList<Document>) document.get("genres");
-
             reviews = (ArrayList<Document>) document.get("reviews");
 
             for (Document r : reviews) {
@@ -290,13 +291,11 @@ public class UserManager {
                         r.get("helpful").toString()
                 ));
             }
-
             for (Document a : authors) {
-                authorsLis.add(a.getString("author_name").toString());
+                authorsLis.add(a.getString("author_name"));
             }
-//            for (Document g : genres) {
-//                genresList.add(g.toString());
-//            }
+            genresList = (ArrayList<String>) document.getList("genres", String.class);
+
             result.add(new Book(
                     document.get("isbn").toString(),
                     document.get("language_code").toString(),
