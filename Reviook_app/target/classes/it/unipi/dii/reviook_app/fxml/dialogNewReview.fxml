@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.unipi.dii.reviook_app.Controllers.DialogNewReviewController">
+    <children>
+        <TextArea fx:id="newReviewText" layoutX="14.0" layoutY="66.0" prefHeight="265.0" prefWidth="576.0"/>
+        <JFXButton fx:id="exitButton" onAction="#exitDialogAction" layoutX="416.0" layoutY="361.0" text="Exit"/>
+        <JFXButton fx:id="addButton" onAction="#addReviewAction" layoutX="498.0" layoutY="361.0" text="Add"/>
+        <Text layoutX="261.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add new Review"/>
+    </children>
+</Pane>

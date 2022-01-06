@@ -1,7 +1,14 @@
 package it.unipi.dii.reviook_app;
 
+import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Users;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Session {
     private static Session session = null;
@@ -77,4 +84,5 @@ public class Session {
             return session.loggedAuthor;
         }
     }
+
 }

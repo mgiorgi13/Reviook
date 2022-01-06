@@ -62,10 +62,8 @@ public class SearchInterfaceController {
     @FXML
     private ChoiceBox bookFilter;
 
-    private ObservableList<String> availableChoices = FXCollections.observableArrayList("Title","Genre","Author");
-
+    private ObservableList<String> availableChoices = FXCollections.observableArrayList("", "Science", "Engineering", "Medicine", "Nonfiction", "Business & Investing", "Sports", "young", "graphic", "Outdoors & Nature", "Parenting & Families", "Computers & Internet", "mystery", "Law", "Health, Mind & Body", "comics", "romance", "Travel", "history", "fantasy", "Home & Garden", "crime", "children", "Horror", "Arts & Photography", "Literature & Fiction", "Biographies & Memoirs", "poetry", "Reference", "Professional & Technical", "biography", "Cooking, Food & Wine", "Teens", "Religion & Spirituality", "adult", "thriller", "Entertainment", "Gay & Lesbian");
     private UserManager userManager = new UserManager();
-
 
     @FXML
     void initialize() {
@@ -94,14 +92,12 @@ public class SearchInterfaceController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-           // controller.setNickname(nickSelected);
+            // controller.setNickname(nickSelected);
         } else {
-
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
         }
-
 
         Stage actual_stage = (Stage) profileButton.getScene().getWindow();
         actual_stage.setScene(new Scene(userInterface));
@@ -111,8 +107,6 @@ public class SearchInterfaceController {
 
     @FXML
     public void searchAction(ActionEvent actionEvent) {
-
-
         //TODO formattare meglio i risultati
         usersList.getItems().clear();
         bookList.getItems().clear();
@@ -127,16 +121,37 @@ public class SearchInterfaceController {
             String selectedChoice = (String) bookFilter.getSelectionModel().getSelectedItem();
 
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
-            obsBooksList.addAll(userManager.searchBooks(searchText.getText(),selectedChoice));
+            obsBooksList.addAll(userManager.searchBooks(searchText.getText(), selectedChoice));
             bookList.getItems().addAll(obsBooksList);
+            bookList.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>() {
+                @Override
+                public ListCell<Book> call(ListView<Book> listView) {
+                    return new ListCell<Book>() {
+                        @Override
+                        public void updateItem(Book item, boolean empty) {
+                            super.updateItem(item, empty);
+                            textProperty().unbind();
+                            if (item != null) {
+                                setText(item.getIsbn() + " " + item.getTitle() + " " + item.getGenres() + " " + item.getAuthors());
+                            } else {
+                                setText(null);
+                            }
+
+                        }
+                    };
+                }
+            });
             bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        Book selectedCell = (Book) bookList.getSelectionModel().getSelectedItem();
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                             bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(selectedCell);
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(bookInterface));
                             actual_stage.setResizable(false);
@@ -147,12 +162,11 @@ public class SearchInterfaceController {
                     }
                 }
             });
-        } else if (userCheck.isSelected()) {
 
+        } else if (userCheck.isSelected()) {
             bookList.setVisible(false);
             authorsList.setVisible(false);
             usersList.setVisible(true);
-
             ObservableList<Users> obsUserList = FXCollections.observableArrayList();
             obsUserList.addAll(userManager.searchUser(searchText.getText()));
             usersList.getItems().addAll(obsUserList);
@@ -178,14 +192,11 @@ public class SearchInterfaceController {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                         Users selectedCell = (Users) usersList.getSelectionModel().getSelectedItem();
                         try {
-                            //System.out.println(selectedCell.getNickname());
-
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
                             controller.setNickname(selectedCell.getNickname());
-
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
@@ -200,7 +211,6 @@ public class SearchInterfaceController {
             bookList.setVisible(false);
             authorsList.setVisible(true);
             usersList.setVisible(false);
-
             ObservableList<Author> obsUserList = FXCollections.observableArrayList();
             obsUserList.addAll(userManager.searchAuthor(searchText.getText()));
             authorsList.getItems().addAll(obsUserList);
@@ -213,7 +223,7 @@ public class SearchInterfaceController {
                             super.updateItem(item, empty);
                             textProperty().unbind();
                             if (item != null)
-                                setText(item.getNickname() + " " + item.getName());
+                                setText(item.getNickname() + " (" + item.getName()+")");
                             else
                                 setText(null);
                         }
@@ -229,12 +239,11 @@ public class SearchInterfaceController {
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
-                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
-
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(selectedCell.getNickname());
                             actual_stage.show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -243,9 +252,11 @@ public class SearchInterfaceController {
                 }
             });
         }
+    }
+    @FXML
+    public void searchActionGenres(ActionEvent actionEvent) {
 
     }
-
     @FXML
     public void selectBookCheckAction(ActionEvent actionEvent) {
         bookCheck.setSelected(true);
