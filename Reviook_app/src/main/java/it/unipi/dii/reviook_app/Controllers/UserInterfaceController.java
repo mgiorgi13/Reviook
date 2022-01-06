@@ -49,10 +49,11 @@ public class UserInterfaceController {
 
     private UserManager userManagerNJ = new UserManager();
 
+    private Session session = Session.getInstance();
+
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
 
-        Session session = Session.getInstance();
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameUser.getText());
@@ -94,10 +95,10 @@ public class UserInterfaceController {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
-        Session session = Session.getInstance();
 
         if (session.getLoggedAuthor() != null) {
-            if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
+            if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
+                follow.setVisible(true);
                 editButtonUser.setVisible(false);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
@@ -108,7 +109,7 @@ public class UserInterfaceController {
                 }
             }
         } else if (session.getLoggedUser() != null) {
-            if (session.getLoggedUser().getNickname().equals(nickname) == false) {
+            if (!session.getLoggedUser().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
             }
@@ -120,28 +121,6 @@ public class UserInterfaceController {
                 }
             }
         }
-        //System.out.println(session.getLoggedAuthor().getInteractions().getFollow().isEmpty());
-
-    }
-
-    public void initialize() {
-        follow.setVisible(false);
-        viewFollower();
-        viewFollow();
-
-        Session session = Session.getInstance();
-        Random rand = new Random();
-
-
-        if (session.getLoggedAuthor() != null) {
-            usernameUser.setText(session.getLoggedAuthor().getNickname());
-        } else if (session.getLoggedUser() != null) {
-            usernameUser.setText(session.getLoggedUser().getNickname());
-        }
-
-
-
-
     }
 
     @FXML
@@ -165,9 +144,9 @@ public class UserInterfaceController {
     @FXML
     void viewFollow () {
         listFollow.getItems().clear();
-        Session session = Session.getInstance();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
         List<String> Follow;
+        //I'm in my user profile
         if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
             session.getLoggedUser().getInteractions().delFollow();
             Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
@@ -199,7 +178,6 @@ public class UserInterfaceController {
     @FXML
     void viewFollower () {
         listFollower.getItems().clear();
-        Session session = Session.getInstance();
         ObservableList<String> listFollowers = FXCollections.observableArrayList();
         List<String> Follower;
         if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
@@ -229,6 +207,18 @@ public class UserInterfaceController {
         }
         followersCount.setText(String.valueOf(Follower.size()));
         listFollowers.clear();
+
+    }
+
+    public void initialize() {
+        follow.setVisible(false);
+
+        if (session.getLoggedUser() != null) {
+            usernameUser.setText(session.getLoggedUser().getNickname());
+        }
+
+        viewFollower();
+        viewFollow();
 
     }
 }

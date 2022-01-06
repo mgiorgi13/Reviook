@@ -9,6 +9,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
+import it.unipi.dii.reviook_app.Data.Review;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
@@ -21,8 +22,6 @@ import org.neo4j.driver.TransactionWork;
 
 import java.util.Arrays;
 import java.util.UUID;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,9 @@ public class UserManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "books";
+    private static final String bookCollection = "amazonBook";
     private static final String genreCollection = "geners";
+
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -52,7 +52,6 @@ public class UserManager {
 
     // N4J
     public void addNewUsers(String type, String username) {
-
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee:" + type + " { username: $username})", parameters("username", username));
@@ -83,12 +82,14 @@ public class UserManager {
     public void following(String username1, boolean type1, String username2, boolean type2) {
         String typ1;
         String typ2;
-        if (type1) typ1 = "Author";
-        else typ1 = "User";
-        if (type2) typ2 = "Author";
-        else typ2 = "User";
-
-
+        if (type1)
+            typ1 = "Author";
+        else
+            typ1 = "User";
+        if (type2)
+            typ2 = "Author";
+        else
+            typ2 = "User";
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (n:" + typ1 + "),(nn:" + typ2 + ") WHERE n.username ='" + username1 + "' AND nn.username='" + username2 + "'" +
@@ -252,7 +253,6 @@ public class UserManager {
         }
     }
     public void register(String name, String surname, String email, String nickname, String password, String type) {
-
         Document doc = new Document("name", name + " " + surname)
                 .append("password", password)
                 .append("count_reviews", "")
@@ -304,11 +304,13 @@ public class UserManager {
     public ArrayList<Book> searchBooks(String searchField, String genre) {
         //TODO add support to genres, authors, review
         ArrayList<Document> authors;
+        ArrayList<Document> reviews;
+        ArrayList<String> genres;
+
         MongoCollection<Document> books = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<Book> result = new ArrayList<>();
 
-        //
         boolean titleSearch = true;
         boolean genresSearch = true;
 
@@ -323,7 +325,7 @@ public class UserManager {
         //global research
         if (!titleSearch && !genresSearch)
             cursor = books.find().iterator();
-            //search by title
+        //search by title
         else if (titleSearch && !genresSearch) {
             titleFilter = text(searchField, new TextSearchOptions().caseSensitive(false));
             cursor = books.find(titleFilter).iterator();
@@ -342,23 +344,43 @@ public class UserManager {
 
         while (cursor.hasNext()) {
             Document document = cursor.next();
+            //System.out.println("documento->" + document);
+
             ArrayList<String> authorsLis = new ArrayList<>();
-            ArrayList<String> genresList = new ArrayList<>();
+            ArrayList<Review> reviewsList = new ArrayList<>();
 
             authors = (ArrayList<Document>) document.get("authors");
-            genresList = (ArrayList<String>) document.getList("genres", String.class);
+            reviews = (ArrayList<Document>) document.get("reviews");
+            genres = (ArrayList<String>) document.get("genres");
+
+            for (Document r : reviews) {
+                reviewsList.add(new Review(
+                        r.get("date_added").toString(),
+                        r.get("review_id").toString(),
+                        r.get("date_updated").toString(),
+                        r.get("n_votes").toString(),
+                        r.get("user_id").toString(),
+                        r.get("rating").toString(),
+                        r.get("review_text").toString(),
+                        r.get("helpful").toString()
+                ));
+            }
+            for (Document a : authors) {
+                authorsLis.add(a.getString("author_name"));
+            }
 
             //TODO inserisci nome dell'autore nel db
             //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
-            for (Document a :
-                    authors) {
-                authorsLis.add(a.getString("author_id"));
-            }
+//            for (Document a :
+//                    authors) {
+//                authorsLis.add(a.getString("author_id"));
+//            }
 
-            result.add(new Book(document.get("isbn").toString(),
+            result.add(new Book(
+                    document.get("isbn").toString(),
                     document.get("language_code").toString(),
                     document.get("asin").toString(),
-                    Double.valueOf(document.get("average_rating").toString()),
+                    document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description").toString(),
                     document.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(document.get("num_pages").toString()),
                     document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
@@ -366,10 +388,12 @@ public class UserManager {
                     document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
                     document.get("image_url").toString(),
                     document.get("book_id").toString(),
-                    document.get("ratings_count").toString().equals("") ? 0 : Integer.valueOf(document.get("ratings_count").toString()),
+                    document.get("ratings_count").toString().equals("") ? Integer.valueOf(0) : Integer.valueOf(document.get("ratings_count").toString()),
                     document.get("title").toString(),
                     authorsLis,
-                    genresList));
+                    genres,
+                    reviewsList
+            ));
         }
         cursor.close();
 

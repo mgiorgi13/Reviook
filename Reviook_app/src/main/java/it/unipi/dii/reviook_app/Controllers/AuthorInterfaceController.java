@@ -116,6 +116,8 @@ public class AuthorInterfaceController {
 
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
+
+
         if (session.getLoggedAuthor()!=null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())){
             addButtonBook.setVisible(true);
         }
@@ -125,11 +127,14 @@ public class AuthorInterfaceController {
         }
 
 
+        // I'm author
         if (session.getLoggedAuthor() != null) {
-            if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
+            //other author
+            if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonAuthor.setVisible(false);
             }
+            //check if I follow already that author
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
                     //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
@@ -137,7 +142,9 @@ public class AuthorInterfaceController {
                         follow.setSelected(true);
                 }
             }
-        } else if (session.getLoggedUser() != null) {
+        }
+        // I'm user
+        else if (session.getLoggedUser() != null) {
             if (session.getLoggedUser().getNickname().equals(nickname) == false) {
                 follow.setVisible(true);
                 editButtonAuthor.setVisible(false);
@@ -270,9 +277,6 @@ public class AuthorInterfaceController {
 
     public void initialize() {
         follow.setVisible(false);
-                //TODO chiedere a salvo perche ha levato queste cose
-//        Session session = Session.getInstance();
-//        Random rand = new Random();
 
         if (session.getLoggedAuthor() != null) {
             usernameAuthor.setText(session.getLoggedAuthor().getNickname());
@@ -281,7 +285,6 @@ public class AuthorInterfaceController {
         }*/
         viewFollow();
         viewFollower();
-        System.out.println(usernameAuthor.getText());
 
 
         listToRead.getItems().add("Book to read 1");

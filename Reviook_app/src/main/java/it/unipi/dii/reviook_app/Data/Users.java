@@ -27,7 +27,7 @@ public class Users {
     private String name;
     private String surname;
     private String nickname;
-    private  String email;
+    private String email;
     private String password;
     private Interaction interactions;
     private Books books;

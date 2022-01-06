@@ -23,7 +23,7 @@ public class Book {
     private ArrayList<Review> reviews;
 
 
-    public Book(String isbn, String language_code, String asin, Double average_rating, String description, Integer num_pages, Integer publication_day, Integer publication_month, Integer publication_year, String image_url, String book_id, Integer ratings_count, String title, ArrayList<String> authors, ArrayList<String> genres) {
+    public Book(String isbn, String language_code, String asin, Double average_rating, String description, Integer num_pages, Integer publication_day, Integer publication_month, Integer publication_year, String image_url, String book_id, Integer ratings_count, String title, ArrayList<String> authors, ArrayList<String> genres, ArrayList<Review> reviews) {
         this.isbn = isbn;
         this.language_code = language_code;
         this.asin = asin;
@@ -39,20 +39,9 @@ public class Book {
         this.title = title;
         this.authors = authors;
         this.genres = genres;
+        this.reviews = reviews;
     }
 
-    public Book(String isbn, String asin, Double average_rating, String description, String image_url, String book_id, Integer ratings_count, String title, ArrayList<String> authors, ArrayList<String> genres) {
-        this.isbn = isbn;
-        this.asin = asin;
-        this.average_rating = average_rating;
-        this.description = description;
-        this.image_url = image_url;
-        this.book_id = book_id;
-        this.ratings_count = ratings_count;
-        this.title = title;
-        this.authors = authors;
-        this.genres = genres;
-    }
 
     public String getIsbn() {
         return isbn;
@@ -181,4 +170,5 @@ public class Book {
     public void setReviews(ArrayList<Review> reviews) {
         this.reviews = reviews;
     }
+
 }
