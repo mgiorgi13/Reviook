@@ -41,7 +41,7 @@ public class UserManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "amazonBook";
+    private static final String bookCollection = "amazonBooks";
     private static final String genreCollection = "geners";
 
 
@@ -368,6 +368,7 @@ public class UserManager {
             for (Document a : authors) {
                 authorsLis.add(a.getString("author_name"));
             }
+
 
             //TODO inserisci nome dell'autore nel db
             //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
