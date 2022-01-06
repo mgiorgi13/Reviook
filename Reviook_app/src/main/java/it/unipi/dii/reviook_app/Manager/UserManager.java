@@ -1,9 +1,6 @@
 package it.unipi.dii.reviook_app.Manager;
 
-
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -257,12 +254,12 @@ public class UserManager {
         //TODO add support to genres, authors, review
         ArrayList<Document> authors;
         ArrayList<Document> reviews;
+        ArrayList<String> genres;
 
         MongoCollection<Document> books = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<Book> result = new ArrayList<>();
 
-        //
         boolean titleSearch = true;
         boolean genresSearch = true;
 
@@ -275,20 +272,25 @@ public class UserManager {
         Bson genreFilter;
 
         //global research
-        if (!titleSearch && !genresSearch)
+        if (!titleSearch && !genresSearch) {
+            //System.out.println("titolo: " + titleSearch + " selezione: " + searchField + " genere: " + genresSearch + " selezione: " + genre);
             cursor = books.find().iterator();
-            //search by title
+        }
+        //search by title
         else if (titleSearch && !genresSearch) {
+            //System.out.println("titolo: " + titleSearch + " selezione: " + searchField + " genere: " + genresSearch + " selezione: " + genre);
             titleFilter = text(searchField, new TextSearchOptions().caseSensitive(false));
             cursor = books.find(titleFilter).iterator();
         }
         //search by genre
         else if (!titleSearch && genresSearch) {
+            //System.out.println("titolo: " + titleSearch + " selezione: " + searchField + " genere: " + genresSearch + " selezione: " + genre);
             genreFilter = in("genres", genre);
             cursor = books.find(genreFilter).iterator();
         }
         //search by title & genre
         else {
+            //System.out.println("titolo: " + titleSearch + " selezione: " + searchField + " genere: " + genresSearch + " selezione: " + genre);
             titleFilter = match(text(searchField, new TextSearchOptions().caseSensitive(false)));
             genreFilter = match(in("genres", genre));
             cursor = books.aggregate(Arrays.asList(titleFilter, genreFilter)).iterator();
@@ -296,12 +298,14 @@ public class UserManager {
 
         while (cursor.hasNext()) {
             Document document = cursor.next();
+            //System.out.println("documento->" + document);
+
             ArrayList<String> authorsLis = new ArrayList<>();
-            ArrayList<String> genresList = new ArrayList<>();
             ArrayList<Review> reviewsList = new ArrayList<>();
 
             authors = (ArrayList<Document>) document.get("authors");
             reviews = (ArrayList<Document>) document.get("reviews");
+            genres = (ArrayList<String>) document.get("genres");
 
             for (Document r : reviews) {
                 reviewsList.add(new Review(
@@ -318,7 +322,6 @@ public class UserManager {
             for (Document a : authors) {
                 authorsLis.add(a.getString("author_name"));
             }
-            //genresList = (ArrayList<String>) document.getList("genres", String.class);
 
             //TODO inserisci nome dell'autore nel db
             //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
@@ -342,7 +345,7 @@ public class UserManager {
                     document.get("ratings_count").toString().equals("") ? Integer.valueOf(0) : Integer.valueOf(document.get("ratings_count").toString()),
                     document.get("title").toString(),
                     authorsLis,
-                    genresList,
+                    genres,
                     reviewsList
             ));
         }

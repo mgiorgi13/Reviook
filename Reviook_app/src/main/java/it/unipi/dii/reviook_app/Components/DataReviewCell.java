@@ -8,7 +8,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-public class DataListElem {
+public class DataReviewCell {
 
     @FXML
     private Text like;
@@ -25,7 +25,7 @@ public class DataListElem {
     @FXML
     private Text user;
 
-    public DataListElem() {
+    public DataReviewCell() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/listElem.fxml"));
         fxmlLoader.setController(this);
         try {

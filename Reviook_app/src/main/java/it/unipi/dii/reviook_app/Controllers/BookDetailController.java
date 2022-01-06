@@ -1,9 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import com.jfoenix.controls.JFXButton;
-import it.unipi.dii.reviook_app.Components.DataListElem;
-import it.unipi.dii.reviook_app.Components.ListElem;
-import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Components.ListReview;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
 import javafx.collections.FXCollections;
@@ -20,12 +18,9 @@ import javafx.scene.image.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.util.Callback;
@@ -76,7 +71,7 @@ public class BookDetailController {
                 new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
                     @Override
                     public ListCell<Review> call(ListView<Review> listView) {
-                        return new ListElem();
+                        return new ListReview();
                     }
                 });
     }

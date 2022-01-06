@@ -112,7 +112,7 @@ public class AuthorInterfaceController {
         Session session = Session.getInstance();
 
         if (session.getLoggedAuthor() != null) {
-            if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
+            if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonAuthor.setVisible(false);
             }

@@ -97,7 +97,7 @@ public class UserInterfaceController {
         Session session = Session.getInstance();
 
         if (session.getLoggedAuthor() != null) {
-            if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
+            if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
             }
@@ -109,7 +109,7 @@ public class UserInterfaceController {
                 }
             }
         } else if (session.getLoggedUser() != null) {
-            if (session.getLoggedUser().getNickname().equals(nickname) == false) {
+            if (!session.getLoggedUser().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
             }
@@ -121,8 +121,6 @@ public class UserInterfaceController {
                 }
             }
         }
-        //System.out.println(session.getLoggedAuthor().getInteractions().getFollow().isEmpty());
-
     }
 
     public void initialize() {
