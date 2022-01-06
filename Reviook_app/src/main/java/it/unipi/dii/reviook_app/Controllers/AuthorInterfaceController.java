@@ -277,10 +277,9 @@ public class AuthorInterfaceController {
         } /*else if (session.getLoggedUser() != null) {
             usernameAuthor.setText(session.getLoggedUser().getNickname());
         }*/
-        viewFollow();
+        this.viewFollow();
         viewFollower();
-        System.out.println(usernameAuthor.getText());
-        System.out.println(session.getLoggedAuthor().getNickname());
+
 
 
         listToRead.getItems().add("Book to read 1");

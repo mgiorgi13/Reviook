@@ -98,6 +98,7 @@ public class UserInterfaceController {
 
         if (session.getLoggedAuthor() != null) {
             if (session.getLoggedAuthor().getNickname().equals(nickname) == false) {
+                follow.setVisible(true);
                 editButtonUser.setVisible(false);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
@@ -120,29 +121,12 @@ public class UserInterfaceController {
                 }
             }
         }
+
         //System.out.println(session.getLoggedAuthor().getInteractions().getFollow().isEmpty());
 
     }
 
-    public void initialize() {
-        follow.setVisible(false);
-        viewFollower();
-        viewFollow();
 
-        Session session = Session.getInstance();
-        Random rand = new Random();
-
-
-        if (session.getLoggedAuthor() != null) {
-            usernameUser.setText(session.getLoggedAuthor().getNickname());
-        } else if (session.getLoggedUser() != null) {
-            usernameUser.setText(session.getLoggedUser().getNickname());
-        }
-
-
-
-
-    }
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -229,6 +213,20 @@ public class UserInterfaceController {
         }
         followersCount.setText(String.valueOf(Follower.size()));
         listFollowers.clear();
+
+    }
+    public void initialize() {
+        follow.setVisible(false);
+        Session session = Session.getInstance();
+        Random rand = new Random();
+        if (session.getLoggedAuthor() != null) {
+            usernameUser.setText(session.getLoggedAuthor().getNickname());
+        } else if (session.getLoggedUser() != null) {
+            usernameUser.setText(session.getLoggedUser().getNickname());
+        }
+        this.viewFollower();
+        this.viewFollow();
+
 
     }
 }

@@ -371,7 +371,7 @@ public class UserManager {
         return result;
     }
 
-    public ArrayList<String> searchGeners(){
+    public ArrayList<String> searchGenrs(){
         MongoCollection<Document> geners = md.getCollection(generBook);
         List<Document> queryResults;
 

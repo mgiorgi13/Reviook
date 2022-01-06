@@ -126,7 +126,7 @@ public class AddBookController {
         generList.setVisible(true);
         authorsList.setVisible(false);
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(userManager.searchGeners());
+        obsUserList.addAll(userManager.searchGenrs());
         generList.getItems().addAll(obsUserList);
         generList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
