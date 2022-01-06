@@ -121,6 +121,7 @@ public class LoginController {
 
         if (session.getIsAuthor()) {
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            System.out.println(session.getLoggedAuthor().getNickname());
         }else{
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
 

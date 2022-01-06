@@ -1,9 +1,8 @@
 package it.unipi.dii.reviook_app.Manager;
 
 
-import com.mongodb.BasicDBObject;
+
 import com.mongodb.client.*;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -26,10 +25,13 @@ import java.util.UUID;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Accumulators.sum;
+import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Projections.computed;
 import static org.neo4j.driver.Values.parameters;
 
 
@@ -41,6 +43,7 @@ public class UserManager {
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
+    private static final String genreCollection = "geners";
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -57,6 +60,7 @@ public class UserManager {
             });
         }
     }
+
 
     public boolean deleteUserN4J() {
         boolean result = false;
@@ -158,7 +162,15 @@ public class UserManager {
     }
 
     //MongoDB
-
+    public boolean verifyISBN(String ISBN) {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
+            while (cursor.hasNext()) {
+                return true;
+            }
+        }
+        return false;
+    }
     public int verifyUsername(String Username) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -205,7 +217,40 @@ public class UserManager {
         }
         return true;
     }
+    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<String> UsernameTagged){
+            String concat =ISBN+title+UsernameTagged;
+        String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
+        UsernameTagged.add(session.getLoggedAuthor().getNickname());
+        Document doc = new Document("author", UsernameTagged)
+                .append("image_url", null)
+                .append("num_pages", "")
+                .append("asin", "")
+                .append("description", Description)
+                .append("average_rating", "")
+                .append("book_id",id)
+                .append("title", title)
+                .append("rating_count", "")
+                .append("language_code", "")
+                .append("publication_month", "")
+                .append("isbn", ISBN)
+                .append("publication_year", "")
+                .append("reviews", "")
+                .append("genres", Genre)
+                .append("publication_day", "");
 
+        md.getCollection(bookCollection).insertOne(doc);
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
+                for (int i = 0; i<UsernameTagged.size(); i++ ) {
+                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.username = '" + UsernameTagged.get(i) + "' AND ee.book_id='" + id + "'" +
+                            "CREATE (dd)-[:WROTE]->(ee)");
+
+                }
+                return null;
+            });
+        }
+    }
     public void register(String name, String surname, String email, String nickname, String password, String type) {
 
         Document doc = new Document("name", name + " " + surname)
@@ -267,32 +312,32 @@ public class UserManager {
         boolean titleSearch = true;
         boolean genresSearch = true;
 
-        if(searchField == null || searchField.equals(""))
+        if (searchField == null || searchField.equals(""))
             titleSearch = false;
-        if(genre == null || genre.equals(""))
+        if (genre == null || genre.equals(""))
             genresSearch = false;
 
         Bson titleFilter;
         Bson genreFilter;
 
         //global research
-        if(!titleSearch && !genresSearch)
+        if (!titleSearch && !genresSearch)
             cursor = books.find().iterator();
-        //search by title
-        else if(titleSearch && !genresSearch) {
-            titleFilter = text(searchField,new TextSearchOptions().caseSensitive(false));
+            //search by title
+        else if (titleSearch && !genresSearch) {
+            titleFilter = text(searchField, new TextSearchOptions().caseSensitive(false));
             cursor = books.find(titleFilter).iterator();
         }
         //search by genre
-        else if(!titleSearch && genresSearch) {
-            genreFilter = in("genres",genre);
+        else if (!titleSearch && genresSearch) {
+            genreFilter = in("genres", genre);
             cursor = books.find(genreFilter).iterator();
         }
         //search by title & genre
         else {
-            titleFilter = match(text(searchField,new TextSearchOptions().caseSensitive(false)));
-            genreFilter = match(in("genres",genre));
-            cursor = books.aggregate(Arrays.asList(titleFilter,genreFilter)).iterator();
+            titleFilter = match(text(searchField, new TextSearchOptions().caseSensitive(false)));
+            genreFilter = match(in("genres", genre));
+            cursor = books.aggregate(Arrays.asList(titleFilter, genreFilter)).iterator();
         }
 
         while (cursor.hasNext()) {
@@ -331,6 +376,45 @@ public class UserManager {
         return result;
     }
 
+    public ArrayList<String> searchBooksAuthor(String Username){
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        List<Document> queryResults;
+        if(Username.equals(""))
+            queryResults = book.find().into(new ArrayList());
+        else
+            queryResults = book.find(in("author",Username)).into(new ArrayList());
+        ArrayList<String> result = new ArrayList<>();
+
+        for (Document r:
+                queryResults) {
+            result.add(new String(r.get("title").toString()));
+        }
+        return result;
+    }
+
+    public ArrayList<String> searchStatisticBooks(String Username){
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        String queryResults;
+        ArrayList<String> Genres = new ArrayList<String>();
+
+            Bson match = match(in("author",Username));
+            Bson unwind = unwind("$genres");
+            Bson group = group("$genres",sum("counter", 1 ));
+            Bson project = project(fields(computed("genre","$_id"),include("counter"),exclude("_id")));
+
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match,unwind, group,project)).iterator();)
+        {
+
+            while (result.hasNext()) {
+                Document genre = result.next();
+                Genres.add(genre.getString("genre")+":"+genre.getInteger("counter"));
+                 }
+        }
+        return Genres ;
+
+    }
+
     public ArrayList<Users> searchUser(String Username) {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
@@ -363,4 +447,17 @@ public class UserManager {
         return result;
     }
 
+    public ArrayList<String> searchGeners(){
+        MongoCollection<Document> geners = md.getCollection(genreCollection);
+        List<Document> queryResults;
+
+            queryResults = geners.find().into(new ArrayList());
+        ArrayList<String> result = new ArrayList<>();
+
+        for (Document r:
+                queryResults) {
+            result.add(new String(r.get("_id").toString()));
+        }
+        return result;
+    }
 }

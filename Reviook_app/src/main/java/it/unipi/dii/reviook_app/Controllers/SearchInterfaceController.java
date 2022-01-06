@@ -233,7 +233,7 @@ public class SearchInterfaceController {
                             super.updateItem(item, empty);
                             textProperty().unbind();
                             if (item != null)
-                                setText(item.getNickname() + " " + item.getName());
+                                setText(item.getNickname() + " (" + item.getName()+")");
                             else
                                 setText(null);
                         }
@@ -249,12 +249,11 @@ public class SearchInterfaceController {
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
-                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
-
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(selectedCell.getNickname());
                             actual_stage.show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -265,7 +264,10 @@ public class SearchInterfaceController {
         }
 
     }
+    @FXML
+    public void searchActionGenres(ActionEvent actionEvent) {
 
+    }
     @FXML
     public void selectBookCheckAction(ActionEvent actionEvent) {
         bookCheck.setSelected(true);
