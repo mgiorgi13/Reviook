@@ -58,16 +58,16 @@ public class UserInterfaceController {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameUser.getText());
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-                userManagerNJ.following(session.getLoggedAuthor().getNickname(),true, usernameUser.getText() , false);
+                userManagerNJ.following(session.getLoggedAuthor().getNickname(), true, usernameUser.getText(), false);
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().setFollow(usernameUser.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManagerNJ.following(session.getLoggedUser().getNickname(),false, usernameUser.getText() , false);
+                userManagerNJ.following(session.getLoggedUser().getNickname(), false, usernameUser.getText(), false);
             }
         } else {
 
             if (session.getLoggedAuthor() != null) {
-                userManagerNJ.deleteFollowing(session.getLoggedAuthor().getNickname(),true, usernameUser.getText() , false);
+                userManagerNJ.deleteFollowing(session.getLoggedAuthor().getNickname(), true, usernameUser.getText(), false);
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
                         session.getLoggedAuthor().getInteractions().getFollow().remove(i);
@@ -75,7 +75,7 @@ public class UserInterfaceController {
                     }
                 }
             } else if (session.getLoggedUser() != null) {
-                userManagerNJ.deleteFollowing(session.getLoggedUser().getNickname(),false, usernameUser.getText() , false);
+                userManagerNJ.deleteFollowing(session.getLoggedUser().getNickname(), false, usernameUser.getText(), false);
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
                         session.getLoggedUser().getInteractions().getFollow().remove(i);
@@ -83,10 +83,7 @@ public class UserInterfaceController {
                     }
                 }
             }
-
         }
-
-
     }
 
     public void setNickname(String nickname) {
@@ -95,6 +92,8 @@ public class UserInterfaceController {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
+        viewFollow();
+        viewFollower();
 
         if (session.getLoggedAuthor() != null) {
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
@@ -123,6 +122,7 @@ public class UserInterfaceController {
         }
     }
 
+
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
         Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search.fxml"));
@@ -142,7 +142,7 @@ public class UserInterfaceController {
     }
 
     @FXML
-    void viewFollow () {
+    void viewFollow() {
         listFollow.getItems().clear();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
         List<String> Follow;
@@ -176,7 +176,7 @@ public class UserInterfaceController {
     }
 
     @FXML
-    void viewFollower () {
+    void viewFollower() {
         listFollower.getItems().clear();
         ObservableList<String> listFollowers = FXCollections.observableArrayList();
         List<String> Follower;
@@ -219,6 +219,5 @@ public class UserInterfaceController {
 
         viewFollower();
         viewFollow();
-
     }
 }

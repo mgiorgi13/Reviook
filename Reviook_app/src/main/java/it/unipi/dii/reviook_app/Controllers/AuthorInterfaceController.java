@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.application.Platform;
@@ -20,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,7 +57,7 @@ public class AuthorInterfaceController {
     private JFXListView listReaded;
 
     @FXML
-    private Button editButtonAuthor,addButtonBook;
+    private Button editButtonAuthor, addButtonBook;
 
     @FXML
     private CheckBox follow;
@@ -65,15 +67,17 @@ public class AuthorInterfaceController {
     private Session session = Session.getInstance();
 
     private UserManager userManager = new UserManager();
+    private SearchManager searchManager = new SearchManager();
 
     @FXML
-    public void addButtonBookFuncton(ActionEvent event) throws IOException{
+    public void addButtonBookFuncton(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/addBook.fxml"));
         Stage actual_stage = (Stage) addButtonBook.getScene().getWindow();
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
     }
+
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
 
@@ -83,16 +87,16 @@ public class AuthorInterfaceController {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameAuthor.getText());
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
 
-                userManager.following(session.getLoggedAuthor().getNickname(),true, usernameAuthor.getText() , true);
+                userManager.following(session.getLoggedAuthor().getNickname(), true, usernameAuthor.getText(), true);
 
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().setFollow(usernameAuthor.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedUser().getNickname(),false, usernameAuthor.getText() , true);
+                userManager.following(session.getLoggedUser().getNickname(), false, usernameAuthor.getText(), true);
             }
         } else {
             if (session.getLoggedAuthor() != null) {
-                userManager.deleteFollowing(session.getLoggedAuthor().getNickname(),true, usernameAuthor.getText() , true);
+                userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), true, usernameAuthor.getText(), true);
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(usernameAuthor.getText())) {
                         session.getLoggedAuthor().getInteractions().getFollow().remove(i);
@@ -100,7 +104,7 @@ public class AuthorInterfaceController {
                     }
                 }
             } else if (session.getLoggedUser() != null) {
-                userManager.deleteFollowing(session.getLoggedUser().getNickname(),false, usernameAuthor.getText() , true);
+                userManager.deleteFollowing(session.getLoggedUser().getNickname(), false, usernameAuthor.getText(), true);
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameAuthor.getText())) {
                         session.getLoggedUser().getInteractions().getFollow().remove(i);
@@ -117,16 +121,14 @@ public class AuthorInterfaceController {
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
 
+        viewFollow();
+        viewFollower();
 
-        if (session.getLoggedAuthor()!=null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())){
+        if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
             addButtonBook.setVisible(true);
-        }
-        else
-        {
+        } else {
             addButtonBook.setVisible(false);
         }
-
-
         // I'm author
         if (session.getLoggedAuthor() != null) {
             //other author
@@ -247,12 +249,13 @@ public class AuthorInterfaceController {
         listFollowers.clear();
         //  System.out.println(Follower.size()+ " "+session.getLoggedAuthor().getInteractions().getFollower()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
-    public void publishedFunction(){
+
+    public void publishedFunction() {
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(userManager.searchBooksAuthor(usernameAuthor.getText()));
+        obsUserList.addAll(searchManager.searchBooksAuthor(usernameAuthor.getText()));
         ObservableList<String> statistic = FXCollections.observableArrayList();
-        statistic.addAll(userManager.searchStatisticBooks(usernameAuthor.getText()));
-        if (session.getLoggedAuthor()!=null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
+        statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));
+        if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
             for (int i = 0; i < obsUserList.size(); i++)
                 session.getLoggedAuthor().setWrittenBook(obsUserList.get(i));
             for (int i = 0; i < statistic.size(); i++)
@@ -261,14 +264,12 @@ public class AuthorInterfaceController {
         listPublished.getItems().addAll(obsUserList);
         String gener;
         Integer perc;
-       for (int i=0;i<statistic.size();i++) {
-           String[] split = statistic.get(i).split(":");
-           gener = split[0];
-           perc = Integer.valueOf(split[1]) * 100 /obsUserList.size();
-           System.out.println(gener +" "+ perc);
-       }
-
-
+        for (int i = 0; i < statistic.size(); i++) {
+            String[] split = statistic.get(i).split(":");
+            gener = split[0];
+            perc = Integer.valueOf(split[1]) * 100 / obsUserList.size();
+            System.out.println(gener + " " + perc);
+        }
 
 
 //        System.out.println(session.getLoggedAuthor().getWrittenBookStatisitc());
@@ -283,9 +284,9 @@ public class AuthorInterfaceController {
         } /*else if (session.getLoggedUser() != null) {
             usernameAuthor.setText(session.getLoggedUser().getNickname());
         }*/
+
         viewFollow();
         viewFollower();
-
 
         listToRead.getItems().add("Book to read 1");
         listToRead.getItems().add("Book to read 2");

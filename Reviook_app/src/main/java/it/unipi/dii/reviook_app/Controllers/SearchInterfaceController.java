@@ -7,10 +7,14 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import it.unipi.dii.reviook_app.Components.ListAuthor;
+import it.unipi.dii.reviook_app.Components.ListBook;
+import it.unipi.dii.reviook_app.Components.ListUser;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Book;
 
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -63,7 +67,8 @@ public class SearchInterfaceController {
     private ChoiceBox bookFilter;
 
     private ObservableList<String> availableChoices = FXCollections.observableArrayList("", "Science", "Engineering", "Medicine", "Nonfiction", "Business & Investing", "Sports", "young", "graphic", "Outdoors & Nature", "Parenting & Families", "Computers & Internet", "mystery", "Law", "Health, Mind & Body", "comics", "romance", "Travel", "history", "fantasy", "Home & Garden", "crime", "children", "Horror", "Arts & Photography", "Literature & Fiction", "Biographies & Memoirs", "poetry", "Reference", "Professional & Technical", "biography", "Cooking, Food & Wine", "Teens", "Religion & Spirituality", "adult", "thriller", "Entertainment", "Gay & Lesbian");
-    private UserManager userManager = new UserManager();
+
+    private SearchManager searchManager = new SearchManager();
 
     @FXML
     void initialize() {
@@ -121,26 +126,15 @@ public class SearchInterfaceController {
             String selectedChoice = (String) bookFilter.getSelectionModel().getSelectedItem();
 
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
-            obsBooksList.addAll(userManager.searchBooks(searchText.getText(), selectedChoice));
+            obsBooksList.addAll(searchManager.searchBooks(searchText.getText(), selectedChoice));
             bookList.getItems().addAll(obsBooksList);
-            bookList.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>() {
-                @Override
-                public ListCell<Book> call(ListView<Book> listView) {
-                    return new ListCell<Book>() {
+            bookList.setCellFactory(
+                    new Callback<ListView<Book>, ListCell<Book>>() {
                         @Override
-                        public void updateItem(Book item, boolean empty) {
-                            super.updateItem(item, empty);
-                            textProperty().unbind();
-                            if (item != null) {
-                                setText(item.getIsbn() + " " + item.getTitle() + " " + item.getGenres() + " " + item.getAuthors());
-                            } else {
-                                setText(null);
-                            }
-
+                        public ListCell<Book> call(ListView<Book> listView) {
+                            return new ListBook();
                         }
-                    };
-                }
-            });
+                    });
             bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -168,22 +162,12 @@ public class SearchInterfaceController {
             authorsList.setVisible(false);
             usersList.setVisible(true);
             ObservableList<Users> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(userManager.searchUser(searchText.getText()));
+            obsUserList.addAll(searchManager.searchUser(searchText.getText()));
             usersList.getItems().addAll(obsUserList);
             usersList.setCellFactory(new Callback<ListView<Users>, ListCell<Users>>() {
                 @Override
                 public ListCell<Users> call(ListView<Users> listView) {
-                    return new ListCell<Users>() {
-                        @Override
-                        public void updateItem(Users item, boolean empty) {
-                            super.updateItem(item, empty);
-                            textProperty().unbind();
-                            if (item != null)
-                                setText(item.getNickname() + " " + item.getName());
-                            else
-                                setText(null);
-                        }
-                    };
+                    return new ListUser();
                 }
             });
             usersList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -212,22 +196,12 @@ public class SearchInterfaceController {
             authorsList.setVisible(true);
             usersList.setVisible(false);
             ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(userManager.searchAuthor(searchText.getText()));
+            obsUserList.addAll(searchManager.searchAuthor(searchText.getText()));
             authorsList.getItems().addAll(obsUserList);
             authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
                 @Override
                 public ListCell<Author> call(ListView<Author> listView) {
-                    return new ListCell<Author>() {
-                        @Override
-                        public void updateItem(Author item, boolean empty) {
-                            super.updateItem(item, empty);
-                            textProperty().unbind();
-                            if (item != null)
-                                setText(item.getNickname() + " (" + item.getName()+")");
-                            else
-                                setText(null);
-                        }
-                    };
+                    return new ListAuthor();
                 }
             });
             authorsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -239,11 +213,12 @@ public class SearchInterfaceController {
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(selectedCell.getNickname());
+
                             Stage actual_stage = (Stage) profileButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
-                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
                             actual_stage.show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -253,10 +228,7 @@ public class SearchInterfaceController {
             });
         }
     }
-    @FXML
-    public void searchActionGenres(ActionEvent actionEvent) {
 
-    }
     @FXML
     public void selectBookCheckAction(ActionEvent actionEvent) {
         bookCheck.setSelected(true);

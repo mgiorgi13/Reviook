@@ -1,4 +1,6 @@
 package it.unipi.dii.reviook_app.Data;
+
+import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import javafx.fxml.FXML;
 import org.neo4j.driver.Record;
@@ -6,7 +8,9 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.TransactionWork;
+
 import static org.neo4j.driver.Values.parameters;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,18 +36,19 @@ public class Users {
     private Interaction interactions;
     private Books books;
 
+    UserManager userManager = new UserManager();
 
-    public Users(String name, String surname, String nickname,String email, String password) {
+    public Users(String name, String surname, String nickname, String email, String password) {
         this.name = name;
         this.surname = surname;
         this.nickname = nickname;
         this.email = email;
-        this.password =password;
+        this.password = password;
         this.interactions = new Interaction();
         this.books = new Books();
     }
 
-    public void Login(){}
+
     public String getName() {
         return name;
     }
@@ -59,6 +64,7 @@ public class Users {
     public String getEmail() {
         return email;
     }
+
     public String getPassword() {
         return password;
     }
@@ -98,5 +104,10 @@ public class Users {
     public void setBooks(Books books) {
         this.books = books;
     }
+
+    public int getFollowerCount() {
+        List<String> followerList = userManager.loadRelationsFollower("User",this.nickname);
+        return followerList.size();
+    };
 
 }

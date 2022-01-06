@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Data.Author;
 import it.unipi.dii.reviook_app.Data.Books;
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -53,6 +54,8 @@ public class AddBookController {
 
     private Session session = Session.getInstance();
     private UserManager userManager = new UserManager();
+    private SearchManager searchManager = new SearchManager();
+
     @FXML
     int contatoreUsername = 0;
     int contatoreGener = 0;
@@ -63,7 +66,7 @@ public class AddBookController {
         authorsList.setVisible(true);
 
         ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(userManager.searchAuthor(authorTag.getText()));
+        obsUserList.addAll(searchManager.searchAuthor(authorTag.getText()));
         authorsList.getItems().addAll(obsUserList);
         authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
             @Override
@@ -126,7 +129,7 @@ public class AddBookController {
         generList.setVisible(true);
         authorsList.setVisible(false);
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(userManager.searchGeners());
+        obsUserList.addAll(searchManager.searchGeners());
         generList.getItems().addAll(obsUserList);
         generList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
