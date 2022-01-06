@@ -5,16 +5,23 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" prefHeight="69.0" prefWidth="539.0" style="-fx-background-color: #f8f8ff; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="pane" prefHeight="69.0" prefWidth="539.0" style="-fx-background-color: #f8f8ff; -fx-background-radius: 10;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Circle fill="#ffffff00" layoutX="420.0" layoutY="44.0" radius="13.0" stroke="CORNFLOWERBLUE" strokeType="INSIDE" />
-        <Text fx:id="followerCounter" fill="CORNFLOWERBLUE" layoutX="414.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375" />
-        <Text fx:id="nameField" fill="CORNFLOWERBLUE" layoutX="20.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="user name and surname" wrappingWidth="277.330078125">
+        <Circle fill="#ffffff00" layoutX="420.0" layoutY="44.0" radius="13.0" stroke="CORNFLOWERBLUE"
+                strokeType="INSIDE"/>
+        <Text fx:id="followerCounter" fill="CORNFLOWERBLUE" layoutX="414.0" layoutY="48.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375"/>
+        <Text fx:id="nameField" fill="CORNFLOWERBLUE" layoutX="20.0" layoutY="19.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" style="-fx-font-weight: bold;" text="user name and surname"
+              wrappingWidth="277.330078125">
             <font>
-                <Font size="14.0" />
+                <Font size="14.0"/>
             </font>
         </Text>
-        <Text fx:id="nicknameField" fill="CORNFLOWERBLUE" layoutX="20.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="nickname" wrappingWidth="324.330078125" />
-        <Text fill="CORNFLOWERBLUE" layoutX="357.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="follower" textAlignment="CENTER" wrappingWidth="43.330078125" />
+        <Text fx:id="nicknameField" fill="CORNFLOWERBLUE" layoutX="20.0" layoutY="49.0" strokeType="OUTSIDE"
+              strokeWidth="0.0" style="-fx-font-weight: bold;" text="nickname" wrappingWidth="324.330078125"/>
+        <Text fill="CORNFLOWERBLUE" layoutX="357.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="follower" textAlignment="CENTER" wrappingWidth="43.330078125"/>
     </children>
 </Pane>
