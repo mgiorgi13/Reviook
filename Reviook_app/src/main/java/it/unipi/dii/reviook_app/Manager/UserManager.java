@@ -118,9 +118,9 @@ public class UserManager {
                 }
                 return movies;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+//            for (String movieTitle : movieTitles) {
+//                System.out.println("\t- " + movieTitle);
+//            }
 
         }
         return movieTitles;
@@ -140,9 +140,9 @@ public class UserManager {
                 }
                 return movies;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+//            for (String movieTitle : movieTitles) {
+//                System.out.println("\t- " + movieTitle);
+//            }
 
         }
         return movieTitles;
