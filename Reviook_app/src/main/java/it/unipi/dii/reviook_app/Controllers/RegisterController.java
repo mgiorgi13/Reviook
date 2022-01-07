@@ -1,7 +1,5 @@
 package it.unipi.dii.reviook_app.Controllers;
 
-import it.unipi.dii.reviook_app.Data.Author;
-import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,14 +18,6 @@ import java.security.MessageDigest;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.bson.Document;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.google.gson.Gson;
 
 
 public class RegisterController {

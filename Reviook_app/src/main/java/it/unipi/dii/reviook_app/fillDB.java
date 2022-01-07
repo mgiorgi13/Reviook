@@ -1,6 +1,7 @@
 //package it.unipi.dii.reviook_app;
 //
 //import it.unipi.dii.reviook_app.Data.Author;
+//import it.unipi.dii.reviook_app.Manager.UserManager;
 //import javafx.fxml.FXMLLoader;
 //import javafx.scene.Parent;
 //
@@ -99,9 +100,11 @@
 //    }
 //
 //    private static void appendJson(String username){
+//        UserManager us = new UserManager();
+//        Faker faker = new Faker();
 //        Author users = new Author("","",username,"","");
 //        Neo4jDriver nd = Neo4jDriver.getInstance();
-//        users.addNewAuthor(username);
+//        us.addNewUsers("Author",username);
 //        if (count == 1) System.out.println("ok");
 //        if (count == 829528) System.out.println("Fine");
 //    }

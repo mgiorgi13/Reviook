@@ -181,6 +181,7 @@ public class SearchManager {
     public ArrayList<Users> searchUser(String Username) {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
+        //search on exact username
         if (Username.equals(""))
             queryResults = user.find().into(new ArrayList());
         else
@@ -191,12 +192,24 @@ public class SearchManager {
                 queryResults) {
             result.add(new Users(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
+
+        //search on name or surname
+        queryResults = user.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+        Users us;
+        for (Document r :
+                queryResults) {
+            us = new Users(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+            if(!result.contains(us))
+                result.add(us);
+        }
+
         return result;
     }
 
     public ArrayList<Author> searchAuthor(String Username) {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         List<Document> queryResults;
+        //search on exact username
         if (Username.equals(""))
             queryResults = author.find().into(new ArrayList());
         else
@@ -207,14 +220,24 @@ public class SearchManager {
                 queryResults) {
             result.add(new Author(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
+
+        //search on name or surname
+        queryResults = author.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+        Author auth;
+        for (Document r :
+                queryResults) {
+            auth = new Author(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+            if(!result.contains(auth))
+                result.add(auth);
+        }
         return result;
     }
 
-    public ArrayList<String> searchGeners() {
-        MongoCollection<Document> geners = md.getCollection(genreCollection);
+    public ArrayList<String> searchGenres() {
+        MongoCollection<Document> genres = md.getCollection(genreCollection);
         List<Document> queryResults;
 
-        queryResults = geners.find().into(new ArrayList());
+        queryResults = genres.find().into(new ArrayList());
         ArrayList<String> result = new ArrayList<>();
 
         for (Document r :
