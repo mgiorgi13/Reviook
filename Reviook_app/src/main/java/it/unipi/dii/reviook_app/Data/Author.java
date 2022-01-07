@@ -18,7 +18,7 @@ public class Author extends Users {
         return writtenBook;
     }
 
-    public ArrayList<String> getWrittenBookStatisitc() {
+    public ArrayList<String> getWrittenBookStatistic() {
         return writtenBookStatistic;
     }
 
@@ -30,9 +30,9 @@ public class Author extends Users {
         this.writtenBook.add(writtenBook);
     }
 
-    public void setWrittenBookStatisitc(String writtenBookStatisitc) {
+    public void setWrittenBookStatistic(String writtenBookStatistic) {
 
-            this.writtenBookStatistic.add(writtenBookStatisitc);
+            this.writtenBookStatistic.add(writtenBookStatistic);
     }
 
     public void setLikeNumber(int likeNumber) {

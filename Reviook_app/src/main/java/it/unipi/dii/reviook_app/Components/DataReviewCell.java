@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.Components;
 
+import it.unipi.dii.reviook_app.Data.Review;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -7,7 +8,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-public class DataListElem {
+public class DataReviewCell {
 
     @FXML
     private Text like;
@@ -24,8 +25,8 @@ public class DataListElem {
     @FXML
     private Text user;
 
-    public DataListElem() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/listElem.fxml"));
+    public DataReviewCell() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/reviewCell.fxml"));
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
@@ -34,11 +35,11 @@ public class DataListElem {
         }
     }
 
-    public void setInfo(String string) {
-        previewText.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
-        user.setText("user");
-        like.setText("10");
-        helpful.setText("10");
+    public void setInfo(Review review) {
+        previewText.setText(review.getReview_text());
+        user.setText(review.getUser_id());
+        like.setText(review.getN_votes());
+        helpful.setText(review.getHelpful());
     }
 
     public Pane getPane() {

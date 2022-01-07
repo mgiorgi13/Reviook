@@ -1,7 +1,9 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import com.jfoenix.controls.JFXButton;
-import it.unipi.dii.reviook_app.Components.ListElem;
+import it.unipi.dii.reviook_app.Components.ListReview;
+import it.unipi.dii.reviook_app.Data.Book;
+import it.unipi.dii.reviook_app.Data.Review;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,10 +13,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,6 +31,9 @@ public class BookDetailController {
     private ResourceBundle resources;
 
     @FXML
+    private ImageView imageContainer;
+
+    @FXML
     private URL location;
 
     @FXML
@@ -36,14 +43,37 @@ public class BookDetailController {
     private JFXButton addReviewButton;
 
     @FXML
-    private ListView listView;
+    private ListView<Review> listView;
 
-    private List<String> stringList = new ArrayList<>(5);
+    @FXML
+    private Text bookAuthor;
 
-    private ObservableList observableList = FXCollections.observableArrayList();
+    @FXML
+    private Text bookCategories;
+
+    @FXML
+    private Text bookDescription;
+
+    @FXML
+    private Text bookTitle;
+
+    private String title, author, categories, description, img_url;
+    private ArrayList<Review> reviewsList;
+
+//    private List<String> stringList = new ArrayList<>(5);
+
+    private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
     public void setListView() {
-
+        observableList.setAll(this.reviewsList);
+        listView.setItems(observableList);
+        listView.setCellFactory(
+                new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
+                    @Override
+                    public ListCell<Review> call(ListView<Review> listView) {
+                        return new ListReview();
+                    }
+                });
     }
 
     @FXML
@@ -56,12 +86,45 @@ public class BookDetailController {
     }
 
     @FXML
-    public void addReviewAction(ActionEvent actionEvent) {
+    public void addReviewAction(ActionEvent actionEvent) throws IOException {
+        Stage dialogNewReviewStage = new Stage();
+        Parent dialogInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
+        Scene dialogScene = new Scene(dialogInterface);
+        dialogNewReviewStage.setScene(dialogScene);
+        dialogNewReviewStage.show();
+    }
+
+    public void setInfoBook(Book bookSelected) {
+        // BOOK TITLE
+        this.title = bookSelected.getTitle();
+        bookTitle.setText(this.title);
+        // AUTHORS LIST
+        ArrayList<String> authors = bookSelected.getAuthors();
+        this.author = authors.get(0); // TODO per ora prendo solo il primo ma poi andranno elencati tutti
+        bookAuthor.setText(this.author);
+        // CATEGORIES LIST
+        ArrayList<String> genres = bookSelected.getGenres();
+        if (genres != null) {
+            categories = genres.size() > 0 ? genres.get(0) : ""; // TODO per ora prendo solo il primo ma poi andranno elencati tutti
+            bookCategories.setText(categories);
+        }
+        // BOOK DESCRIPTION
+        this.description = bookSelected.getDescription();
+        bookDescription.setText(this.description);
+        // IMG BOOK
+        this.img_url = bookSelected.getImage_url();
+        if (!this.img_url.equals("null")) {
+            Image image = new Image(this.img_url);
+            imageContainer.setImage(image);
+        }
+        // REVIEW LIST
+        this.reviewsList = bookSelected.getReviews();
+        setListView();
     }
 
     @FXML
     void initialize() {
-        setListView();
+        // setListView();
     }
 }
 

@@ -126,7 +126,7 @@ public class AddBookController {
         generList.setVisible(true);
         authorsList.setVisible(false);
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(userManager.searchGenrs());
+        obsUserList.addAll(userManager.searchGeners());
         generList.getItems().addAll(obsUserList);
         generList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
@@ -222,7 +222,7 @@ public class AddBookController {
         userManager.addBook(  Title,  ISBN_,  Description,  Genre, UsernameTagged);
         session.getLoggedAuthor().setWrittenBook(Title);
         for (int i= 0; i< Genre.size(); i++)
-            session.getLoggedAuthor().setWrittenBookStatisitc(Genre.get(i));
+            session.getLoggedAuthor().setWrittenBookStatistic(Genre.get(i));
         actiontarget.setText("Congratulations you added a book!!");
 
 

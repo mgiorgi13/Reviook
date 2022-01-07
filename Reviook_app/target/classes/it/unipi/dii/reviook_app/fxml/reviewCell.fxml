@@ -16,7 +16,7 @@
               textAlignment="CENTER" wrappingWidth="12.9375"/>
         <Text fx:id="previewText" fill="WHITE" layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0"
               wrappingWidth="531.13671875"/>
-        <Text fx:id="user" fill="WHITE" layoutX="26.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="user" textAlignment="CENTER" wrappingWidth="63.330078125"/>
+        <Text fx:id="user" fill="WHITE" layoutX="23.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="user" textAlignment="CENTER" wrappingWidth="183.330078125"/>
     </children>
 </Pane>
