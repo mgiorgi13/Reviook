@@ -3,37 +3,21 @@ package it.unipi.dii.reviook_app.Manager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.*;
-import com.mongodb.client.model.BsonField;
-import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import it.unipi.dii.reviook_app.Data.Author;
-import it.unipi.dii.reviook_app.Data.Book;
-import it.unipi.dii.reviook_app.Data.Review;
-import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
-import org.bson.BSONObject;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.mongodb.client.model.Accumulators.addToSet;
-import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Accumulators.sum;
-import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Projections.*;
-import static com.mongodb.client.model.Projections.computed;
 import static org.neo4j.driver.Values.parameters;
 
 
@@ -176,20 +160,22 @@ public class UserManager {
         return false;
     }
 
-    public int verifyUsername(String Username) {
+    public int verifyUsername(String Username, boolean main) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
-                session.setLoggedUser(user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
+                if (main == true)
+                    session.setLoggedUser(user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
                 return 0;
             }
         }
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
-                session.setLoggedAuthor(user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
+                if (main == true)
+                    session.setLoggedAuthor(user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
 
                 return 1;
             }

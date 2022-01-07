@@ -58,7 +58,7 @@ public class LoginController {
     public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
         MessageDigest md;
         String pswHash;
-        int result = userManager.verifyUsername(username);
+        int result = userManager.verifyUsername(username, true);
         if(result == -1)
             return false;
         else
