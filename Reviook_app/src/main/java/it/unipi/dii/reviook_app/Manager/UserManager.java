@@ -1,14 +1,11 @@
 package it.unipi.dii.reviook_app.Manager;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.client.*;
-import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import it.unipi.dii.reviook_app.Data.Author;
-import it.unipi.dii.reviook_app.Data.Book;
-import it.unipi.dii.reviook_app.Data.Review;
-import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
@@ -17,16 +14,10 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
-import java.util.Arrays;
-import java.util.UUID;
-import java.util.ArrayList;
-import java.util.List;
-import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Accumulators.sum;
-import static com.mongodb.client.model.Aggregates.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Projections.*;
-import static com.mongodb.client.model.Projections.computed;
 import static org.neo4j.driver.Values.parameters;
 
 
@@ -46,7 +37,7 @@ public class UserManager {
         this.nd = Neo4jDriver.getInstance();
     }
 
-    // N4J
+    // N4J =============================================================================================================
     public void addNewUsers(String type, String username) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
@@ -156,8 +147,9 @@ public class UserManager {
         }
         return movieTitles;
     }
+    //==================================================================================================================
 
-    //MongoDB
+    // MONGO DB ========================================================================================================
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
@@ -167,6 +159,7 @@ public class UserManager {
         }
         return false;
     }
+
     public int verifyUsername(String Username, boolean main) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -215,8 +208,9 @@ public class UserManager {
         }
         return true;
     }
-    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<String> UsernameTagged){
-            String concat =ISBN+title+UsernameTagged;
+
+    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<String> UsernameTagged) {
+        String concat = ISBN + title + UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
         UsernameTagged.add(session.getLoggedAuthor().getNickname());
         Document doc = new Document("author", UsernameTagged)
@@ -225,7 +219,7 @@ public class UserManager {
                 .append("asin", "")
                 .append("description", Description)
                 .append("average_rating", "")
-                .append("book_id",id)
+                .append("book_id", id)
                 .append("title", title)
                 .append("rating_count", "")
                 .append("language_code", "")
@@ -240,7 +234,7 @@ public class UserManager {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
-                for (int i = 0; i<UsernameTagged.size(); i++ ) {
+                for (int i = 0; i < UsernameTagged.size(); i++) {
                     tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.username = '" + UsernameTagged.get(i) + "' AND ee.book_id='" + id + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
 
@@ -249,6 +243,7 @@ public class UserManager {
             });
         }
     }
+
     public void register(String name, String surname, String email, String nickname, String password, String type) {
         Document doc = new Document("name", name + " " + surname)
                 .append("password", password)
@@ -298,4 +293,32 @@ public class UserManager {
         return false;
     }
 
+    public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+        MongoCollection<Document> book = md.getCollection("amazonBooks");
+        Document newReview = new Document();
+        String reviewID = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        newReview.append("date_added", date);
+        newReview.append("date_updated", "");
+        newReview.append("review_id", reviewID);
+        newReview.append("n_votes", "0");
+        newReview.append("rating", ratingBook);
+        newReview.append("review_text", reviewText);
+        newReview.append("helpful", "0");
+        if (session.getLoggedUser() != null) {
+            String loggedUserID = session.getLoggedUser().getNickname();
+//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedUserID);
+            newReview.append("user_id", loggedUserID);
+        } else {
+            String loggedAuthorID = session.getLoggedAuthor().getNickname();
+//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedAuthorID);
+            newReview.append("user_id", loggedAuthorID);
+        }
+        Bson getBook = eq("book_id", book_id);
+        DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
+        DBObject insertReview = new BasicDBObject("$push", elem);
+        book.updateOne(getBook, (Bson) insertReview);
+    }
+    //==================================================================================================================
 }
