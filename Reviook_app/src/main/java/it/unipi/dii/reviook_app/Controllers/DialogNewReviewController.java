@@ -12,6 +12,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.bson.Document;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DialogNewReviewController {
     @FXML
@@ -28,7 +32,8 @@ public class DialogNewReviewController {
 
     private String book_id;
 
-    Session session = Session.getInstance();
+    UserManager userManager = new UserManager();
+
 
     @FXML
     public void setBook_id(String id) {
@@ -45,17 +50,9 @@ public class DialogNewReviewController {
     @FXML
     public void addReviewAction(ActionEvent actionEvent) {
         String reviewText = newReviewText.getText();
-        Integer ratingBook = bookStars.getValue();
+        Integer ratingBook = bookStars.getValue() != null ? bookStars.getValue() : 0;
         String book_id = this.book_id;
-        if (session.getLoggedUser() != null) {
-            String loggedUserID = session.getLoggedUser().getNickname();
-            // query to mongo DB to insert new review
-            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedUserID);
-        } else {
-            String loggedAuthorID = session.getLoggedAuthor().getNickname();
-            // query to mongo DB to insert new review
-            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedAuthorID);
-        }
+        userManager.AddReviewToBook(reviewText, ratingBook, book_id);
     }
 
     @FXML

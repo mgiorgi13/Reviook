@@ -268,7 +268,7 @@ public class AuthorInterfaceController {
             String[] split = statistic.get(i).split(":");
             gener = split[0];
             perc = Integer.valueOf(split[1]) * 100 / obsUserList.size();
-            System.out.println(gener + " " + perc);
+//            System.out.println(gener + " " + perc);
         }
 
 
