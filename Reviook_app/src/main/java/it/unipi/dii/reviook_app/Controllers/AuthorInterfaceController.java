@@ -12,12 +12,15 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -212,6 +215,39 @@ public class AuthorInterfaceController {
         }
         followCount.setText(String.valueOf(Follow.size()));
         listFollows.clear();
+        listFollow.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
+                    int result = userManager.verifyUsername(selectedCell, false);
+                    if(result == -1)
+                        return;else
+                        try {
+                            Parent userInterface;
+                            FXMLLoader fxmlLoader;
+                            if (result == 1) {
+                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                                userInterface = (Parent) fxmlLoader.load();
+                                AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                                controller.setNickname(selectedCell);
+                            } else {
+                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                                userInterface = (Parent) fxmlLoader.load();
+                                UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                                controller.setNickname(selectedCell);
+                            }
+
+                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
+                        actual_stage.setScene(new Scene(userInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         //    System.out.println(Follow.size()+ " "+session.getLoggedAuthor().getInteractions().getFollow()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
 
@@ -245,8 +281,40 @@ public class AuthorInterfaceController {
                 listFollowers.add(author.getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         }
-        followersCount.setText(String.valueOf(Follower.size()));
-        listFollowers.clear();
+        listFollower.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
+                    int result = userManager.verifyUsername(selectedCell, false);
+                    if(result == -1)
+                        return;
+                        try {
+                            Parent userInterface;
+                            FXMLLoader fxmlLoader;
+                            if (result == 1) {
+                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                                userInterface = (Parent) fxmlLoader.load();
+                                AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                                controller.setNickname(selectedCell);
+                            }
+                            else {
+                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                                userInterface = (Parent) fxmlLoader.load();
+                                UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                                controller.setNickname(selectedCell);
+                            }
+
+                        Stage actual_stage = (Stage) listFollower.getScene().getWindow();
+                        actual_stage.setScene(new Scene(userInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         //  System.out.println(Follower.size()+ " "+session.getLoggedAuthor().getInteractions().getFollower()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
 
