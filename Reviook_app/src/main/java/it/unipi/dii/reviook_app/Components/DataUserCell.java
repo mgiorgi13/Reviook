@@ -44,7 +44,7 @@ public class DataUserCell {
     public void setInfo(Users user) {
         nicknameField.setText(user.getNickname());
         nameField.setText(user.getName());
-        followerCounter.setText("-");
+        followerCounter.setText(String.valueOf(user.getFollowerCount()));
     }
 
     public Pane getPane() {

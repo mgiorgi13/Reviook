@@ -86,10 +86,7 @@ public class UserInterfaceController {
                     }
                 }
             }
-
         }
-
-
     }
 
     public void setNickname(String nickname) {
@@ -97,8 +94,9 @@ public class UserInterfaceController {
 
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
-        viewFollower();
+
         viewFollow();
+        viewFollower();
 
         if (session.getLoggedAuthor() != null) {
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
@@ -292,6 +290,5 @@ public class UserInterfaceController {
 
         viewFollower();
         viewFollow();
-
     }
 }

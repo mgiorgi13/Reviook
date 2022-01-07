@@ -43,7 +43,7 @@ public class DataAuthorCell {
     public void setInfo(Author author) {
         nicknameField.setText(author.getNickname());
         nameField.setText(author.getName());
-        followerCounter.setText("-");
+        followerCounter.setText(String.valueOf(author.getFollowerCount()));
     }
 
     public Pane getPane() {
