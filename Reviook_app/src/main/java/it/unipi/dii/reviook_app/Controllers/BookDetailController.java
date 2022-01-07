@@ -87,13 +87,6 @@ public class BookDetailController {
 
     @FXML
     public void addReviewAction(ActionEvent actionEvent) throws IOException {
-
-//        Parent userInterface;
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-//        userInterface = (Parent) fxmlLoader.load();
-//        UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-//        controller.setNickname(selectedCell.getNickname());
-
         Stage dialogNewReviewStage = new Stage();
         Parent dialogInterface;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));

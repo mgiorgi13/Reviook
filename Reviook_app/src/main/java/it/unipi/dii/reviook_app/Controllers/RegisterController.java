@@ -1,5 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
+import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +20,8 @@ import java.security.MessageDigest;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+
 
 
 public class RegisterController {
@@ -63,7 +67,7 @@ public class RegisterController {
             //convalid email
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher mEmail = p.matcher(email);
-            if (userManager.verifyUsername(nickname) != -1)
+            if (userManager.verifyUsername(nickname, true) != -1)
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";

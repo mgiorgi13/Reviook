@@ -55,31 +55,10 @@ public class LoginController {
 
     private Session session = Session.getInstance();
 
-//    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-//            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-//            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
-//
-//    public LoginController() {
-//    }
-//
-//
-//    public String verifyType(String username) throws JSONException {
-//        JSONArray array = new JSONArray(str);
-//        for (int i = 0; i < array.length(); i++) {
-//            JSONObject object = array.getJSONObject(i);
-//            if (object.getString("username").equals(username))
-//                return object.getString("type");
-//            // System.out.println(object.getString("name"));
-//            //  System.out.println(object.getString("surname"));
-//            //  System.out.println(object.getString("email"));
-//        }
-//        return null;
-//    }
-//
     public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
         MessageDigest md;
         String pswHash;
-        int result = userManager.verifyUsername(username);
+        int result = userManager.verifyUsername(username, true);
         if(result == -1)
             return false;
         else
@@ -121,7 +100,7 @@ public class LoginController {
 
         if (session.getIsAuthor()) {
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            System.out.println(session.getLoggedAuthor().getNickname());
+//            System.out.println(session.getLoggedAuthor().getNickname());
         }else{
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
 
