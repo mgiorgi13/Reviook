@@ -14,9 +14,12 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+
+import static com.mongodb.client.model.Aggregates.set;
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
@@ -319,6 +322,17 @@ public class UserManager {
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
         DBObject insertReview = new BasicDBObject("$push", elem);
         book.updateOne(getBook, (Bson) insertReview);
+    }
+
+    public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
+        System.out.println(review_id + ".." + book_id + "------" + reviewText);
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        Bson getBook = eq("book_id", book_id);
+        Bson getReview = eq("reviews.review_id", review_id);
+         UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
+        UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+
+
     }
     //==================================================================================================================
 }

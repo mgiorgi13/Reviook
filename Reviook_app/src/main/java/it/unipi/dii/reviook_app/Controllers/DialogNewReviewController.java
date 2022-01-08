@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import com.jfoenix.controls.JFXButton;
+import it.unipi.dii.reviook_app.Data.Review;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -32,8 +33,11 @@ public class DialogNewReviewController {
 
     private String book_id;
 
-    UserManager userManager = new UserManager();
+    private Boolean editMode = false;
 
+    private Review reviewToEdit;
+
+    UserManager userManager = new UserManager();
 
     @FXML
     public void setBook_id(String id) {
@@ -41,7 +45,14 @@ public class DialogNewReviewController {
     }
 
     @FXML
+    public void setEditReview(Review reviewToEdit) {
+        this.editMode = true;
+        this.reviewToEdit = reviewToEdit;
+        newReviewText.setText(reviewToEdit.getReview_text());
+        bookStars.setValue(Integer.parseInt(reviewToEdit.getRating()));
+    }
 
+    @FXML
     public void exitDialogAction(ActionEvent actionEvent) {
         Stage actual_stage = (Stage) exitButton.getScene().getWindow();
         actual_stage.close();
@@ -52,7 +63,14 @@ public class DialogNewReviewController {
         String reviewText = newReviewText.getText();
         Integer ratingBook = bookStars.getValue() != null ? bookStars.getValue() : 0;
         String book_id = this.book_id;
-        userManager.AddReviewToBook(reviewText, ratingBook, book_id);
+        if (editMode) {
+//            System.out.println("edit mode");
+            userManager.EditReview(reviewText, ratingBook, book_id, this.reviewToEdit.getReview_id());
+        } else {
+//            System.out.println("adding mode");
+            userManager.AddReviewToBook(reviewText, ratingBook, book_id);
+        }
+
     }
 
     @FXML

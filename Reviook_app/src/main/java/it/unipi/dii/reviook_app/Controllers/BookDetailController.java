@@ -4,9 +4,11 @@ import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.Components.ListReview;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
+import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +17,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -43,6 +47,9 @@ public class BookDetailController {
     private JFXButton addReviewButton;
 
     @FXML
+    private JFXButton editReviewButton;
+
+    @FXML
     private ListView<Review> listView;
 
     @FXML
@@ -58,9 +65,10 @@ public class BookDetailController {
     private Text bookTitle;
 
     private String title, author, categories, description, img_url, book_id;
+
     private ArrayList<Review> reviewsList;
 
-//    private List<String> stringList = new ArrayList<>(5);
+    Session session = Session.getInstance();
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
@@ -93,6 +101,30 @@ public class BookDetailController {
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
         controller.setBook_id(this.book_id);
+        Scene dialogScene = new Scene(dialogInterface);
+        dialogNewReviewStage.setScene(dialogScene);
+        dialogNewReviewStage.show();
+    }
+
+    @FXML
+    public void editReviewAction(ActionEvent actionEvent) throws IOException {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+            return;
+        }
+        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+            return;
+        }
+        Stage dialogNewReviewStage = new Stage();
+        Parent dialogInterface;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
+        dialogInterface = (Parent) fxmlLoader.load();
+        DialogNewReviewController controller = fxmlLoader.getController();
+        controller.setBook_id(this.book_id);
+        controller.setEditReview(selectedReview); //set to edit review fields
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
         dialogNewReviewStage.show();
