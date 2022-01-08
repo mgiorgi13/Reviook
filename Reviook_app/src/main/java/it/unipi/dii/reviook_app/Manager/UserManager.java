@@ -8,6 +8,9 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
@@ -234,7 +237,7 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
                 ID = user.get("author_id").toString();
-               
+
             }
         }
         return ID;
@@ -261,6 +264,7 @@ public class UserManager {
         }
         return -1;
     }
+
 
     public boolean verifyPassword(boolean type, String Username, String Password) {
         MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);
