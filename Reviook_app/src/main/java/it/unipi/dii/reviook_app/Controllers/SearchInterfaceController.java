@@ -118,7 +118,6 @@ public class SearchInterfaceController {
         authorsList.getItems().clear();
 
         if (bookCheck.isSelected()) {
-
             bookList.setVisible(true);
             authorsList.setVisible(false);
             usersList.setVisible(false);
