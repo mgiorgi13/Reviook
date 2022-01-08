@@ -1,30 +1,9 @@
 package it.unipi.dii.reviook_app.Data;
 
 import it.unipi.dii.reviook_app.Manager.UserManager;
-import it.unipi.dii.reviook_app.Neo4jDriver;
 import javafx.fxml.FXML;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
-import org.neo4j.driver.Transaction;
-import org.neo4j.driver.TransactionWork;
-
-import static org.neo4j.driver.Values.parameters;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.IllegalFormatException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.xml.bind.DatatypeConverter;
 
-import org.neo4j.driver.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Users {
     @FXML
