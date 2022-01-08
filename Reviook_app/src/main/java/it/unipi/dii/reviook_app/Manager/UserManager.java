@@ -14,11 +14,17 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
+<<<<<<< HEAD
 
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 
+=======
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
@@ -38,6 +44,7 @@ public class UserManager {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
+<<<<<<< HEAD
     class paramAuthor{
         String author_name;
         String author_role;
@@ -45,6 +52,11 @@ public class UserManager {
     }
     // N4J
     public void addNewUsers(String type, String username,String id) {
+=======
+
+    // N4J =============================================================================================================
+    public void addNewUsers(String type, String username) {
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee:" + type + " { username: $username, author_id: $id})", parameters("username", username, "id", id));
@@ -145,9 +157,9 @@ public class UserManager {
                 }
                 return movies;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+//            for (String movieTitle : movieTitles) {
+//                System.out.println("\t- " + movieTitle);
+//            }
 
         }
         return movieTitles;
@@ -167,13 +179,14 @@ public class UserManager {
                 }
                 return movies;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+//            for (String movieTitle : movieTitles) {
+//                System.out.println("\t- " + movieTitle);
+//            }
 
         }
         return movieTitles;
     }
+<<<<<<< HEAD
     public void toReadAdd(String type, String username, String book_id){
         Neo4jDriver nd = Neo4jDriver.getInstance();
         List<String> movieTitles = new ArrayList();
@@ -201,8 +214,11 @@ public class UserManager {
 
 
     }
+=======
+    //==================================================================================================================
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
 
-    //MongoDB
+    // MONGO DB ========================================================================================================
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
@@ -213,6 +229,7 @@ public class UserManager {
         return false;
     }
 
+<<<<<<< HEAD
     public DBObject paramAuthor(String Username){
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         DBObject author = new BasicDBObject();
@@ -239,6 +256,8 @@ public class UserManager {
         }
         return ID;
     }
+=======
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
     public int verifyUsername(String Username, boolean main) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -287,10 +306,16 @@ public class UserManager {
         }
         return true;
     }
+<<<<<<< HEAD
     public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<DBObject>  UsernameTagged){
 
 
         String concat =ISBN+title+UsernameTagged;
+=======
+
+    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<String> UsernameTagged) {
+        String concat = ISBN + title + UsernameTagged;
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
 
         ArrayList<String> reviews = new ArrayList<String>();
@@ -299,7 +324,7 @@ public class UserManager {
                 .append("isbn", ISBN)
                 .append("description", Description)
                 .append("average_rating", "")
-                .append("book_id",id)
+                .append("book_id", id)
                 .append("title", title)
                 .append("language_code","")
                 .append("publication_month", "")
@@ -316,8 +341,13 @@ public class UserManager {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
+<<<<<<< HEAD
                 for (int i = 0; i<UsernameTagged.size(); i++ ) {
                     tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.author_id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.book_id='" + id + "'" +
+=======
+                for (int i = 0; i < UsernameTagged.size(); i++) {
+                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.username = '" + UsernameTagged.get(i) + "' AND ee.book_id='" + id + "'" +
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
                             "CREATE (dd)-[:WROTE]->(ee)");
 
                 }
@@ -325,7 +355,12 @@ public class UserManager {
             });
         }
     }
+<<<<<<< HEAD
     public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
+=======
+
+    public void register(String name, String surname, String email, String nickname, String password, String type) {
+>>>>>>> feb5e5a179eeec4bc9e4b5e1bb51ef1a81288d03
         Document doc = new Document("name", name + " " + surname)
                 .append("password", password)
                 .append("count_reviews", "")
@@ -372,4 +407,32 @@ public class UserManager {
         return false;
     }
 
+    public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+        MongoCollection<Document> book = md.getCollection("amazonBooks");
+        Document newReview = new Document();
+        String reviewID = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        newReview.append("date_added", date);
+        newReview.append("date_updated", "");
+        newReview.append("review_id", reviewID);
+        newReview.append("n_votes", "0");
+        newReview.append("rating", ratingBook);
+        newReview.append("review_text", reviewText);
+        newReview.append("helpful", "0");
+        if (session.getLoggedUser() != null) {
+            String loggedUserID = session.getLoggedUser().getNickname();
+//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedUserID);
+            newReview.append("user_id", loggedUserID);
+        } else {
+            String loggedAuthorID = session.getLoggedAuthor().getNickname();
+//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedAuthorID);
+            newReview.append("user_id", loggedAuthorID);
+        }
+        Bson getBook = eq("book_id", book_id);
+        DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
+        DBObject insertReview = new BasicDBObject("$push", elem);
+        book.updateOne(getBook, (Bson) insertReview);
+    }
+    //==================================================================================================================
 }
