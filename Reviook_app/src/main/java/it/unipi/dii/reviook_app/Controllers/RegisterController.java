@@ -22,13 +22,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bson.Document;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.google.gson.Gson;
+
 
 
 public class RegisterController {

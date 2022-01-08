@@ -1,6 +1,5 @@
 package it.unipi.dii.reviook_app;
 
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,8 +20,9 @@ public class Reviook extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
+//    public static void main(String[] args) {
+//        launch();
+//
+//    }
 }
 

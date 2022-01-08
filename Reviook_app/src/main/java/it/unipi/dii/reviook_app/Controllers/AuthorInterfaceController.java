@@ -83,8 +83,6 @@ public class AuthorInterfaceController {
 
     @FXML
     public void addfollow(ActionEvent event) throws IOException {
-
-
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameAuthor.getText());
@@ -221,8 +219,9 @@ public class AuthorInterfaceController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
                     int result = userManager.verifyUsername(selectedCell, false);
-                    if(result == -1)
-                        return;else
+                    if (result == -1)
+                        return;
+                    else
                         try {
                             Parent userInterface;
                             FXMLLoader fxmlLoader;
@@ -238,13 +237,13 @@ public class AuthorInterfaceController {
                                 controller.setNickname(selectedCell);
                             }
 
-                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
-                        actual_stage.setScene(new Scene(userInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                            Stage actual_stage = (Stage) listFollow.getScene().getWindow();
+                            actual_stage.setScene(new Scene(userInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                 }
             }
         });
@@ -311,23 +310,22 @@ public class AuthorInterfaceController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
                     int result = userManager.verifyUsername(selectedCell, false);
-                    if(result == -1)
+                    if (result == -1)
                         return;
-                        try {
-                            Parent userInterface;
-                            FXMLLoader fxmlLoader;
-                            if (result == 1) {
-                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                                controller.setNickname(selectedCell);
-                            }
-                            else {
-                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                                controller.setNickname(selectedCell);
-                            }
+                    try {
+                        Parent userInterface;
+                        FXMLLoader fxmlLoader;
+                        if (result == 1) {
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(selectedCell);
+                        } else {
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                            controller.setNickname(selectedCell);
+                        }
 
                         Stage actual_stage = (Stage) listFollower.getScene().getWindow();
                         actual_stage.setScene(new Scene(userInterface));
@@ -362,7 +360,7 @@ public class AuthorInterfaceController {
             String[] split = statistic.get(i).split(":");
             gener = split[0];
             perc = Integer.valueOf(split[1]) * 100 / obsUserList.size();
-            System.out.println(gener + " " + perc);
+//            System.out.println(gener + " " + perc);
         }
 
 

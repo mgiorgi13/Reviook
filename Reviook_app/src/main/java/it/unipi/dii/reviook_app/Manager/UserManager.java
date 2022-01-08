@@ -8,6 +8,9 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
@@ -18,6 +21,11 @@ import org.neo4j.driver.TransactionWork;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
+
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
@@ -145,9 +153,9 @@ public class UserManager {
                 }
                 return movies;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+//            for (String movieTitle : movieTitles) {
+//                System.out.println("\t- " + movieTitle);
+//            }
 
         }
         return movieTitles;
@@ -167,9 +175,9 @@ public class UserManager {
                 }
                 return movies;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+//            for (String movieTitle : movieTitles) {
+//                System.out.println("\t- " + movieTitle);
+//            }
 
         }
         return movieTitles;
@@ -234,7 +242,7 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
                 ID = user.get("author_id").toString();
-               
+
             }
         }
         return ID;
@@ -261,6 +269,7 @@ public class UserManager {
         }
         return -1;
     }
+
 
     public boolean verifyPassword(boolean type, String Username, String Password) {
         MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);
@@ -372,4 +381,32 @@ public class UserManager {
         return false;
     }
 
+    public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+        MongoCollection<Document> book = md.getCollection("amazonBooks");
+        Document newReview = new Document();
+        String reviewID = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        newReview.append("date_added", date);
+        newReview.append("date_updated", "");
+        newReview.append("review_id", reviewID);
+        newReview.append("n_votes", "0");
+        newReview.append("rating", ratingBook);
+        newReview.append("review_text", reviewText);
+        newReview.append("helpful", "0");
+        if (session.getLoggedUser() != null) {
+            String loggedUserID = session.getLoggedUser().getNickname();
+//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedUserID);
+            newReview.append("user_id", loggedUserID);
+        } else {
+            String loggedAuthorID = session.getLoggedAuthor().getNickname();
+//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedAuthorID);
+            newReview.append("user_id", loggedAuthorID);
+        }
+        Bson getBook = eq("book_id", book_id);
+        DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
+        DBObject insertReview = new BasicDBObject("$push", elem);
+        book.updateOne(getBook, (Bson) insertReview);
+    }
+    //==================================================================================================================
 }
