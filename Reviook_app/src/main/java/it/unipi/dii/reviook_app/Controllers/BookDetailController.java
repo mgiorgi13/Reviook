@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.Components.ListReview;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
+import it.unipi.dii.reviook_app.Manager.UserManager;
+import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -56,7 +58,8 @@ public class BookDetailController {
 
     @FXML
     private Text bookTitle;
-
+    Session session = Session.getInstance();
+    private UserManager userManager = new UserManager();
     private String title, author, categories, description, img_url, book_id;
     private ArrayList<Review> reviewsList;
 
@@ -83,6 +86,23 @@ public class BookDetailController {
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
+    }
+    @FXML
+    void toRead (ActionEvent event) throws IOException {
+        String bookTitleText= bookTitle.getText();
+        if(session.getLoggedAuthor()!=null)
+            userManager.toReadAdd ("Author", session.getLoggedAuthor().getNickname(), this.book_id);
+        else
+            userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id);
+    }
+
+    @FXML
+    void readed (ActionEvent event) throws IOException{
+        String bookTitleText= bookTitle.getText();
+        if(session.getLoggedAuthor()!=null)
+            userManager.readedAdd ("Author", session.getLoggedAuthor().getNickname(), this.book_id);
+        else
+            userManager.readedAdd("User", session.getLoggedUser().getNickname(), this.book_id);
     }
 
     @FXML
