@@ -328,28 +328,26 @@
             <children>
                 <TabPane layoutX="-1.0" layoutY="-1.0" prefHeight="599.0" prefWidth="516.0"
                          tabClosingPolicy="UNAVAILABLE">
-                    <tabs>
-                        <Tab text="TO READ">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <JFXListView fx:id="listToRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
-                                                     prefWidth="488.0"/>
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                        <Tab text="READED">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="597.0" prefWidth="516.0">
-                                    <children>
-                                        <JFXListView fx:id="listReaded" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
-                                                     prefWidth="488.0"/>
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                    </tabs>
+                    <Tab onSelectionChanged="#viewToRead" text="ToRead">
+                        <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <children>
+                                    <JFXListView fx:id="listToRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                 prefWidth="488.0"/>
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </Tab>
+                    <Tab onSelectionChanged="#viewReaded" text="Readed">
+                        <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <children>
+                                    <JFXListView fx:id="listReaded" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                 prefWidth="488.0"/>
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </Tab>
                     <Tab onSelectionChanged="#viewFollow" text="Follow">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
