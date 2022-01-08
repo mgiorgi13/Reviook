@@ -1,6 +1,7 @@
-
+//
 //package it.unipi.dii.reviook_app;
 //
+//import com.github.javafaker.Faker;
 //import it.unipi.dii.reviook_app.Data.Author;
 //import it.unipi.dii.reviook_app.Manager.UserManager;
 //import javafx.fxml.FXMLLoader;
@@ -102,8 +103,10 @@
 //
 //    private static void appendJson(String username){
 //        UserManager us = new UserManager();
-//        Faker faker = new Faker();
-//        Author users = new Author("","",username,"","");
+//        Faker faker = new Faker(new Locale("en-US"));
+//        String name = faker.name().fullName();
+//        String nickname = faker.name().username();
+//        Author users = new Author(name,"",nickname,faker.internet().emailAddress(name),nickname+"2022");
 //        Neo4jDriver nd = Neo4jDriver.getInstance();
 //        us.addNewUsers("Author",username);
 //        if (count == 1) System.out.println("ok");

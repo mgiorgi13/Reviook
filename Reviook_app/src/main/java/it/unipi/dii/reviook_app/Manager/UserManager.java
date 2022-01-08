@@ -29,7 +29,6 @@ public class UserManager {
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "amazonBooks";
-    private static final String genreCollection = "geners";
 
 
     public UserManager() {
