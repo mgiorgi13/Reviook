@@ -249,7 +249,30 @@ public class AuthorInterfaceController {
         });
         //    System.out.println(Follow.size()+ " "+session.getLoggedAuthor().getInteractions().getFollow()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
-
+    @FXML
+    void viewReaded(){
+        listReaded.getItems().clear();
+        List<String> toRead;
+        if (userManager.verifyUsername(usernameAuthor.getText(),false)==1)
+            toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "readed");
+        else toRead = userManager.loadRelationsBook("User", usernameAuthor.getText(), "readed");
+        ObservableList<String> listFollowers = FXCollections.observableArrayList();
+        for (int i = 0; i < toRead.size(); i++)
+            listFollowers.add(toRead.get(i));
+        listReaded.getItems().addAll(listFollowers);
+    }
+    @FXML
+    void viewToRead(){
+        listToRead.getItems().clear();
+        List<String> toRead;
+        if (userManager.verifyUsername(usernameAuthor.getText(),false)==1)
+            toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "toRead");
+        else toRead = userManager.loadRelationsBook("User", usernameAuthor.getText(), "toRead");
+        ObservableList<String> listFollowers = FXCollections.observableArrayList();
+        for (int i = 0; i < toRead.size(); i++)
+            listFollowers.add(toRead.get(i));
+        listToRead.getItems().addAll(listFollowers);
+    }
     @FXML
     void viewFollower() {
         listFollower.getItems().clear();
@@ -280,6 +303,7 @@ public class AuthorInterfaceController {
                 listFollowers.add(author.getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         }
+        followersCount.setText(String.valueOf(Follower.size()));
         listFollower.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -318,7 +342,9 @@ public class AuthorInterfaceController {
 
     public void publishedFunction() {
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(searchManager.searchBooksAuthor(usernameAuthor.getText()));
+        // TODO recuperare id  autore e fare la ricerca con quello
+        String revtID = userManager.retriveID(usernameAuthor.getText());
+        obsUserList.addAll(searchManager.searchBooksAuthor(revtID));
         ObservableList<String> statistic = FXCollections.observableArrayList();
         statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));
         if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
@@ -353,14 +379,9 @@ public class AuthorInterfaceController {
 
         viewFollow();
         viewFollower();
-
-        listToRead.getItems().add("Book to read 1");
-        listToRead.getItems().add("Book to read 2");
-        listToRead.getItems().add("Book to read 3");
-
-        listReaded.getItems().add("Book readed 1");
-        listReaded.getItems().add("Book readed 2");
-        listReaded.getItems().add("Book readed 3");
+        viewToRead();
+        viewReaded();
+       
 
     }
 

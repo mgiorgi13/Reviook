@@ -37,7 +37,7 @@ public class UserInterfaceController {
     private Text usernameUser, followersCount, followCount;
 
     @FXML
-    private JFXListView<String> listFollow, listFollower;
+    private JFXListView<String> listFollow, listFollower,listReaded,listToRead;
 
     @FXML
     private CheckBox follow;
@@ -95,8 +95,11 @@ public class UserInterfaceController {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
+        viewReaded();
+        viewToRead();
         viewFollow();
         viewFollower();
+
 
         if (session.getLoggedAuthor() != null) {
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
@@ -280,14 +283,34 @@ public class UserInterfaceController {
         });
 
     }
-
+    @FXML
+    void viewReaded(){
+        listReaded.getItems().clear();
+        List<String> toRead;
+        toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "readed");
+        ObservableList<String> listFollowers = FXCollections.observableArrayList();
+        for (int i = 0; i < toRead.size(); i++)
+            listFollowers.add(toRead.get(i));
+        listReaded.getItems().addAll(listFollowers);
+    }
+    @FXML
+    void viewToRead(){
+        listToRead.getItems().clear();
+        List<String> toRead;
+        toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "toRead");
+        ObservableList<String> listFollowers = FXCollections.observableArrayList();
+        for (int i = 0; i < toRead.size(); i++)
+            listFollowers.add(toRead.get(i));
+        listToRead.getItems().addAll(listFollowers);
+    }
     public void initialize() {
         follow.setVisible(false);
 
         if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
-
+        viewReaded();
+        viewToRead();
         viewFollower();
         viewFollow();
     }

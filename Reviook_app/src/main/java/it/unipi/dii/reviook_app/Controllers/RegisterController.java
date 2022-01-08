@@ -18,6 +18,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,18 +112,19 @@ public class RegisterController {
             return;
         }
 
-
+        String concat = nickname + email;
+        String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
         String singIn = SignIn(Name, surname, email, nickname, password, repeatPsw);
         if (!singIn.equals("Registered")) {
             actiontarget.setText(singIn);
             return;
         }
         if (CheckAuthor.isSelected()) {
-            userManager.addNewUsers("Author", nickname);
-            userManager.register(Name, surname, email, nickname, password, "Author");
+            userManager.addNewUsers("Author", nickname, id);
+            userManager.register(Name, surname, email, nickname, password, "Author",id);
         } else {
-            userManager.addNewUsers("User", nickname);
-            userManager.register(Name, surname, email, nickname, password, "User");
+            userManager.addNewUsers("User", nickname,id);
+            userManager.register(Name, surname, email, nickname, password, "User",id);
         }
         actiontarget.setText(singIn);
         Thread.sleep(1000);

@@ -1,15 +1,12 @@
 package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.mongodb.DBObject;
 import it.unipi.dii.reviook_app.Data.Author;
-import it.unipi.dii.reviook_app.Data.Books;
-import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -27,7 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
+import org.bson.Document;
 
 
 public class AddBookController {
@@ -50,7 +47,11 @@ public class AddBookController {
 
     @FXML
     private Text actiontarget;
-
+    class paramAuthors{
+        String author_name;
+        String author_role;
+        String author_id;
+    };
 
     private Session session = Session.getInstance();
     private UserManager userManager = new UserManager();
@@ -217,12 +218,17 @@ public class AddBookController {
         String Description = description.getText();
         ArrayList<String> Genre=new ArrayList<String>((ObservableList)generTag.getItems());
         ArrayList<String> UsernameTagged=new ArrayList<String>((ObservableList)listTagged.getItems());
+        UsernameTagged.add(session.getLoggedAuthor().getNickname());
 
+        ArrayList<DBObject> param = new ArrayList<DBObject>();
+        for (int i = 0;i < UsernameTagged.size();i++) {
+            param.add(userManager.paramAuthor(UsernameTagged.get(i)));
+        }
         if(userManager.verifyISBN(ISBN_)){
             actiontarget.setText("Existing ISBN");
             return;
         }
-        userManager.addBook(  Title,  ISBN_,  Description,  Genre, UsernameTagged);
+        userManager.addBook(  Title,  ISBN_,  Description,  Genre, param);
         session.getLoggedAuthor().setWrittenBook(Title);
         for (int i= 0; i< Genre.size(); i++)
             session.getLoggedAuthor().setWrittenBookStatistic(Genre.get(i));

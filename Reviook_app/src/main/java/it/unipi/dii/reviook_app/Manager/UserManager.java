@@ -14,12 +14,12 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
-
+import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-
-import static com.mongodb.client.model.Aggregates.set;
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
@@ -39,12 +39,16 @@ public class UserManager {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-
-    // N4J =============================================================================================================
-    public void addNewUsers(String type, String username) {
+    class paramAuthor{
+        String author_name;
+        String author_role;
+        String author_id;
+    }
+    // N4J
+    public void addNewUsers(String type, String username,String id) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee:" + type + " { username: $username})", parameters("username", username));
+                tx.run("CREATE (ee:" + type + " { username: $username, author_id: $id})", parameters("username", username, "id", id));
                 return null;
             });
         }
@@ -107,6 +111,27 @@ public class UserManager {
         }
     }
 
+    public List<String> loadRelationsBook(String type, String username, String read) {
+
+        List<String> movieTitles = new ArrayList();
+        try (Session session = nd.getDriver().session()) {
+            movieTitles = session.readTransaction((TransactionWork<List<String>>) tx -> {
+                Result result = tx.run("MATCH (ee:" + type + ")-[:"+read+"]->(friends) where ee.username = '" + username + "' " +
+                        "return friends.title as Friends");
+                ArrayList<String> movies = new ArrayList<>();
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    movies.add(((Record) r).get("Friends").asString());
+                }
+                return movies;
+            });
+            for (String movieTitle : movieTitles) {
+                System.out.println("\t- " + movieTitle);
+            }
+
+        }
+        return movieTitles;
+    }
     public List<String> loadRelations(String type, String username) {
 
         List<String> movieTitles = new ArrayList();
@@ -150,9 +175,35 @@ public class UserManager {
         }
         return movieTitles;
     }
-    //==================================================================================================================
+    public void toReadAdd(String type, String username, String book_id){
+        Neo4jDriver nd = Neo4jDriver.getInstance();
+        List<String> movieTitles = new ArrayList();
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.book_id='" + book_id + "'" +
+                        "CREATE (n)-[:toRead]->(nn)");
+                return null;
+            });
+        }
 
-    // MONGO DB ========================================================================================================
+
+    }
+    public void readedAdd(String type, String username, String book_id){
+        Neo4jDriver nd = Neo4jDriver.getInstance();
+        List<String> movieTitles = new ArrayList();
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+
+                tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.book_id='" + book_id + "'" +
+                        "CREATE (n)-[:readed]->(nn)" );
+                return null;
+            });
+        }
+
+
+    }
+
+    //MongoDB
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
@@ -163,6 +214,32 @@ public class UserManager {
         return false;
     }
 
+    public DBObject paramAuthor(String Username){
+        MongoCollection<Document> authors = md.getCollection(authorCollection);
+        DBObject author = new BasicDBObject();
+        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+            while (cursor.hasNext()) {
+                Document user = cursor.next();
+                author.put("author_name",(String) user.get("name"));
+                author.put("author_role","");
+                author.put("author_id",(String) user.get("author_id"));
+            }
+        }
+
+        return author;
+    }
+    public String retriveID(String Username){
+        MongoCollection<Document> authors = md.getCollection(authorCollection);
+        String ID = null;
+        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+            while (cursor.hasNext()) {
+                Document user = cursor.next();
+                ID = user.get("author_id").toString();
+
+            }
+        }
+        return ID;
+    }
     public int verifyUsername(String Username, boolean main) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -185,6 +262,7 @@ public class UserManager {
         }
         return -1;
     }
+
 
     public boolean verifyPassword(boolean type, String Username, String Password) {
         MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);
@@ -211,34 +289,37 @@ public class UserManager {
         }
         return true;
     }
+    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<DBObject>  UsernameTagged){
 
-    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<String> UsernameTagged) {
-        String concat = ISBN + title + UsernameTagged;
+
+        String concat =ISBN+title+UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
-        UsernameTagged.add(session.getLoggedAuthor().getNickname());
-        Document doc = new Document("author", UsernameTagged)
-                .append("image_url", null)
+
+        ArrayList<String> reviews = new ArrayList<String>();
+        Document doc = new Document("image_url", "null")
                 .append("num_pages", "")
-                .append("asin", "")
+                .append("isbn", ISBN)
                 .append("description", Description)
                 .append("average_rating", "")
-                .append("book_id", id)
+                .append("book_id",id)
                 .append("title", title)
-                .append("rating_count", "")
-                .append("language_code", "")
+                .append("language_code","")
                 .append("publication_month", "")
-                .append("isbn", ISBN)
                 .append("publication_year", "")
-                .append("reviews", "")
+                .append("reviews",reviews)
                 .append("genres", Genre)
-                .append("publication_day", "");
+                .append("asin", "")
+                .append("publication_day", "")
+                .append("ratings_count", "")
+                .append("authors", UsernameTagged);
+
 
         md.getCollection(bookCollection).insertOne(doc);
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
-                for (int i = 0; i < UsernameTagged.size(); i++) {
-                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.username = '" + UsernameTagged.get(i) + "' AND ee.book_id='" + id + "'" +
+                for (int i = 0; i<UsernameTagged.size(); i++ ) {
+                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.author_id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.book_id='" + id + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
 
                 }
@@ -246,8 +327,7 @@ public class UserManager {
             });
         }
     }
-
-    public void register(String name, String surname, String email, String nickname, String password, String type) {
+    public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
         Document doc = new Document("name", name + " " + surname)
                 .append("password", password)
                 .append("count_reviews", "")
@@ -255,8 +335,6 @@ public class UserManager {
                 .append("email", email)
                 .append("username", nickname);
 
-        String concat = nickname + email;
-        String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
 
         if (type.equals("Author")) {
             doc.append("author_id", id).append("avarage_reviewsSelf", "");
