@@ -19,7 +19,7 @@ public class listBooks {
         statistic.clear();
     }
 
-    public void setReaded(String title, String book_id ) {
+    public void setRead(String title, String book_id ) {
         this.readed.add(new Book(title,book_id)) ;
     }
 
@@ -32,7 +32,7 @@ public class listBooks {
         }
         return null;
     }
-    public String getIdBookReaded(String title)
+    public String getIdBookRead(String title)
     {
         for( Book Books: this.readed) {
             if (Books.getTitle().equals(title))

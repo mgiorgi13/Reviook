@@ -267,9 +267,9 @@ public class AuthorInterfaceController {
         ObservableList<String> ListReaded = FXCollections.observableArrayList();
         for (Book book: readed) {
             if (session.getLoggedAuthor() != null)
-                session.getLoggedAuthor().getBooks().setReaded(book.getTitle(),book.getBook_id());
+                session.getLoggedAuthor().getBooks().setRead(book.getTitle(),book.getBook_id());
             else
-                session.getLoggedUser().getBooks().setReaded(book.getTitle(),book.getBook_id());
+                session.getLoggedUser().getBooks().setRead(book.getTitle(),book.getBook_id());
             ListReaded.add(book.getTitle());
         }
         listReaded.getItems().addAll(ListReaded);
@@ -280,9 +280,9 @@ public class AuthorInterfaceController {
                     String selectedCell = (String) listReaded.getSelectionModel().getSelectedItem();
                     String id_book;
                     if (session.getLoggedAuthor() != null) {
-                        id_book = session.getLoggedAuthor().getBooks().getIdBookReaded(selectedCell);
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookRead(selectedCell);
                     } else {
-                        id_book = session.getLoggedUser().getBooks().getIdBookReaded(selectedCell);
+                        id_book = session.getLoggedUser().getBooks().getIdBookRead(selectedCell);
                     }
                     Book allInfo = searchManager.searchIdBook(id_book);
                     try {

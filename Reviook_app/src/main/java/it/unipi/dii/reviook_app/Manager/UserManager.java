@@ -42,11 +42,11 @@ public class UserManager {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-    class paramAuthor{
-        String author_name;
-        String author_role;
-        String author_id;
-    }
+//    class paramAuthor{
+//        String author_name;
+//        String author_role;
+//        String author_id;
+//    }
     // N4J
     public void addNewUsers(String type, String username,String id) {
         try (Session session = nd.getDriver().session()) {
@@ -413,5 +413,9 @@ public class UserManager {
 
 
     }
+    //==================================================================================================================
+
+    //Analitics
+
     //==================================================================================================================
 }
