@@ -250,7 +250,7 @@
             <children>
                 <TabPane layoutX="-1.0" layoutY="-1.0" prefHeight="599.0" prefWidth="516.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                        <Tab text="TO READ">
+                        <Tab onSelectionChanged="#viewToRead" text="TO READ">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -259,7 +259,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab text="READED">
+                        <Tab onSelectionChanged="#viewReaded" text="READED">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="597.0" prefWidth="516.0">
                                     <children>

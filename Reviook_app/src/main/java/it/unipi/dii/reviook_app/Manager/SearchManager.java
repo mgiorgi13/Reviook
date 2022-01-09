@@ -31,7 +31,7 @@ public class SearchManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "amazonBooks";
+    private static final String bookCollection = "books";
     private static final String genreCollection = "genres";
 
 
@@ -140,13 +140,15 @@ public class SearchManager {
         return result;
     }
 
+
+
     public ArrayList<String> searchBooksAuthor(String Username) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         List<Document> queryResults;
         if (Username.equals(""))
             queryResults = book.find().into(new ArrayList());
         else
-            queryResults = book.find(in("author", Username)).into(new ArrayList());
+            queryResults = book.find(in("authors.author_id", Username)).into(new ArrayList());
         ArrayList<String> result = new ArrayList<>();
 
         for (Document r :

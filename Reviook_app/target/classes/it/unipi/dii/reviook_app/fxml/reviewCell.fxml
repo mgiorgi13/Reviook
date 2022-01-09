@@ -6,7 +6,7 @@
 
 <Pane fx:id="pane" prefHeight="135.0" prefWidth="553.0"
       style="-fx-background-color: #9bafcc; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1">
+      xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <Circle fill="#ffffff00" layoutX="520.0" layoutY="113.0" radius="13.0" stroke="WHITE" strokeType="INSIDE"/>
         <Circle fill="#ffffff00" layoutX="472.0" layoutY="113.0" radius="13.0" stroke="WHITE" strokeType="INSIDE"/>
