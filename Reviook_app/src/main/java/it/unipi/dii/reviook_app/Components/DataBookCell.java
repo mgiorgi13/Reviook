@@ -9,6 +9,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class DataBookCell {
@@ -32,6 +33,9 @@ public class DataBookCell {
     private Text reviewCounter;
 
     @FXML
+    private Text ratingCounter;
+
+    @FXML
     private Text titleField;
 
     public DataBookCell() {
@@ -49,6 +53,18 @@ public class DataBookCell {
         authorsField.setText(book.getAuthors().get(0));
         likeCounter.setText(String.valueOf(book.getRatings_count()));
         reviewCounter.setText(String.valueOf(book.getReviews().size()));
+        Float ratingSum = 0.0f;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (book.getReviews().size() > 0) {
+            for (Review r : book.getReviews()) {
+                ratingSum += Float.parseFloat(r.getRating());
+                // System.out.println(r.getRating());
+            }
+            ratingCounter.setText(String.valueOf(df.format(ratingSum / book.getReviews().size())));
+        } else {
+            ratingCounter.setText(String.valueOf(df.format(ratingSum)));
+        }
+
     }
 
     public Pane getPane() {

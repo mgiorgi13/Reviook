@@ -26,9 +26,9 @@
                                         <Text layoutX="159.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
                                         <Text layoutX="159.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:" />
                                         <Text layoutX="159.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category:" />
-                                        <JFXButton layoutX="14.0" layoutY="154.0" text="To Read" />
-                                        <JFXButton layoutX="79.0" layoutY="154.0" text="Like" />
-                                        <JFXButton layoutX="129.0" layoutY="154.0" text="Readed" />
+                                        <JFXButton layoutX="14.0" layoutY="176.0" text="To Read" />
+                                        <JFXButton layoutX="79.0" layoutY="176.0" text="Like" />
+                                        <JFXButton layoutX="129.0" layoutY="176.0" text="Readed" />
                                         <Text fx:id="bookTitle" layoutX="231.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="255.0" />
                                         <Text fx:id="bookAuthor" layoutX="231.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="228.0" />
                                         <Text fx:id="bookCategories" layoutX="231.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="255.0" />
@@ -39,6 +39,8 @@
                                                 <Text fx:id="bookDescription" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="337.0" />
                                             </content>
                                         </ScrollPane>
+                              <Text layoutX="32.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:" />
+                              <Text fx:id="ratingAVG" layoutX="81.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                                     </children>
                                 </Pane>
                                 <Pane fx:id="test" prefHeight="575.0" prefWidth="594.0">

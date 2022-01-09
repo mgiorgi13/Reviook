@@ -23,6 +23,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URL;
@@ -65,6 +67,9 @@ public class BookDetailController {
     @FXML
     private Text bookTitle;
 
+    @FXML
+    private  Text ratingAVG;
+
     Session session = Session.getInstance();
 
     private UserManager userManager = new UserManager();
@@ -72,7 +77,6 @@ public class BookDetailController {
     private String title, author, categories, description, img_url, book_id;
 
     private ArrayList<Review> reviewsList;
-
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
@@ -86,6 +90,16 @@ public class BookDetailController {
                         return new ListReview();
                     }
                 });
+        Float ratingSum = 0.0f;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (listView.getItems().size() > 0) {
+            for (Review r : listView.getItems()) {
+                ratingSum += Float.parseFloat(r.getRating());
+            }
+            ratingAVG.setText(String.valueOf(df.format(ratingSum/listView.getItems().size())));
+        }else {
+            ratingAVG.setText(String.valueOf(df.format(ratingSum)));
+        }
     }
 
     @FXML
@@ -96,20 +110,21 @@ public class BookDetailController {
         actual_stage.setResizable(false);
         actual_stage.show();
     }
+
     @FXML
-    void toRead (ActionEvent event) throws IOException {
-        String bookTitleText= bookTitle.getText();
-        if(session.getLoggedAuthor()!=null)
-            userManager.toReadAdd ("Author", session.getLoggedAuthor().getNickname(), this.book_id);
+    void toRead(ActionEvent event) throws IOException {
+        String bookTitleText = bookTitle.getText();
+        if (session.getLoggedAuthor() != null)
+            userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
         else
             userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id);
     }
 
     @FXML
-    void readed (ActionEvent event) throws IOException{
-        String bookTitleText= bookTitle.getText();
-        if(session.getLoggedAuthor()!=null)
-            userManager.readedAdd ("Author", session.getLoggedAuthor().getNickname(), this.book_id);
+    void readed(ActionEvent event) throws IOException {
+        String bookTitleText = bookTitle.getText();
+        if (session.getLoggedAuthor() != null)
+            userManager.readedAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
         else
             userManager.readedAdd("User", session.getLoggedUser().getNickname(), this.book_id);
     }
