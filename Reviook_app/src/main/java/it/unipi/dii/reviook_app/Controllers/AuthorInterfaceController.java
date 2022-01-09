@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.*;
 
 import com.jfoenix.controls.JFXListView;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -251,32 +254,108 @@ public class AuthorInterfaceController {
     }
     @FXML
     void viewReaded(){
+//        if (session.getLoggedAuthor() != null)
+//            session.getLoggedAuthor().getBooks().listBooksClear();
+//        else
+//            session.getLoggedUser().getBooks().listBooksClear();
+        String test = usernameAuthor.getText();
         listReaded.getItems().clear();
-        List<String> toRead;
-        if (userManager.verifyUsername(usernameAuthor.getText(),false)==1)
-            toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "readed");
-        else toRead = userManager.loadRelationsBook("User", usernameAuthor.getText(), "readed");
-        ObservableList<String> listFollowers = FXCollections.observableArrayList();
-        for (int i = 0; i < toRead.size(); i++)
-            listFollowers.add(toRead.get(i));
-        listReaded.getItems().addAll(listFollowers);
+        ArrayList<Book> readed;
+
+        readed = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "readed");
+        System.out.println(readed);
+        ObservableList<String> ListReaded = FXCollections.observableArrayList();
+        for (Book book: readed) {
+            if (session.getLoggedAuthor() != null)
+                session.getLoggedAuthor().getBooks().setReaded(book.getTitle(),book.getBook_id());
+            else
+                session.getLoggedUser().getBooks().setReaded(book.getTitle(),book.getBook_id());
+            ListReaded.add(book.getTitle());
+        }
+        listReaded.getItems().addAll(ListReaded);
+        listReaded.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listReaded.getSelectionModel().getSelectedItem();
+                    String id_book;
+                    if (session.getLoggedAuthor() != null) {
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookReaded(selectedCell);
+                    } else {
+                        id_book = session.getLoggedUser().getBooks().getIdBookReaded(selectedCell);
+                    }
+                    Book allInfo = searchManager.searchIdBook(id_book);
+                    try {
+                        Parent bookInterface;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                        bookInterface = (Parent) fxmlLoader.load();
+                        BookDetailController bookController = fxmlLoader.getController();
+                        bookController.setInfoBook(allInfo);
+                        Stage actual_stage = (Stage) listReaded.getScene().getWindow();
+                        actual_stage.setScene(new Scene(bookInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
     @FXML
     void viewToRead(){
-        listToRead.getItems().clear();
-        List<String> toRead;
-        if (userManager.verifyUsername(usernameAuthor.getText(),false)==1)
-            toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "toRead");
-        else toRead = userManager.loadRelationsBook("User", usernameAuthor.getText(), "toRead");
-        ObservableList<String> listFollowers = FXCollections.observableArrayList();
-        for (int i = 0; i < toRead.size(); i++)
-            listFollowers.add(toRead.get(i));
-        listToRead.getItems().addAll(listFollowers);
+//        if (session.getLoggedAuthor() != null)
+//            session.getLoggedAuthor().getBooks().listBooksClear();
+//        else
+//            session.getLoggedUser().getBooks().listBooksClear();
+        String test = usernameAuthor.getText();
+        //listReaded.getItems().clear();
+        ArrayList<Book> toRead;
+
+        toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "toRead");
+
+        ObservableList<String> ListToRead = FXCollections.observableArrayList();
+        for (Book book: toRead) {
+            if (session.getLoggedAuthor() != null)
+                session.getLoggedAuthor().getBooks().setToRead(book.getTitle(),book.getBook_id());
+            else
+                session.getLoggedUser().getBooks().setToRead(book.getTitle(),book.getBook_id());
+            ListToRead.add(book.getTitle());
+        }
+        listToRead.getItems().addAll(ListToRead);
+
+        listToRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listToRead.getSelectionModel().getSelectedItem();
+                    String id_book;
+                    if (session.getLoggedAuthor() != null) {
+                         id_book = session.getLoggedAuthor().getBooks().getIdBookToRead(selectedCell);
+                    } else {
+                         id_book = session.getLoggedUser().getBooks().getIdBookToRead(selectedCell);
+                    }
+                    Book allInfo = searchManager.searchIdBook(id_book);
+                    try {
+                        Parent bookInterface;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                        bookInterface = (Parent) fxmlLoader.load();
+                        BookDetailController bookController = fxmlLoader.getController();
+                        bookController.setInfoBook(allInfo);
+                        Stage actual_stage = (Stage) listToRead.getScene().getWindow();
+                        actual_stage.setScene(new Scene(bookInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
     @FXML
     void viewFollower() {
         listFollower.getItems().clear();
-
         ObservableList<String> listFollowers = FXCollections.observableArrayList();
         List<String> Follower;
         if ((session.getLoggedAuthor() != null) && (session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText()))) {
@@ -347,13 +426,48 @@ public class AuthorInterfaceController {
         obsUserList.addAll(searchManager.searchBooksAuthor(revtID));
         ObservableList<String> statistic = FXCollections.observableArrayList();
         statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));
-        if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
-            for (int i = 0; i < obsUserList.size(); i++)
-                session.getLoggedAuthor().setWrittenBook(obsUserList.get(i));
-            for (int i = 0; i < statistic.size(); i++)
-                session.getLoggedAuthor().setWrittenBookStatistic(statistic.get(i));
+        ArrayList<Book> published;
+
+        published = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "WROTE");
+
+        ObservableList<String> ListToRead = FXCollections.observableArrayList();
+        for (Book book: published) {
+            if (session.getLoggedAuthor() != null)
+                session.getLoggedAuthor().getBooks().setToRead(book.getTitle(),book.getBook_id());
+            else
+                session.getLoggedUser().getBooks().setToRead(book.getTitle(),book.getBook_id());
+            ListToRead.add(book.getTitle());
         }
         listPublished.getItems().addAll(obsUserList);
+        listPublished.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listPublished.getSelectionModel().getSelectedItem();
+                    String id_book;
+                    if (session.getLoggedAuthor() != null) {
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookToRead(selectedCell);
+                    } else {
+                        id_book = session.getLoggedUser().getBooks().getIdBookToRead(selectedCell);
+                    }
+                    Book allInfo = searchManager.searchIdBook(id_book);
+                    try {
+                        Parent bookInterface;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                        bookInterface = (Parent) fxmlLoader.load();
+                        BookDetailController bookController = fxmlLoader.getController();
+                        bookController.setInfoBook(allInfo);
+                        Stage actual_stage = (Stage) listPublished.getScene().getWindow();
+                        actual_stage.setScene(new Scene(bookInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        //TODO statistiche scrittore
         String gener;
         Integer perc;
         for (int i = 0; i < statistic.size(); i++) {
