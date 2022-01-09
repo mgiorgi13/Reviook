@@ -68,7 +68,7 @@ public class BookDetailController {
     private Text bookTitle;
 
     @FXML
-    private  Text ratingAVG;
+    private Text ratingAVG;
 
     Session session = Session.getInstance();
 
@@ -80,9 +80,17 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
+    public void clearlist() {
+        listView.getItems().clear();
+        this.observableList.removeAll();
+    }
+
     public void setListView() {
-        observableList.setAll(this.reviewsList);
-        listView.setItems(observableList);
+        for (Review r : this.reviewsList) {
+            System.out.println(r.getReview_text());
+        }
+        this.observableList.setAll(this.reviewsList);
+        listView.setItems(this.observableList);
         listView.setCellFactory(
                 new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
                     @Override
@@ -96,9 +104,9 @@ public class BookDetailController {
             for (Review r : listView.getItems()) {
                 ratingSum += Float.parseFloat(r.getRating());
             }
-            ratingAVG.setText(String.valueOf(df.format(ratingSum/listView.getItems().size())));
-        }else {
-            ratingAVG.setText(String.valueOf(df.format(ratingSum)));
+            ratingAVG.setText(String.valueOf(df.format(ratingSum / listView.getItems().size())));
+        } else {
+            ratingAVG.setText(df.format(ratingSum));
         }
     }
 
@@ -167,6 +175,7 @@ public class BookDetailController {
     }
 
     public void setInfoBook(Book bookSelected) {
+        System.out.println("CARICO INFO BOOK");
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
