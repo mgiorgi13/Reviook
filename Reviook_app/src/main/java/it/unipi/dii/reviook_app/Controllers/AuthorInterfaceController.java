@@ -309,7 +309,7 @@ public class AuthorInterfaceController {
 //        else
 //            session.getLoggedUser().getBooks().listBooksClear();
         String test = usernameAuthor.getText();
-        //listReaded.getItems().clear();
+        listToRead.getItems().clear();
         ArrayList<Book> toRead;
 
         toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "toRead");
@@ -420,6 +420,7 @@ public class AuthorInterfaceController {
     }
 
     public void publishedFunction() {
+        listPublished.getItems().clear();
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
         // TODO recuperare id  autore e fare la ricerca con quello
         String revtID = userManager.retriveID(usernameAuthor.getText());

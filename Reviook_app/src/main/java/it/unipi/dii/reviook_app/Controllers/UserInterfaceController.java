@@ -344,7 +344,7 @@ public class UserInterfaceController {
 //        else
 //            session.getLoggedUser().getBooks().listBooksClear();
         String test = usernameUser.getText();
-        //listReaded.getItems().clear();
+        listToRead.getItems().clear();
         ArrayList<Book> toRead;
 
         toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "toRead");
