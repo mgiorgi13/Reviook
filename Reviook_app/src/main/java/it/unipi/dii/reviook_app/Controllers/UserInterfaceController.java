@@ -2,13 +2,16 @@ package it.unipi.dii.reviook_app.Controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Users;
+import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -51,6 +54,7 @@ public class UserInterfaceController {
     private String nickname;
 
     private UserManager userManagerNJ = new UserManager();
+    private SearchManager searchManager = new SearchManager();
 
     private Session session = Session.getInstance();
 
@@ -285,23 +289,104 @@ public class UserInterfaceController {
     }
     @FXML
     void viewReaded(){
+//        if (session.getLoggedAuthor() != null)
+//            session.getLoggedAuthor().getBooks().listBooksClear();
+//        else
+//            session.getLoggedUser().getBooks().listBooksClear();
+        String test = usernameUser.getText();
         listReaded.getItems().clear();
-        List<String> toRead;
-        toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "readed");
-        ObservableList<String> listFollowers = FXCollections.observableArrayList();
-        for (int i = 0; i < toRead.size(); i++)
-            listFollowers.add(toRead.get(i));
-        listReaded.getItems().addAll(listFollowers);
+        ArrayList<Book> readed;
+
+        readed = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "readed");
+        System.out.println(readed);
+        ObservableList<String> ListReaded = FXCollections.observableArrayList();
+        for (Book book: readed) {
+            if (session.getLoggedAuthor() != null)
+                session.getLoggedAuthor().getBooks().setReaded(book.getTitle(),book.getBook_id());
+            else
+                session.getLoggedUser().getBooks().setReaded(book.getTitle(),book.getBook_id());
+            ListReaded.add(book.getTitle());
+        }
+        listReaded.getItems().addAll(ListReaded);
+        listReaded.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listReaded.getSelectionModel().getSelectedItem();
+                    String id_book;
+                    if (session.getLoggedAuthor() != null) {
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookReaded(selectedCell);
+                    } else {
+                        id_book = session.getLoggedUser().getBooks().getIdBookReaded(selectedCell);
+                    }
+                    Book allInfo = searchManager.searchIdBook(id_book);
+                    try {
+                        Parent bookInterface;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                        bookInterface = (Parent) fxmlLoader.load();
+                        BookDetailController bookController = fxmlLoader.getController();
+                        bookController.setInfoBook(allInfo);
+                        Stage actual_stage = (Stage) listReaded.getScene().getWindow();
+                        actual_stage.setScene(new Scene(bookInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
     @FXML
     void viewToRead(){
+//        if (session.getLoggedAuthor() != null)
+//            session.getLoggedAuthor().getBooks().listBooksClear();
+//        else
+//            session.getLoggedUser().getBooks().listBooksClear();
+        String test = usernameUser.getText();
         listToRead.getItems().clear();
-        List<String> toRead;
+        ArrayList<Book> toRead;
+
         toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "toRead");
-        ObservableList<String> listFollowers = FXCollections.observableArrayList();
-        for (int i = 0; i < toRead.size(); i++)
-            listFollowers.add(toRead.get(i));
-        listToRead.getItems().addAll(listFollowers);
+
+        ObservableList<String> ListToRead = FXCollections.observableArrayList();
+        for (Book book: toRead) {
+            if (session.getLoggedAuthor() != null)
+                session.getLoggedAuthor().getBooks().setToRead(book.getTitle(),book.getBook_id());
+            else
+                session.getLoggedUser().getBooks().setToRead(book.getTitle(),book.getBook_id());
+            ListToRead.add(book.getTitle());
+        }
+        listToRead.getItems().addAll(ListToRead);
+
+        listToRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listToRead.getSelectionModel().getSelectedItem();
+                    String id_book;
+                    if (session.getLoggedAuthor() != null) {
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookToRead(selectedCell);
+                    } else {
+                        id_book = session.getLoggedUser().getBooks().getIdBookToRead(selectedCell);
+                    }
+                    Book allInfo = searchManager.searchIdBook(id_book);
+                    try {
+                        Parent bookInterface;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                        bookInterface = (Parent) fxmlLoader.load();
+                        BookDetailController bookController = fxmlLoader.getController();
+                        bookController.setInfoBook(allInfo);
+                        Stage actual_stage = (Stage) listToRead.getScene().getWindow();
+                        actual_stage.setScene(new Scene(bookInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
     public void initialize() {
         follow.setVisible(false);

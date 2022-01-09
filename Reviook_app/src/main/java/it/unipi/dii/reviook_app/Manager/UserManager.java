@@ -6,6 +6,7 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
@@ -33,22 +34,21 @@ public class UserManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "books";
+    private static final String bookCollection = "amazonBooks";
+    private static final String genreCollection = "geners";
 
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-
-    class paramAuthor {
+    class paramAuthor{
         String author_name;
         String author_role;
         String author_id;
     }
-
     // N4J
-    public void addNewUsers(String type, String username, String id) {
+    public void addNewUsers(String type, String username,String id) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee:" + type + " { username: $username, author_id: $id})", parameters("username", username, "id", id));
@@ -114,28 +114,24 @@ public class UserManager {
         }
     }
 
-    public List<String> loadRelationsBook(String type, String username, String read) {
-
-        List<String> movieTitles = new ArrayList();
+    public ArrayList<Book> loadRelationsBook(String type, String username, String read) {
+        ArrayList<Book> movieTitles = new ArrayList<Book>();
+        ArrayList<Book> books = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
-            movieTitles = session.readTransaction((TransactionWork<List<String>>) tx -> {
-                Result result = tx.run("MATCH (ee:" + type + ")-[:" + read + "]->(friends) where ee.username = '" + username + "' " +
-                        "return friends.title as Friends");
-                ArrayList<String> movies = new ArrayList<>();
+            movieTitles = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
+                Result result = tx.run("MATCH (ee:" + type + ")-[:"+read+"]->(book) where ee.username = '" + username + "' " +
+                        "return book.title, book.book_id");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    movies.add(((Record) r).get("Friends").asString());
+                        books.add(new Book(((Record) r).get("book.title").asString(),((Record) r).get("book.book_id").asString()));
                 }
-                return movies;
+                return books;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+
 
         }
         return movieTitles;
     }
-
     public List<String> loadRelations(String type, String username) {
 
         List<String> movieTitles = new ArrayList();
@@ -179,8 +175,7 @@ public class UserManager {
         }
         return movieTitles;
     }
-
-    public void toReadAdd(String type, String username, String book_id) {
+    public void toReadAdd(String type, String username, String book_id){
         Neo4jDriver nd = Neo4jDriver.getInstance();
         List<String> movieTitles = new ArrayList();
         try (Session session = nd.getDriver().session()) {
@@ -193,15 +188,14 @@ public class UserManager {
 
 
     }
-
-    public void readedAdd(String type, String username, String book_id) {
+    public void readedAdd(String type, String username, String book_id){
         Neo4jDriver nd = Neo4jDriver.getInstance();
         List<String> movieTitles = new ArrayList();
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
 
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.book_id='" + book_id + "'" +
-                        "CREATE (n)-[:readed]->(nn)");
+                        "CREATE (n)-[:readed]->(nn)" );
                 return null;
             });
         }
@@ -220,22 +214,21 @@ public class UserManager {
         return false;
     }
 
-    public DBObject paramAuthor(String Username) {
+    public DBObject paramAuthor(String Username){
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         DBObject author = new BasicDBObject();
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
-                author.put("author_name", (String) user.get("name"));
-                author.put("author_role", "");
-                author.put("author_id", (String) user.get("author_id"));
+                author.put("author_name",(String) user.get("name"));
+                author.put("author_role","");
+                author.put("author_id",(String) user.get("author_id"));
             }
         }
 
         return author;
     }
-
-    public String retriveID(String Username) {
+    public String retriveID(String Username){
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         String ID = null;
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
@@ -247,7 +240,6 @@ public class UserManager {
         }
         return ID;
     }
-
     public int verifyUsername(String Username, boolean main) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -297,9 +289,10 @@ public class UserManager {
         }
         return true;
     }
+    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<DBObject>  UsernameTagged){
 
-    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
-        String concat = ISBN + title + UsernameTagged;
+
+        String concat =ISBN+title+UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
 
         ArrayList<String> reviews = new ArrayList<String>();
@@ -308,12 +301,12 @@ public class UserManager {
                 .append("isbn", ISBN)
                 .append("description", Description)
                 .append("average_rating", "")
-                .append("book_id", id)
+                .append("book_id",id)
                 .append("title", title)
-                .append("language_code", "")
+                .append("language_code","")
                 .append("publication_month", "")
                 .append("publication_year", "")
-                .append("reviews", reviews)
+                .append("reviews",reviews)
                 .append("genres", Genre)
                 .append("asin", "")
                 .append("publication_day", "")
@@ -325,7 +318,7 @@ public class UserManager {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
-                for (int i = 0; i < UsernameTagged.size(); i++) {
+                for (int i = 0; i<UsernameTagged.size(); i++ ) {
                     tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.author_id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.book_id='" + id + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
 

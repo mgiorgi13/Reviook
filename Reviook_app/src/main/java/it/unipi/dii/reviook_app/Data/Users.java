@@ -13,7 +13,7 @@ public class Users {
     private String email;
     private String password;
     private Interaction interactions;
-    private Books books;
+    private listBooks listBooks;
 
     UserManager userManager = new UserManager();
 
@@ -24,7 +24,7 @@ public class Users {
         this.email = email;
         this.password = password;
         this.interactions = new Interaction();
-        this.books = new Books();
+        this.listBooks = new listBooks();
     }
 
 
@@ -52,8 +52,8 @@ public class Users {
         return interactions;
     }
 
-    public Books getBooks() {
-        return books;
+    public listBooks getBooks() {
+        return listBooks;
     }
 
     public void setName(String name) {
@@ -80,8 +80,8 @@ public class Users {
         this.interactions = interactions;
     }
 
-    public void setBooks(Books books) {
-        this.books = books;
+    public void setBooks(listBooks books) {
+        this.listBooks = books;
     }
 
     public int getFollowerCount() {
