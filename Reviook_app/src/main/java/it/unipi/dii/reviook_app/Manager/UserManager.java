@@ -34,7 +34,7 @@ public class UserManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "amazonBooks";
+    private static final String bookCollection = "books";
     private static final String genreCollection = "geners";
 
 
@@ -42,13 +42,15 @@ public class UserManager {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-//    class paramAuthor{
-//        String author_name;
-//        String author_role;
-//        String author_id;
-//    }
+
+    class paramAuthor {
+        String author_name;
+        String author_role;
+        String author_id;
+    }
+
     // N4J
-    public void addNewUsers(String type, String username,String id) {
+    public void addNewUsers(String type, String username, String id) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee:" + type + " { username: $username, author_id: $id})", parameters("username", username, "id", id));
@@ -132,6 +134,7 @@ public class UserManager {
         }
         return movieTitles;
     }
+
     public List<String> loadRelations(String type, String username) {
 
         List<String> movieTitles = new ArrayList();
@@ -175,7 +178,8 @@ public class UserManager {
         }
         return movieTitles;
     }
-    public void toReadAdd(String type, String username, String book_id){
+
+    public void toReadAdd(String type, String username, String book_id) {
         Neo4jDriver nd = Neo4jDriver.getInstance();
         List<String> movieTitles = new ArrayList();
         try (Session session = nd.getDriver().session()) {
@@ -188,22 +192,24 @@ public class UserManager {
 
 
     }
-    public void readedAdd(String type, String username, String book_id){
+
+    public void readedAdd(String type, String username, String book_id) {
         Neo4jDriver nd = Neo4jDriver.getInstance();
         List<String> movieTitles = new ArrayList();
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
 
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.book_id='" + book_id + "'" +
-                        "CREATE (n)-[:readed]->(nn)" );
+                        "CREATE (n)-[:readed]->(nn)");
                 return null;
             });
         }
 
 
     }
+    //==================================================================================================================
 
-    //MongoDB
+    //MongoDB ==========================================================================================================
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
@@ -214,21 +220,22 @@ public class UserManager {
         return false;
     }
 
-    public DBObject paramAuthor(String Username){
+    public DBObject paramAuthor(String Username) {
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         DBObject author = new BasicDBObject();
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
-                author.put("author_name",(String) user.get("name"));
-                author.put("author_role","");
-                author.put("author_id",(String) user.get("author_id"));
+                author.put("author_name", (String) user.get("name"));
+                author.put("author_role", "");
+                author.put("author_id", (String) user.get("author_id"));
             }
         }
 
         return author;
     }
-    public String retriveID(String Username){
+
+    public String retriveID(String Username) {
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         String ID = null;
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
@@ -240,6 +247,7 @@ public class UserManager {
         }
         return ID;
     }
+
     public int verifyUsername(String Username, boolean main) {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -289,44 +297,6 @@ public class UserManager {
         }
         return true;
     }
-    public void addBook(String title, String ISBN, String Description, ArrayList<String> Genre,ArrayList<DBObject>  UsernameTagged){
-
-
-        String concat =ISBN+title+UsernameTagged;
-        String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
-
-        ArrayList<String> reviews = new ArrayList<String>();
-        Document doc = new Document("image_url", "null")
-                .append("num_pages", "")
-                .append("isbn", ISBN)
-                .append("description", Description)
-                .append("average_rating", "")
-                .append("book_id",id)
-                .append("title", title)
-                .append("language_code","")
-                .append("publication_month", "")
-                .append("publication_year", "")
-                .append("reviews",reviews)
-                .append("genres", Genre)
-                .append("asin", "")
-                .append("publication_day", "")
-                .append("ratings_count", "")
-                .append("authors", UsernameTagged);
-
-
-        md.getCollection(bookCollection).insertOne(doc);
-        try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
-                for (int i = 0; i<UsernameTagged.size(); i++ ) {
-                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.author_id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.book_id='" + id + "'" +
-                            "CREATE (dd)-[:WROTE]->(ee)");
-
-                }
-                return null;
-            });
-        }
-    }
 
     public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
         Document doc = new Document("name", name + " " + surname)
@@ -374,48 +344,6 @@ public class UserManager {
             return true;
         return false;
     }
-
-    public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
-        MongoCollection<Document> book = md.getCollection(bookCollection);
-        Document newReview = new Document();
-        String reviewID = UUID.randomUUID().toString();
-        LocalDateTime now = LocalDateTime.now();
-        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        newReview.append("date_added", date);
-        newReview.append("date_updated", "");
-        newReview.append("review_id", reviewID);
-        newReview.append("n_votes", "0");
-        newReview.append("rating", ratingBook);
-        newReview.append("review_text", reviewText);
-        newReview.append("helpful", "0");
-        if (session.getLoggedUser() != null) {
-            String loggedUserID = session.getLoggedUser().getNickname();
-//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedUserID);
-            newReview.append("user_id", loggedUserID);
-        } else {
-            String loggedAuthorID = session.getLoggedAuthor().getNickname();
-//            System.out.println("book ID: " + book_id + " review Text: " + reviewText + " stars:" + ratingBook + " by " + loggedAuthorID);
-            newReview.append("user_id", loggedAuthorID);
-        }
-        Bson getBook = eq("book_id", book_id);
-        DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
-        DBObject insertReview = new BasicDBObject("$push", elem);
-        book.updateOne(getBook, (Bson) insertReview);
-    }
-
-    public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
-//        System.out.println(review_id + ".." + book_id + "------" + reviewText);
-        MongoCollection<Document> books = md.getCollection(bookCollection);
-        Bson getBook = eq("book_id", book_id);
-        Bson getReview = eq("reviews.review_id", review_id);
-        UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
-        UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
-
-
-    }
-    //==================================================================================================================
-
-    //Analitics
 
     //==================================================================================================================
 }

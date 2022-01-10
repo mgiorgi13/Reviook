@@ -7,6 +7,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.mongodb.DBObject;
 import it.unipi.dii.reviook_app.Data.Author;
+import it.unipi.dii.reviook_app.Manager.BookManager;
 import it.unipi.dii.reviook_app.Manager.SearchManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -56,6 +57,7 @@ public class AddBookController {
     private Session session = Session.getInstance();
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
+    private BookManager bookManager = new BookManager();
 
     @FXML
     int contatoreUsername = 0;
@@ -228,7 +230,7 @@ public class AddBookController {
             actiontarget.setText("Existing ISBN");
             return;
         }
-        userManager.addBook(  Title,  ISBN_,  Description,  Genre, param);
+        bookManager.addBook(  Title,  ISBN_,  Description,  Genre, param);
         session.getLoggedAuthor().setWrittenBook(Title);
         for (int i= 0; i< Genre.size(); i++)
             session.getLoggedAuthor().setWrittenBookStatistic(Genre.get(i));

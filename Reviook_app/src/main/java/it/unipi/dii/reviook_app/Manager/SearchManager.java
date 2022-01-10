@@ -9,6 +9,7 @@ import it.unipi.dii.reviook_app.Data.Review;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -61,14 +62,14 @@ public class SearchManager {
             genres = (ArrayList<String>) document.get("genres");
             for (Document r : reviews) {
                 reviewsList.add(new Review(
-                        r.get("date_added").toString(),
-                        r.get("review_id").toString(),
-                        r.get("date_updated").toString(),
-                        r.get("n_votes").toString(),
-                        r.get("user_id").toString(),
-                        r.get("rating").toString(),
-                        r.get("review_text").toString(),
-                        r.get("helpful").toString()
+                        new SimpleStringProperty(r.get("date_added").toString()),
+                        new SimpleStringProperty(r.getString("review_id")),
+                        new SimpleStringProperty(r.get("date_updated").toString()),
+                        new SimpleStringProperty(r.getString("n_votes")),
+                        new SimpleStringProperty(r.getString("user_id")),
+                        new SimpleStringProperty(r.get("rating").toString()),
+                        new SimpleStringProperty(r.getString("review_text")),
+                        new SimpleStringProperty(r.getString("helpful"))
                 ));
             }
             for (Document a : authors) {
@@ -153,27 +154,19 @@ public class SearchManager {
 
             for (Document r : reviews) {
                 reviewsList.add(new Review(
-                        r.get("date_added").toString(),
-                        r.get("review_id").toString(),
-                        r.get("date_updated").toString(),
-                        r.get("n_votes").toString(),
-                        r.get("user_id").toString(),
-                        r.get("rating").toString(),
-                        r.get("review_text").toString(),
-                        r.get("helpful").toString()
+                        new SimpleStringProperty(r.get("date_added").toString()),
+                        new SimpleStringProperty(r.getString("review_id")),
+                        new SimpleStringProperty(r.get("date_updated").toString()),
+                        new SimpleStringProperty(r.get("n_votes").toString()),
+                        new SimpleStringProperty(r.getString("user_id")),
+                        new SimpleStringProperty(r.get("rating").toString()),
+                        new SimpleStringProperty(r.getString("review_text")),
+                        new SimpleStringProperty(r.getString("helpful"))
                 ));
             }
             for (Document a : authors) {
                 authorsLis.add(a.getString("author_name"));
             }
-
-
-            //TODO inserisci nome dell'autore nel db
-            //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
-//            for (Document a :
-//                    authors) {
-//                authorsLis.add(a.getString("author_id"));
-//            }
 
             result.add(new Book(
                     document.get("isbn").toString(),
@@ -198,7 +191,6 @@ public class SearchManager {
 
         return result;
     }
-
 
 
     public ArrayList<String> searchBooksAuthor(String Username) {
