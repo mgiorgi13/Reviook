@@ -9,7 +9,6 @@ import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,12 +17,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -80,15 +76,8 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
-    public void clearlist() {
-        listView.getItems().clear();
-        this.observableList.removeAll();
-    }
 
     public void setListView() {
-        for (Review r : this.reviewsList) {
-            System.out.println(r.getReview_text());
-        }
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
         listView.setCellFactory(
@@ -144,7 +133,8 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id);
+
+        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
         dialogNewReviewStage.show();
@@ -167,7 +157,10 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id);
+        FXMLLoader thisfxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+        thisfxmlLoader.load();
+        BookDetailController thiscontroller = thisfxmlLoader.getController();
+        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
         controller.setEditReview(selectedReview); //set to edit review fields
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
@@ -175,7 +168,6 @@ public class BookDetailController {
     }
 
     public void setInfoBook(Book bookSelected) {
-        System.out.println("CARICO INFO BOOK");
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
