@@ -18,6 +18,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,7 @@ public class BookManager {
     }
 
     public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+        // TODO aggiornare il rating Book
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
@@ -104,14 +106,24 @@ public class BookManager {
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
         DBObject insertReview = new BasicDBObject("$push", elem);
         book.updateOne(getBook, (Bson) insertReview);
+
     }
 
     public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
+        // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
         UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
         UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+    }
+
+    public void DeleteReview(String review_id, String book_id) {
+        // TODO aggiornare il rating Book
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        Bson getBook = eq("book_id", book_id);
+        Bson getReview = eq("reviews.review_id", review_id);
+        UpdateResult updateResult = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
     }
 
     public Book getBookByID(String book_id) {
@@ -160,5 +172,18 @@ public class BookManager {
         );
 //        System.out.println("book aggiornato->" + book);
         return outputBook;
+    }
+
+    public Float updateRating(ArrayList<Review> reviews) {
+        Float ratingSum = 0.0f;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (reviews.size() > 0) {
+            for (Review r : reviews) {
+                ratingSum += Float.parseFloat(r.getRating());
+            }
+            return ratingSum;
+        } else {
+            return ratingSum;
+        }
     }
 }

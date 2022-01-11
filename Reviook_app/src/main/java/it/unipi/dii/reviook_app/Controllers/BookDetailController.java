@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.Components.ListReview;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
+import it.unipi.dii.reviook_app.Manager.BookManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -30,6 +31,9 @@ import javafx.util.Callback;
 
 
 public class BookDetailController {
+    @FXML
+    public JFXButton deleteReviewButton;
+
     @FXML
     private ResourceBundle resources;
 
@@ -76,6 +80,7 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
+    BookManager bookManager = new BookManager();
 
     public void setListView() {
         this.observableList.setAll(this.reviewsList);
@@ -133,7 +138,6 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-
         controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
@@ -157,9 +161,6 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        FXMLLoader thisfxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-        thisfxmlLoader.load();
-        BookDetailController thiscontroller = thisfxmlLoader.getController();
         controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
         controller.setEditReview(selectedReview); //set to edit review fields
         Scene dialogScene = new Scene(dialogInterface);
@@ -198,8 +199,25 @@ public class BookDetailController {
     }
 
     @FXML
+    public void deleteReviewAction(ActionEvent actionEvent) {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+            return;
+        }
+        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+            return;
+        }
+        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+    }
+
+    @FXML
     void initialize() {
         // setListView();
     }
+
+
 }
 
