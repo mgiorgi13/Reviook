@@ -39,7 +39,6 @@ public class DataReviewCell {
     }
 
     public void setInfo(Review review) {
-//        s.substring(0, Math.min(s.length(), 10))
         String reviewText = review.getReview_text();
         if (reviewText.length() > 350) {
             previewText.setText(review.getReview_text().substring(0, Math.min(review.getReview_text().length(), 350))+" ...");
