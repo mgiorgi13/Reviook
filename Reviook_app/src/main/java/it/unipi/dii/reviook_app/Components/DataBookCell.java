@@ -49,7 +49,13 @@ public class DataBookCell {
     }
 
     public void setInfo(Book book) {
-        titleField.setText(book.getTitle());
+        String title = book.getTitle();
+        if (title.length() > 65) {
+            titleField.setText(book.getTitle().substring(0, Math.min(book.getTitle().length(), 65))+" ...");
+        } else {
+            titleField.setText(title);
+        }
+//        titleField.setText(book.getTitle());
         authorsField.setText(book.getAuthors().get(0));
         likeCounter.setText(String.valueOf(book.getRatings_count()));
         reviewCounter.setText(String.valueOf(book.getReviews().size()));
