@@ -62,6 +62,7 @@ public class AddBookController {
     @FXML
     int contatoreUsername = 0;
     int contatoreGener = 0;
+
     public void searchAction(ActionEvent actionEvent) {
         authorsList.getItems().clear();
         generList.getItems().clear();

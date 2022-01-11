@@ -4,12 +4,12 @@ import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.Components.ListReview;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
+import it.unipi.dii.reviook_app.Manager.BookManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,12 +18,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -34,6 +31,9 @@ import javafx.util.Callback;
 
 
 public class BookDetailController {
+    @FXML
+    public JFXButton deleteReviewButton;
+
     @FXML
     private ResourceBundle resources;
 
@@ -80,15 +80,9 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
-    public void clearlist() {
-        listView.getItems().clear();
-        this.observableList.removeAll();
-    }
+    BookManager bookManager = new BookManager();
 
     public void setListView() {
-        for (Review r : this.reviewsList) {
-            System.out.println(r.getReview_text());
-        }
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
         listView.setCellFactory(
@@ -144,7 +138,7 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id);
+        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
         dialogNewReviewStage.show();
@@ -167,7 +161,7 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id);
+        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
         controller.setEditReview(selectedReview); //set to edit review fields
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
@@ -175,7 +169,6 @@ public class BookDetailController {
     }
 
     public void setInfoBook(Book bookSelected) {
-        System.out.println("CARICO INFO BOOK");
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
@@ -206,8 +199,25 @@ public class BookDetailController {
     }
 
     @FXML
+    public void deleteReviewAction(ActionEvent actionEvent) {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+            return;
+        }
+        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+            return;
+        }
+        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+    }
+
+    @FXML
     void initialize() {
         // setListView();
     }
+
+
 }
 

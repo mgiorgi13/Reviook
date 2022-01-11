@@ -43,11 +43,6 @@ public class UserManager {
         this.nd = Neo4jDriver.getInstance();
     }
 
-    class paramAuthor {
-        String author_name;
-        String author_role;
-        String author_id;
-    }
 
     // N4J
     public void addNewUsers(String type, String username, String id) {
@@ -270,7 +265,6 @@ public class UserManager {
         }
         return -1;
     }
-
 
     public boolean verifyPassword(boolean type, String Username, String Password) {
         MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);

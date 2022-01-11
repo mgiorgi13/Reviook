@@ -18,6 +18,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class BookManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "books";
+    private static final String bookCollection = "amazonBooks";
 
     public BookManager() {
         this.md = MongoDriver.getInstance();
@@ -47,6 +48,7 @@ public class BookManager {
         String concat = ISBN + title + UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
 
+        //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
         Document doc = new Document("image_url", "null")
                 .append("num_pages", "")
@@ -65,15 +67,15 @@ public class BookManager {
                 .append("ratings_count", "")
                 .append("authors", UsernameTagged);
 
-
         md.getCollection(bookCollection).insertOne(doc);
+
+        //N4J
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
                 for (int i = 0; i < UsernameTagged.size(); i++) {
                     tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.author_id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.book_id='" + id + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
-
                 }
                 return null;
             });
@@ -81,6 +83,7 @@ public class BookManager {
     }
 
     public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+        // TODO aggiornare il rating Book
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
@@ -104,14 +107,24 @@ public class BookManager {
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
         DBObject insertReview = new BasicDBObject("$push", elem);
         book.updateOne(getBook, (Bson) insertReview);
+
     }
 
     public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
+        // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
         UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
         UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+    }
+
+    public void DeleteReview(String review_id, String book_id) {
+        // TODO aggiornare il rating Book
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        Bson getBook = eq("book_id", book_id);
+        Bson getReview = eq("reviews.review_id", review_id);
+        UpdateResult updateResult = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
     }
 
     public Book getBookByID(String book_id) {
@@ -160,5 +173,18 @@ public class BookManager {
         );
 //        System.out.println("book aggiornato->" + book);
         return outputBook;
+    }
+
+    public Float updateRating(ArrayList<Review> reviews) {
+        Float ratingSum = 0.0f;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (reviews.size() > 0) {
+            for (Review r : reviews) {
+                ratingSum += Float.parseFloat(r.getRating());
+            }
+            return ratingSum;
+        } else {
+            return ratingSum;
+        }
     }
 }

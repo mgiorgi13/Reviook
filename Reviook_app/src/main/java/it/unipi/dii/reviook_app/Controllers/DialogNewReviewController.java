@@ -4,27 +4,18 @@ import com.jfoenix.controls.JFXButton;
 import com.mongodb.MongoException;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
-import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.Manager.BookManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
-import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class DialogNewReviewController {
     @FXML
@@ -45,11 +36,20 @@ public class DialogNewReviewController {
 
     private Review reviewToEdit;
 
+    private ObservableList<Review> previousList;
+    private Text previousRatingAVG;
+    private BookDetailController controll;
+
     UserManager userManager = new UserManager();
     BookManager bookManager = new BookManager();
 
+    public DialogNewReviewController() {
+    }
+
     @FXML
-    public void setBook_id(String id) {
+    public void setBook_id(String id, ObservableList<Review> list, Text ratingAVG) {
+        this.previousList = list;
+        this.previousRatingAVG = ratingAVG;
         this.book_id = id;
     }
 
@@ -78,13 +78,10 @@ public class DialogNewReviewController {
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
-                // TODO deve partire la query per aggiornaere il book detail
+                // TODO la query deve aggiornare il rating AVG
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
-                Parent bookInterface;
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                bookInterface = (Parent) fxmlLoader.load();
-                BookDetailController bookController = fxmlLoader.getController();
-                bookController.setInfoBook(book); // DOVERBBE FARE LA RELOAD DELLE INFO BOOK
+                this.previousList.setAll(book.getReviews());
+                this.previousRatingAVG.setText("10");
                 Stage actual_stage = (Stage) addButton.getScene().getWindow();
                 actual_stage.close();
             }
@@ -94,13 +91,10 @@ public class DialogNewReviewController {
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
-                // TODO deve partire la query per aggiornaere il book detail
-//                Parent bookInterface;
-//                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-//                bookInterface = (Parent) fxmlLoader.load();
-//                BookDetailController bookController = fxmlLoader.getController();
-//                bookController.setInfoBook(selectedCell);
-
+                // TODO la query deve aggiornare il rating AVG
+                Book book = bookManager.getBookByID(this.book_id); // query to update review
+                this.previousList.setAll(book.getReviews());
+                this.previousRatingAVG.setText("10");
                 Stage actual_stage = (Stage) addButton.getScene().getWindow();
                 actual_stage.close();
             }
