@@ -108,6 +108,9 @@ public class BookManager {
         DBObject insertReview = new BasicDBObject("$push", elem);
         book.updateOne(getBook, (Bson) insertReview);
 
+        Book bookToUpdate = getBookByID(book_id);
+        Double newRating = updateRating(bookToUpdate.getReviews());
+        UpdateResult updateResult2 = book.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
     public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
@@ -117,14 +120,20 @@ public class BookManager {
         Bson getReview = eq("reviews.review_id", review_id);
         UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
         UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+        Book bookToUpdate = getBookByID(book_id);
+        Double newRating = updateRating(bookToUpdate.getReviews());
+        UpdateResult updateResult3 = books.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
     public void DeleteReview(String review_id, String book_id) {
         // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
-        Bson getReview = eq("reviews.review_id", review_id);
+        //  Bson getReview = eq("reviews.review_id", review_id);
         UpdateResult updateResult = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
+        Book bookToUpdate = getBookByID(book_id);
+        Double newRating = updateRating(bookToUpdate.getReviews());
+        UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
     public Book getBookByID(String book_id) {
@@ -157,7 +166,7 @@ public class BookManager {
                 book.getString("isbn"),
                 book.getString("language_code"),
                 book.getString("asin"),
-                book.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(book.getString("average_rating").toString()),
+                book.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(book.get("average_rating").toString()),
                 book.getString("description").toString(),
                 book.getString("num_pages").equals("") ? 0 : Integer.valueOf(book.getString("num_pages")),
                 book.getString("publication_day").equals("") ? 0 : Integer.valueOf(book.getString("publication_day")),
@@ -171,18 +180,16 @@ public class BookManager {
                 genres,
                 reviewsList
         );
-//        System.out.println("book aggiornato->" + book);
         return outputBook;
     }
 
-    public Float updateRating(ArrayList<Review> reviews) {
-        Float ratingSum = 0.0f;
-        DecimalFormat df = new DecimalFormat("#.#");
+    public Double updateRating(ArrayList<Review> reviews) {
+        Double ratingSum = 0.0;
         if (reviews.size() > 0) {
             for (Review r : reviews) {
-                ratingSum += Float.parseFloat(r.getRating());
+                ratingSum += Double.parseDouble(r.getRating());
             }
-            return ratingSum;
+            return ratingSum / reviews.size();
         } else {
             return ratingSum;
         }
