@@ -12,9 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="852.0"
-      prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.unipi.dii.reviook_app.Controllers.BookDetailController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="852.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.Controllers.BookDetailController">
     <children>
         <HBox layoutX="14.0" layoutY="15.0" prefHeight="822.0" prefWidth="799.0">
             <children>
@@ -24,56 +22,37 @@
                             <children>
                                 <Pane prefHeight="200.0" prefWidth="200.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="124.0"
-                                                   layoutX="14.0" layoutY="12.0" stroke="#1f0fff" strokeType="INSIDE"
-                                                   strokeWidth="5.0" width="133.0"/>
-                                        <Text layoutX="159.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                                              text="Title:"/>
-                                        <Text layoutX="159.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                                              text="Author:"/>
-                                        <Text layoutX="159.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                                              text="Category:"/>
-                                        <JFXButton layoutX="14.0" layoutY="176.0" onAction="#toRead" text="To Read"/>
-                                        <JFXButton layoutX="79.0" layoutY="176.0" text="Like"/>
-                                        <JFXButton layoutX="129.0" layoutY="176.0" onAction="#readed" text="Readed"/>
-                                        <Text fx:id="bookTitle" layoutX="231.0" layoutY="27.0" strokeType="OUTSIDE"
-                                              strokeWidth="0.0" text=" " wrappingWidth="255.0"/>
-                                        <Text fx:id="bookAuthor" layoutX="231.0" layoutY="58.0" strokeType="OUTSIDE"
-                                              strokeWidth="0.0" wrappingWidth="228.0"/>
-                                        <Text fx:id="bookCategories" layoutX="231.0" layoutY="87.0" strokeType="OUTSIDE"
-                                              strokeWidth="0.0" wrappingWidth="255.0"/>
-                                        <Text layoutX="159.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                                              text="Description"/>
-                                        <ImageView fx:id="imageContainer" fitHeight="107.0" fitWidth="115.0"
-                                                   layoutX="23.0" layoutY="21.0" pickOnBounds="true"
-                                                   preserveRatio="true"/>
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="124.0" layoutX="14.0" layoutY="12.0" stroke="#1f0fff" strokeType="INSIDE" strokeWidth="5.0" width="133.0" />
+                                        <Text layoutX="159.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
+                                        <Text layoutX="159.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:" />
+                                        <Text layoutX="159.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category:" />
+                                        <JFXButton layoutX="14.0" layoutY="176.0" onAction="#toRead" text="To Read" />
+                                        <JFXButton layoutX="79.0" layoutY="176.0" text="Like" />
+                                        <JFXButton layoutX="129.0" layoutY="176.0" onAction="#readed" text="Readed" />
+                                        <Text fx:id="bookTitle" layoutX="231.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="255.0" />
+                                        <Text fx:id="bookAuthor" layoutX="231.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="228.0" />
+                                        <Text fx:id="bookCategories" layoutX="231.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="255.0" />
+                                        <Text layoutX="159.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+                                        <ImageView fx:id="imageContainer" fitHeight="107.0" fitWidth="115.0" layoutX="23.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
                                         <ScrollPane layoutX="231.0" layoutY="102.0" prefHeight="86.0" prefWidth="354.0">
                                             <content>
-                                                <Text fx:id="bookDescription" strokeType="OUTSIDE" strokeWidth="0.0"
-                                                      wrappingWidth="337.0"/>
+                                                <Text fx:id="bookDescription" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="337.0" />
                                             </content>
                                         </ScrollPane>
-                                        <Text layoutX="32.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                                              text="Rating:"/>
-                                        <Text fx:id="ratingAVG" layoutX="81.0" layoutY="158.0" strokeType="OUTSIDE"
-                                              strokeWidth="0.0" text="0"/>
+                                        <Text layoutX="32.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:" />
+                                        <Text fx:id="ratingAVG" layoutX="81.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                                     </children>
                                 </Pane>
                                 <Pane fx:id="test" prefHeight="575.0" prefWidth="594.0">
-                                    <ListView fx:id="listView" layoutX="7.0" layoutY="14.0" prefHeight="516.0"
-                                              prefWidth="524.0"/>
-                                    <JFXButton fx:id="addReviewButton" layoutX="349.0" layoutY="536.0"
-                                               onAction="#addReviewAction" text="Add Review"/>
-                                    <JFXButton fx:id="editReviewButton" layoutX="442.0" layoutY="536.0"
-                                               onAction="#editReviewAction" text="Edit Review"/>
-                                    <JFXButton fx:id="deleteReviewButton" layoutX="549.0" layoutY="129.0"
-                                               onAction="#deleteReviewAction" text="X"/>
+                                    <ListView fx:id="listView" layoutX="7.0" layoutY="14.0" prefHeight="516.0" prefWidth="578.0" />
+                                    <JFXButton fx:id="addReviewButton" layoutX="211.0" layoutY="536.0" onAction="#addReviewAction" text="Add Review" />
+                                    <JFXButton fx:id="editReviewButton" layoutX="304.0" layoutY="536.0" onAction="#editReviewAction" text="Edit Review" />
+                                    <JFXButton fx:id="deleteReviewButton" layoutX="489.0" layoutY="536.0" onAction="#deleteReviewAction" text="Delete Review" />
                                 </Pane>
                             </children>
                         </VBox>
-                        <JFXButton layoutX="191.0" layoutY="795.0" mnemonicParsing="false" text="HOME"/>
-                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="795.0" mnemonicParsing="false"
-                                   onAction="#searchInterface" text="SEARCH"/>
+                        <JFXButton layoutX="191.0" layoutY="795.0" mnemonicParsing="false" text="HOME" />
+                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="795.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH" />
                     </children>
                 </Pane>
                 <Pane prefHeight="822.0" prefWidth="203.0">
@@ -84,31 +63,21 @@
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="81.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="81.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1" />
                                             </children>
                                         </Pane>
                                     </children>
                                     <VBox.margin>
-                                        <Insets top="15.0"/>
+                                        <Insets top="15.0" />
                                     </VBox.margin>
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="73.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="73.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -117,13 +86,8 @@
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="81.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="81.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -132,29 +96,22 @@
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="73.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="73.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4" />
                                             </children>
                                         </Pane>
                                     </children>
                                 </HBox>
                             </children>
                         </VBox>
-                        <Text fill="#1e3bbc" layoutX="35.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                              text="SUGGESTED BOOK">
+                        <Text fill="#1e3bbc" layoutX="35.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED BOOK">
                             <font>
-                                <Font size="16.0"/>
+                                <Font size="16.0" />
                             </font>
                         </Text>
-                        <Text fill="#1e3bbc" layoutX="35.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                              text="SUGGESTED AUTHOR">
+                        <Text fill="#1e3bbc" layoutX="35.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED AUTHOR">
                             <font>
-                                <Font size="16.0"/>
+                                <Font size="16.0" />
                             </font>
                         </Text>
                         <VBox alignment="CENTER" layoutX="8.0" layoutY="432.0" prefHeight="267.0" prefWidth="187.0">
@@ -163,31 +120,21 @@
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="77.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="77.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1" />
                                             </children>
                                         </Pane>
                                     </children>
                                     <VBox.margin>
-                                        <Insets top="15.0"/>
+                                        <Insets top="15.0" />
                                     </VBox.margin>
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="76.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="76.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -196,13 +143,8 @@
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="76.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="76.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -211,13 +153,8 @@
                                     <children>
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0"
-                                                           layoutX="24.0" layoutY="8.0" stroke="WHITE"
-                                                           strokeType="INSIDE"
-                                                           style="-fx-arc-height: 20; -fx-arc-width: 20;"
-                                                           width="153.0"/>
-                                                <Text fill="WHITE" layoutX="76.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4"/>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="24.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="153.0" />
+                                                <Text fill="WHITE" layoutX="76.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4" />
                                             </children>
                                         </Pane>
                                     </children>

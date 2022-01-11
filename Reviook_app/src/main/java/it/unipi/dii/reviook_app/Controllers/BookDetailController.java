@@ -10,6 +10,7 @@ import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -92,6 +95,27 @@ public class BookDetailController {
                         return new ListReview();
                     }
                 });
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                    Review selectedCell = (Review) listView.getSelectionModel().getSelectedItem();
+                    try {
+                        Parent dialogReview;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/previewReview.fxml"));
+                        dialogReview = (Parent) fxmlLoader.load();
+                        PreviewReviewController prevRevContr = fxmlLoader.getController();
+                        prevRevContr.setInfoReview(selectedCell);
+                        Stage dialogNewReviewStage = new Stage();
+                        Scene dialogScene = new Scene(dialogReview);
+                        dialogNewReviewStage.setScene(dialogScene);
+                        dialogNewReviewStage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         Float ratingSum = 0.0f;
         DecimalFormat df = new DecimalFormat("#.#");
         if (listView.getItems().size() > 0) {
@@ -168,6 +192,25 @@ public class BookDetailController {
         dialogNewReviewStage.show();
     }
 
+    @FXML
+    public void deleteReviewAction(ActionEvent actionEvent) {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+            return;
+        }
+        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+            return;
+        }
+        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+        Book book = bookManager.getBookByID(this.book_id); // query to update review
+        this.observableList.setAll(book.getReviews());
+        DecimalFormat df = new DecimalFormat("#.#");
+        this.ratingAVG.setText(df.format(book.getAverage_rating()));
+    }
+
     public void setInfoBook(Book bookSelected) {
         // BOOK TITLE
         this.title = bookSelected.getTitle();
@@ -196,21 +239,6 @@ public class BookDetailController {
         setListView();
         // BOOK ID
         this.book_id = bookSelected.getBook_id();
-    }
-
-    @FXML
-    public void deleteReviewAction(ActionEvent actionEvent) {
-        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
-        if (selectedReview == null) {
-            return;
-        }
-        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
-            return;
-        }
-        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
-            return;
-        }
-        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
     }
 
     @FXML

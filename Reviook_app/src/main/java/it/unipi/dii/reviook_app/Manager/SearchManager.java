@@ -32,7 +32,7 @@ public class SearchManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "books";
+    private static final String bookCollection = "amazonBooks";
     private static final String genreCollection = "genres";
 
 
