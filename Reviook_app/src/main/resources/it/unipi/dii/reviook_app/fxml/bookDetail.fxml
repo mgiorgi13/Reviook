@@ -33,9 +33,9 @@
                                               text="Author:"/>
                                         <Text layoutX="159.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0"
                                               text="Category:"/>
-                                        <JFXButton layoutX="14.0" layoutY="176.0" text="To Read"/>
+                                        <JFXButton layoutX="14.0" layoutY="176.0" onAction="#toRead" text="To Read"/>
                                         <JFXButton layoutX="79.0" layoutY="176.0" text="Like"/>
-                                        <JFXButton layoutX="129.0" layoutY="176.0" text="Readed"/>
+                                        <JFXButton layoutX="129.0" layoutY="176.0" onAction="#readed" text="Readed"/>
                                         <Text fx:id="bookTitle" layoutX="231.0" layoutY="27.0" strokeType="OUTSIDE"
                                               strokeWidth="0.0" text=" " wrappingWidth="255.0"/>
                                         <Text fx:id="bookAuthor" layoutX="231.0" layoutY="58.0" strokeType="OUTSIDE"

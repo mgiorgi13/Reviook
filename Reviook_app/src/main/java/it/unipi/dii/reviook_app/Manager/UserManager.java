@@ -6,6 +6,7 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import org.bson.Document;
@@ -33,20 +34,17 @@ public class UserManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "amazonBooks";
+    private static final String bookCollection = "books";
+    private static final String genreCollection = "geners";
+
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
 
-    class paramAuthor {
-        String author_name;
-        String author_role;
-        String author_id;
-    }
 
-    // N4J =============================================================================================================
+    // N4J
     public void addNewUsers(String type, String username, String id) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
@@ -113,28 +111,27 @@ public class UserManager {
         }
     }
 
-    public List<String> loadRelationsBook(String type, String username, String read) {
-        List<String> movieTitles = new ArrayList();
+    public ArrayList<Book> loadRelationsBook(String type, String username, String read) {
+        ArrayList<Book> movieTitles = new ArrayList<Book>();
+        ArrayList<Book> books = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
-            movieTitles = session.readTransaction((TransactionWork<List<String>>) tx -> {
-                Result result = tx.run("MATCH (ee:" + type + ")-[:" + read + "]->(friends) where ee.username = '" + username + "' " +
-                        "return friends.title as Friends");
-                ArrayList<String> movies = new ArrayList<>();
+            movieTitles = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
+                Result result = tx.run("MATCH (ee:" + type + ")-[:"+read+"]->(book) where ee.username = '" + username + "' " +
+                        "return book.title, book.book_id");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    movies.add(((Record) r).get("Friends").asString());
+                        books.add(new Book(((Record) r).get("book.title").asString(),((Record) r).get("book.book_id").asString()));
                 }
-                return movies;
+                return books;
             });
-            for (String movieTitle : movieTitles) {
-                System.out.println("\t- " + movieTitle);
-            }
+
 
         }
         return movieTitles;
     }
 
     public List<String> loadRelations(String type, String username) {
+
         List<String> movieTitles = new ArrayList();
         try (Session session = nd.getDriver().session()) {
             movieTitles = session.readTransaction((TransactionWork<List<String>>) tx -> {
@@ -262,6 +259,7 @@ public class UserManager {
                 Document user = cursor.next();
                 if (main == true)
                     session.setLoggedAuthor(user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
+
                 return 1;
             }
         }

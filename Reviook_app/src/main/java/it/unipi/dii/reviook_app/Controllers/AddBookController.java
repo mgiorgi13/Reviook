@@ -62,6 +62,7 @@ public class AddBookController {
     @FXML
     int contatoreUsername = 0;
     int contatoreGener = 0;
+
     public void searchAction(ActionEvent actionEvent) {
         authorsList.getItems().clear();
         generList.getItems().clear();
@@ -132,7 +133,7 @@ public class AddBookController {
         generList.setVisible(true);
         authorsList.setVisible(false);
         ObservableList<String> obsUserList = FXCollections.observableArrayList();
-        obsUserList.addAll(searchManager.searchGeners());
+        obsUserList.addAll(searchManager.searchGenres());
         generList.getItems().addAll(obsUserList);
         generList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override

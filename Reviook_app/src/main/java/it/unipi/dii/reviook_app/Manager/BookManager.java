@@ -48,6 +48,7 @@ public class BookManager {
         String concat = ISBN + title + UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
 
+        //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
         Document doc = new Document("image_url", "null")
                 .append("num_pages", "")
@@ -66,15 +67,15 @@ public class BookManager {
                 .append("ratings_count", "")
                 .append("authors", UsernameTagged);
 
-
         md.getCollection(bookCollection).insertOne(doc);
+
+        //N4J
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { book_id : $book_id, title: $ title})", parameters("book_id", id, "title", title));
                 for (int i = 0; i < UsernameTagged.size(); i++) {
                     tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.author_id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.book_id='" + id + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
-
                 }
                 return null;
             });
