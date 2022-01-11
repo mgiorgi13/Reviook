@@ -42,6 +42,12 @@ public class Book {
         this.reviews = reviews;
     }
 
+    public Book(String title,String book_id)
+    {
+        this( "", "", "", 0.0, "", 0, 0, 0, 0, "",  book_id, 0, title, new ArrayList(), new ArrayList() , new ArrayList());
+
+    }
+
 
     public String getIsbn() {
         return isbn;

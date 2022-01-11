@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.Components.ListReview;
 import it.unipi.dii.reviook_app.Data.Book;
 import it.unipi.dii.reviook_app.Data.Review;
+import it.unipi.dii.reviook_app.Manager.BookManager;
 import it.unipi.dii.reviook_app.Manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ import javafx.scene.image.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +31,9 @@ import javafx.util.Callback;
 
 
 public class BookDetailController {
+    @FXML
+    public JFXButton deleteReviewButton;
+
     @FXML
     private ResourceBundle resources;
 
@@ -45,6 +50,9 @@ public class BookDetailController {
     private JFXButton addReviewButton;
 
     @FXML
+    private JFXButton editReviewButton;
+
+    @FXML
     private ListView<Review> listView;
 
     @FXML
@@ -58,18 +66,25 @@ public class BookDetailController {
 
     @FXML
     private Text bookTitle;
-    Session session = Session.getInstance();
-    private UserManager userManager = new UserManager();
-    private String title, author, categories, description, img_url, book_id;
-    private ArrayList<Review> reviewsList;
 
-//    private List<String> stringList = new ArrayList<>(5);
+    @FXML
+    private Text ratingAVG;
+
+    Session session = Session.getInstance();
+
+    private UserManager userManager = new UserManager();
+
+    private String title, author, categories, description, img_url, book_id;
+
+    private ArrayList<Review> reviewsList;
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
+    BookManager bookManager = new BookManager();
+
     public void setListView() {
-        observableList.setAll(this.reviewsList);
-        listView.setItems(observableList);
+        this.observableList.setAll(this.reviewsList);
+        listView.setItems(this.observableList);
         listView.setCellFactory(
                 new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
                     @Override
@@ -77,6 +92,16 @@ public class BookDetailController {
                         return new ListReview();
                     }
                 });
+        Float ratingSum = 0.0f;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (listView.getItems().size() > 0) {
+            for (Review r : listView.getItems()) {
+                ratingSum += Float.parseFloat(r.getRating());
+            }
+            ratingAVG.setText(String.valueOf(df.format(ratingSum / listView.getItems().size())));
+        } else {
+            ratingAVG.setText(df.format(ratingSum));
+        }
     }
 
     @FXML
@@ -87,20 +112,21 @@ public class BookDetailController {
         actual_stage.setResizable(false);
         actual_stage.show();
     }
+
     @FXML
-    void toRead (ActionEvent event) throws IOException {
-        String bookTitleText= bookTitle.getText();
-        if(session.getLoggedAuthor()!=null)
-            userManager.toReadAdd ("Author", session.getLoggedAuthor().getNickname(), this.book_id);
+    void toRead(ActionEvent event) throws IOException {
+        String bookTitleText = bookTitle.getText();
+        if (session.getLoggedAuthor() != null)
+            userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
         else
             userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id);
     }
 
     @FXML
-    void readed (ActionEvent event) throws IOException{
-        String bookTitleText= bookTitle.getText();
-        if(session.getLoggedAuthor()!=null)
-            userManager.readedAdd ("Author", session.getLoggedAuthor().getNickname(), this.book_id);
+    void readed(ActionEvent event) throws IOException {
+        String bookTitleText = bookTitle.getText();
+        if (session.getLoggedAuthor() != null)
+            userManager.readedAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
         else
             userManager.readedAdd("User", session.getLoggedUser().getNickname(), this.book_id);
     }
@@ -112,7 +138,31 @@ public class BookDetailController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id);
+        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
+        Scene dialogScene = new Scene(dialogInterface);
+        dialogNewReviewStage.setScene(dialogScene);
+        dialogNewReviewStage.show();
+    }
+
+    @FXML
+    public void editReviewAction(ActionEvent actionEvent) throws IOException {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+            return;
+        }
+        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+            return;
+        }
+        Stage dialogNewReviewStage = new Stage();
+        Parent dialogInterface;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
+        dialogInterface = (Parent) fxmlLoader.load();
+        DialogNewReviewController controller = fxmlLoader.getController();
+        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
+        controller.setEditReview(selectedReview); //set to edit review fields
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
         dialogNewReviewStage.show();
@@ -149,8 +199,25 @@ public class BookDetailController {
     }
 
     @FXML
+    public void deleteReviewAction(ActionEvent actionEvent) {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+            return;
+        }
+        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+            return;
+        }
+        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+    }
+
+    @FXML
     void initialize() {
         // setListView();
     }
+
+
 }
 

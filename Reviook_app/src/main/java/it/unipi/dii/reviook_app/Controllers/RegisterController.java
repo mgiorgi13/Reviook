@@ -23,8 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
-
 public class RegisterController {
     @FXML
     private Text actiontarget;
@@ -54,12 +52,6 @@ public class RegisterController {
     private Button loginButton;
 
     private UserManager userManager = new UserManager();
-
-    // Create a new javax.json.JSONObject instance.
-    String str = "[{\"type\":\"author\",\"name\":\"Mattia\",\"surname\":\"Di Donato\",\"username\":\"Mattiax\",\"email\":\"mattia@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-            "{\"type\":\"user\",\"name\":\"Salvo\",\"surname\":\"Arancio Febbo\",\"username\":\"Salvox\",\"email\":\"salvo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}," +
-            "{\"type\":\"user\",\"name\":\"Matteo\",\"surname\":\"Giorgi\",\"username\":\"Matteox\",\"email\":\"matteo@unipi.it\",\"password\":\"2C87C8312E5F752A0E79660511567505\"}]";
-
 
     public String SignIn(String name, String surname, String email, String nickname, String password, String repeatPsw) {
         try {
@@ -121,10 +113,10 @@ public class RegisterController {
         }
         if (CheckAuthor.isSelected()) {
             userManager.addNewUsers("Author", nickname, id);
-            userManager.register(Name, surname, email, nickname, password, "Author",id);
+            userManager.register(Name, surname, email, nickname, password, "Author", id);
         } else {
-            userManager.addNewUsers("User", nickname,id);
-            userManager.register(Name, surname, email, nickname, password, "User",id);
+            userManager.addNewUsers("User", nickname, id);
+            userManager.register(Name, surname, email, nickname, password, "User", id);
         }
         actiontarget.setText(singIn);
         Thread.sleep(1000);

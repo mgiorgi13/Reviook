@@ -9,6 +9,7 @@ import it.unipi.dii.reviook_app.Data.Review;
 import it.unipi.dii.reviook_app.Data.Users;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -31,15 +32,74 @@ public class SearchManager {
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
-    private static final String bookCollection = "amazonBooks";
-    private static final String genreCollection = "geners";
+    private static final String bookCollection = "books";
+    private static final String genreCollection = "genres";
 
 
     public SearchManager() {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
+    public Book searchIdBook(String idBook)
+    {
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        MongoCursor<Document> cursor;
+        Book result = null;
 
+        cursor = books.find(in("book_id", idBook)).iterator();
+
+        while (cursor.hasNext()) {
+            Document document = cursor.next();
+            //System.out.println("documento->" + document);
+            ArrayList<Document> authors;
+            ArrayList<Document> reviews;
+            ArrayList<String> genres;
+            ArrayList<String> authorsLis = new ArrayList<>();
+            ArrayList<Review> reviewsList = new ArrayList<>();
+
+            authors = (ArrayList<Document>) document.get("authors");
+            reviews = (ArrayList<Document>) document.get("reviews");
+            genres = (ArrayList<String>) document.get("genres");
+            for (Document r : reviews) {
+                reviewsList.add(new Review(
+                        new SimpleStringProperty(r.get("date_added").toString()),
+                        new SimpleStringProperty(r.getString("review_id")),
+                        new SimpleStringProperty(r.get("date_updated").toString()),
+                        new SimpleStringProperty(r.getString("n_votes")),
+                        new SimpleStringProperty(r.getString("user_id")),
+                        new SimpleStringProperty(r.get("rating").toString()),
+                        new SimpleStringProperty(r.getString("review_text")),
+                        new SimpleStringProperty(r.getString("helpful"))
+                ));
+            }
+            for (Document a : authors) {
+                authorsLis.add(a.getString("author_name"));
+            }
+            result = (new Book(
+
+                    document.get("isbn").toString(),
+                    document.get("language_code").toString(),
+                    document.get("asin").toString(),
+                    document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
+                    document.get("description").toString(),
+                    document.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(document.get("num_pages").toString()),
+                    document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
+                    document.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_month").toString()),
+                    document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
+                    document.get("image_url").toString(),
+                    document.get("book_id").toString(),
+                    document.get("ratings_count").toString().equals("") ? Integer.valueOf(0) : Integer.valueOf(document.get("ratings_count").toString()),
+                    document.get("title").toString(),
+                    authorsLis,
+                    genres,
+                    reviewsList
+            ));
+        }
+        cursor.close();
+
+        return result;
+
+    }
     public ArrayList<Book> searchBooks(String searchField, String genre) {
         //TODO add support to genres, authors, review
         ArrayList<Document> authors;
@@ -94,27 +154,19 @@ public class SearchManager {
 
             for (Document r : reviews) {
                 reviewsList.add(new Review(
-                        r.get("date_added").toString(),
-                        r.get("review_id").toString(),
-                        r.get("date_updated").toString(),
-                        r.get("n_votes").toString(),
-                        r.get("user_id").toString(),
-                        r.get("rating").toString(),
-                        r.get("review_text").toString(),
-                        r.get("helpful").toString()
+                        new SimpleStringProperty(r.get("date_added").toString()),
+                        new SimpleStringProperty(r.getString("review_id")),
+                        new SimpleStringProperty(r.get("date_updated").toString()),
+                        new SimpleStringProperty(r.get("n_votes").toString()),
+                        new SimpleStringProperty(r.getString("user_id")),
+                        new SimpleStringProperty(r.get("rating").toString()),
+                        new SimpleStringProperty(r.getString("review_text")),
+                        new SimpleStringProperty(r.getString("helpful"))
                 ));
             }
             for (Document a : authors) {
                 authorsLis.add(a.getString("author_name"));
             }
-
-
-            //TODO inserisci nome dell'autore nel db
-            //TODO migliorare se possibile il modo in cui si prelevano i campi embedded e array
-//            for (Document a :
-//                    authors) {
-//                authorsLis.add(a.getString("author_id"));
-//            }
 
             result.add(new Book(
                     document.get("isbn").toString(),
@@ -139,7 +191,6 @@ public class SearchManager {
 
         return result;
     }
-
 
 
     public ArrayList<String> searchBooksAuthor(String Username) {
@@ -183,6 +234,7 @@ public class SearchManager {
     public ArrayList<Users> searchUser(String Username) {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
+        //search on exact username
         if (Username.equals(""))
             queryResults = user.find().into(new ArrayList());
         else
@@ -193,12 +245,24 @@ public class SearchManager {
                 queryResults) {
             result.add(new Users(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
+
+        //search on name or surname
+        queryResults = user.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+        Users us;
+        for (Document r :
+                queryResults) {
+            us = new Users(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+            if(!result.contains(us))
+                result.add(us);
+        }
+
         return result;
     }
 
     public ArrayList<Author> searchAuthor(String Username) {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         List<Document> queryResults;
+        //search on exact username
         if (Username.equals(""))
             queryResults = author.find().into(new ArrayList());
         else
@@ -209,14 +273,24 @@ public class SearchManager {
                 queryResults) {
             result.add(new Author(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
+
+        //search on name or surname
+        queryResults = author.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+        Author auth;
+        for (Document r :
+                queryResults) {
+            auth = new Author(r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+            if(!result.contains(auth))
+                result.add(auth);
+        }
         return result;
     }
 
-    public ArrayList<String> searchGeners() {
-        MongoCollection<Document> geners = md.getCollection(genreCollection);
+    public ArrayList<String> searchGenres() {
+        MongoCollection<Document> genres = md.getCollection(genreCollection);
         List<Document> queryResults;
 
-        queryResults = geners.find().into(new ArrayList());
+        queryResults = genres.find().into(new ArrayList());
         ArrayList<String> result = new ArrayList<>();
 
         for (Document r :
