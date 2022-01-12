@@ -25,6 +25,9 @@ public class DataReviewCell {
     @FXML
     private Text user;
 
+    @FXML
+    private Text ratingField;
+
     public DataReviewCell() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/reviewCell.fxml"));
         fxmlLoader.setController(this);
@@ -36,10 +39,16 @@ public class DataReviewCell {
     }
 
     public void setInfo(Review review) {
-        previewText.setText(review.getReview_text());
+        String reviewText = review.getReview_text();
+        if (reviewText.length() > 350) {
+            previewText.setText(review.getReview_text().substring(0, Math.min(review.getReview_text().length(), 350))+" ...");
+        } else {
+            previewText.setText(reviewText);
+        }
         user.setText(review.getUser_id());
         like.setText(review.getN_votes());
         helpful.setText(review.getHelpful());
+        ratingField.setText(review.getRating().toString());
     }
 
     public Pane getPane() {

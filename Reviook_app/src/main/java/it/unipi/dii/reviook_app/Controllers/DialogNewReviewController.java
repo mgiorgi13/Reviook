@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class DialogNewReviewController {
     @FXML
@@ -81,7 +82,8 @@ public class DialogNewReviewController {
                 // TODO la query deve aggiornare il rating AVG
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
                 this.previousList.setAll(book.getReviews());
-                this.previousRatingAVG.setText("10");
+                DecimalFormat df = new DecimalFormat("#.#");
+                this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
                 Stage actual_stage = (Stage) addButton.getScene().getWindow();
                 actual_stage.close();
             }
@@ -94,7 +96,8 @@ public class DialogNewReviewController {
                 // TODO la query deve aggiornare il rating AVG
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
                 this.previousList.setAll(book.getReviews());
-                this.previousRatingAVG.setText("10");
+                DecimalFormat df = new DecimalFormat("#.#");
+                this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
                 Stage actual_stage = (Stage) addButton.getScene().getWindow();
                 actual_stage.close();
             }
