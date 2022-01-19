@@ -9,7 +9,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0"
             prefWidth="912.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.unipi.dii.reviook_app.Controllers.UserInterfaceController">
+            fx:controller="it.unipi.dii.reviook_app.controllers.UserInterfaceController">
     <left>
         <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
@@ -338,11 +338,11 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab onSelectionChanged="#viewReaded" text="Readed">
+                    <Tab onSelectionChanged="#viewRead" text="Read">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <JFXListView fx:id="listReaded" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                    <JFXListView fx:id="listRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
                                                  prefWidth="488.0"/>
                                 </children>
                             </AnchorPane>

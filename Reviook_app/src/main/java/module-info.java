@@ -12,11 +12,10 @@ module it.unipi.dii.reviook_app {
     requires java.desktop;
     requires jaxb.api;
 
-
     opens it.unipi.dii.reviook_app to javafx.fxml;
     exports it.unipi.dii.reviook_app;
-    exports it.unipi.dii.reviook_app.Controllers;
-    opens it.unipi.dii.reviook_app.Controllers to javafx.fxml;
-    exports it.unipi.dii.reviook_app.Components;
-    opens it.unipi.dii.reviook_app.Components to javafx.fxml;
+    exports it.unipi.dii.reviook_app.controllers;
+    opens it.unipi.dii.reviook_app.controllers to javafx.fxml;
+    exports it.unipi.dii.reviook_app.components;
+    opens it.unipi.dii.reviook_app.components to javafx.fxml;
 }

@@ -1,84 +1,83 @@
 package it.unipi.dii.reviook_app;
 
-import com.jfoenix.controls.JFXButton;
-import it.unipi.dii.reviook_app.Data.Author;
-import it.unipi.dii.reviook_app.Data.Users;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import it.unipi.dii.reviook_app.entity.Author;
+import it.unipi.dii.reviook_app.entity.Cache;
+import it.unipi.dii.reviook_app.entity.User;
 
 public class Session {
     private static Session session = null;
     private Boolean isAuthor; // true : author , false : user
-    private Users loggedUser = null;
+    private User loggedUser = null;
     private Author loggedAuthor = null;
+    private static Cache cache = new Cache();
 
     public static Session getSession() {
         return session;
     }
 
-
-
     public static void setSession(Session session) {
         Session.session = session;
     }
 
-    public void setCurrentLoggedUser(Users logged) {
+    public void setCurrentLoggedUser(User logged) {
         this.loggedUser = logged;
     }
+
     public void setCurrentLoggedAuthor(Author logged) {
         this.loggedAuthor = logged;
     }
 
-    private Session() {}
+    private Session() {
+    }
+
+    public Cache getCache() {
+        return cache;
+    }
 
     public Boolean getIsAuthor() {
         return isAuthor;
     }
 
     public void setIsAuthor(Boolean type) {
-        if(session == null)
-        {
+        if (session == null) {
             new RuntimeException("Session is not active.");
         } else
             this.isAuthor = type;
     }
 
     public static Session getInstance() {
-        if(session == null) {
+        if (session == null) {
             session = new Session();
         }
         return session;
     }
 
-    public void setLoggedUser(String name, String surname, String nickname,String email, String password) {
-        if(session == null) {
+    public void setLoggedUser(String id, String name, String surname, String nickname, String email, String password) {
+        if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedUser = new Users( name,  surname,  nickname, email,  password);
+            session.loggedUser = new User(id, name, surname, nickname, email, password);
         }
     }
 
-    public void setLoggedAuthor(String name, String surname, String nickname,String email, String password) {
-        if(session == null) {
+    public void setLoggedAuthor(String id, String name, String surname, String nickname, String email, String password) {
+        if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedAuthor = new Author( name,  surname,  nickname, email,  password);
+            session.loggedAuthor = new Author(id, name, surname, nickname, email, password);
         }
     }
 
-    public Users getLoggedUser() {
-        if(session == null) {
+    public User getLoggedUser() {
+        if (session == null) {
             throw new RuntimeException("Session is not active.");
         } else {
             return session.loggedUser;
         }
     }
+
     public Author getLoggedAuthor() {
-        if(session == null) {
+        if (session == null) {
             throw new RuntimeException("Session is not active.");
         } else {
             return session.loggedAuthor;
