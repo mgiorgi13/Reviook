@@ -83,7 +83,7 @@ public class BookManager {
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         newReview.append("date_added", date);
-//        newReview.append("date_updated", "");
+        newReview.append("date_updated", date);
         newReview.append("review_id", reviewID);
         newReview.append("likes", 0);
         newReview.append("rating", ratingBook);
