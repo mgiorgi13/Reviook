@@ -62,8 +62,8 @@ public class SearchManager {
                 reviewsList.add(new Review(
                         new SimpleStringProperty(r.get("date_added").toString()),
                         new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated") == null ? "": r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes")),
+                        new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
+                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
                         new SimpleStringProperty(r.getString("user_id")),
                         new SimpleStringProperty(r.get("rating").toString()),
                         new SimpleStringProperty(r.getString("review_text"))
@@ -73,11 +73,10 @@ public class SearchManager {
                 authorsLis.add(a.getString("author_name"));
             }
             result = (new Book(
-
                     document.get("isbn").toString(),
                     document.get("language_code").toString(),
                     document.get("asin").toString(),
-                    document.getDouble("average_rating"),
+                    document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description").toString(),
                     document.getInteger("num_pages"),
                     document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
@@ -154,7 +153,7 @@ public class SearchManager {
                         new SimpleStringProperty(r.get("date_added").toString()),
                         new SimpleStringProperty(r.getString("review_id")),
                         new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes")),
+                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
                         new SimpleStringProperty(r.getString("user_id")),
                         new SimpleStringProperty(r.get("rating").toString()),
                         new SimpleStringProperty(r.getString("review_text"))
@@ -170,13 +169,13 @@ public class SearchManager {
                     document.get("asin").toString(),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description").toString(),
-                    document.get("num_pages").toString().equals("") ? 0 : Integer.valueOf(document.get("num_pages").toString()),
+                    document.getInteger("num_pages"),
                     document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
                     document.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_month").toString()),
                     document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
                     document.get("image_url").toString(),
                     document.get("book_id").toString(),
-                    document.get("ratings_count").toString().equals("") ? Integer.valueOf(0) : Integer.valueOf(document.get("ratings_count").toString()),
+                    document.getInteger("ratings_count"),
                     document.get("title").toString(),
                     authorsLis,
                     genres,

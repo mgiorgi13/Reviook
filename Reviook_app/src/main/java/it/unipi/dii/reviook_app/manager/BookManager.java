@@ -147,8 +147,8 @@ public class BookManager {
                 reviewsList.add(new Review(
                         new SimpleStringProperty(r.get("date_added").toString()),
                         new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes")),
+                        new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
+                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
                         new SimpleStringProperty(r.getString("user_id")),
                         new SimpleStringProperty(r.get("rating").toString()),
                         new SimpleStringProperty(r.getString("review_text"))
