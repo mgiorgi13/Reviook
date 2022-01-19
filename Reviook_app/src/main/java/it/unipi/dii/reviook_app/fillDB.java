@@ -1,6 +1,7 @@
 //
 //package it.unipi.dii.reviook_app;
 //
+//import com.mongodb.client.MongoCollection;
 //import it.unipi.dii.reviook_app.entity.Author;
 //import it.unipi.dii.reviook_app.entity.Book;
 //import it.unipi.dii.reviook_app.entity.Genre;
@@ -12,6 +13,7 @@
 //import javafx.scene.Parent;
 //
 //
+//import org.bson.Document;
 //import org.json.simple.JSONArray;
 //import org.json.simple.JSONObject;
 //import org.json.simple.parser.JSONParser;
@@ -28,6 +30,7 @@
 //import java.util.*;
 //import java.util.Scanner;
 //
+//import static com.mongodb.client.model.Filters.in;
 //import static org.neo4j.driver.Values.parameters;
 //
 //
@@ -36,12 +39,13 @@
 //    public static int writeCount = 0;
 //    public static String target = "authorsDocument";
 //    public static String newFileName = "Document";
-//    private static int ntread = 500;
+//    private static int ntread = 2000;
 //    private static volatile Integer contatore = 0; // 28100
 //    private static ArrayList<Author> author = new ArrayList();
 //    private static ArrayList<User> user = new ArrayList();
 //    private static ArrayList<Book> book = new ArrayList();
 //    private static  Neo4jDriver nd = Neo4jDriver.getInstance();
+//    private static  MongoDriver md = MongoDriver.getInstance();
 //
 //    public static void main(String[] args)
 //
@@ -142,6 +146,22 @@
 //        }
 //    }
 //
+//    public static synchronized ArrayList<String> searchBooksAuthor(String author_id) {
+//        MongoCollection<Document> book = md.getCollection("books");
+//        List<Document> queryResults;
+//        if (author_id.equals(""))
+//            queryResults = book.find().into(new ArrayList());
+//        else
+//            queryResults = book.find(in("authors.author_id", author_id)).into(new ArrayList());
+//        ArrayList<String> result = new ArrayList<>();
+//
+//        for (Document r :
+//                queryResults) {
+//            result.add(r.getString("book_id"));
+//        }
+//        return result;
+//    }
+//
 //
 //    private static void insertUsers() {
 //        SearchManager sm = new SearchManager();
@@ -207,7 +227,7 @@
 ////                    um.following(nick, "User", nick4, "Author");
 //
 //                //add wrote relation
-//                books = sm.searchBooksAuthor(id);
+//                books = searchBooksAuthor(id);
 ////                System.out.println(nick);
 ////                System.out.println(books);
 //                addwrote(nick,books);
@@ -227,6 +247,8 @@
 //                if (contatore % 100 == 0)
 //                    System.out.println(Thread.currentThread().getId() + " : " + contatore);
 //            }
+//
+//            System.out.println("-------->" + contatore);
 //
 //            }
 //        };

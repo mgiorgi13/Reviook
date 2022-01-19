@@ -43,25 +43,26 @@ public class BookManager {
 
     public void addBook(String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
 
         //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
-        Document doc = new Document("image_url", "null")
-                .append("num_pages", "")
+        Document doc = new Document("image_url", "")
+                .append("num_pages", 0)
                 .append("isbn", ISBN)
                 .append("description", Description)
                 .append("average_rating", "")
                 .append("book_id", id)
                 .append("title", title)
                 .append("language_code", "")
-                .append("publication_month", "")
-                .append("publication_year", "")
+                .append("publication_month", calendar.get(Calendar.MONTH))
+                .append("publication_year", calendar.get(Calendar.YEAR))
                 .append("reviews", reviews)
                 .append("genres", Genre)
                 .append("asin", "")
-                .append("publication_day", "")
-                .append("ratings_count", "")
+                .append("publication_day", calendar.get(Calendar.DAY_OF_MONTH))
+                .append("ratings_count", 0.0)
                 .append("authors", UsernameTagged);
 
         md.getCollection(bookCollection).insertOne(doc);
