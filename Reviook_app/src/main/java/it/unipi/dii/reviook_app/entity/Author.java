@@ -39,17 +39,16 @@ public class Author extends User {
     public void setLikeNumber(int likeNumber) {
         this.likeNumber = likeNumber;
     }
-//todo aggiungere getfollowing
+
+    //todo aggiungere getfollowing
     public int getFollowerCount() {
         List<String> followerList = userManager.loadRelationsFollower("Author", this.getNickname());
         return followerList.size();
     }
 
 
-     public String getIdBookPublished(String title)
-    {
-        for( Book Books: this.writtenBook) {
-
+    public String getIdBookPublished(String title) {
+        for (Book Books : this.writtenBook) {
             if (Books.getTitle().equals(title))
                 return Books.getBook_id();
         }

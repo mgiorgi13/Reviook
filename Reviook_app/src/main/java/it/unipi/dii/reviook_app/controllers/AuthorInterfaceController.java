@@ -115,8 +115,6 @@ public class AuthorInterfaceController {
     }
 
     public void setNickname(String nickname) {
-        //TODO caricaListeLibri()
-
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
 
@@ -197,7 +195,7 @@ public class AuthorInterfaceController {
                 listFollows.add(session.getLoggedAuthor().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         } else {
-            Author author = new Author("","", "", usernameAuthor.getText(), "", "");
+            Author author = new Author("", "", "", usernameAuthor.getText(), "", "");
             author.getInteractions().delFollow();
             Follow = userManager.loadRelations("Author", usernameAuthor.getText());
             author.getInteractions().setNumberFollow(Follow.size());
@@ -247,8 +245,9 @@ public class AuthorInterfaceController {
         });
         //    System.out.println(Follow.size()+ " "+session.getLoggedAuthor().getInteractions().getFollow()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
+
     @FXML
-    void viewRead(){
+    void viewRead() {
         if (session.getLoggedAuthor() != null)
             session.getLoggedAuthor().getBooks().listBooksClear();
         else
@@ -260,11 +259,11 @@ public class AuthorInterfaceController {
         read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
         System.out.println(read);
         ObservableList<String> ListRead = FXCollections.observableArrayList();
-        for (Book book: read) {
+        for (Book book : read) {
             if (session.getLoggedAuthor() != null)
-                ListRead.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(),book.getBook_id()));
+                ListRead.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(), book.getBook_id()));
             else
-                ListRead.add(session.getLoggedUser().getBooks().setRead(book.getTitle(),book.getBook_id()));
+                ListRead.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
         }
         listRead.getItems().addAll(ListRead);
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -298,7 +297,7 @@ public class AuthorInterfaceController {
     }
 
     @FXML
-    void viewToRead(){
+    void viewToRead() {
         if (session.getLoggedAuthor() != null)
             session.getLoggedAuthor().getBooks().listBooksClear();
         else
@@ -310,11 +309,11 @@ public class AuthorInterfaceController {
         toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "TO_READ");
 
         ObservableList<String> ListToRead = FXCollections.observableArrayList();
-        for (Book book: toRead) {
+        for (Book book : toRead) {
             if (session.getLoggedAuthor() != null)
-                ListToRead.add(session.getLoggedAuthor().getBooks().setToRead(book.getTitle(),book.getBook_id()));
+                ListToRead.add(session.getLoggedAuthor().getBooks().setToRead(book.getTitle(), book.getBook_id()));
             else
-                ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(),book.getBook_id()));
+                ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(), book.getBook_id()));
         }
         listToRead.getItems().addAll(ListToRead);
 
@@ -325,9 +324,9 @@ public class AuthorInterfaceController {
                     String selectedCell = (String) listToRead.getSelectionModel().getSelectedItem();
                     String id_book;
                     if (session.getLoggedAuthor() != null) {
-                         id_book = session.getLoggedAuthor().getBooks().getIdBookToRead(selectedCell);
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookToRead(selectedCell);
                     } else {
-                         id_book = session.getLoggedUser().getBooks().getIdBookToRead(selectedCell);
+                        id_book = session.getLoggedUser().getBooks().getIdBookToRead(selectedCell);
                     }
                     Book allInfo = searchManager.searchIdBook(id_book);
                     try {
@@ -347,6 +346,7 @@ public class AuthorInterfaceController {
             }
         });
     }
+
     @FXML
     void viewFollower() {
         listFollower.getItems().clear();
@@ -364,7 +364,7 @@ public class AuthorInterfaceController {
                 listFollowers.add(session.getLoggedAuthor().getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         } else {
-            Author author = new Author("","", "", usernameAuthor.getText(), "", "");
+            Author author = new Author("", "", "", usernameAuthor.getText(), "", "");
             author.getInteractions().delFollower();
             Follower = userManager.loadRelationsFollower("Author", usernameAuthor.getText());
             author.getInteractions().setNumberFollower(Follower.size());
@@ -416,13 +416,13 @@ public class AuthorInterfaceController {
     public void publishedFunction() {
         listPublished.getItems().clear();
         if (session.getLoggedAuthor() != null)
-                session.getLoggedAuthor().getBooks().listBooksClear();
-            else
-                session.getLoggedUser().getBooks().listBooksClear();
+            session.getLoggedAuthor().getBooks().listBooksClear();
+        else
+            session.getLoggedUser().getBooks().listBooksClear();
         //ObservableList<String> obsPublishedList = FXCollections.observableArrayList();
         // TODO recuperare id  autore e fare la ricerca con quello
         String revtID = userManager.retriveID(usernameAuthor.getText());
-      //  obsPublishedList.addAll(searchManager.searchBooksAuthor(revtID));
+        //  obsPublishedList.addAll(searchManager.searchBooksAuthor(revtID));
         ObservableList<String> statistic = FXCollections.observableArrayList();
         statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));
         ArrayList<Book> published;
@@ -430,12 +430,11 @@ public class AuthorInterfaceController {
         published = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "WROTE");
 
         ObservableList<String> ListPublished = FXCollections.observableArrayList();
-        for (Book book: published) {
-            if (session.getLoggedAuthor() != null){
-                ListPublished.add(session.getLoggedAuthor().getBooks().setPublished(book.getTitle(),book.getBook_id()));
-            }
-            else
-                ListPublished.add(session.getLoggedUser().getBooks().setPublished(book.getTitle(),book.getBook_id()));
+        for (Book book : published) {
+            if (session.getLoggedAuthor() != null) {
+                ListPublished.add(session.getLoggedAuthor().getBooks().setPublished(book.getTitle(), book.getBook_id()));
+            } else
+                ListPublished.add(session.getLoggedUser().getBooks().setPublished(book.getTitle(), book.getBook_id()));
         }
         listPublished.getItems().addAll(ListPublished);
         listPublished.setOnMouseClicked(new EventHandler<MouseEvent>() {

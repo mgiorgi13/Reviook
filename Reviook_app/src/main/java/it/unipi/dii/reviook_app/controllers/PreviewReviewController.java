@@ -41,8 +41,6 @@ public class PreviewReviewController {
     }
 
     public void setInfoReview(Review selectedReview) {
-//        scrollPane.
-        //TODO BUG : SE IL CAMPO RATING è 0 ALLORA ESPODE
         ratingField.setText(selectedReview.getRating());
         authorReviewField.setText(selectedReview.getUser_id());
         reviewText.setText(selectedReview.getReview_text());
@@ -50,6 +48,5 @@ public class PreviewReviewController {
 
     @FXML
     void initialize() {
-
     }
 }

@@ -204,11 +204,17 @@ public class BookDetailController {
         if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
             return;
         }
-        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
-        Book book = bookManager.getBookByID(this.book_id); // query to update review
-        this.observableList.setAll(book.getReviews());
-        DecimalFormat df = new DecimalFormat("#.#");
-        this.ratingAVG.setText(df.format(book.getAverage_rating()));
+        try {
+            bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Book book = bookManager.getBookByID(this.book_id); // query to update review
+            this.reviewsList = book.getReviews();
+            setListView();
+            DecimalFormat df = new DecimalFormat("#.#");
+            this.ratingAVG.setText(df.format(book.getAverage_rating()));
+        }
     }
 
     public void setInfoBook(Book bookSelected) {

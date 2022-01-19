@@ -26,7 +26,6 @@ import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
 
-//TODO CONTROLLARE FORMATO NODI NEO4J
 public class BookManager {
     private MongoDriver md;
     private Neo4jDriver nd;
@@ -81,19 +80,17 @@ public class BookManager {
     }
 
     public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
-        // TODO aggiornare il rating Book
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         newReview.append("date_added", date);
-        newReview.append("date_updated", "");
+        newReview.append("date_updated", date);
         newReview.append("review_id", reviewID);
-        newReview.append("likes", "0");
+        newReview.append("likes", 0);
         newReview.append("rating", ratingBook);
         newReview.append("review_text", reviewText);
-        newReview.append("helpful", "0");
         if (session.getLoggedUser() != null) {
             String loggedUserID = session.getLoggedUser().getNickname();
             newReview.append("user_id", loggedUserID);
@@ -112,7 +109,6 @@ public class BookManager {
     }
 
     public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
-        // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
@@ -124,7 +120,6 @@ public class BookManager {
     }
 
     public void DeleteReview(String review_id, String book_id) {
-        // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         //  Bson getReview = eq("reviews.review_id", review_id);

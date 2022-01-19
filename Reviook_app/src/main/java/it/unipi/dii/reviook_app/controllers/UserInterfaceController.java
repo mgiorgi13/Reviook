@@ -35,7 +35,7 @@ public class UserInterfaceController {
     private Text usernameUser, followersCount, followCount;
 
     @FXML
-    private JFXListView<String> listFollow, listFollower, listRead,listToRead;
+    private JFXListView<String> listFollow, listFollower, listRead, listToRead;
 
     @FXML
     private CheckBox follow;
@@ -89,16 +89,14 @@ public class UserInterfaceController {
     }
 
     public void setNickname(String nickname) {
-        //TODO caricaListeLibri()
-
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
+        //carico le info dello user
         viewRead();
         viewToRead();
         viewFollow();
         viewFollower();
-
 
         if (session.getLoggedAuthor() != null) {
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
@@ -107,7 +105,6 @@ public class UserInterfaceController {
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
-                    //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
                     if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(this.nickname))
                         follow.setSelected(true);
                 }
@@ -119,7 +116,6 @@ public class UserInterfaceController {
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
-                    //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname))
                         follow.setSelected(true);
                 }
@@ -159,12 +155,11 @@ public class UserInterfaceController {
             for (int i = 0; i < Follow.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollow(Follow.get(i));
             }
-
             for (int i = 0; i < session.getLoggedUser().getInteractions().getNumberFollow(); i++)
                 listFollows.add(session.getLoggedUser().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         } else {
-            User user = new User("", "","", usernameUser.getText(), "", "");
+            User user = new User("", "", "", usernameUser.getText(), "", "");
             user.getInteractions().delFollow();
             Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
@@ -185,8 +180,9 @@ public class UserInterfaceController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
                     int result = userManagerNJ.verifyUsername(selectedCell, false);
-                    if(result == -1)
-                        return;else
+                    if (result == -1)
+                        return;
+                    else
                         try {
                             Parent userInterface;
                             FXMLLoader fxmlLoader;
@@ -231,7 +227,7 @@ public class UserInterfaceController {
                 listFollowers.add(session.getLoggedUser().getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         } else {
-            User users = new User("","", "", usernameUser.getText(), "", "");
+            User users = new User("", "", "", usernameUser.getText(), "", "");
             users.getInteractions().delFollower();
             Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
             users.getInteractions().setNumberFollower(Follower.size());
@@ -252,7 +248,7 @@ public class UserInterfaceController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
                     int result = userManagerNJ.verifyUsername(selectedCell, false);
-                    if(result == -1)
+                    if (result == -1)
                         return;
                     try {
                         Parent userInterface;
@@ -262,8 +258,7 @@ public class UserInterfaceController {
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
                             controller.setNickname(selectedCell);
-                        }
-                        else {
+                        } else {
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
@@ -282,8 +277,9 @@ public class UserInterfaceController {
         });
 
     }
+
     @FXML
-    void viewRead(){
+    void viewRead() {
         if (session.getLoggedAuthor() != null)
             session.getLoggedAuthor().getBooks().listBooksClear();
         else
@@ -295,11 +291,11 @@ public class UserInterfaceController {
         read = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "READ");
         System.out.println(read);
         ObservableList<String> ListReaded = FXCollections.observableArrayList();
-        for (Book book: read) {
+        for (Book book : read) {
             if (session.getLoggedAuthor() != null)
-                ListReaded.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(),book.getBook_id()));
+                ListReaded.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(), book.getBook_id()));
             else
-                ListReaded.add(session.getLoggedUser().getBooks().setRead(book.getTitle(),book.getBook_id()));
+                ListReaded.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
         }
         listRead.getItems().addAll(ListReaded);
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -331,8 +327,9 @@ public class UserInterfaceController {
             }
         });
     }
+
     @FXML
-    void viewToRead(){
+    void viewToRead() {
         if (session.getLoggedAuthor() != null)
             session.getLoggedAuthor().getBooks().listBooksClear();
         else
@@ -344,11 +341,11 @@ public class UserInterfaceController {
         toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
 
         ObservableList<String> ListToRead = FXCollections.observableArrayList();
-        for (Book book: toRead) {
+        for (Book book : toRead) {
             if (session.getLoggedAuthor() != null)
-                ListToRead.add(session.getLoggedAuthor().getBooks().setToRead(book.getTitle(),book.getBook_id()));
+                ListToRead.add(session.getLoggedAuthor().getBooks().setToRead(book.getTitle(), book.getBook_id()));
             else
-                ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(),book.getBook_id()));
+                ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(), book.getBook_id()));
         }
         listToRead.getItems().addAll(ListToRead);
 
@@ -381,13 +378,14 @@ public class UserInterfaceController {
             }
         });
     }
+
     public void initialize() {
         follow.setVisible(false);
 
         if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
-
+        // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         viewFollower();
         viewFollow();
     }

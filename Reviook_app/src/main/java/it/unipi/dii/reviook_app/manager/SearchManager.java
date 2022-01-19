@@ -38,8 +38,8 @@ public class SearchManager {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-    public Book searchIdBook(String idBook)
-    {
+
+    public Book searchIdBook(String idBook) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         Book result = null;
@@ -96,8 +96,8 @@ public class SearchManager {
         return result;
 
     }
+
     public ArrayList<Book> searchBooks(String searchField, String genre) {
-        //TODO add support to genres, authors, review
         ArrayList<Document> authors;
         ArrayList<Document> reviews;
         ArrayList<String> genres;
@@ -196,7 +196,6 @@ public class SearchManager {
             queryResults = book.find(in("authors.author_id", author_id)).into(new ArrayList());
         ArrayList<String> result = new ArrayList<>();
 
-        //TODO MODIFICA BOOK_ID TO TITLE
         for (Document r :
                 queryResults) {
             result.add(r.getString("title"));
@@ -238,17 +237,17 @@ public class SearchManager {
 
         for (Document r :
                 queryResults) {
-            result.add(new User(r.getString("user_id"),r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
+            result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
 
         //search on name or surname
-        if(!Username.equals("")){
+        if (!Username.equals("")) {
             queryResults = user.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
             User us;
             for (Document r :
                     queryResults) {
-                us = new User(r.getString("user_id"),r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
-                if(!result.contains(us))
+                us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+                if (!result.contains(us))
                     result.add(us);
             }
         }
@@ -268,10 +267,10 @@ public class SearchManager {
 
         for (Document r :
                 queryResults) {
-            result.add(new Author(r.getString("author_id"),r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
+            result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
         }
 
-        if(!Username.equals("")) {
+        if (!Username.equals("")) {
             //search on name or surname
             queryResults = author.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
             Author auth;
@@ -292,8 +291,8 @@ public class SearchManager {
 
         cursor = genres.find().iterator();
 
-        while (cursor.hasNext()){
-            result.add( new Genre(cursor.next().getString("_id")));
+        while (cursor.hasNext()) {
+            result.add(new Genre(cursor.next().getString("_id")));
         }
 
         return result;

@@ -69,6 +69,8 @@ public class SearchInterfaceController {
 
     private SearchManager searchManager = new SearchManager();
 
+    private Session session = Session.getInstance();
+
     private ObservableList<Genre> availableChoices = FXCollections.observableArrayList();
 
     @FXML
@@ -77,6 +79,41 @@ public class SearchInterfaceController {
         availableChoices.addAll(searchManager.searchGenres());
         bookFilter.setItems(availableChoices);
         bookFilter.setVisible(false);
+        //inizializzo le liste se ho la cache piena
+        //TODO eliminare ripetizione codice dei cell factory
+        if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("book") && session.getCache().getSearchedBooks() != null) {
+//            System.out.println("book: "+session.getCache().getSearchedBooks().size());
+            ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
+            obsBooksList.addAll(session.getCache().getSearchedBooks());
+            bookList.setItems(obsBooksList);
+            addCustomFactory("book");
+            bookList.setVisible(true);
+            usersList.setVisible(false);
+            authorsList.setVisible(false);
+        } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("user") && session.getCache().getSearchedUsers() != null) {
+//            System.out.println("user: "+session.getCache().getSearchedUsers().size());
+            ObservableList<User> obsUserList = FXCollections.observableArrayList();
+            obsUserList.addAll(session.getCache().getSearchedUsers());
+            usersList.setItems(obsUserList);
+            addCustomFactory("user");
+            usersList.setVisible(true);
+            authorsList.setVisible(false);
+            bookList.setVisible(false);
+        } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("author") && session.getCache().getSearchedAuthors() != null) {
+//            System.out.println("author: "+session.getCache().getSearchedAuthors().size());
+            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
+            obsUserList.addAll(session.getCache().getSearchedAuthors());
+            authorsList.setItems(obsUserList);
+            addCustomFactory("author");
+            authorsList.setVisible(true);
+            bookList.setVisible(false);
+            usersList.setVisible(false);
+        } else {
+            usersList.getItems().clear();
+            bookList.getItems().clear();
+            authorsList.getItems().clear();
+        }
+
     }
 
     @FXML
@@ -125,20 +162,99 @@ public class SearchInterfaceController {
             bookList.setVisible(true);
             authorsList.setVisible(false);
             usersList.setVisible(false);
-
             String selectedChoice = bookFilter.getSelectionModel().getSelectedItem() == null ? "" : bookFilter.getSelectionModel().getSelectedItem().toString();
-
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
-            obsBooksList.addAll(searchManager.searchBooks(searchText.getText(), selectedChoice));
+            ArrayList<Book> list = searchManager.searchBooks(searchText.getText(), selectedChoice);
+            session.getCache().setSearchedBooks(list);
+            obsBooksList.addAll(list);
             bookList.getItems().addAll(obsBooksList);
-            bookList.setCellFactory(
-                    new Callback<ListView<Book>, ListCell<Book>>() {
-                        @Override
-                        public ListCell<Book> call(ListView<Book> listView) {
-                            return new ListBook();
-                        }
-                    });
-            bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            addCustomFactory("book");
+        } else if (userCheck.isSelected()) {
+            bookList.setVisible(false);
+            authorsList.setVisible(false);
+            usersList.setVisible(true);
+            ObservableList<User> obsUserList = FXCollections.observableArrayList();
+            ArrayList<User> list = searchManager.searchUser(searchText.getText());
+            session.getCache().setSearchedUsers(list);
+            obsUserList.addAll(list);
+            usersList.getItems().addAll(obsUserList);
+            addCustomFactory("user");
+        } else if (authorCheck.isSelected()) {
+            bookList.setVisible(false);
+            authorsList.setVisible(true);
+            usersList.setVisible(false);
+            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
+            ArrayList<Author> list = searchManager.searchAuthor(searchText.getText());
+            session.getCache().setSearchedAuthors(list);
+            obsUserList.addAll(list);
+            authorsList.getItems().addAll(obsUserList);
+            addCustomFactory("author");
+        }
+    }
+
+    @FXML
+    public void selectBookCheckAction(ActionEvent actionEvent) {
+        bookCheck.setSelected(true);
+        authorCheck.setSelected(false);
+        userCheck.setSelected(false);
+        bookFilter.setVisible(true);
+        session.getCache().setSearchType("book");
+        if (session.getCache().getSearchedBooks() != null) {
+            ObservableList<Book> obsBookList = FXCollections.observableArrayList();
+            obsBookList.addAll(session.getCache().getSearchedBooks());
+            bookList.setItems(obsBookList);
+            addCustomFactory("book");
+            bookList.setVisible(true);
+            usersList.setVisible(false);
+            authorsList.setVisible(false);
+        }
+    }
+
+    @FXML
+    public void selectAuthorCheckAction(ActionEvent actionEvent) {
+        bookCheck.setSelected(false);
+        userCheck.setSelected(false);
+        authorCheck.setSelected(true);
+        bookFilter.setVisible(false);
+        session.getCache().setSearchType("author");
+        if (session.getCache().getSearchedAuthors() != null) {
+            ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
+            obsAuthorList.addAll(session.getCache().getSearchedAuthors());
+            authorsList.setItems(obsAuthorList);
+            addCustomFactory("author");
+            bookList.setVisible(false);
+            usersList.setVisible(false);
+            authorsList.setVisible(true);
+        }
+    }
+
+    @FXML
+    public void selectUserCheckAction(ActionEvent actionEvent) {
+        bookCheck.setSelected(false);
+        authorCheck.setSelected(false);
+        userCheck.setSelected(true);
+        bookFilter.setVisible(false);
+        session.getCache().setSearchType("user");
+        if (session.getCache().getSearchedUsers() != null) {
+            ObservableList<User> obsUserList = FXCollections.observableArrayList();
+            obsUserList.addAll(session.getCache().getSearchedUsers());
+            usersList.setItems(obsUserList);
+            addCustomFactory("user");
+            bookList.setVisible(false);
+            usersList.setVisible(true);
+            authorsList.setVisible(false);
+        }
+    }
+
+    private void addCustomFactory(String type) {
+        if (type.equals("book")) {
+            this.bookList.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>() {
+                @Override
+                public ListCell<Book> call(ListView<Book> listView) {
+                    return new ListBook();
+                }
+            });
+            this.bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
@@ -159,21 +275,14 @@ public class SearchInterfaceController {
                     }
                 }
             });
-
-        } else if (userCheck.isSelected()) {
-            bookList.setVisible(false);
-            authorsList.setVisible(false);
-            usersList.setVisible(true);
-            ObservableList<User> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(searchManager.searchUser(searchText.getText()));
-            usersList.getItems().addAll(obsUserList);
-            usersList.setCellFactory(new Callback<ListView<User>, ListCell<User>>() {
+        } else if (type.equals("user")) {
+            this.usersList.setCellFactory(new Callback<ListView<User>, ListCell<User>>() {
                 @Override
                 public ListCell<User> call(ListView<User> listView) {
                     return new ListUser();
                 }
             });
-            usersList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            this.usersList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
@@ -194,20 +303,14 @@ public class SearchInterfaceController {
                     }
                 }
             });
-        } else if (authorCheck.isSelected()) {
-            bookList.setVisible(false);
-            authorsList.setVisible(true);
-            usersList.setVisible(false);
-            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(searchManager.searchAuthor(searchText.getText()));
-            authorsList.getItems().addAll(obsUserList);
-            authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
+        } else if (type.equals("author")) {
+            this.authorsList.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
                 @Override
                 public ListCell<Author> call(ListView<Author> listView) {
                     return new ListAuthor();
                 }
             });
-            authorsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            this.authorsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
@@ -230,29 +333,5 @@ public class SearchInterfaceController {
                 }
             });
         }
-    }
-
-    @FXML
-    public void selectBookCheckAction(ActionEvent actionEvent) {
-        bookCheck.setSelected(true);
-        authorCheck.setSelected(false);
-        userCheck.setSelected(false);
-        bookFilter.setVisible(true);
-    }
-
-    @FXML
-    public void selectAuthorCheckAction(ActionEvent actionEvent) {
-        bookCheck.setSelected(false);
-        userCheck.setSelected(false);
-        authorCheck.setSelected(true);
-        bookFilter.setVisible(false);
-    }
-
-
-    public void selectUserCheckAction(ActionEvent actionEvent) {
-        bookCheck.setSelected(false);
-        authorCheck.setSelected(false);
-        userCheck.setSelected(true);
-        bookFilter.setVisible(false);
     }
 }
