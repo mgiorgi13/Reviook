@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
@@ -12,7 +13,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="852.0"
       prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="it.unipi.dii.reviook_app.Controllers.BookDetailController">
@@ -39,12 +39,7 @@
                                                 <FontAwesomeIconView glyphName="BOOKMARK"/>
                                             </graphic>
                                         </JFXButton>
-                                        <JFXButton layoutX="79.0" layoutY="176.0" text="Like">
-                                            <graphic>
-                                                <FontAwesomeIconView glyphName="HEART"/>
-                                            </graphic>
-                                        </JFXButton>
-                                        <JFXButton layoutX="129.0" layoutY="176.0" onAction="#readed" text="Readed">
+                                        <JFXButton layoutX="87.0" layoutY="176.0" onAction="#readed" text="Readed">
                                             <graphic>
                                                 <FontAwesomeIconView glyphName="BOOK"/>
                                             </graphic>
@@ -93,9 +88,9 @@
                                             <FontAwesomeIconView glyphName="TRASH"/>
                                         </graphic>
                                     </JFXButton>
-                                    <JFXButton layoutX="528.0" layoutY="2.0" text="helpful">
+                                    <JFXButton layoutX="528.0" layoutY="3.0" text="Like">
                                         <graphic>
-                                            <FontAwesomeIconView glyphName="STAR"/>
+                                            <FontAwesomeIconView glyphName="HEART"/>
                                         </graphic>
                                     </JFXButton>
                                 </Pane>
