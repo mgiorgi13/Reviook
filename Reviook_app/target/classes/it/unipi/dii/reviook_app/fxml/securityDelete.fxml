@@ -11,7 +11,7 @@
 
 
 <Pane prefHeight="179.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.unipi.dii.reviook_app.Controllers.SecurityController">
+      fx:controller="it.unipi.dii.reviook_app.controllers.SecurityController">
     <children>
         <GridPane hgap="10.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                   minWidth="-Infinity" prefHeight="121.0" prefWidth="370.0" vgap="10.0">

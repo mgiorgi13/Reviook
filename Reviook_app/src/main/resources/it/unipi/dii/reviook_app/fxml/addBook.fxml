@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.Controllers.AddBookController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AddBookController">
    <children>
       <Text layoutX="410.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author Tag" />
       <Text layoutX="41.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title book" />
@@ -23,13 +23,13 @@
       </Pane>
       <Pane layoutX="315.0" layoutY="60.0" prefHeight="138.0" prefWidth="173.0">
          <children>
-            <JFXListView fx:id="generList" prefHeight="138.0" prefWidth="276.0" />
+            <JFXListView fx:id="genreList" prefHeight="138.0" prefWidth="276.0" />
             <JFXListView fx:id="authorsList" prefHeight="138.0" prefWidth="276.0" />
          </children>
       </Pane>
       <TextArea fx:id="description" layoutX="196.0" layoutY="465.0" prefHeight="90.0" prefWidth="258.0" />
       <Text layoutX="153.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres" />
-      <Button fx:id="addBookButton" layoutX="196.0" layoutY="567.0" mnemonicParsing="false" onAction="#addBookFuncton" prefHeight="25.0" prefWidth="258.0" text="Add your book" />
+      <Button fx:id="addBookButton" layoutX="196.0" layoutY="567.0" mnemonicParsing="false" onAction="#addBookFunction" prefHeight="25.0" prefWidth="258.0" text="Add your book" />
       <Text fx:id="actiontarget" layoutX="222.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="215.455078125" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       <Text layoutX="269.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NEW BOOK" />
@@ -40,7 +40,7 @@
       <JFXButton layoutX="196.0" layoutY="226.0" onAction="#searchActionGenres" prefHeight="25.0" prefWidth="69.0" text="SEARCH" />
       <Pane layoutX="73.0" layoutY="285.0" prefHeight="145.0" prefWidth="197.0">
          <children>
-            <JFXListView fx:id="generTag" layoutX="5.0" layoutY="3.0" prefHeight="138.0" prefWidth="187.0" />
+            <JFXListView fx:id="genreTag" layoutX="5.0" layoutY="3.0" prefHeight="138.0" prefWidth="187.0" />
          </children>
       </Pane>
       <JFXButton fx:id="backButton" layoutX="20.0" layoutY="567.0" onAction="#backFunction" prefHeight="25.0" prefWidth="69.0" text="BACK" />
