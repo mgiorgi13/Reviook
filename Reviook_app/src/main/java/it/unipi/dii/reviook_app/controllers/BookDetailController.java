@@ -250,6 +250,7 @@ public class BookDetailController {
     @FXML
     void initialize() {
         // setListView();
+        System.out.println(session.getCache().getLastUpdate());
     }
 
 

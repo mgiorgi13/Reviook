@@ -2,10 +2,9 @@ package it.unipi.dii.reviook_app.controllers;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ResourceBundle;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -79,40 +78,44 @@ public class SearchInterfaceController {
         availableChoices.addAll(searchManager.searchGenres());
         bookFilter.setItems(availableChoices);
         bookFilter.setVisible(false);
-        //inizializzo le liste se ho la cache piena
-        //TODO eliminare ripetizione codice dei cell factory
-        if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("book") && session.getCache().getSearchedBooks() != null) {
+
+        if (checkCacheValid()) {
+            //inizializzo le liste se ho la cache piena
+            //TODO eliminare ripetizione codice dei cell factory
+            if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("book") && session.getCache().getSearchedBooks() != null) {
 //            System.out.println("book: "+session.getCache().getSearchedBooks().size());
-            ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
-            obsBooksList.addAll(session.getCache().getSearchedBooks());
-            bookList.setItems(obsBooksList);
-            addCustomFactory("book");
-            bookList.setVisible(true);
-            usersList.setVisible(false);
-            authorsList.setVisible(false);
-        } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("user") && session.getCache().getSearchedUsers() != null) {
+                ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
+                obsBooksList.addAll(session.getCache().getSearchedBooks());
+                bookList.setItems(obsBooksList);
+                addCustomFactory("book");
+                bookList.setVisible(true);
+                usersList.setVisible(false);
+                authorsList.setVisible(false);
+            } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("user") && session.getCache().getSearchedUsers() != null) {
 //            System.out.println("user: "+session.getCache().getSearchedUsers().size());
-            ObservableList<User> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(session.getCache().getSearchedUsers());
-            usersList.setItems(obsUserList);
-            addCustomFactory("user");
-            usersList.setVisible(true);
-            authorsList.setVisible(false);
-            bookList.setVisible(false);
-        } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("author") && session.getCache().getSearchedAuthors() != null) {
+                ObservableList<User> obsUserList = FXCollections.observableArrayList();
+                obsUserList.addAll(session.getCache().getSearchedUsers());
+                usersList.setItems(obsUserList);
+                addCustomFactory("user");
+                usersList.setVisible(true);
+                authorsList.setVisible(false);
+                bookList.setVisible(false);
+            } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("author") && session.getCache().getSearchedAuthors() != null) {
 //            System.out.println("author: "+session.getCache().getSearchedAuthors().size());
-            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-            obsUserList.addAll(session.getCache().getSearchedAuthors());
-            authorsList.setItems(obsUserList);
-            addCustomFactory("author");
-            authorsList.setVisible(true);
-            bookList.setVisible(false);
-            usersList.setVisible(false);
-        } else {
-            usersList.getItems().clear();
-            bookList.getItems().clear();
-            authorsList.getItems().clear();
+                ObservableList<Author> obsUserList = FXCollections.observableArrayList();
+                obsUserList.addAll(session.getCache().getSearchedAuthors());
+                authorsList.setItems(obsUserList);
+                addCustomFactory("author");
+                authorsList.setVisible(true);
+                bookList.setVisible(false);
+                usersList.setVisible(false);
+            } else {
+                usersList.getItems().clear();
+                bookList.getItems().clear();
+                authorsList.getItems().clear();
+            }
         }
+
 
     }
 
@@ -166,6 +169,7 @@ public class SearchInterfaceController {
             ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
             ArrayList<Book> list = searchManager.searchBooks(searchText.getText(), selectedChoice);
             session.getCache().setSearchedBooks(list);
+            session.getCache().setLastUpdate(new Date());
             obsBooksList.addAll(list);
             bookList.getItems().addAll(obsBooksList);
             addCustomFactory("book");
@@ -176,6 +180,7 @@ public class SearchInterfaceController {
             ObservableList<User> obsUserList = FXCollections.observableArrayList();
             ArrayList<User> list = searchManager.searchUser(searchText.getText());
             session.getCache().setSearchedUsers(list);
+            session.getCache().setLastUpdate(new Date());
             obsUserList.addAll(list);
             usersList.getItems().addAll(obsUserList);
             addCustomFactory("user");
@@ -186,6 +191,7 @@ public class SearchInterfaceController {
             ObservableList<Author> obsUserList = FXCollections.observableArrayList();
             ArrayList<Author> list = searchManager.searchAuthor(searchText.getText());
             session.getCache().setSearchedAuthors(list);
+            session.getCache().setLastUpdate(new Date());
             obsUserList.addAll(list);
             authorsList.getItems().addAll(obsUserList);
             addCustomFactory("author");
@@ -199,7 +205,7 @@ public class SearchInterfaceController {
         userCheck.setSelected(false);
         bookFilter.setVisible(true);
         session.getCache().setSearchType("book");
-        if (session.getCache().getSearchedBooks() != null) {
+        if (session.getCache().getSearchedBooks() != null && checkCacheValid()) {
             ObservableList<Book> obsBookList = FXCollections.observableArrayList();
             obsBookList.addAll(session.getCache().getSearchedBooks());
             bookList.setItems(obsBookList);
@@ -217,7 +223,7 @@ public class SearchInterfaceController {
         authorCheck.setSelected(true);
         bookFilter.setVisible(false);
         session.getCache().setSearchType("author");
-        if (session.getCache().getSearchedAuthors() != null) {
+        if (session.getCache().getSearchedAuthors() != null && checkCacheValid()) {
             ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
             obsAuthorList.addAll(session.getCache().getSearchedAuthors());
             authorsList.setItems(obsAuthorList);
@@ -235,7 +241,7 @@ public class SearchInterfaceController {
         userCheck.setSelected(true);
         bookFilter.setVisible(false);
         session.getCache().setSearchType("user");
-        if (session.getCache().getSearchedUsers() != null) {
+        if (session.getCache().getSearchedUsers() != null && checkCacheValid()) {
             ObservableList<User> obsUserList = FXCollections.observableArrayList();
             obsUserList.addAll(session.getCache().getSearchedUsers());
             usersList.setItems(obsUserList);
@@ -333,5 +339,19 @@ public class SearchInterfaceController {
                 }
             });
         }
+    }
+
+    private boolean checkCacheValid() {
+        Date timeNow = new Date();
+        long difference_In_Time = timeNow.getTime() - session.getCache().getLastUpdate().getTime();
+        long difference_In_Minutes = (difference_In_Time / (1000 * 60)) % 60;
+        if (difference_In_Minutes >= 10) {
+            session.getCache().ClearCache();
+            this.bookList.getItems().clear();
+            this.usersList.getItems().clear();
+            this.authorsList.getItems().clear();
+            return false;
+        }
+        return true;
     }
 }

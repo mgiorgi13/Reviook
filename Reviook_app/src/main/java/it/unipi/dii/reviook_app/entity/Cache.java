@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Cache {
     private ArrayList<Book> searchedBooks;
@@ -9,6 +10,8 @@ public class Cache {
     private String searchedTitle;
     private String searchedGenres;
     private String searchType;
+    private Date lastUpdate;
+    private int count=0;
 
     public Cache() {
         this.searchedBooks = null;
@@ -16,6 +19,23 @@ public class Cache {
         this.searchedAuthors = null;
         this.searchedTitle = null;
         this.searchedGenres = null;
+        this.lastUpdate = new Date();
+    }
+
+    public void ClearCache() {
+        this.searchedAuthors = null;
+        this.searchedBooks = null;
+        this.searchedUsers = null;
+        this.searchType = null;
+        // TODO gestire anche gli altri campi
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public String getSearchType() {
