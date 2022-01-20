@@ -2,15 +2,15 @@ package it.unipi.dii.reviook_app.entity;
 
 public class Genre {
     private String type;
-    private Integer value;
+    private Double value;
 
-    public Genre(String type, Integer value) {
+    public Genre(String type, Double value) {
         this.type = type;
         this.value = value;
     }
 
     public Genre(String type) {
-        this(type,0);
+        this(type,0.0);
     }
 
     public String getType() {
@@ -21,11 +21,11 @@ public class Genre {
         this.type = type;
     }
 
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 

@@ -3,23 +3,35 @@ package it.unipi.dii.reviook_app.manager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.*;
+import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import it.unipi.dii.reviook_app.entity.Genre;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.mongodb.client.model.Accumulators.avg;
+import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Sorts.descending;
+import static com.mongodb.client.model.Sorts.orderBy;
 import static org.neo4j.driver.Values.parameters;
+import static org.neo4j.driver.Values.value;
 
 
 public class UserManager {
@@ -304,4 +316,55 @@ public class UserManager {
     }
 
     //==================================================================================================================
+
+    //ANALITICS ==========================================================================================================
+
+    public ArrayList<Genre> averageRatingCategoryAuthor(String username){
+        MongoCollection<Document> author = md.getCollection(authorCollection);
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        String author_id = null;
+        ArrayList<Genre> top5Rated= new ArrayList<>();
+
+        Bson getAuthor;
+        Bson unwindGenres;
+        Bson groupGenres;
+        Bson sortAvg;
+        Bson top5;
+
+
+        //get id of the author using the username
+        try (MongoCursor<Document> cursor = author.find(eq ("username",username)).iterator()) {
+            while (cursor.hasNext()) {
+                author_id = cursor.next().getString("author_id");
+            }
+        }
+
+        if(author_id == null)
+            return null;
+
+        getAuthor = eq("author_id",author_id);
+        unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
+        groupGenres = group("$genres", avg("average_rating", "$average_rating"));
+        sortAvg = sort(orderBy(descending("average_rating")));
+        top5 = limit(5);
+
+        try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(getAuthor, unwindGenres, groupGenres, sortAvg, top5)).iterator()) {
+            while (cursor.hasNext()) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                String avg = df.format(cursor.next().getDouble("average_rating"));
+
+                Genre genre = new Genre(cursor.next().getString("_id"),Double.valueOf(avg));
+                top5Rated.add(genre);
+            }
+        }
+        return top5Rated;
+    }
+
+//    public List<Genre> averageRatingCategoryUser(String username){
+//        MongoCollection<Document> author = md.getCollection(usersCollection);
+//    }
+
+    //==================================================================================================================
+
 }

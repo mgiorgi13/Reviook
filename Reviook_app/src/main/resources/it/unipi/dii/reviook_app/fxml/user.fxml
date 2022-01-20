@@ -294,7 +294,7 @@
                 <Pane prefHeight="138.0" prefWidth="512.0">
                     <children>
                         <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false"
-                                  onAction="#addfollow" text="add follow"/>
+                                  onAction="#addFollow" text="add follow"/>
                         <Text fx:id="usernameUser" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0"
                               text="USER PROFILE"/>
                         <VBox alignment="CENTER" layoutX="231.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">

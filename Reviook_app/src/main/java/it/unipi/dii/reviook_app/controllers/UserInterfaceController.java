@@ -54,7 +54,7 @@ public class UserInterfaceController {
     private Session session = Session.getInstance();
 
     @FXML
-    public void addfollow(ActionEvent event) throws IOException {
+    public void addFollow(ActionEvent event) throws IOException {
 
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
@@ -290,14 +290,14 @@ public class UserInterfaceController {
 
         read = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "READ");
         System.out.println(read);
-        ObservableList<String> ListReaded = FXCollections.observableArrayList();
+        ObservableList<String> ListRead = FXCollections.observableArrayList();
         for (Book book : read) {
             if (session.getLoggedAuthor() != null)
-                ListReaded.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(), book.getBook_id()));
+                ListRead.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(), book.getBook_id()));
             else
-                ListReaded.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
+                ListRead.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
         }
-        listRead.getItems().addAll(ListReaded);
+        listRead.getItems().addAll(ListRead);
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -388,5 +388,6 @@ public class UserInterfaceController {
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         viewFollower();
         viewFollow();
+        //check if
     }
 }

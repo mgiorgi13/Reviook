@@ -80,7 +80,7 @@ public class AuthorInterfaceController {
     }
 
     @FXML
-    public void addfollow(ActionEvent event) throws IOException {
+    public void addFollow(ActionEvent event) throws IOException {
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameAuthor.getText());
