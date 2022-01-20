@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
 
 public class DataReviewCell {
@@ -27,6 +26,9 @@ public class DataReviewCell {
 
     @FXML
     private Text ratingField;
+
+    @FXML
+    private FontAwesomeIconView likeIcon;
 
     public DataReviewCell() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/reviewCell.fxml"));

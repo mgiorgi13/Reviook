@@ -11,7 +11,7 @@ public class Cache {
     private String searchedGenres;
     private String searchType;
     private Date lastUpdate;
-    private int count=0;
+
 
     public Cache() {
         this.searchedBooks = null;

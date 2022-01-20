@@ -88,13 +88,12 @@ public class BookDetailController {
     public void setListView() {
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
-        listView.setCellFactory(
-                new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
-                    @Override
-                    public ListCell<Review> call(ListView<Review> listView) {
-                        return new ListReview();
-                    }
-                });
+        listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
+            @Override
+            public ListCell<Review> call(ListView<Review> listView) {
+                return new ListReview();
+            }
+        });
         listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -249,8 +248,6 @@ public class BookDetailController {
 
     @FXML
     void initialize() {
-        // setListView();
-        System.out.println(session.getCache().getLastUpdate());
     }
 
 

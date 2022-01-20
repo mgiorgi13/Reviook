@@ -186,6 +186,7 @@ public class SearchManager {
 
         return result;
     }
+//    df435fcc-6142-4242-9aa5-e39fc24db304  e020fec3-e9ba-457f-ac6f-5951b4494a85
 
     public ArrayList<String> searchBooksAuthor(String author_id) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
@@ -229,24 +230,31 @@ public class SearchManager {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
         //search on exact username
-        if (Username.equals(""))
+        if (Username.equals("")) {
             queryResults = user.find().into(new ArrayList());
-        else
+        } else {
             queryResults = user.find(eq("username", Username)).into(new ArrayList());
+        }
         ArrayList<User> result = new ArrayList<>();
 
-        for (Document r :
-                queryResults) {
-            result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
+        for (Document r : queryResults) {
+            ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
+            result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID));
         }
 
         //search on name or surname
         if (!Username.equals("")) {
             queryResults = user.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
             User us;
-            for (Document r :
-                    queryResults) {
-                us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+            for (Document r : queryResults) {
+                ArrayList<String> listReviewID = new ArrayList<>();
+                ArrayList<Document> list = (ArrayList<Document>) r.get("liked_review");
+                if (list != null) {
+                    for (Document elem : list) {
+                        listReviewID.add(elem.toString());
+                    }
+                }
+                us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID);
                 if (!result.contains(us))
                     result.add(us);
             }
@@ -259,24 +267,25 @@ public class SearchManager {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         List<Document> queryResults;
         //search on exact username
-        if (Username.equals(""))
+        if (Username.equals("")) {
             queryResults = author.find().into(new ArrayList());
-        else
+        } else {
             queryResults = author.find(eq("username", Username)).into(new ArrayList());
+        }
         ArrayList<Author> result = new ArrayList<>();
 
-        for (Document r :
-                queryResults) {
-            result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString()));
+        for (Document r : queryResults) {
+            ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
+            result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID));
         }
 
         if (!Username.equals("")) {
             //search on name or surname
             queryResults = author.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
             Author auth;
-            for (Document r :
-                    queryResults) {
-                auth = new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString());
+            for (Document r : queryResults) {
+                ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
+                auth = new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID);
                 if (!result.contains(auth))
                     result.add(auth);
             }

@@ -195,7 +195,7 @@ public class AuthorInterfaceController {
                 listFollows.add(session.getLoggedAuthor().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         } else {
-            Author author = new Author("", "", "", usernameAuthor.getText(), "", "");
+            Author author = new Author("", "", "", usernameAuthor.getText(), "", "",null);
             author.getInteractions().delFollow();
             Follow = userManager.loadRelations("Author", usernameAuthor.getText());
             author.getInteractions().setNumberFollow(Follow.size());
@@ -359,12 +359,11 @@ public class AuthorInterfaceController {
             for (int i = 0; i < Follower.size(); i++) {
                 session.getLoggedAuthor().getInteractions().setFollower(Follower.get(i));
             }
-
             for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollower().size(); i++)
                 listFollowers.add(session.getLoggedAuthor().getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         } else {
-            Author author = new Author("", "", "", usernameAuthor.getText(), "", "");
+            Author author = new Author("", "", "", usernameAuthor.getText(), "", "",null);
             author.getInteractions().delFollower();
             Follower = userManager.loadRelationsFollower("Author", usernameAuthor.getText());
             author.getInteractions().setNumberFollower(Follower.size());
