@@ -2,34 +2,23 @@
 //package it.unipi.dii.reviook_app;
 //
 //import com.mongodb.client.MongoCollection;
+//import com.mongodb.client.model.Updates;
 //import it.unipi.dii.reviook_app.entity.Author;
 //import it.unipi.dii.reviook_app.entity.Book;
-//import it.unipi.dii.reviook_app.entity.Genre;
 //import it.unipi.dii.reviook_app.entity.User;
-//import it.unipi.dii.reviook_app.manager.BookManager;
 //import it.unipi.dii.reviook_app.manager.SearchManager;
 //import it.unipi.dii.reviook_app.manager.UserManager;
-//import javafx.fxml.FXMLLoader;
-//import javafx.scene.Parent;
 //
 //
 //import org.bson.Document;
-//import org.json.simple.JSONArray;
+//import org.bson.conversions.Bson;
 //import org.json.simple.JSONObject;
-//import org.json.simple.parser.JSONParser;
+//import org.neo4j.driver.Result;
 //import org.neo4j.driver.TransactionWork;
 //
-//import java.io.FileReader;
-//
-//import java.io.FileReader;
-//import java.io.FileWriter;
-//import java.io.IOException;
-//import java.text.DateFormat;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
 //import java.util.*;
-//import java.util.Scanner;
 //
+//import static com.mongodb.client.model.Filters.eq;
 //import static com.mongodb.client.model.Filters.in;
 //import static org.neo4j.driver.Values.parameters;
 //
@@ -39,8 +28,8 @@
 //    public static int writeCount = 0;
 //    public static String target = "authorsDocument";
 //    public static String newFileName = "Document";
-//    private static int ntread = 2000;
-//    private static volatile Integer contatore = 0; // 28100
+//    private static int ntread = 500;
+//    private static volatile Integer contatore = 0;
 //    private static ArrayList<Author> author = new ArrayList();
 //    private static ArrayList<User> user = new ArrayList();
 //    private static ArrayList<Book> book = new ArrayList();
@@ -162,21 +151,41 @@
 //        return result;
 //    }
 //
+//    public static synchronized void loadRelations(String type, String username) {
+//        MongoCollection user;
+//        Bson getUsername = eq("username", username);
+//        int c = 0;
+//        try (org.neo4j.driver.Session session = nd.getDriver().session()) {
+//            c = session.readTransaction((TransactionWork<Integer>) tx -> {
+//                Result result = tx.run("MATCH (ee:" + type + ")-[:FOLLOW]->(friends) where ee.username = '" + username + "' " +
+//                        "return count(friends) as cont");
+//                return Integer.valueOf(result.next().get("cont").toString());
+//            });
+//        }
+//        if(type.equals("User"))
+//            user = md.getCollection("users");
+//        else
+//            user =md.getCollection("authors");
+//
+//        user.updateOne(getUsername, Updates.set("follower_count", c));
+//
+//    }
+//
 //
 //    private static void insertUsers() {
 //        SearchManager sm = new SearchManager();
 //        UserManager um = new UserManager();
-//        author = sm.searchAuthor("");
-////        user = sm.searchUser("");
+//       author = sm.searchAuthor("");
+//        // user = sm.searchUser("");
 ////        book = sm.searchBooks("","");
 //
 //        int size = book.size();
 //
+//
 //        Runnable myRunnable = new Runnable(){
 //        public void run(){
 ////            ArrayList<Author> copyA = author;
-//            ArrayList<String> books;
-//
+//            ArrayList<String> books = new ArrayList<>();
 //            while (true){
 //                String id , name, nick , nick2,nick3,nick4;
 //                String book1, book2, book3, book4, book5, book6;
@@ -188,14 +197,14 @@
 //                            // System.out.println(Thread.currentThread().getId() + " : " + contatore);
 //                            break;
 //                        }
-//                        //new author
-//                        id = author.get(contatore).getId();
-//                        name = author.get(contatore).getName();
-//                        nick = author.get(contatore).getNickname();
+////                        //new author
+//                       id = author.get(contatore).getId();
+//                    //    name = author.get(contatore).getName();
+//                       nick = author.get(contatore).getNickname();
 ////                        //new user
 ////                        id = user.get(contatore).getId();
 ////                        name = user.get(contatore).getName();
-////                        nick = user.get(contatore).getNickname();
+//                        // nick = user.get(contatore).getNickname();
 ////                        //book
 ////                        id = book.get(contatore).getBook_id();
 ////                        name = book.get(contatore).getTitle();
@@ -226,11 +235,8 @@
 ////                if(!nick.equals(nick4))
 ////                    um.following(nick, "User", nick4, "Author");
 //
-//                //add wrote relation
-//                books = searchBooksAuthor(id);
-////                System.out.println(nick);
-////                System.out.println(books);
-//                addwrote(nick,books);
+//
+//
 //
 ////                //to read read
 ////
@@ -242,6 +248,13 @@
 ////                um.readAdd("User",nick,book5);
 ////                um.readAdd("User",nick,book6);
 //
+//                //add wrote relation
+//                books = searchBooksAuthor(id);
+//                //                System.out.println(nick);
+//                //                System.out.println(books);
+//                addwrote(nick,books);
+//                // //update follower count
+//                // loadRelations("User",nick);
 //
 //
 //                if (contatore % 100 == 0)
