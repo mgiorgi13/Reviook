@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class User {
     @FXML
     private String id;
@@ -47,6 +46,14 @@ public class User {
 
     public void setListReviewID(ArrayList<String> listReviewID) {
         this.listReviewID = listReviewID;
+    }
+
+    public void addReviewID(String id) {
+        this.listReviewID.add(id);
+    }
+
+    public void removeReviewID(String id) {
+        this.listReviewID.remove(id);
     }
 
     public String getId() {

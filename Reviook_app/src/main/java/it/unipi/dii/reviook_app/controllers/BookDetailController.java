@@ -216,6 +216,23 @@ public class BookDetailController {
         }
     }
 
+    @FXML
+    public void putLikeAction(){
+        //TODO evitare di partire se non ho selezionato niente
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview.getLiked()){
+            System.out.println("HO MESSO LIKE A QUESTA REVIEW");
+            session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
+            System.out.println("new list "+session.getLoggedAuthor().getListReviewID());
+            setListView();
+        } else {
+            System.out.println("NON HO MESSO LIKE A QEESTA REVIEW");
+            session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
+            System.out.println("new list "+session.getLoggedAuthor().getListReviewID());
+            setListView();
+        }
+    }
+
     public void setInfoBook(Book bookSelected) {
         // BOOK TITLE
         this.title = bookSelected.getTitle();
