@@ -21,7 +21,7 @@ public class User {
     //genres list
     //suggested books
     //suggested user
-    private listBooks listBooks;
+    private ListBooks listBooks;
 
     UserManager userManager = new UserManager();
 
@@ -33,7 +33,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.interactions = new Interaction();
-        this.listBooks = new listBooks();
+        this.listBooks = new ListBooks();
     }
 
     public String getId() {
@@ -68,7 +68,7 @@ public class User {
         return interactions;
     }
 
-    public listBooks getBooks() {
+    public ListBooks getBooks() {
         return listBooks;
     }
 
@@ -96,7 +96,7 @@ public class User {
         this.interactions = interactions;
     }
 
-    public void setBooks(listBooks books) {
+    public void setBooks(ListBooks books) {
         this.listBooks = books;
     }
 
