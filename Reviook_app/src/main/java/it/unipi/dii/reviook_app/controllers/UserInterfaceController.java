@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.entity.Book;
+import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
@@ -46,9 +47,11 @@ public class UserInterfaceController {
     @FXML
     private JFXButton searchButton;
 
+    private ArrayList<Genre> analytics;
+
     private String nickname;
 
-    private UserManager userManagerNJ = new UserManager();
+    private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
 
     private Session session = Session.getInstance();
@@ -60,16 +63,16 @@ public class UserInterfaceController {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameUser.getText());
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-                userManagerNJ.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
+                userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().setFollow(usernameUser.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManagerNJ.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
+                userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
             }
         } else {
 
             if (session.getLoggedAuthor() != null) {
-                userManagerNJ.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
+                userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
                         session.getLoggedAuthor().getInteractions().getFollow().remove(i);
@@ -77,7 +80,7 @@ public class UserInterfaceController {
                     }
                 }
             } else if (session.getLoggedUser() != null) {
-                userManagerNJ.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
+                userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(usernameUser.getText())) {
                         session.getLoggedUser().getInteractions().getFollow().remove(i);
@@ -92,9 +95,15 @@ public class UserInterfaceController {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
+        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"user");
+        if(analytics == null) {
+            //load analytics from db
+            analytics = userManager.averageRatingCategoryAuthor(nickname);
+            session.getCache().getAnalyticsExecuted().put(nickname+"user",analytics);
+        }
+        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"user"));
+
         //carico le info dello user
-        viewRead();
-        viewToRead();
         viewFollow();
         viewFollower();
 
@@ -150,7 +159,7 @@ public class UserInterfaceController {
         //I'm in my user profile
         if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
             session.getLoggedUser().getInteractions().delFollow();
-            Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
+            Follow = userManager.loadRelations("User", usernameUser.getText());
             session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollow(Follow.get(i));
@@ -161,7 +170,7 @@ public class UserInterfaceController {
         } else {
             User user = new User("", "", "", usernameUser.getText(), "", "");
             user.getInteractions().delFollow();
-            Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
+            Follow = userManager.loadRelations("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 user.getInteractions().setFollow(Follow.get(i));
@@ -179,7 +188,7 @@ public class UserInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
-                    int result = userManagerNJ.verifyUsername(selectedCell, false);
+                    int result = userManager.verifyUsername(selectedCell, false);
                     if (result == -1)
                         return;
                     else
@@ -217,7 +226,7 @@ public class UserInterfaceController {
         List<String> Follower;
         if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
             session.getLoggedUser().getInteractions().delFollower();
-            Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
+            Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
             session.getLoggedUser().getInteractions().setNumberFollower(Follower.size());
             for (int i = 0; i < Follower.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
@@ -229,7 +238,7 @@ public class UserInterfaceController {
         } else {
             User users = new User("", "", "", usernameUser.getText(), "", "");
             users.getInteractions().delFollower();
-            Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
+            Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
             users.getInteractions().setNumberFollower(Follower.size());
 
             for (int i = 0; i < Follower.size(); i++) {
@@ -247,7 +256,7 @@ public class UserInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    int result = userManagerNJ.verifyUsername(selectedCell, false);
+                    int result = userManager.verifyUsername(selectedCell, false);
                     if (result == -1)
                         return;
                     try {
@@ -288,7 +297,7 @@ public class UserInterfaceController {
         listRead.getItems().clear();
         ArrayList<Book> read;
 
-        read = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "READ");
+        read = userManager.loadRelationsBook("User", usernameUser.getText(), "READ");
         System.out.println(read);
         ObservableList<String> ListRead = FXCollections.observableArrayList();
         for (Book book : read) {
@@ -338,7 +347,7 @@ public class UserInterfaceController {
         listToRead.getItems().clear();
         ArrayList<Book> toRead;
 
-        toRead = userManagerNJ.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
+        toRead = userManager.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
 
         ObservableList<String> ListToRead = FXCollections.observableArrayList();
         for (Book book : toRead) {
@@ -388,6 +397,5 @@ public class UserInterfaceController {
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         viewFollower();
         viewFollow();
-        //check if
     }
 }

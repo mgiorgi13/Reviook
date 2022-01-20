@@ -31,6 +31,10 @@ public class Genre {
 
     @Override
     public String toString() {
-        return type;
+        String result = type;
+        if(value != 0.0)
+            result = result + " : " + value;
+        return result;
+
     }
 }

@@ -20,6 +20,7 @@ import org.neo4j.driver.TransactionWork;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,6 @@ import java.util.List;
 import static com.mongodb.client.model.Accumulators.avg;
 import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Projections.*;
 import static com.mongodb.client.model.Sorts.descending;
 import static com.mongodb.client.model.Sorts.orderBy;
 import static org.neo4j.driver.Values.parameters;
@@ -206,7 +206,7 @@ public class UserManager {
         return author;
     }
 
-    public String retriveID(String Username) {
+    public String retrieveID(String Username) {
         MongoCollection<Document> authors = md.getCollection(authorCollection);
         String ID = null;
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
@@ -317,7 +317,7 @@ public class UserManager {
 
     //==================================================================================================================
 
-    //ANALITICS ==========================================================================================================
+    //ANALYTICS ==========================================================================================================
 
     public ArrayList<Genre> averageRatingCategoryAuthor(String username){
         MongoCollection<Document> author = md.getCollection(authorCollection);
@@ -342,7 +342,7 @@ public class UserManager {
         if(author_id == null)
             return null;
 
-        getAuthor = eq("author_id",author_id);
+        getAuthor = match(eq("authors.author_id",author_id));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$average_rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
@@ -350,20 +350,45 @@ public class UserManager {
 
         try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(getAuthor, unwindGenres, groupGenres, sortAvg, top5)).iterator()) {
             while (cursor.hasNext()) {
-                DecimalFormat df = new DecimalFormat("#.##");
-                df.setRoundingMode(RoundingMode.CEILING);
-                String avg = df.format(cursor.next().getDouble("average_rating"));
+                Document stat = cursor.next();
+                Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
 
-                Genre genre = new Genre(cursor.next().getString("_id"),Double.valueOf(avg));
+                Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
                 top5Rated.add(genre);
             }
         }
         return top5Rated;
     }
 
-//    public List<Genre> averageRatingCategoryUser(String username){
-//        MongoCollection<Document> author = md.getCollection(usersCollection);
-//    }
+    public ArrayList<Genre> averageRatingCategoryUser(String username){
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        ArrayList<Genre> top5Rated= new ArrayList<>();
+
+        Bson getUser;
+        Bson unwindReviews;
+        Bson unwindGenres;
+        Bson groupGenres;
+        Bson sortAvg;
+        Bson top5;
+
+        getUser =  match(eq("reviews.username",username));
+        unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
+        unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
+        groupGenres = group("$genres", avg("average_rating", "$reviews.rating"));
+        sortAvg = sort(orderBy(descending("average_rating")));
+        top5 = limit(5);
+
+        try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(unwindReviews, getUser, unwindGenres, groupGenres, sortAvg, top5)).iterator()) {
+            while (cursor.hasNext()) {
+                Document stat = cursor.next();
+                Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
+
+                Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
+                top5Rated.add(genre);
+            }
+        }
+        return top5Rated;
+    }
 
     //==================================================================================================================
 

@@ -215,7 +215,7 @@
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="512.0">
                     <children>
-                        <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false" onAction="#addfollow" text="follow" />
+                        <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
                         <Text fx:id="usernameAuthor" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                         <VBox alignment="CENTER" layoutX="231.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
@@ -239,7 +239,7 @@
                 </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="addButtonBook" layoutX="17.0" layoutY="26.0" mnemonicParsing="false" onAction="#addButtonBookFuncton" prefHeight="86.0" prefWidth="167.0" text="ADD NEW BOOK" />
+                  <Button fx:id="addButtonBook" layoutX="17.0" layoutY="26.0" mnemonicParsing="false" onAction="#addButtonBookFunction" prefHeight="86.0" prefWidth="167.0" text="ADD NEW BOOK" />
                </children>
             </Pane>
             </children>

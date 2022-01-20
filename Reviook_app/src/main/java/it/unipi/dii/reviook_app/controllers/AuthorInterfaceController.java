@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.*;
 
 import com.jfoenix.controls.JFXListView;
-import it.unipi.dii.reviook_app.components.ListBook;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
+import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -24,7 +24,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 public class AuthorInterfaceController {
     @FXML
@@ -67,11 +66,13 @@ public class AuthorInterfaceController {
 
     private Session session = Session.getInstance();
 
+    private ArrayList<Genre> analytics;
+
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
 
     @FXML
-    public void addButtonBookFuncton(ActionEvent event) throws IOException {
+    public void addButtonBookFunction(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/addBook.fxml"));
         Stage actual_stage = (Stage) addButtonBook.getScene().getWindow();
         actual_stage.setScene(new Scene(updateInterface));
@@ -117,6 +118,14 @@ public class AuthorInterfaceController {
     public void setNickname(String nickname) {
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
+
+        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
+        if(analytics == null) {
+            //load analytics from db
+            analytics = userManager.averageRatingCategoryAuthor(nickname);
+            session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
+        }
+        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"author"));
 
         viewFollow();
         viewFollower();
@@ -421,7 +430,7 @@ public class AuthorInterfaceController {
             session.getLoggedUser().getBooks().listBooksClear();
         //ObservableList<String> obsPublishedList = FXCollections.observableArrayList();
         // TODO recuperare id  autore e fare la ricerca con quello
-        String revtID = userManager.retriveID(usernameAuthor.getText());
+        String revtID = userManager.retrieveID(usernameAuthor.getText());
         //  obsPublishedList.addAll(searchManager.searchBooksAuthor(revtID));
         ObservableList<String> statistic = FXCollections.observableArrayList();
         statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));

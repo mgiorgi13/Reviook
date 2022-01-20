@@ -5,8 +5,6 @@ import it.unipi.dii.reviook_app.entity.Cache;
 import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
 
-import java.util.HashMap;
-import java.util.List;
 
 public class Session {
     private static Session session = null;
@@ -14,7 +12,6 @@ public class Session {
     private User loggedUser = null;
     private Author loggedAuthor = null;
     private static Cache cache = new Cache();
-    private static HashMap<String, List<Genre>> analyticsExecuted = new HashMap<>();
 
     public static Session getSession() {
         return session;

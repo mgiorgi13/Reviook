@@ -239,7 +239,7 @@
                 </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="addButtonBook" layoutX="17.0" layoutY="26.0" mnemonicParsing="false" onAction="#addButtonBookFuncton" prefHeight="86.0" prefWidth="167.0" text="ADD NEW BOOK" />
+                  <Button fx:id="addButtonBook" layoutX="17.0" layoutY="26.0" mnemonicParsing="false" onAction="#addButtonBookFunction" prefHeight="86.0" prefWidth="167.0" text="ADD NEW BOOK" />
                </children>
             </Pane>
             </children>
