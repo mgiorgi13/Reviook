@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.Session;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
+import it.unipi.dii.reviook_app.entity.RankingObject;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,7 +33,7 @@ public class RankingInterfaceController {
     private Label labelError;
 
     @FXML
-    private JFXListView<String> usersList;
+    private JFXListView<RankingObject> usersList;
 
     @FXML
     private JFXButton homeButton;
@@ -113,6 +114,14 @@ public class RankingInterfaceController {
 
                 return;
             }
+        }
+        if (usersRank.isSelected())
+        {
+            usersList.setVisible(true);
+            bookList.setVisible(false);
+            ObservableList<RankingObject> obsBooksList = FXCollections.observableArrayList();
+            obsBooksList.addAll(searchManager.rankReview());
+            usersList.getItems().addAll(obsBooksList);
         }
     }
 

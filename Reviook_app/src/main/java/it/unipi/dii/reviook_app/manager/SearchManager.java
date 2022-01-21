@@ -31,6 +31,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Indexes.descending;
 import static com.mongodb.client.model.Projections.*;
 import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Sorts.orderBy;
 
 public class SearchManager {
     private MongoDriver md;
@@ -338,20 +339,60 @@ public class SearchManager {
 
         return genre;
     }
+
+    public ArrayList<RankingObject> rankReview()
+    {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        ArrayList<RankingObject> array = new ArrayList<>();
+
+
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(new Document("$unwind",
+                        new Document("path", "$reviews")
+                                .append("includeArrayIndex", "string")
+                                .append("preserveNullAndEmptyArrays", false)),
+                new Document("$project",
+                        new Document("reviews.username", 1L)
+                                .append("reviews.likes",
+                                        new Document("$ifNull", Arrays.asList("$reviews.likes", "$reviews.helpful")))),
+                new Document("$group",
+                        new Document("_id", "$reviews.username")
+                                .append("reviews_number",
+                                        new Document("$count",
+                                                new Document()))
+                                .append("average_likes",
+                                        new Document("$avg", "$reviews.likes"))),
+                new Document("$match",
+                        new Document("reviews_number",
+                                new Document("$gte", 200L))),
+                new Document("$sort",
+                        new Document("average_likes", -1L)),
+                new Document("$limit", 100L))).iterator();) {
+
+            while (result.hasNext()) {
+                Document document = result.next();
+                array.add(new RankingObject(document.getString("_id"),
+                        document.getInteger("reviews_number"),
+                        document.getDouble("average_likes")));
+            }
+        }
+        return array;
+
+    }
+
     public ArrayList<String> searchYears(){
-        Date dt=new Date();
-        int year=2022;
+
         MongoCollection<Document> years = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<String> total_years = new ArrayList<>();
 
 
-        Bson match = match((and(gte("publication_year", 1900),lte("publication_year", year))));
+        Bson match = match(gte("publication_year", 1900));
         Bson group = group("$publication_year");
-       // Bson sort = sort(Sorts.descending("publication_year"));
+        Bson sort = sort(orderBy(descending("publication_year")));
 
 
-        try (MongoCursor<Document> result = years.aggregate(Arrays.asList(match, group)).iterator();) {
+        try (MongoCursor<Document> result = years.aggregate(Arrays.asList(match, group, sort)).iterator();) {
 
             while (result.hasNext()) {
                 Document y = result.next();
