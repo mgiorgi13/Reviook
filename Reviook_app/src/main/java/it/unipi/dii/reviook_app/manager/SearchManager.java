@@ -387,9 +387,9 @@ public class SearchManager {
         ArrayList<String> total_years = new ArrayList<>();
 
 
-        Bson match = match(gte("publication_year", 1900));
+        Bson match = match(and(gte("publication_year", 1900),lte("publication_year", 2022)));
         Bson group = group("$publication_year");
-        Bson sort = sort(orderBy(descending("publication_year")));
+        Bson sort = sort(orderBy(descending("_id")));
 
 
         try (MongoCursor<Document> result = years.aggregate(Arrays.asList(match, group, sort)).iterator();) {
