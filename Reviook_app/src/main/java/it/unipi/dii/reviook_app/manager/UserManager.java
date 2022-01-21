@@ -169,15 +169,6 @@ public class UserManager {
     //==================================================================================================================
 
     //MongoDB ==========================================================================================================
-    public boolean verifyISBN(String ISBN) {
-        MongoCollection<Document> book = md.getCollection(bookCollection);
-        try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
-            while (cursor.hasNext()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public DBObject paramAuthor(String Username) {
         MongoCollection<Document> authors = md.getCollection(authorCollection);

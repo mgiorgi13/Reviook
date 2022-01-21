@@ -38,6 +38,16 @@ public class BookManager {
         this.nd = Neo4jDriver.getInstance();
     }
 
+    public boolean verifyISBN(String ISBN) {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
+            while (cursor.hasNext()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addBook(String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
         Calendar calendar = Calendar.getInstance();
@@ -125,7 +135,7 @@ public class BookManager {
         Book bookToUpdate = getBookByID(book_id);
         Double newRating = updateRating(bookToUpdate.getReviews());
         UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
-        removeLikeReview(review_id); // TODO funziona solo per i like miei a mie review, altrimenti non funziona
+        removeLikeReview(review_id, book_id); // TODO funziona solo per i like miei a mie review, altrimenti non funziona
     }
 
     public Book getBookByID(String book_id) {
@@ -187,32 +197,52 @@ public class BookManager {
         }
     }
 
-    public void addLikeReview(String reviewID) {
+    public void addLikeReview(String reviewID, String book_id) {
         if (session.getLoggedAuthor() != null) {
             MongoCollection<Document> authors = md.getCollection(authorCollection);
             Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
             DBObject elem = new BasicDBObject("liked_review", reviewID);
             DBObject insertRevID = new BasicDBObject("$push", elem);
             authors.updateOne(getAuthor, (Bson) insertRevID);
+            //increment like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
         } else if (session.getLoggedUser() != null) {
             MongoCollection<Document> users = md.getCollection(usersCollection);
             Bson getUser = eq("user_id", session.getLoggedUser().getId());
             DBObject elem = new BasicDBObject("liked_review", reviewID);
             DBObject insertRevID = new BasicDBObject("$push", elem);
             users.updateOne(getUser, (Bson) insertRevID);
+            //increment like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
         }
 
     }
 
-    public void removeLikeReview(String reviewID) {
+    public void removeLikeReview(String reviewID, String book_id) {
         if (session.getLoggedAuthor() != null) {
             MongoCollection<Document> authors = md.getCollection(authorCollection);
             Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
             authors.updateOne(getAuthor, Updates.pull("liked_review", reviewID));
+            //decrement like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
         } else if (session.getLoggedUser() != null) {
             MongoCollection<Document> users = md.getCollection(usersCollection);
             Bson getUser = eq("user_id", session.getLoggedUser().getId());
             users.updateOne(getUser, Updates.pull("liked_review", reviewID));
+            //increment like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
         }
 
     }
