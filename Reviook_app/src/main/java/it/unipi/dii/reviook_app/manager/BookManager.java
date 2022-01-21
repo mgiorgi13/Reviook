@@ -40,7 +40,7 @@ public class BookManager {
 
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
-        try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
+        try (MongoCursor<Document> cursor = book.find(eq("isbn", ISBN)).iterator()) {
             while (cursor.hasNext()) {
                 return true;
             }
@@ -53,6 +53,7 @@ public class BookManager {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
+        //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
         Document doc = new Document("image_url", "")
@@ -149,32 +150,32 @@ public class BookManager {
         ArrayList<String> genres = (ArrayList<String>) book.get("genres");
 
         for (Document r : reviews) {
-            reviewsList.add(new Review(
-                    r.getString("username"),
-                    new SimpleStringProperty(r.get("date_added").toString()),
-                    new SimpleStringProperty(r.getString("review_id")),
-                    new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
-                    new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
-                    new SimpleStringProperty(r.getString("user_id")),
-                    new SimpleStringProperty(r.get("rating").toString()),
-                    new SimpleStringProperty(r.getString("review_text"))
-            ));
-        }
+                reviewsList.add(new Review(
+                        r.getString("username"),
+                        r.get("date_added").toString(),
+                        r.getString("review_id"),
+                        r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                        r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
+                        r.getString("user_id"),
+                        r.get("rating").toString(),
+                        r.getString("review_text")
+                ));
+            }
         for (Document a : authors) {
             authorsLis.add(a.getString("author_name"));
         }
 
         Book outputBook = new Book(
-                book.getString("isbn"),
-                book.getString("language_code"),
-                book.getString("asin"),
+                book.get("isbn") == null ? null : book.getString("isbn"),
+                book.get("language_code")  == null ? null : book.getString("language_code"),
+                book.get("asin") == null ? null : book.getString("asin"),
                 book.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(book.get("average_rating").toString()),
-                book.getString("description").toString(),
-                book.getInteger("num_pages"),
-                book.getString("publication_day").equals("") ? 0 : Integer.valueOf(book.getString("publication_day")),
-                book.getString("publication_month").equals("") ? 0 : Integer.valueOf(book.getString("publication_month")),
-                book.getString("publication_year").equals("") ? 0 : Integer.valueOf(book.getString("publication_year")),
-                book.getString("image_url"),
+                book.get("description") == null ? null : book.getString("description"),
+                book.get("num_pages") == null ? null : book.getInteger("num_pages"),
+                book.get("publication_day") == null ? null : book.getInteger("publication_day"),
+                book.get("publication_month") == null ? null : book.getInteger("publication_month"),
+                book.get("publication_year") == null ? null : book.getInteger("publication_year"),
+                book.get("image_url") == null ? null : book.getString("image_url"),
                 book.getString("book_id"),
                 book.getInteger("ratings_count"),
                 book.getString("title"),

@@ -267,7 +267,7 @@ public class BookDetailController {
         bookDescription.setText(this.description);
         // IMG BOOK
         this.img_url = bookSelected.getImage_url();
-        if (!this.img_url.equals("null")) {
+        if (this.img_url != null) {
             Image image = new Image(this.img_url);
             imageContainer.setImage(image);
         }

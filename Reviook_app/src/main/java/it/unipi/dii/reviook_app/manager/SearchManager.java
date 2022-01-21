@@ -61,32 +61,32 @@ public class SearchManager {
             for (Document r : reviews) {
                 reviewsList.add(new Review(
                         r.getString("username"),
-                        new SimpleStringProperty(r.get("date_added").toString()),
-                        new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
-                        new SimpleStringProperty(r.getString("user_id")),
-                        new SimpleStringProperty(r.get("rating").toString()),
-                        new SimpleStringProperty(r.getString("review_text"))
+                        r.get("date_added").toString(),
+                        r.getString("review_id"),
+                        r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                        r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
+                        r.getString("user_id"),
+                        r.get("rating").toString(),
+                        r.getString("review_text")
                 ));
             }
             for (Document a : authors) {
                 authorsLis.add(a.getString("author_name"));
             }
             result = (new Book(
-                    document.get("isbn").toString(),
-                    document.get("language_code").toString(),
-                    document.get("asin").toString(),
+                    document.get("isbn") == null ? null : document.getString("isbn"),
+                    document.get("language_code")  == null ? null : document.getString("language_code"),
+                    document.get("asin") == null ? null : document.getString("asin"),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
-                    document.get("description").toString(),
-                    document.getInteger("num_pages"),
-                    document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
-                    document.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_month").toString()),
-                    document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
-                    document.get("image_url").toString(),
-                    document.get("book_id").toString(),
+                    document.get("description") == null ? null : document.getString("description"),
+                    document.get("num_pages") == null ? null : document.getInteger("num_pages"),
+                    document.get("publication_day") == null ? null : document.getInteger("publication_day"),
+                    document.get("publication_month") == null ? null : document.getInteger("publication_month"),
+                    document.get("publication_year") == null ? null : document.getInteger("publication_year"),
+                    document.get("image_url") == null ? null : document.getString("image_url"),
+                    document.getString("book_id"),
                     document.getInteger("ratings_count"),
-                    document.get("title").toString(),
+                    document.getString("title"),
                     authorsLis,
                     genres,
                     reviewsList
@@ -152,13 +152,13 @@ public class SearchManager {
             for (Document r : reviews) {
                 reviewsList.add(new Review(
                         r.getString("username"),
-                        new SimpleStringProperty(r.get("date_added").toString()),
-                        new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
-                        new SimpleStringProperty(r.getString("user_id")),
-                        new SimpleStringProperty(r.get("rating").toString()),
-                        new SimpleStringProperty(r.getString("review_text"))
+                        r.get("date_added").toString(),
+                        r.getString("review_id"),
+                        r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                        r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
+                        r.getString("user_id"),
+                        r.get("rating").toString(),
+                        r.getString("review_text")
                 ));
             }
             for (Document a : authors) {
@@ -166,19 +166,19 @@ public class SearchManager {
             }
 
             result.add(new Book(
-                    document.get("isbn").toString(),
-                    document.get("language_code").toString(),
-                    document.get("asin").toString(),
+                    document.get("isbn") == null ? null : document.getString("isbn"),
+                    document.get("language_code")  == null ? null : document.getString("language_code"),
+                    document.get("asin") == null ? null : document.getString("asin"),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
-                    document.get("description").toString(),
-                    document.getInteger("num_pages"),
-                    document.get("publication_day").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_day").toString()),
-                    document.get("publication_month").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_month").toString()),
-                    document.get("publication_year").toString().equals("") ? 0 : Integer.valueOf(document.get("publication_year").toString()),
-                    document.get("image_url").toString(),
-                    document.get("book_id").toString(),
+                    document.get("description") == null ? null : document.getString("description"),
+                    document.get("num_pages") == null ? null : document.getInteger("num_pages"),
+                    document.get("publication_day") == null ? null : document.getInteger("publication_day"),
+                    document.get("publication_month") == null ? null : document.getInteger("publication_month"),
+                    document.get("publication_year") == null ? null : document.getInteger("publication_year"),
+                    document.get("image_url") == null ? null : document.getString("image_url"),
+                    document.getString("book_id"),
                     document.getInteger("ratings_count"),
-                    document.get("title").toString(),
+                    document.getString("title"),
                     authorsLis,
                     genres,
                     reviewsList

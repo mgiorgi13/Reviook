@@ -13,60 +13,76 @@
             <children>
                 <VBox alignment="CENTER" layoutY="35.0" prefHeight="315.0" prefWidth="199.0">
                     <children>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat1" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#1e3bbc" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="bookCatPercent1" fill="#1e3bbc" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#1e3bbc" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="bookCatValue1" fill="#1e3bbc" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#1e3bbc" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 1" />
+                                <Text fx:id="bookCatText1" fill="#1e3bbc" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 1"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat2" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#cd7818" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="bookCatPercent2" fill="#cd7818" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#cd7818" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="bookCatValue2" fill="#cd7818" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#cd7818" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 2" />
+                                <Text fx:id="bookCatText2" fill="#cd7818" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 2"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat3" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#1eba22" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="bookCatPercent3" fill="#1eba22" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#1eba22" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="bookCatValue3" fill="#1eba22" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#1eba22" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 3" />
+                                <Text fx:id="bookCatText3" fill="#1eba22" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 3"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat4" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#ba1e68" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="bookCatPercent4" fill="#ba1e68" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#ba1e68" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="bookCatValue4" fill="#ba1e68" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#ba1e68" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 4" />
+                                <Text fx:id="bookCatText4" fill="#ba1e68" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 4"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
                     </children>
@@ -215,7 +231,7 @@
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="512.0">
                     <children>
-                        <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false" onAction="#addfollow" text="follow" />
+                        <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
                         <Text fx:id="usernameAuthor" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                         <VBox alignment="CENTER" layoutX="231.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
@@ -239,7 +255,7 @@
                 </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="addButtonBook" layoutX="17.0" layoutY="26.0" mnemonicParsing="false" onAction="#addButtonBookFuncton" prefHeight="86.0" prefWidth="167.0" text="ADD NEW BOOK" />
+                  <Button fx:id="addButtonBook" layoutX="17.0" layoutY="26.0" mnemonicParsing="false" onAction="#addButtonBookFunction" prefHeight="86.0" prefWidth="167.0" text="ADD NEW BOOK" />
                </children>
             </Pane>
             </children>
