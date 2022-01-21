@@ -60,6 +60,7 @@ public class SearchManager {
             genres = (ArrayList<String>) document.get("genres");
             for (Document r : reviews) {
                 reviewsList.add(new Review(
+                        r.getString("username"),
                         new SimpleStringProperty(r.get("date_added").toString()),
                         new SimpleStringProperty(r.getString("review_id")),
                         new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
@@ -150,6 +151,7 @@ public class SearchManager {
 
             for (Document r : reviews) {
                 reviewsList.add(new Review(
+                        r.getString("username"),
                         new SimpleStringProperty(r.get("date_added").toString()),
                         new SimpleStringProperty(r.getString("review_id")),
                         new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),

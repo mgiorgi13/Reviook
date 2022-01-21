@@ -8,12 +8,13 @@ public class Review {
     private SimpleStringProperty review_id;
     private SimpleStringProperty date_update;
     private SimpleStringProperty user_id;
+    private String username;
     private SimpleStringProperty rating;
     private SimpleStringProperty review_text;
     private SimpleIntegerProperty likes;
     private Boolean liked;
 
-    public Review(SimpleStringProperty date_added, SimpleStringProperty review_id, SimpleStringProperty date_update, SimpleIntegerProperty likes, SimpleStringProperty user_id, SimpleStringProperty rating, SimpleStringProperty review_text) {
+    public Review(String username, SimpleStringProperty date_added, SimpleStringProperty review_id, SimpleStringProperty date_update, SimpleIntegerProperty likes, SimpleStringProperty user_id, SimpleStringProperty rating, SimpleStringProperty review_text) {
         this.date_added = date_added;
         this.review_id = review_id;
         this.date_update = date_update;
@@ -22,6 +23,7 @@ public class Review {
         this.rating = rating;
         this.review_text = review_text;
         this.liked = false;
+        this.username = username;
     }
 
     public void setLiked() {
@@ -86,6 +88,10 @@ public class Review {
 
     public String getUser_id() {
         return user_id.get();
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 
     public SimpleStringProperty user_idProperty() {
