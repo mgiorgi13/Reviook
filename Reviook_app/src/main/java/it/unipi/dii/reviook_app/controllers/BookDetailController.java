@@ -217,20 +217,35 @@ public class BookDetailController {
     }
 
     @FXML
-    public void putLikeAction(){
-        //TODO evitare di partire se non ho selezionato niente
+    public void putLikeAction() {
         Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
-        if (selectedReview.getLiked()){
-            System.out.println("HO MESSO LIKE A QUESTA REVIEW");
-            session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
-            System.out.println("new list "+session.getLoggedAuthor().getListReviewID());
-            setListView();
-        } else {
-            System.out.println("NON HO MESSO LIKE A QEESTA REVIEW");
-            session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
-            System.out.println("new list "+session.getLoggedAuthor().getListReviewID());
-            setListView();
+        if (selectedReview == null) {
+            return;
         }
+        if (session.getLoggedUser() != null) {
+            if (selectedReview.getLiked()) {
+                // I already liked it
+                session.getLoggedUser().removeReviewID(selectedReview.getReview_id());
+                bookManager.removeLikeReview(selectedReview.getReview_id());
+                setListView();
+            } else {
+                session.getLoggedUser().addReviewID(selectedReview.getReview_id());
+                bookManager.addLikeReview(selectedReview.getReview_id());
+                setListView();
+            }
+        } else if (session.getLoggedAuthor() != null) {
+            if (selectedReview.getLiked()) {
+                // I already liked it
+                session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
+                bookManager.removeLikeReview(selectedReview.getReview_id());
+                setListView();
+            } else {
+                session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
+                bookManager.addLikeReview(selectedReview.getReview_id());
+                setListView();
+            }
+        }
+
     }
 
     public void setInfoBook(Book bookSelected) {

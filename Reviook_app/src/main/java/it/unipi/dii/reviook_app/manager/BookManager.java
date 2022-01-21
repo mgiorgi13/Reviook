@@ -137,16 +137,16 @@ public class BookManager {
         ArrayList<String> genres = (ArrayList<String>) book.get("genres");
 
         for (Document r : reviews) {
-                reviewsList.add(new Review(
-                        new SimpleStringProperty(r.get("date_added").toString()),
-                        new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
-                        new SimpleStringProperty(r.getString("user_id")),
-                        new SimpleStringProperty(r.get("rating").toString()),
-                        new SimpleStringProperty(r.getString("review_text"))
-                ));
-            }
+            reviewsList.add(new Review(
+                    new SimpleStringProperty(r.get("date_added").toString()),
+                    new SimpleStringProperty(r.getString("review_id")),
+                    new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
+                    new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
+                    new SimpleStringProperty(r.getString("user_id")),
+                    new SimpleStringProperty(r.get("rating").toString()),
+                    new SimpleStringProperty(r.getString("review_text"))
+            ));
+        }
         for (Document a : authors) {
             authorsLis.add(a.getString("author_name"));
         }
@@ -182,5 +182,35 @@ public class BookManager {
         } else {
             return ratingSum;
         }
+    }
+
+    public void addLikeReview(String reviewID) {
+        if (session.getLoggedAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+            DBObject elem = new BasicDBObject("liked_review", reviewID);
+            DBObject insertRevID = new BasicDBObject("$push", elem);
+            authors.updateOne(getAuthor, (Bson) insertRevID);
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", session.getLoggedUser().getId());
+            DBObject elem = new BasicDBObject("liked_review", reviewID);
+            DBObject insertRevID = new BasicDBObject("$push", elem);
+            users.updateOne(getUser, (Bson) insertRevID);
+        }
+
+    }
+
+    public void removeLikeReview(String reviewID) {
+        if (session.getLoggedAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+            authors.updateOne(getAuthor, Updates.pull("liked_review", reviewID));
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", session.getLoggedUser().getId());
+            users.updateOne(getUser, Updates.pull("liked_review", reviewID));
+        }
+
     }
 }
