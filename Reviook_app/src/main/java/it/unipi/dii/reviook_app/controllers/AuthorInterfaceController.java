@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.*;
 
 import com.jfoenix.controls.JFXListView;
-import it.unipi.dii.reviook_app.components.ListBook;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
+import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -22,9 +22,9 @@ import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 public class AuthorInterfaceController {
     @FXML
@@ -63,15 +63,23 @@ public class AuthorInterfaceController {
     @FXML
     private CheckBox follow;
 
+    @FXML
+    private Text bookCatValue1, bookCatText1, bookCatValue2, bookCatText2, bookCatValue3, bookCatText3, bookCatValue4, bookCatText4, bookCatValue5, bookCatText5;
+
+    @FXML
+    private HBox Stat1,Stat2,Stat3,Stat4;
+
     private String nickname;
 
     private Session session = Session.getInstance();
+
+    private ArrayList<Genre> analytics;
 
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
 
     @FXML
-    public void addButtonBookFuncton(ActionEvent event) throws IOException {
+    public void addButtonBookFunction(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/addBook.fxml"));
         Stage actual_stage = (Stage) addButtonBook.getScene().getWindow();
         actual_stage.setScene(new Scene(updateInterface));
@@ -80,7 +88,7 @@ public class AuthorInterfaceController {
     }
 
     @FXML
-    public void addfollow(ActionEvent event) throws IOException {
+    public void addFollow(ActionEvent event) throws IOException {
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameAuthor.getText());
@@ -114,9 +122,67 @@ public class AuthorInterfaceController {
         }
     }
 
+    private void setAnalyticsResult(){
+        Double previousValue = -1.0;
+        String newGenre = "";
+        ArrayList<Genre> genresReformatted = new ArrayList<>();
+
+          analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
+        if(analytics == null) {
+            //load analytics from db
+            analytics = userManager.averageRatingCategoryAuthor(nickname);
+            session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
+        }
+
+        for(int i = 0; i < analytics.size(); i ++){
+            if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
+                newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
+            }else{
+                genresReformatted.add(new Genre(newGenre,previousValue));
+                newGenre = "";
+                newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
+            }
+            previousValue = analytics.get(i).getValue();
+            if(i == analytics.size() - 1){
+                genresReformatted.add(new Genre(newGenre,previousValue));
+            }
+        }
+
+        int size = genresReformatted.size();
+
+        Stat1.setVisible(false);
+        Stat2.setVisible(false);
+        Stat3.setVisible(false);
+        Stat4.setVisible(false);
+
+        if(size >= 1){
+            Stat1.setVisible(true);
+            bookCatText1.setText(genresReformatted.get(0).getType());
+            bookCatValue1.setText(genresReformatted.get(0).getValue().toString());
+        }
+        if(size >= 2){
+            Stat2.setVisible(true);
+            bookCatText2.setText(genresReformatted.get(1).getType());
+            bookCatValue2.setText(genresReformatted.get(1).getValue().toString());
+        }
+        if(size >= 3){
+            Stat3.setVisible(true);
+            bookCatText3.setText(genresReformatted.get(2).getType());
+            bookCatValue3.setText(genresReformatted.get(2).getValue().toString());
+        }
+        if(size >= 4){
+            Stat4.setVisible(true);
+            bookCatText4.setText(genresReformatted.get(3).getType());
+            bookCatValue4.setText(genresReformatted.get(3).getValue().toString());
+        }
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
+
+
+        setAnalyticsResult();
 
         viewFollow();
         viewFollower();
@@ -420,7 +486,7 @@ public class AuthorInterfaceController {
             session.getLoggedUser().getBooks().listBooksClear();
         //ObservableList<String> obsPublishedList = FXCollections.observableArrayList();
         // TODO recuperare id  autore e fare la ricerca con quello
-        String revtID = userManager.retriveID(usernameAuthor.getText());
+        String revtID = userManager.retrieveID(usernameAuthor.getText());
         //  obsPublishedList.addAll(searchManager.searchBooksAuthor(revtID));
         ObservableList<String> statistic = FXCollections.observableArrayList();
         statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));

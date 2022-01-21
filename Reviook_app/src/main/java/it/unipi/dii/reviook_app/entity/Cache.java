@@ -2,6 +2,8 @@ package it.unipi.dii.reviook_app.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class Cache {
     private ArrayList<Book> searchedBooks;
@@ -11,7 +13,8 @@ public class Cache {
     private String searchedGenres;
     private String searchType;
     private Date lastUpdate;
-
+    private HashMap<String, ArrayList<Genre>> analyticsExecuted;
+    private int count=0;
 
     public Cache() {
         this.searchedBooks = null;
@@ -19,6 +22,7 @@ public class Cache {
         this.searchedAuthors = null;
         this.searchedTitle = null;
         this.searchedGenres = null;
+        this.analyticsExecuted = new HashMap<>();
         this.lastUpdate = new Date();
     }
 
@@ -27,6 +31,7 @@ public class Cache {
         this.searchedBooks = null;
         this.searchedUsers = null;
         this.searchType = null;
+        this.analyticsExecuted.clear();
         // TODO gestire anche gli altri campi
     }
 
@@ -84,5 +89,13 @@ public class Cache {
 
     public void setSearchedGenres(String searchedGenres) {
         this.searchedGenres = searchedGenres;
+    }
+
+    public HashMap<String, ArrayList<Genre>> getAnalyticsExecuted() {
+        return analyticsExecuted;
+    }
+
+    public void setAnalyticsExecuted(HashMap<String, ArrayList<Genre>> analyticsExecuted) {
+        this.analyticsExecuted = analyticsExecuted;
     }
 }
