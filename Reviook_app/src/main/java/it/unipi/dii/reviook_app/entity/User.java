@@ -16,6 +16,7 @@ public class User {
     private String password;
     private Interaction interactions;
     private ArrayList<String> listReviewID;
+    private Integer follower_count;
     //follower list
     //following list
     //to read list
@@ -27,7 +28,7 @@ public class User {
 
     UserManager userManager = new UserManager();
 
-    public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
+    public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -37,7 +38,7 @@ public class User {
         this.interactions = new Interaction();
         this.listBooks = new ListBooks();
         this.listReviewID = listReviewID;
-        System.out.println();
+        this.follower_count = follower_count;
     }
 
     public ArrayList<String> getListReviewID() {
@@ -123,10 +124,9 @@ public class User {
     }
 
     public int getFollowerCount() {
-        List<String> followerList = userManager.loadRelationsFollower("User", this.nickname);
-        return followerList.size();
+//        List<String> followerList = userManager.loadRelationsFollower("User", this.nickname);
+//        return followerList.size();
+        return this.follower_count;
     }
-
-    ;
 
 }
