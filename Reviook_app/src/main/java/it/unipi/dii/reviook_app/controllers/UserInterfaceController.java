@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.controllers;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,10 @@ public class UserInterfaceController {
     private Text reviewCatValue1, reviewCatText1, reviewCatValue2, reviewCatText2, reviewCatValue3, reviewCatText3, reviewCatValue4, reviewCatText4, reviewCatValue5, reviewCatText5;
 
     @FXML
-    private HBox Stat1,Stat2,Stat3,Stat4;
+    private HBox Stat1, Stat2, Stat3, Stat4;
+
+    @FXML
+    private Button rankingButton;
 
     private ArrayList<Genre> analytics;
 
@@ -99,30 +103,30 @@ public class UserInterfaceController {
         }
     }
 
-    private void setAnalyticsResult(){
+    private void setAnalyticsResult() {
         Double previousValue = -1.0;
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
-        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"user");
-        if(analytics == null) {
+        analytics = session.getCache().getAnalyticsExecuted().get(nickname + "user");
+        if (analytics == null) {
             //load analytics from db
             analytics = userManager.averageRatingCategoryUser(nickname);
-            session.getCache().getAnalyticsExecuted().put(nickname+"user",analytics);
+            session.getCache().getAnalyticsExecuted().put(nickname + "user", analytics);
         }
-        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"user"));
+        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname + "user"));
 
-        for(int i = 0; i < analytics.size(); i ++){
-            if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
-                newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
-            }else{
-                genresReformatted.add(new Genre(newGenre,previousValue));
+        for (int i = 0; i < analytics.size(); i++) {
+            if (previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)) {
+                newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
+            } else {
+                genresReformatted.add(new Genre(newGenre, previousValue));
                 newGenre = "";
                 newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
             }
             previousValue = analytics.get(i).getValue();
-            if(i == analytics.size() - 1){
-                genresReformatted.add(new Genre(newGenre,previousValue));
+            if (i == analytics.size() - 1) {
+                genresReformatted.add(new Genre(newGenre, previousValue));
             }
         }
 
@@ -133,22 +137,22 @@ public class UserInterfaceController {
         Stat3.setVisible(false);
         Stat4.setVisible(false);
 
-        if(size >= 1){
+        if (size >= 1) {
             Stat1.setVisible(true);
             reviewCatText1.setText(genresReformatted.get(0).getType());
             reviewCatValue1.setText(genresReformatted.get(0).getValue().toString());
         }
-        if(size >= 2){
+        if (size >= 2) {
             Stat2.setVisible(true);
             reviewCatText2.setText(genresReformatted.get(1).getType());
             reviewCatValue2.setText(genresReformatted.get(1).getValue().toString());
         }
-        if(size >= 3){
+        if (size >= 3) {
             Stat3.setVisible(true);
             reviewCatText3.setText(genresReformatted.get(2).getType());
             reviewCatValue3.setText(genresReformatted.get(2).getValue().toString());
         }
-        if(size >= 4){
+        if (size >= 4) {
             Stat4.setVisible(true);
             reviewCatText4.setText(genresReformatted.get(3).getType());
             reviewCatValue4.setText(genresReformatted.get(3).getValue().toString());
@@ -156,8 +160,9 @@ public class UserInterfaceController {
     }
 
 
-
     public void setNickname(String nickname) {
+        //TODO caricaListeLibri()
+
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
@@ -166,14 +171,17 @@ public class UserInterfaceController {
         //carico le info dello user
         viewFollow();
         viewFollower();
-
+        rankingButton.setVisible(true);
         if (session.getLoggedAuthor() != null) {
+            rankingButton.setVisible(false);
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
+
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
+                    //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
                     if (session.getLoggedAuthor().getInteractions().getFollow().get(i).equals(this.nickname))
                         follow.setSelected(true);
                 }
@@ -182,15 +190,18 @@ public class UserInterfaceController {
             if (!session.getLoggedUser().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
+                rankingButton.setVisible(false);
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
+                    //System.out.println(session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname));
                     if (session.getLoggedUser().getInteractions().getFollow().get(i).equals(this.nickname))
                         follow.setSelected(true);
                 }
             }
         }
     }
+
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -445,6 +456,19 @@ public class UserInterfaceController {
                 }
             }
         });
+    }
+
+    @FXML
+    void selectRanking(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
+
+        homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/ranking.fxml"));
+
+        Stage actual_stage = (Stage) rankingButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 
     public void initialize() {
