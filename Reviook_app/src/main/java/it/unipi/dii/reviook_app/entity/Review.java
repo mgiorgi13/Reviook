@@ -11,6 +11,7 @@ public class Review {
     private SimpleStringProperty rating;
     private SimpleStringProperty review_text;
     private SimpleIntegerProperty likes;
+    private Boolean liked;
 
     public Review(SimpleStringProperty date_added, SimpleStringProperty review_id, SimpleStringProperty date_update, SimpleIntegerProperty likes, SimpleStringProperty user_id, SimpleStringProperty rating, SimpleStringProperty review_text) {
         this.date_added = date_added;
@@ -20,6 +21,19 @@ public class Review {
         this.user_id = user_id;
         this.rating = rating;
         this.review_text = review_text;
+        this.liked = false;
+    }
+
+    public void setLiked() {
+        this.liked = true;
+    }
+
+    public void unseLiked() {
+        this.liked = false;
+    }
+
+    public Boolean getLiked() {
+        return this.liked;
     }
 
     public String getDate_added() {

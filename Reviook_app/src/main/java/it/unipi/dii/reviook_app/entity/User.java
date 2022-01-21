@@ -2,8 +2,9 @@ package it.unipi.dii.reviook_app.entity;
 
 import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.fxml.FXML;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     @FXML
@@ -14,6 +15,7 @@ public class User {
     private String email;
     private String password;
     private Interaction interactions;
+    private ArrayList<String> listReviewID;
     //follower list
     //following list
     //to read list
@@ -25,7 +27,7 @@ public class User {
 
     UserManager userManager = new UserManager();
 
-    public User(String id, String name, String surname, String nickname, String email, String password) {
+    public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -34,6 +36,26 @@ public class User {
         this.password = password;
         this.interactions = new Interaction();
         this.listBooks = new ListBooks();
+        this.listReviewID = listReviewID;
+        System.out.println();
+    }
+
+    public ArrayList<String> getListReviewID() {
+        return listReviewID;
+    }
+
+    public void setListReviewID(ArrayList<String> listReviewID) {
+        this.listReviewID = listReviewID;
+    }
+
+    public void addReviewID(String id) {
+        this.listReviewID.add(id);
+    }
+
+    public void removeReviewID(String id) {
+        this.listReviewID.remove(id);
+        this.listBooks = new ListBooks();
+
     }
 
     public String getId() {
@@ -101,8 +123,10 @@ public class User {
     }
 
     public int getFollowerCount() {
-        List<String> followerList = userManager.loadRelationsFollower("User",this.nickname);
+        List<String> followerList = userManager.loadRelationsFollower("User", this.nickname);
         return followerList.size();
-    };
+    }
+
+    ;
 
 }
