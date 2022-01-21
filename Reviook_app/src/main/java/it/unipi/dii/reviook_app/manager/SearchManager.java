@@ -2,6 +2,9 @@ package it.unipi.dii.reviook_app.manager;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.TextSearchOptions;
 import it.unipi.dii.reviook_app.entity.*;
 import it.unipi.dii.reviook_app.MongoDriver;
@@ -10,9 +13,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.json.JsonMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.Accumulators.sum;
@@ -20,6 +28,7 @@ import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Indexes.descending;
 import static com.mongodb.client.model.Projections.*;
 import static com.mongodb.client.model.Projections.exclude;
 
@@ -298,5 +307,58 @@ public class SearchManager {
         }
 
         return result;
+    }
+    public JSONArray searchRankBook(Integer year){
+        Date dt=new Date();
+
+        MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
+        MongoCursor<Document> cursor;
+        ArrayList<Book> total_years = new ArrayList<>();
+
+        JSONArray genre = new JSONArray();
+        Bson match = match(in("publication_year", year));
+        Bson unwind = unwind("$genres");
+        Bson group = group("$genres", sum("counter", 1));
+
+
+
+        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match,unwind, group)).iterator();) {
+
+            while (result.hasNext()) {
+                Document y = result.next();
+                total_years.add(new Book("",""));
+                genre.put(y.getString("_id"));
+                genre.put(y.getInteger("counter"));
+
+            }
+
+
+            System.out.println(genre.length());
+        }
+
+        return genre;
+    }
+    public ArrayList<String> searchYears(){
+        Date dt=new Date();
+        int year=2022;
+        MongoCollection<Document> years = md.getCollection(bookCollection);
+        MongoCursor<Document> cursor;
+        ArrayList<String> total_years = new ArrayList<>();
+
+
+        Bson match = match((and(gte("publication_year", 1900),lte("publication_year", year))));
+        Bson group = group("$publication_year");
+       // Bson sort = sort(Sorts.descending("publication_year"));
+
+
+        try (MongoCursor<Document> result = years.aggregate(Arrays.asList(match, group)).iterator();) {
+
+            while (result.hasNext()) {
+                Document y = result.next();
+                total_years.add(String.valueOf(y.getInteger("_id")));
+            }
+        }
+        return total_years;
+
     }
 }

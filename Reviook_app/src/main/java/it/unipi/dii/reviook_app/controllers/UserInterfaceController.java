@@ -35,6 +35,9 @@ public class UserInterfaceController {
     private Text usernameUser, followersCount, followCount;
 
     @FXML
+    private Button rankingButton;
+
+    @FXML
     private JFXListView<String> listFollow, listFollower, listRead,listToRead;
 
     @FXML
@@ -98,12 +101,13 @@ public class UserInterfaceController {
         viewToRead();
         viewFollow();
         viewFollower();
-
-
+        rankingButton.setVisible(true);
         if (session.getLoggedAuthor() != null) {
+            rankingButton.setVisible(false);
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
+
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
@@ -116,6 +120,7 @@ public class UserInterfaceController {
             if (!session.getLoggedUser().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
+                rankingButton.setVisible(false);
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
@@ -380,6 +385,19 @@ public class UserInterfaceController {
                 }
             }
         });
+    }
+
+    @FXML
+    void selectRanking(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
+
+        homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/ranking.fxml"));
+
+        Stage actual_stage = (Stage) rankingButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
     public void initialize() {
         follow.setVisible(false);

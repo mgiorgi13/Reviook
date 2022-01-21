@@ -40,6 +40,9 @@ public class AuthorInterfaceController {
     private JFXButton searchButton;
 
     @FXML
+    private Button rankingButton;
+
+    @FXML
     private Text followCount;
 
     @FXML
@@ -122,11 +125,13 @@ public class AuthorInterfaceController {
 
         viewFollow();
         viewFollower();
-
+        rankingButton.setVisible(false);
         if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
             addButtonBook.setVisible(true);
+            rankingButton.setVisible(true);
         } else {
             addButtonBook.setVisible(false);
+            rankingButton.setVisible(false);
         }
         // I'm author
         if (session.getLoggedAuthor() != null) {
@@ -479,7 +484,18 @@ public class AuthorInterfaceController {
 
 //        System.out.println(session.getLoggedAuthor().getWrittenBookStatisitc());
     }
+    @FXML
+    void selectRanking(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
 
+        homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/ranking.fxml"));
+
+        Stage actual_stage = (Stage) rankingButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
+    }
 
     public void initialize() {
         follow.setVisible(false);
