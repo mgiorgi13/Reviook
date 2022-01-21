@@ -158,7 +158,7 @@ public class UserInterfaceController {
                 listFollows.add(session.getLoggedUser().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         } else {
-            User user = new User("", "", "", usernameUser.getText(), "", "", null);
+            User user = new User("", "", "", usernameUser.getText(), "", "", null, 0);
             user.getInteractions().delFollow();
             Follow = userManagerNJ.loadRelations("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
@@ -226,7 +226,7 @@ public class UserInterfaceController {
                 listFollowers.add(session.getLoggedUser().getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         } else {
-            User users = new User("", "", "", usernameUser.getText(), "", "", null);
+            User users = new User("", "", "", usernameUser.getText(), "", "", null, 0);
             users.getInteractions().delFollower();
             Follower = userManagerNJ.loadRelationsFollower("User", usernameUser.getText());
             users.getInteractions().setNumberFollower(Follower.size());

@@ -8,12 +8,11 @@ public class Author extends User {
     private ArrayList<String> writtenBookStatistic;
     private int likeNumber;
 
-    public Author(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
-        super(id, name, surname, nickname, email, password, listReviewID);
+    public Author(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
+        super(id, name, surname, nickname, email, password, listReviewID, follower_count);
         this.writtenBook = new ArrayList<>();
         this.writtenBookStatistic = new ArrayList<String>();
         this.likeNumber = 0;
-        System.out.println("liked review list: "+this.getListReviewID());
     }
 
     public ArrayList<Book> getWrittenBook() {

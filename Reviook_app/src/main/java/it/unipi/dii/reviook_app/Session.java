@@ -54,19 +54,19 @@ public class Session {
         return session;
     }
 
-    public void setLoggedUser(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
+    public void setLoggedUser(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedUser = new User(id, name, surname, nickname, email, password, listReviewID);
+            session.loggedUser = new User(id, name, surname, nickname, email, password, listReviewID, follower_count);
         }
     }
 
-    public void setLoggedAuthor(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
+    public void setLoggedAuthor(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedAuthor = new Author(id, name, surname, nickname, email, password, listReviewID);
+            session.loggedAuthor = new Author(id, name, surname, nickname, email, password, listReviewID, follower_count);
         }
     }
 

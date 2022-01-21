@@ -241,7 +241,7 @@ public class SearchManager {
 
         for (Document r : queryResults) {
             ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-            result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID));
+            result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
         }
 
         //search on name or surname
@@ -256,7 +256,7 @@ public class SearchManager {
                         listReviewID.add(elem.toString());
                     }
                 }
-                us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID);
+                us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
                 if (!result.contains(us))
                     result.add(us);
             }
@@ -278,7 +278,7 @@ public class SearchManager {
 
         for (Document r : queryResults) {
             ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-            result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID));
+            result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
         }
 
         if (!Username.equals("")) {
@@ -287,7 +287,7 @@ public class SearchManager {
             Author auth;
             for (Document r : queryResults) {
                 ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-                auth = new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID);
+                auth = new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
                 if (!result.contains(auth))
                     result.add(auth);
             }
