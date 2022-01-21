@@ -323,13 +323,12 @@ public class UserManager {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         MongoCollection<Document> books = md.getCollection(bookCollection);
         String author_id = null;
-        ArrayList<Genre> top5Rated= new ArrayList<>();
+        ArrayList<Genre> topRated= new ArrayList<>();
 
         Bson getAuthor;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-        Bson top5;
 
 
         //get id of the author using the username
@@ -346,48 +345,45 @@ public class UserManager {
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$average_rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
-        top5 = limit(5);
 
-        try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(getAuthor, unwindGenres, groupGenres, sortAvg, top5)).iterator()) {
+        try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(getAuthor, unwindGenres, groupGenres, sortAvg)).iterator()) {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
 
                 Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
-                top5Rated.add(genre);
+                topRated.add(genre);
             }
         }
-        return top5Rated;
+        return topRated;
     }
 
     public ArrayList<Genre> averageRatingCategoryUser(String username){
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        ArrayList<Genre> top5Rated= new ArrayList<>();
+        ArrayList<Genre> topRated= new ArrayList<>();
 
         Bson getUser;
         Bson unwindReviews;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-        Bson top5;
 
         getUser =  match(eq("reviews.username",username));
         unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$reviews.rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
-        top5 = limit(5);
 
-        try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(unwindReviews, getUser, unwindGenres, groupGenres, sortAvg, top5)).iterator()) {
+        try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(unwindReviews, getUser, unwindGenres, groupGenres, sortAvg)).iterator()) {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
 
                 Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
-                top5Rated.add(genre);
+                topRated.add(genre);
             }
         }
-        return top5Rated;
+        return topRated;
     }
 
     //==================================================================================================================

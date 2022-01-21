@@ -15,72 +15,72 @@
             <children>
                 <VBox alignment="CENTER" layoutY="35.0" prefHeight="315.0" prefWidth="199.0">
                     <children>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat1" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
                                         <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
                                                 stroke="#1e3bbc" strokeType="INSIDE" strokeWidth="5.0"/>
-                                        <Text fx:id="bookCatPercent1" fill="#1e3bbc" layoutX="22.0" layoutY="35.0"
+                                        <Text fx:id="reviewCatValue1" fill="#1e3bbc" layoutX="22.0" layoutY="35.0"
                                               strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
                                               text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#1e3bbc" strokeType="OUTSIDE" strokeWidth="0.0"
+                                <Text fx:id="reviewCatText1" fill="#1e3bbc" strokeType="OUTSIDE" strokeWidth="0.0"
                                       style="-fx-font-weight: bold;" text="Book category 1"/>
                             </children>
                             <VBox.margin>
                                 <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat2" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
                                         <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
                                                 stroke="#cd7818" strokeType="INSIDE" strokeWidth="5.0"/>
-                                        <Text fx:id="bookCatPercent2" fill="#cd7818" layoutX="22.0" layoutY="35.0"
+                                        <Text fx:id="reviewCatValue2" fill="#cd7818" layoutX="22.0" layoutY="35.0"
                                               strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
                                               text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#cd7818" strokeType="OUTSIDE" strokeWidth="0.0"
+                                <Text fx:id="reviewCatText2" fill="#cd7818" strokeType="OUTSIDE" strokeWidth="0.0"
                                       style="-fx-font-weight: bold;" text="Book category 2"/>
                             </children>
                             <VBox.margin>
                                 <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat3" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
                                         <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
                                                 stroke="#1eba22" strokeType="INSIDE" strokeWidth="5.0"/>
-                                        <Text fx:id="bookCatPercent3" fill="#1eba22" layoutX="22.0" layoutY="35.0"
+                                        <Text fx:id="reviewCatValue3" fill="#1eba22" layoutX="22.0" layoutY="35.0"
                                               strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
                                               text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#1eba22" strokeType="OUTSIDE" strokeWidth="0.0"
+                                <Text fx:id="reviewCatText3" fill="#1eba22" strokeType="OUTSIDE" strokeWidth="0.0"
                                       style="-fx-font-weight: bold;" text="Book category 3"/>
                             </children>
                             <VBox.margin>
                                 <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
+                        <HBox fx:id="Stat4" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
                                         <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
                                                 stroke="#ba1e68" strokeType="INSIDE" strokeWidth="5.0"/>
-                                        <Text fx:id="bookCatPercent4" fill="#ba1e68" layoutX="22.0" layoutY="35.0"
+                                        <Text fx:id="reviewCatValue4" fill="#ba1e68" layoutX="22.0" layoutY="35.0"
                                               strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
                                               text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fill="#ba1e68" strokeType="OUTSIDE" strokeWidth="0.0"
+                                <Text fx:id="reviewCatText4" fill="#ba1e68" strokeType="OUTSIDE" strokeWidth="0.0"
                                       style="-fx-font-weight: bold;" text="Book category 4"/>
                             </children>
                             <VBox.margin>
@@ -90,7 +90,7 @@
                     </children>
                 </VBox>
                 <Text fill="#1e3bbc" layoutX="61.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                      text="MY BOOKS">
+                      text="MY REVIEWS">
                     <font>
                         <Font size="16.0"/>
                     </font>

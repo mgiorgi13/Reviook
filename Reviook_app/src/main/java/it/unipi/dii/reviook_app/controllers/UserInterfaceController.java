@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
@@ -25,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -46,6 +48,12 @@ public class UserInterfaceController {
 
     @FXML
     private JFXButton searchButton;
+
+    @FXML
+    private Text reviewCatValue1, reviewCatText1, reviewCatValue2, reviewCatText2, reviewCatValue3, reviewCatText3, reviewCatValue4, reviewCatText4, reviewCatValue5, reviewCatText5;
+
+    @FXML
+    private HBox Stat1,Stat2,Stat3,Stat4;
 
     private ArrayList<Genre> analytics;
 
@@ -91,6 +99,56 @@ public class UserInterfaceController {
         }
     }
 
+    private void setAnalyticsResult(){
+        Double previousValue = -1.0;
+        String newGenre = "";
+        ArrayList<Genre> genresReformatted = new ArrayList<>();
+
+        for(int i = 0; i < analytics.size(); i ++){
+            if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
+                newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
+            }else{
+                genresReformatted.add(new Genre(newGenre,previousValue));
+                newGenre = "";
+                newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
+            }
+            previousValue = analytics.get(i).getValue();
+            if(i == analytics.size() - 1){
+                genresReformatted.add(new Genre(newGenre,previousValue));
+            }
+        }
+
+        int size = genresReformatted.size();
+
+        Stat1.setVisible(false);
+        Stat2.setVisible(false);
+        Stat3.setVisible(false);
+        Stat4.setVisible(false);
+
+        if(size >= 1){
+            Stat1.setVisible(true);
+            reviewCatText1.setText(genresReformatted.get(0).getType());
+            reviewCatValue1.setText(genresReformatted.get(0).getValue().toString());
+        }
+        if(size >= 2){
+            Stat2.setVisible(true);
+            reviewCatText2.setText(genresReformatted.get(1).getType());
+            reviewCatValue2.setText(genresReformatted.get(1).getValue().toString());
+        }
+        if(size >= 3){
+            Stat3.setVisible(true);
+            reviewCatText3.setText(genresReformatted.get(2).getType());
+            reviewCatValue3.setText(genresReformatted.get(2).getValue().toString());
+        }
+        if(size >= 4){
+            Stat4.setVisible(true);
+            reviewCatText4.setText(genresReformatted.get(3).getType());
+            reviewCatValue4.setText(genresReformatted.get(3).getValue().toString());
+        }
+    }
+
+
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
@@ -98,10 +156,11 @@ public class UserInterfaceController {
         analytics = session.getCache().getAnalyticsExecuted().get(nickname+"user");
         if(analytics == null) {
             //load analytics from db
-            analytics = userManager.averageRatingCategoryAuthor(nickname);
+            analytics = userManager.averageRatingCategoryUser(nickname);
             session.getCache().getAnalyticsExecuted().put(nickname+"user",analytics);
         }
         System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"user"));
+        setAnalyticsResult();
 
         //carico le info dello user
         viewFollow();
@@ -395,6 +454,7 @@ public class UserInterfaceController {
             usernameUser.setText(session.getLoggedUser().getNickname());
         }
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
+        // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
         viewFollower();
         viewFollow();
     }

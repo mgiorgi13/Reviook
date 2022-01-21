@@ -51,17 +51,17 @@ public class BookManager {
                 .append("num_pages", 0)
                 .append("isbn", ISBN)
                 .append("description", Description)
-                .append("average_rating", "")
+                .append("average_rating", 0.0)
                 .append("book_id", id)
                 .append("title", title)
                 .append("language_code", "")
-                .append("publication_month", calendar.get(Calendar.MONTH))
+                .append("publication_month", calendar.get(Calendar.MONTH +1))
                 .append("publication_year", calendar.get(Calendar.YEAR))
                 .append("reviews", reviews)
                 .append("genres", Genre)
                 .append("asin", "")
                 .append("publication_day", calendar.get(Calendar.DAY_OF_MONTH))
-                .append("ratings_count", 0.0)
+                .append("ratings_count", 0)
                 .append("authors", UsernameTagged);
 
         md.getCollection(bookCollection).insertOne(doc);
@@ -159,11 +159,11 @@ public class BookManager {
                 book.getString("language_code"),
                 book.getString("asin"),
                 book.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(book.get("average_rating").toString()),
-                book.getString("description").toString(),
+                book.getString("description"),
                 book.getInteger("num_pages"),
-                book.getString("publication_day").equals("") ? 0 : Integer.valueOf(book.getString("publication_day")),
-                book.getString("publication_month").equals("") ? 0 : Integer.valueOf(book.getString("publication_month")),
-                book.getString("publication_year").equals("") ? 0 : Integer.valueOf(book.getString("publication_year")),
+                book.getInteger("publication_day"),
+                book.getInteger("publication_month"),
+                book.getInteger("publication_year"),
                 book.getString("image_url"),
                 book.getString("book_id"),
                 book.getInteger("ratings_count"),

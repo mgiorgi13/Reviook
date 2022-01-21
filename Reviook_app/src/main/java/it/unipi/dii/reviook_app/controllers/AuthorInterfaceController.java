@@ -22,6 +22,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -61,6 +62,12 @@ public class AuthorInterfaceController {
 
     @FXML
     private CheckBox follow;
+
+    @FXML
+    private Text bookCatValue1, bookCatText1, bookCatValue2, bookCatText2, bookCatValue3, bookCatText3, bookCatValue4, bookCatText4, bookCatValue5, bookCatText5;
+
+    @FXML
+    private HBox Stat1,Stat2,Stat3,Stat4;
 
     private String nickname;
 
@@ -115,6 +122,54 @@ public class AuthorInterfaceController {
         }
     }
 
+    private void setAnalyticsResult(){
+        Double previousValue = -1.0;
+        String newGenre = "";
+        ArrayList<Genre> genresReformatted = new ArrayList<>();
+
+        for(int i = 0; i < analytics.size(); i ++){
+            if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
+                newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
+            }else{
+                genresReformatted.add(new Genre(newGenre,previousValue));
+                newGenre = "";
+                newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
+            }
+            previousValue = analytics.get(i).getValue();
+            if(i == analytics.size() - 1){
+                genresReformatted.add(new Genre(newGenre,previousValue));
+            }
+        }
+
+        int size = genresReformatted.size();
+
+        Stat1.setVisible(false);
+        Stat2.setVisible(false);
+        Stat3.setVisible(false);
+        Stat4.setVisible(false);
+
+        if(size >= 1){
+            Stat1.setVisible(true);
+            bookCatText1.setText(genresReformatted.get(0).getType());
+            bookCatValue1.setText(genresReformatted.get(0).getValue().toString());
+        }
+        if(size >= 2){
+            Stat2.setVisible(true);
+            bookCatText2.setText(genresReformatted.get(1).getType());
+            bookCatValue2.setText(genresReformatted.get(1).getValue().toString());
+        }
+        if(size >= 3){
+            Stat3.setVisible(true);
+            bookCatText3.setText(genresReformatted.get(2).getType());
+            bookCatValue3.setText(genresReformatted.get(2).getValue().toString());
+        }
+        if(size >= 4){
+            Stat4.setVisible(true);
+            bookCatText4.setText(genresReformatted.get(3).getType());
+            bookCatValue4.setText(genresReformatted.get(3).getValue().toString());
+        }
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
@@ -126,6 +181,14 @@ public class AuthorInterfaceController {
             session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
         }
         System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"author"));
+
+
+        Stat1.setVisible(false);
+        Stat2.setVisible(false);
+        Stat3.setVisible(false);
+        Stat4.setVisible(false);
+
+        setAnalyticsResult();
 
         viewFollow();
         viewFollower();
