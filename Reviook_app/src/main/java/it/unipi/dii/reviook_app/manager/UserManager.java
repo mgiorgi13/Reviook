@@ -181,15 +181,6 @@ public class UserManager {
     //==================================================================================================================
 
     //MongoDB ==========================================================================================================
-    public boolean verifyISBN(String ISBN) {
-        MongoCollection<Document> book = md.getCollection(bookCollection);
-        try (MongoCursor<Document> cursor = book.find(eq("isbn", ISBN)).iterator()) {
-            while (cursor.hasNext()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public DBObject paramAuthor(String Username) {
         MongoCollection<Document> authors = md.getCollection(authorCollection);
@@ -227,7 +218,7 @@ public class UserManager {
                 Document user = cursor.next();
                 if (main) {
                     ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                    session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID);
+                    session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
                 }
                 return 0;
             }
@@ -237,7 +228,7 @@ public class UserManager {
                 Document user = cursor.next();
                 if (main) {
                     ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                    session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID);
+                    session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
                 }
                 return 1;
             }
@@ -272,8 +263,11 @@ public class UserManager {
     }
 
     public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
+        ArrayList<String> liked_review = new ArrayList<>();
         Document doc = new Document("name", name + " " + surname)
                 .append("password", password)
+                .append("follower_count", 0)
+                .append("liked_review", liked_review)
                 .append("email", email)
                 .append("username", nickname);
 
@@ -314,6 +308,32 @@ public class UserManager {
         if (updateResult.getModifiedCount() == 1)
             return true;
         return false;
+    }
+
+    private void incrementFollowerCount(String id) {
+        //increment follower count
+        if (session.getIsAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", id);
+            authors.updateOne(getAuthor, Updates.inc("follower_count", 1));
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", id);
+            users.updateOne(getUser, Updates.inc("follower_count", 1));
+        }
+    }
+
+    private void decrementFollowerCount(String id) {
+        //increment follower count
+        if (session.getIsAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", id);
+            authors.updateOne(getAuthor, Updates.inc("follower_count", -1));
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", id);
+            users.updateOne(getUser, Updates.inc("follower_count", -1));
+        }
     }
 
     //==================================================================================================================

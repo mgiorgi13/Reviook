@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.entity;
 
-
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class Review {
     private String date_added;

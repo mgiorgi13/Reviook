@@ -226,22 +226,22 @@ public class BookDetailController {
             if (selectedReview.getLiked()) {
                 // I already liked it
                 session.getLoggedUser().removeReviewID(selectedReview.getReview_id());
-                bookManager.removeLikeReview(selectedReview.getReview_id());
+                bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
                 setListView();
             } else {
                 session.getLoggedUser().addReviewID(selectedReview.getReview_id());
-                bookManager.addLikeReview(selectedReview.getReview_id());
+                bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
                 setListView();
             }
         } else if (session.getLoggedAuthor() != null) {
             if (selectedReview.getLiked()) {
                 // I already liked it
                 session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
-                bookManager.removeLikeReview(selectedReview.getReview_id());
+                bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
                 setListView();
             } else {
                 session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
-                bookManager.addLikeReview(selectedReview.getReview_id());
+                bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
                 setListView();
             }
         }
