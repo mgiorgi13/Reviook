@@ -2,8 +2,8 @@ package it.unipi.dii.reviook_app;
 
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Cache;
-import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
+import java.util.ArrayList;
 
 
 public class Session {
@@ -54,19 +54,19 @@ public class Session {
         return session;
     }
 
-    public void setLoggedUser(String id, String name, String surname, String nickname, String email, String password) {
+    public void setLoggedUser(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
         if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedUser = new User(id, name, surname, nickname, email, password);
+            session.loggedUser = new User(id, name, surname, nickname, email, password, listReviewID);
         }
     }
 
-    public void setLoggedAuthor(String id, String name, String surname, String nickname, String email, String password) {
+    public void setLoggedAuthor(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID) {
         if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedAuthor = new Author(id, name, surname, nickname, email, password);
+            session.loggedAuthor = new Author(id, name, surname, nickname, email, password, listReviewID);
         }
     }
 

@@ -55,7 +55,7 @@ public class UserManager {
     public void addNewUsers(String type, String id, String name, String username) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters( "id", id,"name",name,"username", username));
+                tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", id, "name", name, "username", username));
                 return null;
             });
         }
@@ -105,11 +105,11 @@ public class UserManager {
         ArrayList<Book> books = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             readings = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
-                Result result = tx.run("MATCH (ee:" + type + ")-[:"+read+"]->(book) where ee.username = '" + username + "' " +
+                Result result = tx.run("MATCH (ee:" + type + ")-[:" + read + "]->(book) where ee.username = '" + username + "' " +
                         "return book.title, book.id");
                 while (result.hasNext()) {
                     Record r = result.next();
-                        books.add(new Book(((Record) r).get("book.title").asString(),((Record) r).get("book.id").asString()));
+                    books.add(new Book(((Record) r).get("book.title").asString(), ((Record) r).get("book.id").asString()));
                 }
                 return books;
             });
@@ -183,7 +183,7 @@ public class UserManager {
     //MongoDB ==========================================================================================================
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
-        try (MongoCursor<Document> cursor = book.find(eq("ISBN", ISBN)).iterator()) {
+        try (MongoCursor<Document> cursor = book.find(eq("isbn", ISBN)).iterator()) {
             while (cursor.hasNext()) {
                 return true;
             }
@@ -225,17 +225,20 @@ public class UserManager {
         try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
-                if (main == true)
-                    session.setLoggedUser(user.getString("user_id"),user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
+                if (main) {
+                    ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
+                    session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID);
+                }
                 return 0;
             }
         }
         try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
-                if (main == true)
-                    session.setLoggedAuthor(user.getString("author_id"),user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString());
-
+                if (main) {
+                    ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
+                    session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID);
+                }
                 return 1;
             }
         }
@@ -271,14 +274,12 @@ public class UserManager {
     public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
         Document doc = new Document("name", name + " " + surname)
                 .append("password", password)
-                .append("count_reviews", "")
-                .append("average_reviews", "")
                 .append("email", email)
                 .append("username", nickname);
 
 
         if (type.equals("Author")) {
-            doc.append("author_id", id).append("avarage_reviewsSelf", "");
+            doc.append("author_id", id);
             md.getCollection(authorCollection).insertOne(doc);
         } else {
             doc.append("user_id", id);

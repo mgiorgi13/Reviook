@@ -88,6 +88,9 @@ public class SearchInterfaceController {
                 obsBooksList.addAll(session.getCache().getSearchedBooks());
                 bookList.setItems(obsBooksList);
                 addCustomFactory("book");
+                bookCheck.setSelected(true);
+                authorCheck.setSelected(false);
+                userCheck.setSelected(false);
                 bookList.setVisible(true);
                 usersList.setVisible(false);
                 authorsList.setVisible(false);
@@ -97,6 +100,9 @@ public class SearchInterfaceController {
                 obsUserList.addAll(session.getCache().getSearchedUsers());
                 usersList.setItems(obsUserList);
                 addCustomFactory("user");
+                bookCheck.setSelected(false);
+                authorCheck.setSelected(false);
+                userCheck.setSelected(true);
                 usersList.setVisible(true);
                 authorsList.setVisible(false);
                 bookList.setVisible(false);
@@ -106,6 +112,9 @@ public class SearchInterfaceController {
                 obsUserList.addAll(session.getCache().getSearchedAuthors());
                 authorsList.setItems(obsUserList);
                 addCustomFactory("author");
+                bookCheck.setSelected(false);
+                userCheck.setSelected(false);
+                authorCheck.setSelected(true);
                 authorsList.setVisible(true);
                 bookList.setVisible(false);
                 usersList.setVisible(false);
@@ -115,8 +124,6 @@ public class SearchInterfaceController {
                 authorsList.getItems().clear();
             }
         }
-
-
     }
 
     @FXML

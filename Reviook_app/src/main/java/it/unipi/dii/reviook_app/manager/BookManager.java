@@ -9,8 +9,6 @@ import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Session;
@@ -45,6 +43,7 @@ public class BookManager {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
+        //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
         Document doc = new Document("image_url", "")
@@ -141,13 +140,14 @@ public class BookManager {
 
         for (Document r : reviews) {
                 reviewsList.add(new Review(
-                        new SimpleStringProperty(r.get("date_added").toString()),
-                        new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? Integer.valueOf(r.get("helpful").toString()) : Integer.valueOf(r.get("likes").toString())),
-                        new SimpleStringProperty(r.getString("user_id")),
-                        new SimpleStringProperty(r.get("rating").toString()),
-                        new SimpleStringProperty(r.getString("review_text"))
+                        r.getString("username"),
+                        r.get("date_added").toString(),
+                        r.getString("review_id"),
+                        r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                        r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
+                        r.getString("user_id"),
+                        r.get("rating").toString(),
+                        r.getString("review_text")
                 ));
             }
         for (Document a : authors) {
@@ -155,23 +155,23 @@ public class BookManager {
         }
 
         Book outputBook = new Book(
-                book.getString("isbn"),
-                book.getString("language_code"),
-                book.getString("asin"),
+                book.get("isbn") == null ? null : book.getString("isbn"),
+                book.get("language_code")  == null ? null : book.getString("language_code"),
+                book.get("asin") == null ? null : book.getString("asin"),
                 book.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(book.get("average_rating").toString()),
-                book.getString("description"),
-                book.getInteger("num_pages"),
-                book.getInteger("publication_day"),
-                book.getInteger("publication_month"),
-                book.getInteger("publication_year"),
-                book.getString("image_url"),
+                book.get("description") == null ? null : book.getString("description"),
+                book.get("num_pages") == null ? null : book.getInteger("num_pages"),
+                book.get("publication_day") == null ? null : book.getInteger("publication_day"),
+                book.get("publication_month") == null ? null : book.getInteger("publication_month"),
+                book.get("publication_year") == null ? null : book.getInteger("publication_year"),
+                book.get("image_url") == null ? null : book.getString("image_url"),
                 book.getString("book_id"),
                 book.getInteger("ratings_count"),
                 book.getString("title"),
                 authorsLis,
                 genres,
                 reviewsList
-        );
+            );
         return outputBook;
     }
 
@@ -185,5 +185,35 @@ public class BookManager {
         } else {
             return ratingSum;
         }
+    }
+
+    public void addLikeReview(String reviewID) {
+        if (session.getLoggedAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+            DBObject elem = new BasicDBObject("liked_review", reviewID);
+            DBObject insertRevID = new BasicDBObject("$push", elem);
+            authors.updateOne(getAuthor, (Bson) insertRevID);
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", session.getLoggedUser().getId());
+            DBObject elem = new BasicDBObject("liked_review", reviewID);
+            DBObject insertRevID = new BasicDBObject("$push", elem);
+            users.updateOne(getUser, (Bson) insertRevID);
+        }
+
+    }
+
+    public void removeLikeReview(String reviewID) {
+        if (session.getLoggedAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+            authors.updateOne(getAuthor, Updates.pull("liked_review", reviewID));
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", session.getLoggedUser().getId());
+            users.updateOne(getUser, Updates.pull("liked_review", reviewID));
+        }
+
     }
 }

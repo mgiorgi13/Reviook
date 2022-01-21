@@ -192,7 +192,6 @@ public class UserInterfaceController {
         }
     }
 
-
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
         Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search.fxml"));
@@ -228,7 +227,7 @@ public class UserInterfaceController {
                 listFollows.add(session.getLoggedUser().getInteractions().getFollow().get(i));
             listFollow.getItems().addAll(listFollows);
         } else {
-            User user = new User("", "", "", usernameUser.getText(), "", "");
+            User user = new User("", "", "", usernameUser.getText(), "", "", null);
             user.getInteractions().delFollow();
             Follow = userManager.loadRelations("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
@@ -296,7 +295,7 @@ public class UserInterfaceController {
                 listFollowers.add(session.getLoggedUser().getInteractions().getFollower().get(i));
             listFollower.getItems().addAll(listFollowers);
         } else {
-            User users = new User("", "", "", usernameUser.getText(), "", "");
+            User users = new User("", "", "", usernameUser.getText(), "", "", null);
             users.getInteractions().delFollower();
             Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
             users.getInteractions().setNumberFollower(Follower.size());
@@ -458,5 +457,7 @@ public class UserInterfaceController {
         // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
         viewFollower();
         viewFollow();
+
+
     }
 }
