@@ -92,11 +92,11 @@ public class BookManager {
         newReview.append("rating", ratingBook);
         newReview.append("review_text", reviewText);
         if (session.getLoggedUser() != null) {
-            String loggedUserID = session.getLoggedUser().getNickname();
-            newReview.append("user_id", loggedUserID);
+            newReview.append("user_id", session.getLoggedUser().getId());
+            newReview.append("username", session.getLoggedUser().getNickname());
         } else {
-            String loggedAuthorID = session.getLoggedAuthor().getNickname();
-            newReview.append("user_id", loggedAuthorID);
+            newReview.append("user_id", session.getLoggedAuthor().getId());
+            newReview.append("username", session.getLoggedAuthor().getNickname());
         }
         Bson getBook = eq("book_id", book_id);
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
@@ -127,6 +127,7 @@ public class BookManager {
         Book bookToUpdate = getBookByID(book_id);
         Double newRating = updateRating(bookToUpdate.getReviews());
         UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
+        removeLikeReview(review_id); // TODO funziona solo per i like miei a mie review, altrimenti non funziona
     }
 
     public Book getBookByID(String book_id) {
@@ -141,6 +142,7 @@ public class BookManager {
 
         for (Document r : reviews) {
             reviewsList.add(new Review(
+                    r.getString("username"),
                     new SimpleStringProperty(r.get("date_added").toString()),
                     new SimpleStringProperty(r.getString("review_id")),
                     new SimpleStringProperty(r.get("date_updated") == null ? "" : r.get("date_updated").toString()),

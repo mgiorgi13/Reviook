@@ -54,7 +54,7 @@ public class DataReviewCell {
         } else {
             previewText.setText(reviewText);
         }
-        user.setText(review.getUser_id());
+        user.setText(review.getUsername());
         like.setText(review.getLikes().toString());
 //        helpful.setText(review.getHelpful());
         ratingField.setText(review.getRating().toString());
