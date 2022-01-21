@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RankingInterfaceController">
+    <children>
+        <VBox layoutX="6.0" layoutY="4.0" prefHeight="814.0" prefWidth="757.0">
+            <children>
+                <Pane prefHeight="123.0" prefWidth="757.0">
+                    <children>
+                        <JFXButton layoutX="667.0" layoutY="46.0" onAction="#searchAction" text="SEARCH" />
+                        <CheckBox fx:id="booksRank" layoutX="591.0" layoutY="30.0" mnemonicParsing="false" onAction="#selectBooksRank" text="Books rank" />
+                        <CheckBox fx:id="usersRank" layoutX="591.0" layoutY="77.0" mnemonicParsing="false" onAction="#selectUsersRank" text="Users rank" />
+                        <ChoiceBox fx:id="yearsFilter" layoutX="443.0" layoutY="48.0" prefHeight="26.0" prefWidth="121.0" />
+                  <Label fx:id="labelError" layoutX="100.0" layoutY="109.0" prefHeight="17.0" prefWidth="274.0" />
+                    </children>
+                </Pane>
+                <Pane prefHeight="672.0" prefWidth="757.0">
+                    <children>
+                        <JFXListView fx:id="bookList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
+                        <JFXListView fx:id="usersList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
+                        <JFXButton fx:id="homeButton" layoutX="211.0" layoutY="633.0" onAction="#homeInterface" text="HOME" />
+                        <JFXButton fx:id="profileButton" layoutX="487.0" layoutY="633.0" onAction="#profileInterface" text="PROFILE" />
+                    </children>
+                </Pane>
+            </children>
+        </VBox>
+    </children>
+</Pane>

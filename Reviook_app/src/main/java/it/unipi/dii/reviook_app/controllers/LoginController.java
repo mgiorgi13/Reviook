@@ -103,7 +103,7 @@ public class LoginController {
                 session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
             }
         }
-
+        
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);
