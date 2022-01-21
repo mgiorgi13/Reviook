@@ -2,13 +2,13 @@ package it.unipi.dii.reviook_app.entity;
 
 import java.util.ArrayList;
 
-public class listBooks {
+public class ListBooks {
     private ArrayList<Book> readed;
     private ArrayList<Book> toRead;
     private ArrayList<Book> published;
     private ArrayList<Book> statistic;
 
-    public listBooks() {
+    public ListBooks() {
         this.readed = new ArrayList<>();
         this.toRead = new ArrayList<>();
         this.statistic = new ArrayList<>();
