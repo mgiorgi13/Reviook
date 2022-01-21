@@ -127,6 +127,13 @@ public class AuthorInterfaceController {
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
+          analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
+        if(analytics == null) {
+            //load analytics from db
+            analytics = userManager.averageRatingCategoryAuthor(nickname);
+            session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
+        }
+
         for(int i = 0; i < analytics.size(); i ++){
             if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
                 newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
@@ -174,19 +181,6 @@ public class AuthorInterfaceController {
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
 
-        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
-        if(analytics == null) {
-            //load analytics from db
-            analytics = userManager.averageRatingCategoryAuthor(nickname);
-            session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
-        }
-        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"author"));
-
-
-        Stat1.setVisible(false);
-        Stat2.setVisible(false);
-        Stat3.setVisible(false);
-        Stat4.setVisible(false);
 
         setAnalyticsResult();
 

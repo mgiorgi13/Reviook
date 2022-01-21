@@ -104,6 +104,14 @@ public class UserInterfaceController {
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
+        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"user");
+        if(analytics == null) {
+            //load analytics from db
+            analytics = userManager.averageRatingCategoryUser(nickname);
+            session.getCache().getAnalyticsExecuted().put(nickname+"user",analytics);
+        }
+        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"user"));
+
         for(int i = 0; i < analytics.size(); i ++){
             if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
                 newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
@@ -153,13 +161,6 @@ public class UserInterfaceController {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
-        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"user");
-        if(analytics == null) {
-            //load analytics from db
-            analytics = userManager.averageRatingCategoryUser(nickname);
-            session.getCache().getAnalyticsExecuted().put(nickname+"user",analytics);
-        }
-        System.out.println(session.getCache().getAnalyticsExecuted().get(nickname+"user"));
         setAnalyticsResult();
 
         //carico le info dello user
