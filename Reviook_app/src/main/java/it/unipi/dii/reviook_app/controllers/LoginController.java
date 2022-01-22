@@ -20,6 +20,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 
@@ -74,6 +75,13 @@ public class LoginController {
     void loginButton(ActionEvent event) throws IOException, NoSuchAlgorithmException, JSONException {
         username = usernameLogin.getText();
         password = passwordField.getText();
+
+        // TODO modificare caso in cui si è ADMIN per ora mockato
+        if (username.equals("admin") && password.equals("root")){
+           Parent    admin = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
+
+        }
+
         if (usernameLogin.getText().isEmpty() || passwordField.getText().isEmpty()) {
             actiontarget.setText("You must fill in all fields");
             return;
