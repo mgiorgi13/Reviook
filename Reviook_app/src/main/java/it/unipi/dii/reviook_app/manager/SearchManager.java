@@ -2,9 +2,6 @@ package it.unipi.dii.reviook_app.manager;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Indexes;
-import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.TextSearchOptions;
 import it.unipi.dii.reviook_app.entity.*;
 import it.unipi.dii.reviook_app.MongoDriver;
@@ -13,10 +10,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.json.JsonMode;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -314,6 +308,27 @@ public class SearchManager {
 
         while (cursor.hasNext()) {
             result.add(new Genre(cursor.next().getString("_id")));
+        }
+
+        return result;
+    }
+    public ArrayList<String> searchlanguageCode() {
+        MongoCollection<Document> languageCode = md.getCollection(bookCollection);
+
+        ArrayList<String> result = new ArrayList<>();
+
+
+        Bson group = group("$language_code", sum("counter", 1));
+
+
+
+        try (MongoCursor<Document> cursor = languageCode.aggregate(Arrays.asList(group)).iterator();) {
+
+
+            while (cursor.hasNext()) {
+                result.add(cursor.next().getString("_id"));
+
+            }
         }
 
         return result;
