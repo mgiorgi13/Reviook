@@ -16,6 +16,7 @@ import org.bson.conversions.Bson;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
@@ -41,28 +42,28 @@ public class BookManager {
         this.nd = Neo4jDriver.getInstance();
     }
 
-    public void addBook(String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
+    public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date,String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
 
 
         //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
-        Document doc = new Document("image_url", "null")
-                .append("num_pages", "")
+        Document doc = new Document("asin", "")
+                .append("language_code", languageCode)
                 .append("isbn", ISBN)
                 .append("description", Description)
-                .append("average_rating", "")
+                .append("num_pages", num_pages)
+                .append("publication_day", date.getDayOfMonth())
+                .append("publication_month", date.getMonthValue())
+                .append("publication_year", date.getYear())
+                .append("image_url", URL_image)
                 .append("book_id", id)
                 .append("title", title)
-                .append("language_code", "")
-                .append("publication_month", "")
-                .append("publication_year", "")
-                .append("reviews", reviews)
+                .append("average_rating", 0.0)
+                .append("ratings_count", 0)
                 .append("genres", Genre)
-                .append("asin", "")
-                .append("publication_day", "")
-                .append("ratings_count", "")
-                .append("authors", UsernameTagged);
+                .append("authors", UsernameTagged)
+                .append("reviews", reviews);
 
         md.getCollection(bookCollection).insertOne(doc);
 
