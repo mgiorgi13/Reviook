@@ -249,7 +249,7 @@ public class AddBookController {
         for (int i = 0;i < UsernameTagged.size();i++) {
             param.add(userManager.paramAuthor(UsernameTagged.get(i)));
         }
-        if(userManager.verifyISBN(ISBN_)){
+        if(bookManager.verifyISBN(ISBN_)){
             actiontarget.setText("Existing ISBN");
             return;
         }

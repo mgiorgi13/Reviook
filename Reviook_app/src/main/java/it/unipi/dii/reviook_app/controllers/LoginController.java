@@ -51,7 +51,7 @@ public class LoginController {
         MessageDigest md;
         String pswHash;
         int result = userManager.verifyUsername(username, true);
-        if(result == -1)
+        if (result == -1)
             return false;
         else
             session.setIsAuthor(result == 1 ? true : false);
@@ -61,8 +61,8 @@ public class LoginController {
         md.update(password.getBytes());
         byte[] digest = md.digest();
         pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        Boolean c = userManager.verifyPassword(session.getIsAuthor(),username,pswHash);
-        if (!userManager.verifyPassword(session.getIsAuthor(),username,pswHash))
+        Boolean c = userManager.verifyPassword(session.getIsAuthor(), username, pswHash);
+        if (!userManager.verifyPassword(session.getIsAuthor(), username, pswHash))
             return false;
 
         return true;
@@ -79,11 +79,9 @@ public class LoginController {
             return;
         }
         if (!logIn(username, password)) {
-            actiontarget.setText( "Wrong Login");
+            actiontarget.setText("Wrong Login");
             return;
         }
-
-
         Parent user_scene;
 
         if (session.getIsAuthor() == null) {
@@ -92,20 +90,16 @@ public class LoginController {
 
         if (session.getIsAuthor()) {
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-//            System.out.println(session.getLoggedAuthor().getNickname());
-        }else{
+        } else {
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-
-            List<String> Follow = userManager.loadRelations("User",username);
+            List<String> Follow = userManager.loadRelations("User", username);
             session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
-            for(int i = 0; i<Follow.size(); i++)
-            {
+            for (int i = 0; i < Follow.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
             }
-            List<String> Follower= userManager.loadRelationsFollower("User",username);
+            List<String> Follower = userManager.loadRelationsFollower("User", username);
             session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
-            for(int i = 0; i<Follower.size(); i++)
-            {
+            for (int i = 0; i < Follower.size(); i++) {
                 session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
             }
         }

@@ -10,7 +10,9 @@ module it.unipi.dii.reviook_app {
     requires org.mongodb.driver.core;
     requires javafaker;
     requires java.desktop;
-    requires jaxb.api;
+    requires de.jensd.fx.glyphs.fontawesome;
+    requires java.xml.bind;
+
 
 
     opens it.unipi.dii.reviook_app to javafx.fxml;

@@ -6,13 +6,12 @@ import java.util.List;
 public class Author extends User {
     private ArrayList<Book> writtenBook;
     private ArrayList<String> writtenBookStatistic;
-    private int likeNumber;
 
-    public Author(String id, String name, String surname, String nickname, String email, String password) {
-        super(id, name, surname, nickname, email, password);
+
+    public Author(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
+        super(id, name, surname, nickname, email, password, listReviewID, follower_count);
         this.writtenBook = new ArrayList<>();
         this.writtenBookStatistic = new ArrayList<String>();
-        this.likeNumber = 0;
     }
 
     public ArrayList<Book> getWrittenBook() {
@@ -23,33 +22,16 @@ public class Author extends User {
         return writtenBookStatistic;
     }
 
-    public int getLikeNumber() {
-        return likeNumber;
-    }
-
     public void setWrittenBook(Book writtenBook) {
         this.writtenBook.add(writtenBook);
     }
 
     public void setWrittenBookStatistic(String writtenBookStatistic) {
-
         this.writtenBookStatistic.add(writtenBookStatistic);
     }
 
-    public void setLikeNumber(int likeNumber) {
-        this.likeNumber = likeNumber;
-    }
-//todo aggiungere getfollowing
-    public int getFollowerCount() {
-        List<String> followerList = userManager.loadRelationsFollower("Author", this.getNickname());
-        return followerList.size();
-    }
-
-
-     public String getIdBookPublished(String title)
-    {
-        for( Book Books: this.writtenBook) {
-
+    public String getIdBookPublished(String title) {
+        for (Book Books : this.writtenBook) {
             if (Books.getTitle().equals(title))
                 return Books.getBook_id();
         }

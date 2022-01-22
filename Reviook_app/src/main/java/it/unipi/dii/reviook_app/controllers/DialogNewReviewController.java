@@ -79,7 +79,6 @@ public class DialogNewReviewController {
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
-                // TODO la query deve aggiornare il rating AVG
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
                 this.previousList.setAll(book.getReviews());
                 DecimalFormat df = new DecimalFormat("#.#");
@@ -93,7 +92,6 @@ public class DialogNewReviewController {
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
-                // TODO la query deve aggiornare il rating AVG
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
                 this.previousList.setAll(book.getReviews());
                 DecimalFormat df = new DecimalFormat("#.#");

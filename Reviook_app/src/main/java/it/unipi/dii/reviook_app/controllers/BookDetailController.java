@@ -88,13 +88,12 @@ public class BookDetailController {
     public void setListView() {
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
-        listView.setCellFactory(
-                new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
-                    @Override
-                    public ListCell<Review> call(ListView<Review> listView) {
-                        return new ListReview();
-                    }
-                });
+        listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
+            @Override
+            public ListCell<Review> call(ListView<Review> listView) {
+                return new ListReview();
+            }
+        });
         listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -204,11 +203,49 @@ public class BookDetailController {
         if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
             return;
         }
-        bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
-        Book book = bookManager.getBookByID(this.book_id); // query to update review
-        this.observableList.setAll(book.getReviews());
-        DecimalFormat df = new DecimalFormat("#.#");
-        this.ratingAVG.setText(df.format(book.getAverage_rating()));
+        try {
+            bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Book book = bookManager.getBookByID(this.book_id); // query to update review
+            this.reviewsList = book.getReviews();
+            setListView();
+            DecimalFormat df = new DecimalFormat("#.#");
+            this.ratingAVG.setText(df.format(book.getAverage_rating()));
+        }
+    }
+
+    @FXML
+    public void putLikeAction() {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
+        if (session.getLoggedUser() != null) {
+            if (selectedReview.getLiked()) {
+                // I already liked it
+                session.getLoggedUser().removeReviewID(selectedReview.getReview_id());
+                bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
+                setListView();
+            } else {
+                session.getLoggedUser().addReviewID(selectedReview.getReview_id());
+                bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
+                setListView();
+            }
+        } else if (session.getLoggedAuthor() != null) {
+            if (selectedReview.getLiked()) {
+                // I already liked it
+                session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
+                bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
+                setListView();
+            } else {
+                session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
+                bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
+                setListView();
+            }
+        }
+
     }
 
     public void setInfoBook(Book bookSelected) {

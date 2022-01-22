@@ -27,7 +27,6 @@ import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
 
-//TODO CONTROLLARE FORMATO NODI NEO4J
 public class BookManager {
     private MongoDriver md;
     private Neo4jDriver nd;
@@ -42,10 +41,23 @@ public class BookManager {
         this.nd = Neo4jDriver.getInstance();
     }
 
+    public boolean verifyISBN(String ISBN) {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        try (MongoCursor<Document> cursor = book.find(eq("isbn", ISBN)).iterator()) {
+            while (cursor.hasNext()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date,String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
 
-
+        //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
         Document doc = new Document("asin", "")
@@ -81,25 +93,23 @@ public class BookManager {
     }
 
     public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
-        // TODO aggiornare il rating Book
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         newReview.append("date_added", date);
-        newReview.append("date_updated", "");
+        newReview.append("date_updated", date);
         newReview.append("review_id", reviewID);
-        newReview.append("likes", "0");
+        newReview.append("likes", 0);
         newReview.append("rating", ratingBook);
         newReview.append("review_text", reviewText);
-        newReview.append("helpful", "0");
         if (session.getLoggedUser() != null) {
-            String loggedUserID = session.getLoggedUser().getNickname();
-            newReview.append("user_id", loggedUserID);
+            newReview.append("user_id", session.getLoggedUser().getId());
+            newReview.append("username", session.getLoggedUser().getNickname());
         } else {
-            String loggedAuthorID = session.getLoggedAuthor().getNickname();
-            newReview.append("user_id", loggedAuthorID);
+            newReview.append("user_id", session.getLoggedAuthor().getId());
+            newReview.append("username", session.getLoggedAuthor().getNickname());
         }
         Bson getBook = eq("book_id", book_id);
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
@@ -112,7 +122,6 @@ public class BookManager {
     }
 
     public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
-        // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
@@ -124,7 +133,6 @@ public class BookManager {
     }
 
     public void DeleteReview(String review_id, String book_id) {
-        // TODO aggiornare il rating Book
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         //  Bson getReview = eq("reviews.review_id", review_id);
@@ -132,6 +140,7 @@ public class BookManager {
         Book bookToUpdate = getBookByID(book_id);
         Double newRating = updateRating(bookToUpdate.getReviews());
         UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
+        removeLikeReview(review_id, book_id); // TODO funziona solo per i like miei a mie review, altrimenti non funziona
     }
 
     public Book getBookByID(String book_id) {
@@ -146,13 +155,14 @@ public class BookManager {
 
         for (Document r : reviews) {
                 reviewsList.add(new Review(
-                        new SimpleStringProperty(r.get("date_added").toString()),
-                        new SimpleStringProperty(r.getString("review_id")),
-                        new SimpleStringProperty(r.get("date_updated").toString()),
-                        new SimpleIntegerProperty(r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes")),
-                        new SimpleStringProperty(r.getString("user_id")),
-                        new SimpleStringProperty(r.get("rating").toString()),
-                        new SimpleStringProperty(r.getString("review_text"))
+                        r.getString("username"),
+                        r.get("date_added").toString(),
+                        r.getString("review_id"),
+                        r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                        r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
+                        r.getString("user_id"),
+                        r.get("rating").toString(),
+                        r.getString("review_text")
                 ));
             }
         for (Document a : authors) {
@@ -160,16 +170,16 @@ public class BookManager {
         }
 
         Book outputBook = new Book(
-                book.getString("isbn"),
-                book.getString("language_code"),
-                book.getString("asin"),
+                book.get("isbn") == null ? null : book.getString("isbn"),
+                book.get("language_code")  == null ? null : book.getString("language_code"),
+                book.get("asin") == null ? null : book.getString("asin"),
                 book.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(book.get("average_rating").toString()),
-                book.getString("description").toString(),
-                book.getInteger("num_pages"),
-                book.getString("publication_day").equals("") ? 0 : Integer.valueOf(book.getString("publication_day")),
-                book.getString("publication_month").equals("") ? 0 : Integer.valueOf(book.getString("publication_month")),
-                book.getString("publication_year").equals("") ? 0 : Integer.valueOf(book.getString("publication_year")),
-                book.getString("image_url"),
+                book.get("description") == null ? null : book.getString("description"),
+                book.get("num_pages") == null ? null : book.getInteger("num_pages"),
+                book.get("publication_day") == null ? null : book.getInteger("publication_day"),
+                book.get("publication_month") == null ? null : book.getInteger("publication_month"),
+                book.get("publication_year") == null ? null : book.getInteger("publication_year"),
+                book.get("image_url") == null ? null : book.getString("image_url"),
                 book.getString("book_id"),
                 book.getInteger("ratings_count"),
                 book.getString("title"),
@@ -190,5 +200,55 @@ public class BookManager {
         } else {
             return ratingSum;
         }
+    }
+
+    public void addLikeReview(String reviewID, String book_id) {
+        if (session.getLoggedAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+            DBObject elem = new BasicDBObject("liked_review", reviewID);
+            DBObject insertRevID = new BasicDBObject("$push", elem);
+            authors.updateOne(getAuthor, (Bson) insertRevID);
+            //increment like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", session.getLoggedUser().getId());
+            DBObject elem = new BasicDBObject("liked_review", reviewID);
+            DBObject insertRevID = new BasicDBObject("$push", elem);
+            users.updateOne(getUser, (Bson) insertRevID);
+            //increment like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
+        }
+
+    }
+
+    public void removeLikeReview(String reviewID, String book_id) {
+        if (session.getLoggedAuthor() != null) {
+            MongoCollection<Document> authors = md.getCollection(authorCollection);
+            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+            authors.updateOne(getAuthor, Updates.pull("liked_review", reviewID));
+            //decrement like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
+        } else if (session.getLoggedUser() != null) {
+            MongoCollection<Document> users = md.getCollection(usersCollection);
+            Bson getUser = eq("user_id", session.getLoggedUser().getId());
+            users.updateOne(getUser, Updates.pull("liked_review", reviewID));
+            //increment like review counter
+            MongoCollection<Document> books = md.getCollection(bookCollection);
+            Bson getBook = eq("book_id", book_id);
+            Bson getReview = eq("reviews.review_id", reviewID);
+            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
+        }
+
     }
 }

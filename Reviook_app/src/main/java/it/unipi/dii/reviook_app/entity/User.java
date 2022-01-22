@@ -2,8 +2,9 @@ package it.unipi.dii.reviook_app.entity;
 
 import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.fxml.FXML;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     @FXML
@@ -14,6 +15,8 @@ public class User {
     private String email;
     private String password;
     private Interaction interactions;
+    private ArrayList<String> listReviewID;
+    private Integer follower_count;
     //follower list
     //following list
     //to read list
@@ -21,11 +24,11 @@ public class User {
     //genres list
     //suggested books
     //suggested user
-    private listBooks listBooks;
+    private ListBooks listBooks;
 
     UserManager userManager = new UserManager();
 
-    public User(String id, String name, String surname, String nickname, String email, String password) {
+    public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -33,7 +36,27 @@ public class User {
         this.email = email;
         this.password = password;
         this.interactions = new Interaction();
-        this.listBooks = new listBooks();
+        this.listBooks = new ListBooks();
+        this.listReviewID = listReviewID;
+        this.follower_count = follower_count;
+    }
+
+    public ArrayList<String> getListReviewID() {
+        return listReviewID;
+    }
+
+    public void setListReviewID(ArrayList<String> listReviewID) {
+        this.listReviewID = listReviewID;
+    }
+
+    public void addReviewID(String id) {
+        this.listReviewID.add(id);
+    }
+
+    public void removeReviewID(String id) {
+        this.listReviewID.remove(id);
+        this.listBooks = new ListBooks();
+
     }
 
     public String getId() {
@@ -68,7 +91,7 @@ public class User {
         return interactions;
     }
 
-    public listBooks getBooks() {
+    public ListBooks getBooks() {
         return listBooks;
     }
 
@@ -96,13 +119,14 @@ public class User {
         this.interactions = interactions;
     }
 
-    public void setBooks(listBooks books) {
+    public void setBooks(ListBooks books) {
         this.listBooks = books;
     }
 
     public int getFollowerCount() {
-        List<String> followerList = userManager.loadRelationsFollower("User",this.nickname);
-        return followerList.size();
-    };
+//        List<String> followerList = userManager.loadRelationsFollower("User", this.nickname);
+//        return followerList.size();
+        return this.follower_count;
+    }
 
 }
