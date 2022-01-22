@@ -92,6 +92,7 @@
                         <Font size="16.0" />
                     </font>
                 </Text>
+            <Button fx:id="rankingButton" layoutX="36.0" layoutY="395.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="25.0" prefWidth="135.0" text="Ranking" />
             </children>
         </Pane>
     </left>
