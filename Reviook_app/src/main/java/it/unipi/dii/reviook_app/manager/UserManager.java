@@ -160,7 +160,7 @@ public class UserManager {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.id='" + book_id + "'" +
-                        "CREATE (n)-[:TO_READ]->(nn)");
+                        "MERGE (n)-[:TO_READ]->(nn)");
                 return null;
             });
         }
@@ -173,7 +173,7 @@ public class UserManager {
             session.writeTransaction((TransactionWork<Void>) tx -> {
 
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.id='" + book_id + "'" +
-                        "CREATE (n)-[:READ]->(nn)");
+                        "MERGE (n)-[:READ]->(nn)");
                 return null;
             });
         }
