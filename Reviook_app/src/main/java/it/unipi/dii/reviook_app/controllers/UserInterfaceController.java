@@ -57,6 +57,12 @@ public class UserInterfaceController {
     private HBox Stat1, Stat2, Stat3, Stat4;
 
     @FXML
+    private Text suggestedAuthor1, suggestedAuthor2, suggestedAuthor3, suggestedAuthor4;
+
+    @FXML
+    private Text suggestedUser1, suggestedUser2, suggestedUser3, suggestedUser4;
+
+    @FXML
     private Button rankingButton;
 
     private ArrayList<Genre> analytics;
