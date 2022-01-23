@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -34,8 +35,12 @@ import javafx.util.Callback;
 
 
 public class BookDetailController {
+
     @FXML
     public JFXButton deleteReviewButton;
+
+    @FXML
+    public Button deleteBook;
 
     @FXML
     private ResourceBundle resources;
@@ -249,6 +254,15 @@ public class BookDetailController {
     }
 
     public void setInfoBook(Book bookSelected) {
+
+        deleteBook.setVisible(false);
+        if (session.getLoggedAuthor() != null)
+        {
+            if(BookManager.foundMyBook(bookSelected.getBook_id(),session.getLoggedAuthor().getId()))
+                deleteBook.setVisible(true);
+
+            //se il libro è mio abilito tasto
+        }
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
@@ -278,9 +292,23 @@ public class BookDetailController {
         // BOOK ID
         this.book_id = bookSelected.getBook_id();
     }
+    @FXML
+    void deleteBookFun(ActionEvent event) throws IOException {
+        if (BookManager.deleteBook(book_id)){
+            Parent userInterface;
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            userInterface = (Parent) fxmlLoader.load();
+            Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
+            actual_stage.setScene(new Scene(userInterface));
+            actual_stage.setResizable(false);
+            actual_stage.show();
+        }
+        return;
+    }
 
     @FXML
     void initialize() {
+
         // setListView();
     }
 
