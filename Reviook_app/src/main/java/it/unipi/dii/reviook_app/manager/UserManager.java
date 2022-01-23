@@ -7,10 +7,12 @@ import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import it.unipi.dii.reviook_app.entity.Genre;
+import it.unipi.dii.reviook_app.entity.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
@@ -405,6 +407,44 @@ public class UserManager {
             }
         }
         return topRated;
+    }
+
+    public ArrayList<User> similarUsers(String username,String type){
+        ArrayList<User> suggestion = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = (ArrayList<User>) session.readTransaction((TransactionWork<List<User>>) tx -> {
+                Result result = tx.run("MATCH (u1:" + type + ")-[]-(b:Book)-[]-(u2:User) " +
+                        "WHERE u1.username = '" + username + "' AND u1<>u2" +
+                        "RETURN DISTINCT u2");
+                ArrayList<User> queryResult = new ArrayList<>();
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new User(r.get("u2.id").toString(),r.get("u2.name").toString(),"",r.get("u2.username").toString(),"","",new ArrayList<>(),0));
+                }
+                return queryResult;
+            });
+        }
+        return suggestion;
+    }
+
+     public ArrayList<Author> similarAuthors(String username,String type){
+        ArrayList<Author> suggestion;
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<List<Author>>) tx -> {
+                Result result = tx.run("MATCH (u:" + type + ")-[]-(b:Book)-[]-(a:Author) " +
+                        "WHERE u.username = '" + username + "' AND u<>a" +
+                        "RETURN DISTINCT a");
+                ArrayList<Author> queryResult = new ArrayList<>();
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Author(r.get("a.id").toString(),r.get("a.name").toString(),"",r.get("a.username").toString(),"","",new ArrayList<>(),0));
+                }
+                return queryResult;
+            });
+        }
+        return suggestion;
     }
 
     //==================================================================================================================
