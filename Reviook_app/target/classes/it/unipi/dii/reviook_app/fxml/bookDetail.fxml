@@ -87,12 +87,13 @@
                         </VBox>
                         <JFXButton layoutX="191.0" layoutY="795.0" mnemonicParsing="false" text="HOME">
                             <graphic>
-                                <FontAwesomeIconView glyphName="HOME" />
+                                <FontAwesomeIconView glyphName="HOME"/>
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="795.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
+                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="795.0" mnemonicParsing="false"
+                                   onAction="#searchInterface" text="SEARCH">
                             <graphic>
-                                <FontAwesomeIconView glyphName="SEARCH" />
+                                <FontAwesomeIconView glyphName="SEARCH"/>
                             </graphic>
                         </JFXButton>
                     </children>
