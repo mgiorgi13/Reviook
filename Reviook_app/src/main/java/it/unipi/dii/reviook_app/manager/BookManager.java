@@ -10,6 +10,7 @@ import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import it.unipi.dii.reviook_app.entity.User;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
@@ -38,6 +39,7 @@ public class BookManager {
     private static MongoDriver md;
     private static Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
+    private UserManager userManager;
 
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
@@ -46,6 +48,7 @@ public class BookManager {
     public BookManager() {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
+        this.userManager = new UserManager();
     }
 
 
@@ -115,9 +118,13 @@ public class BookManager {
         if (session.getLoggedUser() != null) {
             newReview.append("user_id", session.getLoggedUser().getId());
             newReview.append("username", session.getLoggedUser().getNickname());
+            //add that book to read list
+            userManager.readAdd("User",session.getLoggedUser().getNickname(),book_id);
         } else {
             newReview.append("user_id", session.getLoggedAuthor().getId());
             newReview.append("username", session.getLoggedAuthor().getNickname());
+            //add that book to read list
+            userManager.readAdd("Author",session.getLoggedAuthor().getNickname(),book_id);
         }
         Bson getBook = eq("book_id", book_id);
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));

@@ -70,7 +70,7 @@ public class BookDetailController {
     private Text bookCategories;
 
     @FXML
-    private Text bookDescription;
+    private Text bookDescription, isbnKey,isbnValue,dataPubblication,languageCode,totalPage;
 
     @FXML
     private Text bookTitle;
@@ -254,7 +254,35 @@ public class BookDetailController {
     }
 
     public void setInfoBook(Book bookSelected) {
+        String isbn;
 
+        if (bookSelected.getIsbn()!=null) {
+            isbnKey.setText("ISBN");
+            isbnValue.setText(bookSelected.getIsbn());
+        }else if (bookSelected.getAsin()!=null)
+        {
+            isbnKey.setText("ASIN");
+            isbnValue.setText(bookSelected.getAsin());
+        }
+        else isbnValue.setText("???");
+        if (bookSelected.getNum_pages()!=null) {
+            totalPage.setText(String.valueOf(bookSelected.getNum_pages()));
+        }else totalPage.setText("???");
+        if (bookSelected.getPublication_month()!=null && bookSelected.getPublication_day()!=null && bookSelected.getPublication_year()!=null) {
+            dataPubblication.setText(String.valueOf(bookSelected.getPublication_day())+"/"+String.valueOf(bookSelected.getPublication_month())+"/"+String.valueOf(bookSelected.getPublication_year()));
+        }else dataPubblication.setText("???");
+        if (bookSelected.getLanguage_code()!=null) {
+            languageCode.setText(String.valueOf(bookSelected.getLanguage_code()));
+        }else languageCode.setText("???");
+
+
+//        System.out.println(bookSelected.getAsin());
+//        System.out.println(bookSelected.getIsbn());
+//        System.out.println(bookSelected.getNum_pages());
+//        System.out.println(bookSelected.getPublication_day());
+//        System.out.println(bookSelected.getPublication_month());
+//        System.out.println(bookSelected.getPublication_year());
+//        System.out.println(bookSelected.getLanguage_code());
         deleteBook.setVisible(false);
         if (session.getLoggedAuthor() != null)
         {
