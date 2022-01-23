@@ -77,11 +77,14 @@ public class LoginController {
         password = passwordField.getText();
 
         // TODO modificare caso in cui si è ADMIN per ora mockato
-        if (username.equals("admin") && password.equals("root")){
-           Parent    admin = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
-
+        if (username.equals("admin") && password.equals("root")) {
+            Parent admin = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
+            Stage actual_stage = (Stage) loginButton.getScene().getWindow();
+            actual_stage.setScene(new Scene(admin));
+            actual_stage.setResizable(false);
+            actual_stage.show();
+            return;
         }
-
         if (usernameLogin.getText().isEmpty() || passwordField.getText().isEmpty()) {
             actiontarget.setText("You must fill in all fields");
             return;
@@ -91,7 +94,6 @@ public class LoginController {
             return;
         }
         Parent user_scene;
-
         if (session.getIsAuthor() == null) {
             return;
         }
@@ -111,7 +113,7 @@ public class LoginController {
                 session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
             }
         }
-        
+
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);

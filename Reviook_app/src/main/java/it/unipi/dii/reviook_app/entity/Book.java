@@ -40,16 +40,13 @@ public class Book {
         this.reviews = reviews;
     }
 
-    public Book(String id, String title,String isbn,String description,ArrayList<String> genres, ArrayList<String> authors){
-        this(isbn, "", "", 0.0, description, 0, 0, 0, 0, "", id , 0, title, authors, genres , new ArrayList());
+    public Book(String id, String title, String isbn, String description, ArrayList<String> genres, ArrayList<String> authors) {
+        this(isbn, "", "", 0.0, description, 0, 0, 0, 0, "", id, 0, title, authors, genres, new ArrayList());
     }
 
-    public Book(String title,String book_id)
-    {
-        this( "", "", "", 0.0, "", 0, 0, 0, 0, "",  book_id, 0, title, new ArrayList(), new ArrayList() , new ArrayList());
-
+    public Book(String title, String book_id) {
+        this("", "", "", 0.0, "", 0, 0, 0, 0, "", book_id, 0, title, new ArrayList(), new ArrayList(), new ArrayList());
     }
-
 
     public String getIsbn() {
         return isbn;
