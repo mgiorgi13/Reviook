@@ -15,11 +15,14 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
+
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+
 import static com.mongodb.client.model.Filters.*;
 import static org.neo4j.driver.Values.parameters;
 
@@ -48,7 +51,8 @@ public class BookManager {
         return false;
     }
 
-    public void addBook(String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
+
+    public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date,String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -56,22 +60,22 @@ public class BookManager {
         //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
         ArrayList<String> reviews = new ArrayList<String>();
-        Document doc = new Document("image_url", "")
-                .append("num_pages", 0)
+        Document doc = new Document("asin", "")
+                .append("language_code", languageCode)
                 .append("isbn", ISBN)
                 .append("description", Description)
-                .append("average_rating", "")
+                .append("num_pages", num_pages)
+                .append("publication_day", date.getDayOfMonth())
+                .append("publication_month", date.getMonthValue())
+                .append("publication_year", date.getYear())
+                .append("image_url", URL_image)
                 .append("book_id", id)
                 .append("title", title)
-                .append("language_code", "")
-                .append("publication_month", calendar.get(Calendar.MONTH))
-                .append("publication_year", calendar.get(Calendar.YEAR))
-                .append("reviews", reviews)
+                .append("average_rating", 0.0)
+                .append("ratings_count", 0)
                 .append("genres", Genre)
-                .append("asin", "")
-                .append("publication_day", calendar.get(Calendar.DAY_OF_MONTH))
-                .append("ratings_count", 0.0)
-                .append("authors", UsernameTagged);
+                .append("authors", UsernameTagged)
+                .append("reviews", reviews);
 
         md.getCollection(bookCollection).insertOne(doc);
 

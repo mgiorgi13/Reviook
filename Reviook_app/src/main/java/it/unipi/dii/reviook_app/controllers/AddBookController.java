@@ -1,6 +1,7 @@
 package it.unipi.dii.reviook_app.controllers;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -46,7 +48,7 @@ public class AddBookController {
     private JFXListView<String> listTagged;
 
     @FXML
-    private TextField authorTag, titleBook, ISBN;
+    private TextField authorTag, titleBook, ISBN, numPage, URLImage;
 
     @FXML
     private TextArea description;
@@ -54,10 +56,18 @@ public class AddBookController {
     @FXML
     private Text actiontarget;
 
+    @FXML
+    private ChoiceBox languageCode;
+
+    @FXML
+    private DatePicker publication_date;
+
+
     private Session session = Session.getInstance();
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
     private BookManager bookManager = new BookManager();
+    private ObservableList<String> availableChoices = FXCollections.observableArrayList();
 
     @FXML
     int contatoreUsername = 0;
@@ -200,6 +210,12 @@ public class AddBookController {
         actual_stage.show();
     }
 
+    @FXML
+    void initialize() {
+        availableChoices.addAll(searchManager.searchlanguageCode());
+        languageCode.setItems(availableChoices);
+
+    }
     public void addBookFunction() throws IOException {
         if (titleBook.getText().isEmpty())
         {
@@ -216,9 +232,14 @@ public class AddBookController {
             actiontarget.setText("You must enter the Genres");
             return;
         }
-
         String Title = titleBook.getText();
+
+        LocalDate date = publication_date.getValue();
+
+        String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String ISBN_ = ISBN.getText();
+        String URL_image = URLImage.getText();
+        Integer num_pages = Integer.parseInt(numPage.getText()) ;
         String Description = description.getText();
         ArrayList<String> Genre=new ArrayList<String>((ObservableList)genreTag.getItems());
         ArrayList<String> UsernameTagged=new ArrayList<String>((ObservableList)listTagged.getItems());
@@ -236,8 +257,8 @@ public class AddBookController {
         String concat = ISBN_ + Title + UsernameTagged;
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
 
-        bookManager.addBook(id,  Title,  ISBN_,  Description,  Genre, param);
-        session.getLoggedAuthor().setWrittenBook(new Book(id,  Title,  ISBN_,  Description,  Genre, UsernameTagged));
+        bookManager.addBook( num_pages, URL_image, selectedChoice, date,id,  Title,  ISBN_,  Description,  Genre, param);
+        session.getLoggedAuthor().setWrittenBook(new Book(num_pages,URL_image,selectedChoice,date,id,  Title,  ISBN_,  Description,  Genre, UsernameTagged));
         for (int i= 0; i< Genre.size(); i++)
             session.getLoggedAuthor().setWrittenBookStatistic(Genre.get(i));
         actiontarget.setText("Congratulations you added a book!!");
@@ -250,4 +271,7 @@ public class AddBookController {
         listTagged.getItems().clear();
         backFunction();
     }
+
+    
+
 }
