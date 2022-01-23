@@ -15,7 +15,7 @@
         <JFXCheckBox fx:id="authorOption" layoutX="65.0" layoutY="71.0" onAction="#selectAuthorCheckAction" text="Authors" />
         <JFXButton fx:id="searchButton" layoutX="184.0" layoutY="68.0" onAction="#searchAction" text="SEARCH" />
         <JFXButton fx:id="deleteButtonList" layoutX="394.0" layoutY="782.0" onAction="#deleteListElem" text="DELETE" />
-        <JFXListView fx:id="reviewsListView" layoutX="725.0" layoutY="354.0" prefHeight="411.0" prefWidth="608.0" />
+        <JFXListView fx:id="reviewsListView" layoutX="725.0" layoutY="390.0" prefHeight="375.0" prefWidth="608.0" />
         <Text layoutX="658.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="ADMIN" textAlignment="CENTER">
             <font>
                 <Font size="19.0" />
@@ -25,7 +25,7 @@
         <Text layoutX="748.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name/Title:" />
         <Text layoutX="750.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories:" />
         <Text layoutX="749.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:" />
-        <Text layoutX="750.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews" />
+        <Text layoutX="752.0" layoutY="375.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews" />
         <JFXButton fx:id="deleteReviewButton" layoutX="1070.0" layoutY="782.0" onAction="#deleteReviewAction" text="DELETE" />
         <Text layoutX="748.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
         <Text layoutX="750.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Follower:" />
@@ -38,9 +38,9 @@
         <Text fx:id="categories" layoutX="828.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
         <Text fx:id="rating" layoutX="827.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
         <Text fx:id="follower" layoutX="829.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
-      <ScrollPane layoutX="820.0" layoutY="236.0" prefHeight="91.0" prefWidth="513.0">
+      <ScrollPane layoutX="820.0" layoutY="236.0" prefHeight="117.0" prefWidth="513.0">
          <content>
-            <Text fx:id="description" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="495.13671875" />
+            <Text fx:id="description" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="495.13671875" />
          </content>
       </ScrollPane>
     </children>

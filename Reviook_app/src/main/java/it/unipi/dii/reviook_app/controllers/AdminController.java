@@ -40,6 +40,7 @@ import javafx.util.Callback;
 
 public class AdminController {
     @FXML
+
     private ResourceBundle resources;
 
     @FXML
@@ -119,21 +120,11 @@ public class AdminController {
             Book selectedBook = (Book) bookList.getSelectionModel().getSelectedItem();
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-            System.out.println(selectedUser.toString());
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-            System.out.println(selectedAuthor.toString());
         }
     }
-
-    void loadReviewList() {
-        this.reviewsListView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
-            @Override
-            public ListCell<Review> call(ListView<Review> listView) {
-                return new ListReview();
-            }
-        });
-    }
+    
 
     @FXML
     void deleteReviewAction(ActionEvent event) {
@@ -144,9 +135,7 @@ public class AdminController {
             ObservableList<Review> obsListReview = FXCollections.observableArrayList();
             obsListReview.setAll(book.getReviews());
             this.reviewsListView.getItems().clear();
-            loadReviewList();
             this.reviewsListView.setItems(obsListReview);
-
         }
     }
 
@@ -211,7 +200,12 @@ public class AdminController {
                         obsListReview.setAll(selectedBook.getReviews());
                         reviewsListView.getItems().clear();
                         reviewsListView.setItems(obsListReview);
-                        loadReviewList();
+                        reviewsListView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
+                            @Override
+                            public ListCell<Review> call(ListView<Review> listView) {
+                                return new ListReview();
+                            }
+                        });
                     }
                 }
             });
