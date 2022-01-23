@@ -67,7 +67,6 @@ public class UserManager {
         boolean result = false;
         String username;
         String type = this.session.getIsAuthor() ? "Author" : "User";
-
         if (this.session.getIsAuthor())
             username = this.session.getLoggedAuthor().getNickname();
         else
@@ -89,6 +88,7 @@ public class UserManager {
                 return null;
             });
         }
+        incrementFollowerCount(username2);
     }
 
     public void deleteFollowing(String username1, String type1, String username2, String type2) {
@@ -100,6 +100,7 @@ public class UserManager {
                 return null;
             });
         }
+        decrementFollowerCount(username2);
     }
 
     public ArrayList<Book> loadRelationsBook(String type, String username, String read) {

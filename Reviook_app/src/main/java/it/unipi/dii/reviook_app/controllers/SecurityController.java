@@ -43,7 +43,6 @@ public class SecurityController {
             session.setSession(null);
             session.setCurrentLoggedUser(null);
             session.setCurrentLoggedAuthor(null);
-
             Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
             Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
             actual_stage.setScene(new Scene(login));

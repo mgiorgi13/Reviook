@@ -76,7 +76,6 @@ public class UserInterfaceController {
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
-
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().setFollow(usernameUser.getText());
@@ -165,10 +164,8 @@ public class UserInterfaceController {
         }
     }
 
-
     public void setNickname(String nickname) {
         //TODO caricaListeLibri()
-
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
@@ -207,7 +204,6 @@ public class UserInterfaceController {
             }
         }
     }
-
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {

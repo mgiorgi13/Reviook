@@ -124,9 +124,23 @@ public class User {
     }
 
     public int getFollowerCount() {
-//        List<String> followerList = userManager.loadRelationsFollower("User", this.nickname);
-//        return followerList.size();
         return this.follower_count;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", interactions=" + interactions +
+                ", listReviewID=" + listReviewID +
+                ", follower_count=" + follower_count +
+                ", listBooks=" + listBooks +
+                ", userManager=" + userManager +
+                '}';
+    }
 }

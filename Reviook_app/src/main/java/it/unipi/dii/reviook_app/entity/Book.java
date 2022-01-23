@@ -41,9 +41,9 @@ public class Book {
         this.reviews = reviews;
     }
 
-    public Book(Integer num_pages,String URL_image,String selectedChoice,LocalDate date,String id, String title, String isbn, String description, ArrayList<String> genres, ArrayList<String> authors){
+    public Book(Integer num_pages, String URL_image, String selectedChoice, LocalDate date, String id, String title, String isbn, String description, ArrayList<String> genres, ArrayList<String> authors) {
 
-        this(isbn, selectedChoice, "", 0.0, description, num_pages, date.getDayOfMonth(), date.getMonthValue(), date.getYear(), URL_image, id , 0, title, authors, genres , new ArrayList());
+        this(isbn, selectedChoice, "", 0.0, description, num_pages, date.getDayOfMonth(), date.getMonthValue(), date.getYear(), URL_image, id, 0, title, authors, genres, new ArrayList());
     }
 
     public Book(String title, String book_id) {
@@ -83,7 +83,7 @@ public class Book {
     }
 
     public String getDescription() {
-        return description;
+        return this.description != null ? this.description : "-";
     }
 
     public void setDescription(String description) {

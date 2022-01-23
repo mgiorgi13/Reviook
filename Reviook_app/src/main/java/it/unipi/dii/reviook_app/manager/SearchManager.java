@@ -79,7 +79,7 @@ public class SearchManager {
             }
             result = (new Book(
                     document.get("isbn") == null ? null : document.getString("isbn"),
-                    document.get("language_code")  == null ? null : document.getString("language_code"),
+                    document.get("language_code") == null ? null : document.getString("language_code"),
                     document.get("asin") == null ? null : document.getString("asin"),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description") == null ? null : document.getString("description"),
@@ -171,7 +171,7 @@ public class SearchManager {
 
             result.add(new Book(
                     document.get("isbn") == null ? null : document.getString("isbn"),
-                    document.get("language_code")  == null ? null : document.getString("language_code"),
+                    document.get("language_code") == null ? null : document.getString("language_code"),
                     document.get("asin") == null ? null : document.getString("asin"),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description") == null ? null : document.getString("description"),
@@ -192,7 +192,6 @@ public class SearchManager {
 
         return result;
     }
-//    df435fcc-6142-4242-9aa5-e39fc24db304  e020fec3-e9ba-457f-ac6f-5951b4494a85
 
     public ArrayList<String> searchBooksAuthor(String author_id) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
@@ -247,7 +246,6 @@ public class SearchManager {
             ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
             result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
         }
-
         //search on name or surname
         if (!Username.equals("")) {
             queryResults = user.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
@@ -279,7 +277,6 @@ public class SearchManager {
             queryResults = author.find(eq("username", Username)).into(new ArrayList());
         }
         ArrayList<Author> result = new ArrayList<>();
-
         for (Document r : queryResults) {
             ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
             result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
@@ -303,74 +300,50 @@ public class SearchManager {
         MongoCollection<Document> genres = md.getCollection(genreCollection);
         MongoCursor<Document> cursor;
         ArrayList<Genre> result = new ArrayList<>();
-
         cursor = genres.find().iterator();
-
         while (cursor.hasNext()) {
             result.add(new Genre(cursor.next().getString("_id")));
         }
-
         return result;
     }
+
     public ArrayList<String> searchlanguageCode() {
         MongoCollection<Document> languageCode = md.getCollection(bookCollection);
-
         ArrayList<String> result = new ArrayList<>();
-
-
         Bson group = group("$language_code", sum("counter", 1));
-
-
-
         try (MongoCursor<Document> cursor = languageCode.aggregate(Arrays.asList(group)).iterator();) {
-
-
             while (cursor.hasNext()) {
                 result.add(cursor.next().getString("_id"));
-
             }
         }
-
         return result;
     }
-    public JSONArray searchRankBook(Integer year){
-        Date dt=new Date();
 
+    public JSONArray searchRankBook(Integer year) {
+        Date dt = new Date();
         MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<Book> total_years = new ArrayList<>();
-
         JSONArray genre = new JSONArray();
         Bson match = match(in("publication_year", year));
         Bson unwind = unwind("$genres");
         Bson group = group("$genres", sum("counter", 1));
-
-
-
-        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match,unwind, group)).iterator();) {
-
+        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match, unwind, group)).iterator();) {
             while (result.hasNext()) {
                 Document y = result.next();
-                total_years.add(new Book("",""));
+                total_years.add(new Book("", ""));
                 genre.put(y.getString("_id"));
                 genre.put(y.getInteger("counter"));
-
             }
-
-
-            System.out.println(genre.length());
+//            System.out.println(genre.length());
         }
 
         return genre;
     }
 
-    public ArrayList<RankingObject> rankReview()
-    {
+    public ArrayList<RankingObject> rankReview() {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         ArrayList<RankingObject> array = new ArrayList<>();
-
-
-
         try (MongoCursor<Document> result = book.aggregate(Arrays.asList(new Document("$unwind",
                         new Document("path", "$reviews")
                                 .append("includeArrayIndex", "string")
@@ -404,20 +377,14 @@ public class SearchManager {
 
     }
 
-    public ArrayList<String> searchYears(){
-
+    public ArrayList<String> searchYears() {
         MongoCollection<Document> years = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<String> total_years = new ArrayList<>();
-
-
-        Bson match = match(and(gte("publication_year", 1900),lte("publication_year", 2022)));
+        Bson match = match(and(gte("publication_year", 1900), lte("publication_year", 2022)));
         Bson group = group("$publication_year");
         Bson sort = sort(orderBy(descending("_id")));
-
-
         try (MongoCursor<Document> result = years.aggregate(Arrays.asList(match, group, sort)).iterator();) {
-
             while (result.hasNext()) {
                 Document y = result.next();
                 total_years.add(String.valueOf(y.getInteger("_id")));
