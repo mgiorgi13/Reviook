@@ -3,12 +3,15 @@ package it.unipi.dii.reviook_app.controllers;
 import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -44,6 +47,9 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+    @FXML
+    private ChoiceBox loginType;
+
     private UserManager userManager = new UserManager();
 
     private Session session = Session.getInstance();
@@ -51,10 +57,10 @@ public class LoginController {
     public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
         MessageDigest md;
         String pswHash;
-        int result = userManager.verifyUsername(username, "author", true);
-        if(result == -1)
+        int result = userManager.verifyUsername(username, loginType.getSelectionModel().getSelectedItem().toString(), true);
+        if (result == -1)
             return false;
-        if(result != 2)
+        if (result != 2)
             session.setIsAuthor(result == 1 ? true : false);
 
         //Hashing control
@@ -62,8 +68,8 @@ public class LoginController {
         md.update(password.getBytes());
         byte[] digest = md.digest();
         pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        Boolean c = userManager.verifyPassword(session.getIsAuthor(), username, pswHash);
-        if (!userManager.verifyPassword(session.getIsAuthor(), username, pswHash))
+        Boolean c = userManager.verifyPassword(loginType.getSelectionModel().getSelectedItem().toString(), username, pswHash);
+        if (!userManager.verifyPassword(loginType.getSelectionModel().getSelectedItem().toString(), username, pswHash))
             return false;
 
         return true;
@@ -76,16 +82,7 @@ public class LoginController {
         username = usernameLogin.getText();
         password = passwordField.getText();
 
-        // TODO modificare caso in cui si è ADMIN per ora mockato
-        if (username.equals("admin") && password.equals("root")) {
-            Parent admin = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
-            Stage actual_stage = (Stage) loginButton.getScene().getWindow();
-            actual_stage.setScene(new Scene(admin));
-            actual_stage.setResizable(false);
-            actual_stage.show();
-            return;
-        }
-        if (usernameLogin.getText().isEmpty() || passwordField.getText().isEmpty()) {
+        if (usernameLogin.getText().isEmpty() || passwordField.getText().isEmpty() || loginType.getSelectionModel().getSelectedItem() == null) {
             actiontarget.setText("You must fill in all fields");
             return;
         }
@@ -94,25 +91,31 @@ public class LoginController {
             return;
         }
         Parent user_scene;
-        if (session.getIsAuthor() == null) {
-            return;
+
+
+        if (loginType.getSelectionModel().getSelectedItem().toString().equals("admin")) {
+            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
+        } else {
+            if (session.getIsAuthor()) {
+                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            } else {
+                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                List<String> Follow = userManager.loadRelations("User", username);
+                session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
+                for (int i = 0; i < Follow.size(); i++) {
+                    session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
+                }
+                List<String> Follower = userManager.loadRelationsFollower("User", username);
+                session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
+                for (int i = 0; i < Follower.size(); i++) {
+                    session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
+                }
+            }
         }
 
-        if (session.getIsAuthor()) {
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-        } else {
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-            List<String> Follow = userManager.loadRelations("User", username);
-            session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
-            for (int i = 0; i < Follow.size(); i++) {
-                session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
-            }
-            List<String> Follower = userManager.loadRelationsFollower("User", username);
-            session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
-            for (int i = 0; i < Follower.size(); i++) {
-                session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
-            }
-        }
+        /*if (session.getIsAuthor() == null) {
+            return;
+        }*/
 
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
@@ -131,5 +134,10 @@ public class LoginController {
         actual_stage.setScene(new Scene(register_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
+    }
+
+    @FXML
+    void initialize() {
+        loginType.setItems(FXCollections.observableArrayList("user", "author", "admin"));
     }
 }

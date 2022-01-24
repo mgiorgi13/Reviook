@@ -44,7 +44,7 @@ public class UserManager {
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
-     private static final String adminsCollection = "admins";
+    private static final String adminsCollection = "admins";
     private static final String genreCollection = "genres";
 
     public UserManager() {
@@ -217,13 +217,13 @@ public class UserManager {
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
 
-        if(type.equals("admin")){
+        if (type.equals("admin")) {
             try (MongoCursor<Document> cursor = admins.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     return 2;
                 }
             }
-        }else if(type.equals("author")){
+        } else if (type.equals("author")) {
             try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
@@ -234,7 +234,7 @@ public class UserManager {
                     return 1;
                 }
             }
-        }else{
+        } else {
             try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
@@ -250,9 +250,9 @@ public class UserManager {
         return -1;
     }
 
-    public boolean verifyPassword(boolean type, String Username, String Password) {
-        MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);
-        try (MongoCursor<Document> cursor = users.find(and(eq("username", Username), eq("password", Password))).iterator()) {
+    public boolean verifyPassword(String loginType, String Username, String Password) {
+        MongoCollection<Document> collection = md.getCollection(loginType.equals("author") ? authorCollection : loginType.equals("user") ? usersCollection : adminsCollection);
+        try (MongoCursor<Document> cursor = collection.find(and(eq("username", Username), eq("password", Password))).iterator()) {
             while (cursor.hasNext()) {
                 return true;
             }
@@ -354,24 +354,24 @@ public class UserManager {
 
     //ANALYTICS ==========================================================================================================
 
-    public ArrayList<Genre> averageRatingCategoryAuthor(String username){
+    public ArrayList<Genre> averageRatingCategoryAuthor(String username) {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         MongoCollection<Document> books = md.getCollection(bookCollection);
         String author_id = null;
-        ArrayList<Genre> topRated= new ArrayList<>();
+        ArrayList<Genre> topRated = new ArrayList<>();
         Bson getAuthor;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
         //get id of the author using the username
-        try (MongoCursor<Document> cursor = author.find(eq ("username",username)).iterator()) {
+        try (MongoCursor<Document> cursor = author.find(eq("username", username)).iterator()) {
             while (cursor.hasNext()) {
                 author_id = cursor.next().getString("author_id");
             }
         }
-        if(author_id == null)
+        if (author_id == null)
             return null;
-        getAuthor = match(eq("authors.author_id",author_id));
+        getAuthor = match(eq("authors.author_id", author_id));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$average_rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
@@ -380,22 +380,22 @@ public class UserManager {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
 
-                Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
+                Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
         }
         return topRated;
     }
 
-    public ArrayList<Genre> averageRatingCategoryUser(String username){
+    public ArrayList<Genre> averageRatingCategoryUser(String username) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        ArrayList<Genre> topRated= new ArrayList<>();
+        ArrayList<Genre> topRated = new ArrayList<>();
         Bson getUser;
         Bson unwindReviews;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-        getUser = match(eq("reviews.username",username));
+        getUser = match(eq("reviews.username", username));
         unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$reviews.rating"));
@@ -404,14 +404,14 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
-                Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
+                Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
         }
         return topRated;
     }
 
-    public ArrayList<User> similarUsers(String username,String type){
+    public ArrayList<User> similarUsers(String username, String type) {
         ArrayList<User> suggestion = new ArrayList<>();
         ArrayList<User> queryResult = new ArrayList<>();
 
@@ -422,7 +422,7 @@ public class UserManager {
                         "RETURN DISTINCT u2.id,u2.name,u2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new User(r.get("u2.id").asString(),r.get("u2.name").asString(),"",r.get("u2.username").asString(),"","",new ArrayList<>(),0));
+                    queryResult.add(new User(r.get("u2.id").asString(), r.get("u2.name").asString(), "", r.get("u2.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });
@@ -430,7 +430,7 @@ public class UserManager {
         return suggestion;
     }
 
-     public ArrayList<Author> similarAuthors(String username,String type){
+    public ArrayList<Author> similarAuthors(String username, String type) {
         ArrayList<Author> suggestion;
         ArrayList<Author> queryResult = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
@@ -440,7 +440,7 @@ public class UserManager {
                         "RETURN DISTINCT a.id,a.name,a.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Author(r.get("a.id").asString(),r.get("a.name").asString(),"",r.get("a.username").asString(),"","",new ArrayList<>(),0));
+                    queryResult.add(new Author(r.get("a.id").asString(), r.get("a.name").asString(), "", r.get("a.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });

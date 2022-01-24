@@ -612,6 +612,7 @@ public class AuthorInterfaceController {
             }
         });
     }
+
     @FXML
     void selectRanking(ActionEvent event) throws IOException {
         Parent homeInterface;
