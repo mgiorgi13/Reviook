@@ -4,16 +4,18 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import it.unipi.dii.reviook_app.entity.User;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
@@ -24,13 +26,17 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Projections.exclude;
 import static org.neo4j.driver.Values.parameters;
 
 
 public class BookManager {
-    private MongoDriver md;
-    private Neo4jDriver nd;
+    private static MongoDriver md;
+    private static Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
     private UserManager userManager;
 
@@ -43,6 +49,7 @@ public class BookManager {
         this.nd = Neo4jDriver.getInstance();
         this.userManager = new UserManager();
     }
+
 
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
@@ -258,4 +265,87 @@ public class BookManager {
         }
 
     }
+    public static boolean foundMyBook(String id_book, String id_author){
+
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+
+        Bson match = match(in("book_id", id_book));
+        Bson project = project(fields(include("authors.author_id")));
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match, project)).iterator();) {
+            if (result.hasNext())
+            {
+                ArrayList<Document> myAuthor = (ArrayList<Document>) result.next().get("authors");
+                for (int i =0;i < myAuthor.size();i++) {
+                    if (myAuthor.get(i).getString("author_id").equals(id_author))
+                        return true;
+                }
+
+            }
+
+        }
+
+
+        return false;
+    }
+
+    public static boolean deleteBook(String book_id){
+        MongoCollection<Document> user = md.getCollection(bookCollection);
+        DeleteResult deleteResult = user.deleteOne(eq("book_id", book_id));
+        if (deleteResult.getDeletedCount() == 1){
+            try (Session session = nd.getDriver().session()) {
+                    session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                    tx.run("MATCH (n : Book { id: '" + book_id + "'}) DETACH DELETE n");
+                    return true;
+                });
+            }
+            return true;
+        }
+        return false;
+    }
+
+    //ANALYTICS ==========================================================================================================
+
+    public ArrayList<Book> similarBooks(String book_id){
+        ArrayList<Book> suggestion = new ArrayList<>();
+        ArrayList<Book> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
+                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a:Author)-[]->(b2:Book) " +
+                        "WHERE b1.id = '" + book_id + "' AND b1<>b2 " +
+                        "RETURN DISTINCT b2.book_id,b2.title");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Book(r.get("b2.title").asString(),r.get("b2.book_id").asString()));
+                }
+                return queryResult;
+            });
+        }
+        System.out.println(suggestion);
+        return suggestion;
+    }
+
+     public ArrayList<Author> similarAuthors(String book_id){
+        ArrayList<Author> suggestion;
+        ArrayList<Author> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
+                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a1:Author)-[]->(b2:Book)<-[:WROTE]-(a2:Author) " +
+                       "WHERE b1.id = '" + book_id + "' AND b1<>b2 AND a1<>a2 " +
+                        "RETURN DISTINCT a2.id,a2.name,a2.username");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Author(r.get("a2.id").asString(),r.get("a2.name").asString(),"",r.get("a2.username").asString(),"","",new ArrayList<>(),0));
+                }
+                return queryResult;
+            });
+        }
+        System.out.println(suggestion);
+        return suggestion;
+    }
+
+    //==================================================================================================================
+
 }

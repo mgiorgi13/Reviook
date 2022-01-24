@@ -127,7 +127,7 @@ public class SearchManager {
             cursor = books.find().iterator();
             //search by title
         else if (titleSearch && !genresSearch) {
-            titleFilter = text(searchField, new TextSearchOptions().caseSensitive(false));
+            titleFilter = text("\"" + searchField + "\"" , new TextSearchOptions().caseSensitive(false));
             cursor = books.find(titleFilter).iterator();
         }
         //search by genre
@@ -193,44 +193,6 @@ public class SearchManager {
         return result;
     }
 
-    public ArrayList<String> searchBooksAuthor(String author_id) {
-        MongoCollection<Document> book = md.getCollection(bookCollection);
-        List<Document> queryResults;
-        if (author_id.equals(""))
-            queryResults = book.find().into(new ArrayList());
-        else
-            queryResults = book.find(in("authors.author_id", author_id)).into(new ArrayList());
-        ArrayList<String> result = new ArrayList<>();
-
-        for (Document r :
-                queryResults) {
-            result.add(r.getString("title"));
-        }
-        return result;
-    }
-
-    public ArrayList<String> searchStatisticBooks(String Username) {
-        MongoCollection<Document> book = md.getCollection(bookCollection);
-        String queryResults;
-        ArrayList<String> Genres = new ArrayList<String>();
-
-        Bson match = match(in("author", Username));
-        Bson unwind = unwind("$genres");
-        Bson group = group("$genres", sum("counter", 1));
-        Bson project = project(fields(computed("genre", "$_id"), include("counter"), exclude("_id")));
-
-
-        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match, unwind, group, project)).iterator();) {
-
-            while (result.hasNext()) {
-                Document genre = result.next();
-                Genres.add(genre.getString("genre") + ":" + genre.getInteger("counter"));
-            }
-        }
-        return Genres;
-
-    }
-
     public ArrayList<User> searchUser(String Username) {
         MongoCollection<Document> user = md.getCollection(usersCollection);
         List<Document> queryResults;
@@ -248,16 +210,10 @@ public class SearchManager {
         }
         //search on name or surname
         if (!Username.equals("")) {
-            queryResults = user.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+            queryResults = user.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
             User us;
             for (Document r : queryResults) {
-                ArrayList<String> listReviewID = new ArrayList<>();
-                ArrayList<Document> list = (ArrayList<Document>) r.get("liked_review");
-                if (list != null) {
-                    for (Document elem : list) {
-                        listReviewID.add(elem.toString());
-                    }
-                }
+                ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
                 us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
                 if (!result.contains(us))
                     result.add(us);
@@ -284,7 +240,7 @@ public class SearchManager {
 
         if (!Username.equals("")) {
             //search on name or surname
-            queryResults = author.find(text(Username, new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+            queryResults = author.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
             Author auth;
             for (Document r : queryResults) {
                 ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
@@ -307,7 +263,7 @@ public class SearchManager {
         return result;
     }
 
-    public ArrayList<String> searchlanguageCode() {
+    public ArrayList<String> searchLanguageCode() {
         MongoCollection<Document> languageCode = md.getCollection(bookCollection);
         ArrayList<String> result = new ArrayList<>();
         Bson group = group("$language_code", sum("counter", 1));
@@ -324,6 +280,7 @@ public class SearchManager {
         MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<Book> total_years = new ArrayList<>();
+
         JSONArray genre = new JSONArray();
         Bson match = match(in("publication_year", year));
         Bson unwind = unwind("$genres");
