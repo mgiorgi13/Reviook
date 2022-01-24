@@ -135,6 +135,13 @@ public class AuthorInterfaceController {
         }
     }
 
+    private String truckString(String input) {
+        if (input.length() > 14) {
+            return input.substring(0, 14);
+        }
+        return input;
+    }
+
     private void viewBookAnalytic(){
         Double previousValue = -1.0;
         String newGenre = "";
@@ -171,22 +178,22 @@ public class AuthorInterfaceController {
         if(size >= 1){
             Stat1.setVisible(true);
             bookCatText1.setText(genresReformatted.get(0).getType());
-            bookCatValue1.setText(genresReformatted.get(0).getValue().toString().substring(0,20));
+            bookCatValue1.setText(genresReformatted.get(0).getValue().toString());
         }
         if(size >= 2){
             Stat2.setVisible(true);
             bookCatText2.setText(genresReformatted.get(1).getType());
-            bookCatValue2.setText(genresReformatted.get(1).getValue().toString().substring(0,20));
+            bookCatValue2.setText(genresReformatted.get(1).getValue().toString());
         }
         if(size >= 3){
             Stat3.setVisible(true);
             bookCatText3.setText(genresReformatted.get(2).getType());
-            bookCatValue3.setText(genresReformatted.get(2).getValue().toString().substring(0,20));
+            bookCatValue3.setText(genresReformatted.get(2).getValue().toString());
         }
         if(size >= 4){
             Stat4.setVisible(true);
             bookCatText4.setText(genresReformatted.get(3).getType());
-            bookCatValue4.setText(genresReformatted.get(3).getValue().toString().substring(0,20));
+            bookCatValue4.setText(genresReformatted.get(3).getValue().toString());
         }
     }
 
@@ -203,19 +210,19 @@ public class AuthorInterfaceController {
 
         if(size >= 1){
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname().substring(0,20));
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
         }
         if(size >= 2){
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname().substring(0,20));
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
         }
         if(size >= 3){
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname().substring(0,20));
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
         }
         if(size >= 4){
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(suggestedAuthors.get(3).getNickname().substring(0,20));
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
         }
 
     }
@@ -233,19 +240,19 @@ public class AuthorInterfaceController {
 
         if(size >= 1){
             HBUser1.setVisible(true);
-            suggestedUser1.setText(suggestedUsers.get(0).getNickname());
+            suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
         }
         if(size >= 2){
             HBUser2.setVisible(true);
-            suggestedUser2.setText(suggestedUsers.get(1).getNickname());
+            suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
         }
         if(size >= 3){
             HBUser3.setVisible(true);
-            suggestedUser3.setText(suggestedUsers.get(2).getNickname());
+            suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
         }
         if(size >= 4){
             HBUser4.setVisible(true);
-            suggestedUser4.setText(suggestedUsers.get(3).getNickname());
+            suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
         }
 
     }

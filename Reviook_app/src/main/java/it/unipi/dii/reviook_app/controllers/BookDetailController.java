@@ -266,8 +266,8 @@ public class BookDetailController {
     }
 
     private String truckString(String input) {
-        if (input.length() > 20) {
-            return input.substring(0, 20);
+        if (input.length() > 24) {
+            return input.substring(0, 24);
         }
         return input;
     }
