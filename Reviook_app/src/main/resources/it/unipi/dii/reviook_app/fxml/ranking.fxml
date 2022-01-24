@@ -29,10 +29,10 @@
                         <JFXButton layoutX="78.0" layoutY="716.0" onAction="#searchAction" text="SEARCH" />
                   <VBox layoutX="10.0" layoutY="7.0" prefHeight="690.0" prefWidth="144.0">
                      <children>
-                        <JFXButton prefHeight="48.0" prefWidth="128.0" text="Annual Publications" />
-                        <JFXButton prefHeight="67.0" prefWidth="133.0" text="Most Reliable Users" />
-                        <JFXButton prefHeight="67.0" prefWidth="134.0" text="Most Popular Books" />
-                        <JFXButton prefHeight="67.0" prefWidth="131.0" text="Most Desired Books" />
+                        <JFXButton prefHeight="48.0" prefWidth="128.0" onAction="#annualPublications" text="Annual Publications" />
+                        <JFXButton prefHeight="67.0" prefWidth="133.0" onAction="#mostReliableUsers" text="Most Reliable Users" />
+                        <JFXButton prefHeight="67.0" prefWidth="134.0" onAction="#mostPopularBooks" text="Most Popular Books" />
+                        <JFXButton prefHeight="67.0" prefWidth="131.0" onAction="#mostDesiredBooks" text="Most Desired Books" />
                      </children>
                   </VBox>
                     </children>

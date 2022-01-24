@@ -85,6 +85,20 @@ public class RankingInterfaceController {
         }
     }
 
+    private void clearLists(){
+        usersList.getItems().clear();
+        bookList.getItems().clear();
+        availableBook.clear();
+    }
+
+    @FXML
+    public void annualPublications(ActionEvent actionEvent) {
+        clearLists();
+
+    }
+
+
+
     @FXML
     public void searchAction(ActionEvent actionEvent) throws JSONException {
         usersList.getItems().clear();
@@ -96,19 +110,19 @@ public class RankingInterfaceController {
             String selectedChoice = yearsFilter.getSelectionModel().getSelectedItem() == null ? "" : yearsFilter.getSelectionModel().getSelectedItem().toString();
             if (selectedChoice.equals(""))
             {
-                labelError.setText("You must enter the year");
+                labelError.setText("You must enter the year ->");
                 return;
             }
             else{
                 labelError.setText("");
-                JSONArray array = searchManager.searchRankBook(Integer.valueOf(selectedChoice));
+                ArrayList<Genre> array = bookManager.searchRankBook(Integer.valueOf(selectedChoice));
 
                 String genres;
                 ArrayList<String> genresList = new ArrayList<>();
-                for (int i = 0; i< array.length(); i++)
+                for (int i = 0; i< array.size(); i++)
                 {
                     if(i%2==0){
-                        genres = "GENRES BOOK: "+array.get(i)+ "     TOTAL PUBLISHED: " + array.get(i+1);
+                        genres = "GENRES BOOK: "+array.get(i).getType() + "     TOTAL PUBLISHED: " + array.get(i+1).getValue().intValue();
                         genresList.add(genres);
                     }
                 }

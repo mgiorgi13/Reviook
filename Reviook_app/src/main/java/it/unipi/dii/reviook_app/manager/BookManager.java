@@ -16,6 +16,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.mongodb.client.model.Accumulators.sum;
 import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
@@ -360,35 +362,23 @@ public class BookManager {
         return books;
     }
 
-    public JSONArray searchRankBook(Integer year){
-        Date dt=new Date();
-
+    public ArrayList<Genre> searchRankBook(Integer year){
         MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
-        MongoCursor<Document> cursor;
-        ArrayList<Book> total_years = new ArrayList<>();
 
-        JSONArray genre = new JSONArray();
+        ArrayList<Genre> genres = new ArrayList<>();
         Bson match = match(in("publication_year", year));
         Bson unwind = unwind("$genres");
         Bson group = group("$genres", sum("counter", 1));
 
-
-
-        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match,unwind, group)).iterator();) {
+        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match,unwind,group)).iterator()) {
 
             while (result.hasNext()) {
                 Document y = result.next();
-                total_years.add(new Book("",""));
-                genre.put(y.getString("_id"));
-                genre.put(y.getInteger("counter"));
-
+                genres.add(new Genre(y.getString("_id"),Double.valueOf(y.get("counter").toString()));
             }
-
-
-            System.out.println(genre.length());
         }
 
-        return genre;
+        return genres;
     }
 
     public ArrayList<RankingObject> rankReview()
