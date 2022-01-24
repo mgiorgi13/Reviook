@@ -97,6 +97,9 @@ public class AdminController {
     @FXML
     private Text categories;
 
+    @FXML
+    private JFXButton addAdminButton;
+
     private String selectedBookID = null;
 
     private SearchManager searchManager = new SearchManager();
@@ -125,6 +128,14 @@ public class AdminController {
         }
     }
     
+    @FXML
+    void addAdminAction(ActionEvent event) throws IOException {
+        Parent newAdminInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/newAdmin.fxml"));
+        Stage actual_stage = (Stage) addAdminButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(newAdminInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
+    }
 
     @FXML
     void deleteReviewAction(ActionEvent event) {

@@ -202,14 +202,11 @@ public class UserInterfaceController {
     private void viewSuggestedUsers() {
         ArrayList<User> suggestedUsers = userManager.similarUsers(nickname,"User");
         Collections.shuffle(suggestedUsers);
-
         HBUser1.setVisible(false);
         HBUser2.setVisible(false);
         HBUser3.setVisible(false);
         HBUser4.setVisible(false);
-
         int size = suggestedUsers.size();
-
         if(size >= 1){
             HBUser1.setVisible(true);
             suggestedUser1.setText(suggestedUsers.get(0).getNickname().substring(0,20));
