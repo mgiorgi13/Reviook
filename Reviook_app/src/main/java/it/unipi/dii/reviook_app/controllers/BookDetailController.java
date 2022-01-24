@@ -2,6 +2,7 @@ package it.unipi.dii.reviook_app.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import it.unipi.dii.reviook_app.components.ListReview;
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import it.unipi.dii.reviook_app.manager.BookManager;
@@ -22,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -29,6 +31,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 import javafx.util.Callback;
@@ -77,6 +80,15 @@ public class BookDetailController {
 
     @FXML
     private Text ratingAVG;
+
+    @FXML
+    private HBox HBAuthor1,HBAuthor2,HBAuthor3,HBAuthor4,HBBook1,HBBook2,HBBook3,HBBook4;
+
+    @FXML
+    private Text suggestedAuthor1, suggestedAuthor2, suggestedAuthor3, suggestedAuthor4;
+
+    @FXML
+    private Text suggestedBook1, suggestedBook2, suggestedBook3, suggestedBook4;
 
     Session session = Session.getInstance();
 
@@ -253,8 +265,72 @@ public class BookDetailController {
 
     }
 
+    private void viewSuggestedAuthors(String book_id) {
+        ArrayList<Author> suggestedAuthors = bookManager.similarAuthors(book_id);
+        Collections.shuffle(suggestedAuthors);
+
+        HBAuthor1.setVisible(false);
+        HBAuthor2.setVisible(false);
+        HBAuthor3.setVisible(false);
+        HBAuthor4.setVisible(false);
+
+        int size = suggestedAuthors.size();
+
+        if(size >= 1){
+            HBAuthor1.setVisible(true);
+            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname());
+        }
+        if(size >= 2){
+            HBAuthor2.setVisible(true);
+            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname());
+        }
+        if(size >= 3){
+            HBAuthor3.setVisible(true);
+            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname());
+        }
+        if(size >= 4){
+            HBAuthor4.setVisible(true);
+            suggestedAuthor4.setText(suggestedAuthors.get(3).getNickname());
+        }
+
+    }
+
+    private void viewSuggestedBooks(String book_id) {
+        ArrayList<Book> suggestedUsers = bookManager.similarBooks(book_id);
+        Collections.shuffle(suggestedUsers);
+
+        HBBook1.setVisible(false);
+        HBBook2.setVisible(false);
+        HBBook3.setVisible(false);
+        HBBook4.setVisible(false);
+
+        int size = suggestedUsers.size();
+
+        if(size >= 1){
+            HBBook1.setVisible(true);
+            suggestedBook1.setText(suggestedUsers.get(0).getTitle());
+        }
+        if(size >= 2){
+            HBBook2.setVisible(true);
+            suggestedBook1.setText(suggestedUsers.get(1).getTitle());
+        }
+        if(size >= 3){
+            HBBook3.setVisible(true);
+            suggestedBook1.setText(suggestedUsers.get(2).getTitle());
+        }
+        if(size >= 4){
+            HBBook4.setVisible(true);
+            suggestedBook1.setText(suggestedUsers.get(3).getTitle());
+        }
+
+    }
+
     public void setInfoBook(Book bookSelected) {
         String isbn;
+
+        //book&author suggestion
+        viewSuggestedBooks(bookSelected.getBook_id());
+        viewSuggestedAuthors(bookSelected.getBook_id());
 
         if (bookSelected.getIsbn()!=null) {
             isbnKey.setText("ISBN");
