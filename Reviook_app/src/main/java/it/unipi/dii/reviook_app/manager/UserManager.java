@@ -40,18 +40,15 @@ public class UserManager {
     private MongoDriver md;
     private Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
-
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
     private static final String genreCollection = "genres";
 
-
     public UserManager() {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-
 
     // N4J
     public void addNewUsers(String type, String id, String name, String username) {
@@ -348,28 +345,22 @@ public class UserManager {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         String author_id = null;
         ArrayList<Genre> topRated= new ArrayList<>();
-
         Bson getAuthor;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-
-
         //get id of the author using the username
         try (MongoCursor<Document> cursor = author.find(eq ("username",username)).iterator()) {
             while (cursor.hasNext()) {
                 author_id = cursor.next().getString("author_id");
             }
         }
-
         if(author_id == null)
             return null;
-
         getAuthor = match(eq("authors.author_id",author_id));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$average_rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
-
         try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(getAuthor, unwindGenres, groupGenres, sortAvg)).iterator()) {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
@@ -385,24 +376,20 @@ public class UserManager {
     public ArrayList<Genre> averageRatingCategoryUser(String username){
         MongoCollection<Document> books = md.getCollection(bookCollection);
         ArrayList<Genre> topRated= new ArrayList<>();
-
         Bson getUser;
         Bson unwindReviews;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-
         getUser = match(eq("reviews.username",username));
         unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$reviews.rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
-
         try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(unwindReviews, getUser, unwindGenres, groupGenres, sortAvg)).iterator()) {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
-
                 Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
                 topRated.add(genre);
             }
@@ -432,7 +419,6 @@ public class UserManager {
      public ArrayList<Author> similarAuthors(String username,String type){
         ArrayList<Author> suggestion;
         ArrayList<Author> queryResult = new ArrayList<>();
-
         try (Session session = nd.getDriver().session()) {
             suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
                 Result result = tx.run("MATCH (u:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[:READ|:TO_READ]-(a:Author) " +

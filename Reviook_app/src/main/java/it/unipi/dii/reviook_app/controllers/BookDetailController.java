@@ -331,9 +331,7 @@ public class BookDetailController {
 
     public void setInfoBook(Book bookSelected) {
         String isbn;
-
         //book&author suggestion
-        System.out.println(bookSelected.getBook_id());
         viewSuggestedBooks(bookSelected.getBook_id());
         viewSuggestedAuthors(bookSelected.getBook_id());
 
@@ -343,43 +341,33 @@ public class BookDetailController {
         } else if (bookSelected.getAsin() != null) {
             isbnKey.setText("ASIN");
             isbnValue.setText(bookSelected.getAsin());
-        } else isbnValue.setText("???");
+        } else isbnValue.setText("-");
         if (bookSelected.getNum_pages() != null) {
             totalPage.setText(String.valueOf(bookSelected.getNum_pages()));
-        } else totalPage.setText("???");
+        } else totalPage.setText("-");
         if (bookSelected.getPublication_month() != null && bookSelected.getPublication_day() != null && bookSelected.getPublication_year() != null) {
             dataPubblication.setText(String.valueOf(bookSelected.getPublication_day()) + "/" + String.valueOf(bookSelected.getPublication_month()) + "/" + String.valueOf(bookSelected.getPublication_year()));
-        } else dataPubblication.setText("???");
+        } else dataPubblication.setText("-");
         if (bookSelected.getLanguage_code() != null) {
             languageCode.setText(String.valueOf(bookSelected.getLanguage_code()));
-        } else languageCode.setText("???");
+        } else languageCode.setText("-");
 
-
-//        System.out.println(bookSelected.getAsin());
-//        System.out.println(bookSelected.getIsbn());
-//        System.out.println(bookSelected.getNum_pages());
-//        System.out.println(bookSelected.getPublication_day());
-//        System.out.println(bookSelected.getPublication_month());
-//        System.out.println(bookSelected.getPublication_year());
-//        System.out.println(bookSelected.getLanguage_code());
         deleteBook.setVisible(false);
         if (session.getLoggedAuthor() != null) {
             if (BookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
                 deleteBook.setVisible(true);
-
-            //se il libro è mio abilito tasto
         }
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
         // AUTHORS LIST
         ArrayList<String> authors = bookSelected.getAuthors();
-        this.author = authors.get(0); // TODO per ora prendo solo il primo ma poi andranno elencati tutti
+        this.author = String.join(", ", authors);
         bookAuthor.setText(this.author);
         // CATEGORIES LIST
         ArrayList<String> genres = bookSelected.getGenres();
         if (genres != null) {
-            categories = genres.size() > 0 ? genres.get(0) : ""; // TODO per ora prendo solo il primo ma poi andranno elencati tutti
+            categories = String.join(", ", genres);
             bookCategories.setText(categories);
         }
         // BOOK DESCRIPTION
@@ -392,7 +380,6 @@ public class BookDetailController {
             imageContainer.setImage(image);
         } catch (Exception e) {
         }
-        ;
 
         // REVIEW LIST
         this.reviewsList = bookSelected.getReviews();
@@ -417,8 +404,6 @@ public class BookDetailController {
 
     @FXML
     void initialize() {
-
-        // setListView();
     }
 
 
