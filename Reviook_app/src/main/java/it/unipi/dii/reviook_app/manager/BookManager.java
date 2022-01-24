@@ -16,7 +16,6 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -24,12 +23,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.mongodb.client.model.Accumulators.avg;
 import static com.mongodb.client.model.Accumulators.sum;
 import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
 import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Sorts.descending;
+import static com.mongodb.client.model.Sorts.orderBy;
 import static org.neo4j.driver.Values.parameters;
 
 
@@ -343,18 +345,19 @@ public class BookManager {
         return suggestion;
     }
 
-    public ArrayList<Book>top100Books(String type){
-        ArrayList<Book> books;
-        ArrayList<Book> queryResult = new ArrayList<>();
+    public ArrayList<RankingObject> topBooks(String type,Integer limit){
+        ArrayList<RankingObject> books;
+        ArrayList<RankingObject> queryResult = new ArrayList<>();
 
         try (Session session = nd.getDriver().session()) {
-            books = (ArrayList<Book>) session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
-                Result result = tx.run("MATCH u=()-[r:'" + type + "']->(b:Book) " +
-                        "RETURN b.id,b.title " +
-                        "LIMIT 100");
+            books = (ArrayList<RankingObject>) session.readTransaction((TransactionWork<ArrayList<RankingObject>>) tx -> {
+                Result result = tx.run("MATCH (b:Book)<-[r:" + type + "]-() " +
+                        "RETURN b.id,b.title,count(r) as count " +
+                        "ORDER BY count DESC " +
+                        "LIMIT " + limit +"");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Book(r.get("b.title").asString(),r.get("b.id").asString()));
+                    queryResult.add(new RankingObject(r.get("b.title").asString(),Integer.valueOf(r.get("count").toString())));
                 }
                 return queryResult;
             });
@@ -374,7 +377,7 @@ public class BookManager {
 
             while (result.hasNext()) {
                 Document y = result.next();
-                genres.add(new Genre(y.getString("_id"),Double.valueOf(y.get("counter").toString()));
+                genres.add(new Genre(y.getString("_id"),Double.valueOf(y.get("counter").toString())));
             }
         }
 
@@ -386,29 +389,17 @@ public class BookManager {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         ArrayList<RankingObject> array = new ArrayList<>();
 
-
-
-        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(new Document("$unwind",
-                        new Document("path", "$reviews")
-                                .append("includeArrayIndex", "string")
-                                .append("preserveNullAndEmptyArrays", false)),
-                new Document("$project",
-                        new Document("reviews.username", 1L)
+        Bson unwindReviews = unwind("$reviews");
+        Bson projectLikes = new Document("$project",
+                                new Document("reviews.username", 1L)
                                 .append("reviews.likes",
-                                        new Document("$ifNull", Arrays.asList("$reviews.likes", "$reviews.helpful")))),
-                new Document("$group",
-                        new Document("_id", "$reviews.username")
-                                .append("reviews_number",
-                                        new Document("$count",
-                                                new Document()))
-                                .append("average_likes",
-                                        new Document("$avg", "$reviews.likes"))),
-                new Document("$match",
-                        new Document("reviews_number",
-                                new Document("$gte", 200L))),
-                new Document("$sort",
-                        new Document("average_likes", -1L)),
-                new Document("$limit", 100L))).iterator();) {
+                                        new Document("$ifNull", Arrays.asList("$reviews.likes", "$reviews.helpful"))));
+        Bson groupUsername = group("$reviews.username", sum("reviews_number", 1), avg("average_likes","$reviews.likes"));
+        Bson matchGreaterThan200 = match(gte("reviews_number", 200));
+        Bson sort = sort(orderBy(descending("average_likes")));
+        Bson limit = limit(100);
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(unwindReviews,projectLikes,groupUsername,matchGreaterThan200,sort,limit)).iterator()) {
 
             while (result.hasNext()) {
                 Document document = result.next();
