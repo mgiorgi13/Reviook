@@ -391,7 +391,7 @@ public class UserManager {
         Bson groupGenres;
         Bson sortAvg;
 
-        getUser =  match(eq("reviews.username",username));
+        getUser = match(eq("reviews.username",username));
         unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$reviews.rating"));
@@ -411,16 +411,16 @@ public class UserManager {
 
     public ArrayList<User> similarUsers(String username,String type){
         ArrayList<User> suggestion = new ArrayList<>();
+        ArrayList<User> queryResult = new ArrayList<>();
 
         try (Session session = nd.getDriver().session()) {
-            suggestion = (ArrayList<User>) session.readTransaction((TransactionWork<List<User>>) tx -> {
-                Result result = tx.run("MATCH (u1:" + type + ")-[]-(b:Book)-[]-(u2:User) " +
-                        "WHERE u1.username = '" + username + "' AND u1<>u2" +
-                        "RETURN DISTINCT u2");
-                ArrayList<User> queryResult = new ArrayList<>();
+            suggestion = session.readTransaction((TransactionWork<ArrayList<User>>) tx -> {
+                Result result = tx.run("MATCH (u1:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +
+                        "WHERE u1.username = '" + username + "' AND u1<>u2 " +
+                        "RETURN DISTINCT u2.id,u2.name,u2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new User(r.get("u2.id").toString(),r.get("u2.name").toString(),"",r.get("u2.username").toString(),"","",new ArrayList<>(),0));
+                    queryResult.add(new User(r.get("u2.id").asString(),r.get("u2.name").asString(),"",r.get("u2.username").asString(),"","",new ArrayList<>(),0));
                 }
                 return queryResult;
             });
@@ -430,16 +430,16 @@ public class UserManager {
 
      public ArrayList<Author> similarAuthors(String username,String type){
         ArrayList<Author> suggestion;
+        ArrayList<Author> queryResult = new ArrayList<>();
 
         try (Session session = nd.getDriver().session()) {
-            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<List<Author>>) tx -> {
-                Result result = tx.run("MATCH (u:" + type + ")-[]-(b:Book)-[]-(a:Author) " +
-                        "WHERE u.username = '" + username + "' AND u<>a" +
-                        "RETURN DISTINCT a");
-                ArrayList<Author> queryResult = new ArrayList<>();
+            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
+                Result result = tx.run("MATCH (u:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[:READ|:TO_READ]-(a:Author) " +
+                        "WHERE u.username = '" + username + "' AND u<>a " +
+                        "RETURN DISTINCT a.id,a.name,a.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Author(r.get("a.id").toString(),r.get("a.name").toString(),"",r.get("a.username").toString(),"","",new ArrayList<>(),0));
+                    queryResult.add(new Author(r.get("a.id").asString(),r.get("a.name").asString(),"",r.get("a.username").asString(),"","",new ArrayList<>(),0));
                 }
                 return queryResult;
             });

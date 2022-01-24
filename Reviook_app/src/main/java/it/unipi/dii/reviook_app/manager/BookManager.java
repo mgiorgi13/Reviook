@@ -6,19 +6,19 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
 import it.unipi.dii.reviook_app.entity.User;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
-import static com.mongodb.client.model.Accumulators.sum;
 import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
@@ -304,4 +303,47 @@ public class BookManager {
         }
         return false;
     }
+
+    //ANALYTICS ==========================================================================================================
+
+    public ArrayList<Book> similarBooks(String book_id){
+        ArrayList<Book> suggestion = new ArrayList<>();
+        ArrayList<Book> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
+                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a:Author)-[]->(b2:Book) " +
+                        "WHERE b1.book_id = '" + book_id + "' AND b1<>b2 " +
+                        "RETURN DISTINCT b2.book_id,b2.title");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Book(r.get("b2.title").asString(),r.get("b2.book_id").asString()));
+                }
+                return queryResult;
+            });
+        }
+        return suggestion;
+    }
+
+     public ArrayList<Author> similarAuthors(String book_id){
+        ArrayList<Author> suggestion;
+        ArrayList<Author> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
+                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a1:Author)-[]->(b2:Book)<-[:WROTE]-(a2:Author) " +
+                       "WHERE b1.book_id = '" + book_id + "' AND b1<>b2 AND a1<>a2" +
+                        "RETURN DISTINCT a2.id,a2.name,a2.username");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Author(r.get("a2.id").asString(),r.get("a2.name").asString(),"",r.get("a2.username").asString(),"","",new ArrayList<>(),0));
+                }
+                return queryResult;
+            });
+        }
+        return suggestion;
+    }
+
+    //==================================================================================================================
+
 }

@@ -1,13 +1,13 @@
 package it.unipi.dii.reviook_app.controllers;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.JFXListView;
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
@@ -55,6 +55,9 @@ public class UserInterfaceController {
 
     @FXML
     private HBox Stat1, Stat2, Stat3, Stat4;
+
+    @FXML
+    private HBox HBAuthor1,HBAuthor2,HBAuthor3,HBAuthor4,HBUser1,HBUser2,HBUser3,HBUser4;
 
     @FXML
     private Text suggestedAuthor1, suggestedAuthor2, suggestedAuthor3, suggestedAuthor4;
@@ -109,7 +112,7 @@ public class UserInterfaceController {
         }
     }
 
-    private void setAnalyticsResult() {
+    private void viewReviewAnalytic() {
         Double previousValue = -1.0;
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
@@ -165,6 +168,65 @@ public class UserInterfaceController {
         }
     }
 
+    private void viewSuggestedAuthors() {
+        ArrayList<Author> suggestedAuthors = userManager.similarAuthors(nickname,"User");
+        Collections.shuffle(suggestedAuthors);
+
+        HBAuthor1.setVisible(false);
+        HBAuthor2.setVisible(false);
+        HBAuthor3.setVisible(false);
+        HBAuthor4.setVisible(false);
+
+        int size = suggestedAuthors.size();
+
+        if(size >= 1){
+            HBAuthor1.setVisible(true);
+            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname());
+        }
+        if(size >= 2){
+            HBAuthor2.setVisible(true);
+            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname());
+        }
+        if(size >= 3){
+            HBAuthor3.setVisible(true);
+            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname());
+        }
+        if(size >= 4){
+            HBAuthor4.setVisible(true);
+            suggestedAuthor4.setText(suggestedAuthors.get(3).getNickname());
+        }
+
+    }
+
+    private void viewSuggestedUsers() {
+        ArrayList<User> suggestedUsers = userManager.similarUsers(nickname,"User");
+        Collections.shuffle(suggestedUsers);
+
+        HBUser1.setVisible(false);
+        HBUser2.setVisible(false);
+        HBUser3.setVisible(false);
+        HBUser4.setVisible(false);
+
+        int size = suggestedUsers.size();
+
+        if(size >= 1){
+            HBUser1.setVisible(true);
+            suggestedUser1.setText(suggestedUsers.get(0).getNickname());
+        }
+        if(size >= 2){
+            HBUser2.setVisible(true);
+            suggestedUser2.setText(suggestedUsers.get(1).getNickname());
+        }
+        if(size >= 3){
+            HBUser3.setVisible(true);
+            suggestedUser3.setText(suggestedUsers.get(2).getNickname());
+        }
+        if(size >= 4){
+            HBUser4.setVisible(true);
+            suggestedUser4.setText(suggestedUsers.get(3).getNickname());
+        }
+
+    }
 
     public void setNickname(String nickname) {
         //TODO caricaListeLibri()
@@ -172,7 +234,10 @@ public class UserInterfaceController {
         this.nickname = nickname;
         usernameUser.setText(this.nickname);
 
-        setAnalyticsResult();
+        //load analytics
+        viewReviewAnalytic();
+        viewSuggestedAuthors();
+        viewSuggestedUsers();
 
         //carico le info dello user
         viewFollow();
