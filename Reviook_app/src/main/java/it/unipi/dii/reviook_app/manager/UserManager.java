@@ -20,6 +20,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import javax.print.Doc;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -44,6 +45,7 @@ public class UserManager {
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
+     private static final String adminsCollection = "admins";
     private static final String genreCollection = "genres";
 
 
@@ -213,29 +215,41 @@ public class UserManager {
         return ID;
     }
 
-    public int verifyUsername(String Username, boolean main) {
+    public int verifyUsername(String Username, String type, boolean loggingIn) {
+        MongoCollection<Document> admins = md.getCollection(adminsCollection);
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
-        try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                if (main) {
-                    ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                    session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+
+        if(type.equals("admin")){
+            try (MongoCursor<Document> cursor = admins.find(eq("username", Username)).iterator()) {
+                while (cursor.hasNext()) {
+                    return 2;
                 }
-                return 0;
+            }
+        }else if(type.equals("author")){
+            try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+                while (cursor.hasNext()) {
+                    Document user = cursor.next();
+                    if (loggingIn) {
+                        ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
+                        session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                    }
+                    return 1;
+                }
+            }
+        }else{
+            try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
+                while (cursor.hasNext()) {
+                    Document user = cursor.next();
+                    if (loggingIn) {
+                        ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
+                        session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                    }
+                    return 0;
+                }
             }
         }
-        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                if (main) {
-                    ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                    session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
-                }
-                return 1;
-            }
-        }
+
         return -1;
     }
 

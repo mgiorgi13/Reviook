@@ -333,32 +333,31 @@ public class UserInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell, false);
-                    if (result == -1)
+                    int result = userManager.verifyUsername(selectedCell,"", false);
+                    if (result == -1 || result == 2)
                         return;
-                    else
-                        try {
-                            Parent userInterface;
-                            FXMLLoader fxmlLoader;
-                            if (result == 1) {
-                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                                controller.setNickname(selectedCell);
-                            } else {
-                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                                controller.setNickname(selectedCell);
-                            }
-
-                            Stage actual_stage = (Stage) listFollow.getScene().getWindow();
-                            actual_stage.setScene(new Scene(userInterface));
-                            actual_stage.setResizable(false);
-                            actual_stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    try {
+                        Parent userInterface;
+                        FXMLLoader fxmlLoader;
+                        if (result == 1) {
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(selectedCell);
+                        } else {
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                            controller.setNickname(selectedCell);
                         }
+
+                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
+                        actual_stage.setScene(new Scene(userInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -401,8 +400,8 @@ public class UserInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell, false);
-                    if (result == -1)
+                    int result = userManager.verifyUsername(selectedCell,"tipo",false);
+                    if (result == -1 || result == 2)
                         return;
                     try {
                         Parent userInterface;

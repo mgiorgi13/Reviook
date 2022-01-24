@@ -51,13 +51,13 @@ public class LoginController {
     public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
         MessageDigest md;
         String pswHash;
-        int result = userManager.verifyUsername(username, true);
-        if (result == -1)
+        int result = userManager.verifyUsername(username, "author", true);
+        if(result == -1)
             return false;
-        else
+        if(result != 2)
             session.setIsAuthor(result == 1 ? true : false);
 
-        //Hashing controll
+        //Hashing control
         md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
         byte[] digest = md.digest();
