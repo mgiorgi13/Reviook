@@ -313,7 +313,7 @@ public class BookManager {
         try (Session session = nd.getDriver().session()) {
             suggestion = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
                 Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a:Author)-[]->(b2:Book) " +
-                        "WHERE b1.book_id = '" + book_id + "' AND b1<>b2 " +
+                        "WHERE b1.id = '" + book_id + "' AND b1<>b2 " +
                         "RETURN DISTINCT b2.book_id,b2.title");
                 while (result.hasNext()) {
                     Record r = result.next();
@@ -322,6 +322,7 @@ public class BookManager {
                 return queryResult;
             });
         }
+        System.out.println(suggestion);
         return suggestion;
     }
 
@@ -332,7 +333,7 @@ public class BookManager {
         try (Session session = nd.getDriver().session()) {
             suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
                 Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a1:Author)-[]->(b2:Book)<-[:WROTE]-(a2:Author) " +
-                       "WHERE b1.book_id = '" + book_id + "' AND b1<>b2 AND a1<>a2" +
+                       "WHERE b1.id = '" + book_id + "' AND b1<>b2 AND a1<>a2 " +
                         "RETURN DISTINCT a2.id,a2.name,a2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
@@ -341,6 +342,7 @@ public class BookManager {
                 return queryResult;
             });
         }
+        System.out.println(suggestion);
         return suggestion;
     }
 

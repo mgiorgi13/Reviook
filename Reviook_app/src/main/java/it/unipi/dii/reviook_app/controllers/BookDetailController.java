@@ -312,15 +312,15 @@ public class BookDetailController {
         }
         if(size >= 2){
             HBBook2.setVisible(true);
-            suggestedBook1.setText(suggestedUsers.get(1).getTitle());
+            suggestedBook2.setText(suggestedUsers.get(1).getTitle());
         }
         if(size >= 3){
             HBBook3.setVisible(true);
-            suggestedBook1.setText(suggestedUsers.get(2).getTitle());
+            suggestedBook3.setText(suggestedUsers.get(2).getTitle());
         }
         if(size >= 4){
             HBBook4.setVisible(true);
-            suggestedBook1.setText(suggestedUsers.get(3).getTitle());
+            suggestedBook4.setText(suggestedUsers.get(3).getTitle());
         }
 
     }
@@ -329,6 +329,7 @@ public class BookDetailController {
         String isbn;
 
         //book&author suggestion
+        System.out.println(bookSelected.getBook_id());
         viewSuggestedBooks(bookSelected.getBook_id());
         viewSuggestedAuthors(bookSelected.getBook_id());
 
