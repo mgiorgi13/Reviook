@@ -6,6 +6,7 @@ import it.unipi.dii.reviook_app.Session;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.RankingObject;
+import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,6 +62,8 @@ public class RankingInterfaceController {
     private ObservableList<String> availableBook = FXCollections.observableArrayList();
 
     private SearchManager searchManager = new SearchManager();
+    private BookManager bookManager = new BookManager();
+
     @FXML
     public void selectBooksRank(ActionEvent actionEvent) {
         usersList.getItems().clear();
@@ -120,7 +123,7 @@ public class RankingInterfaceController {
             usersList.setVisible(true);
             bookList.setVisible(false);
             ObservableList<RankingObject> obsBooksList = FXCollections.observableArrayList();
-            obsBooksList.addAll(searchManager.rankReview());
+            obsBooksList.addAll(bookManager.rankReview());
             usersList.getItems().addAll(obsBooksList);
         }
     }

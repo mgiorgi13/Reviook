@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RankingInterfaceController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RankingInterfaceController">
     <children>
         <VBox layoutX="6.0" layoutY="4.0" prefHeight="814.0" prefWidth="757.0">
             <children>
-                <Pane prefHeight="123.0" prefWidth="757.0">
-                    <children>
-                        <JFXButton layoutX="667.0" layoutY="46.0" onAction="#searchAction" text="SEARCH" />
-                        <CheckBox fx:id="booksRank" layoutX="591.0" layoutY="30.0" mnemonicParsing="false" onAction="#selectBooksRank" text="Books rank" />
-                        <CheckBox fx:id="usersRank" layoutX="591.0" layoutY="77.0" mnemonicParsing="false" onAction="#selectUsersRank" text="Users rank" />
-                        <ChoiceBox fx:id="yearsFilter" layoutX="443.0" layoutY="48.0" prefHeight="26.0" prefWidth="121.0" />
-                  <Label fx:id="labelError" layoutX="100.0" layoutY="109.0" prefHeight="17.0" prefWidth="274.0" />
-                    </children>
+                <Pane prefHeight="54.0" prefWidth="757.0">
+               <children>
+                        <ChoiceBox fx:id="yearsFilter" layoutX="651.0" layoutY="11.0" prefHeight="26.0" prefWidth="83.0" />
+                  <Label fx:id="labelError" layoutX="499.0" layoutY="16.0" prefHeight="17.0" prefWidth="131.0" />
+               </children>
                 </Pane>
-                <Pane prefHeight="672.0" prefWidth="757.0">
+                <Pane prefHeight="768.0" prefWidth="757.0">
                     <children>
-                        <JFXListView fx:id="bookList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
-                        <JFXListView fx:id="usersList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
-                        <JFXButton fx:id="homeButton" layoutX="211.0" layoutY="633.0" onAction="#homeInterface" text="HOME" />
-                        <JFXButton fx:id="profileButton" layoutX="487.0" layoutY="633.0" onAction="#profileInterface" text="PROFILE" />
+                        <JFXListView fx:id="bookList" layoutX="145.0" layoutY="6.0" prefHeight="690.0" prefWidth="590.0" />
+                        <JFXListView fx:id="usersList" layoutX="144.0" layoutY="6.0" prefHeight="690.0" prefWidth="591.0" />
+                        <JFXButton fx:id="homeButton" layoutX="351.0" layoutY="716.0" onAction="#homeInterface" text="HOME" />
+                        <JFXButton fx:id="profileButton" layoutX="440.0" layoutY="716.0" onAction="#profileInterface" text="PROFILE" />
+                        <CheckBox fx:id="booksRank" layoutX="210.0" layoutY="735.0" mnemonicParsing="false" onAction="#selectBooksRank" text="Books rank" />
+                        <CheckBox fx:id="usersRank" layoutX="209.0" layoutY="711.0" mnemonicParsing="false" onAction="#selectUsersRank" text="Users rank" />
+                        <JFXButton layoutX="78.0" layoutY="716.0" onAction="#searchAction" text="SEARCH" />
+                  <VBox layoutX="10.0" layoutY="7.0" prefHeight="690.0" prefWidth="144.0">
+                     <children>
+                        <JFXButton prefHeight="48.0" prefWidth="128.0" text="Annual Publications" />
+                        <JFXButton prefHeight="67.0" prefWidth="133.0" text="Most Reliable Users" />
+                        <JFXButton prefHeight="67.0" prefWidth="134.0" text="Most Popular Books" />
+                        <JFXButton prefHeight="67.0" prefWidth="131.0" text="Most Desired Books" />
+                     </children>
+                  </VBox>
                     </children>
                 </Pane>
             </children>

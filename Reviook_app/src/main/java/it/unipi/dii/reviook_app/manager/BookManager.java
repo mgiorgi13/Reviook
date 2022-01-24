@@ -6,12 +6,9 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import it.unipi.dii.reviook_app.entity.Author;
-import it.unipi.dii.reviook_app.entity.Book;
-import it.unipi.dii.reviook_app.entity.Review;
+import it.unipi.dii.reviook_app.entity.*;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
-import it.unipi.dii.reviook_app.entity.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.neo4j.driver.Record;
@@ -322,7 +319,6 @@ public class BookManager {
                 return queryResult;
             });
         }
-        System.out.println(suggestion);
         return suggestion;
     }
 
@@ -342,8 +338,97 @@ public class BookManager {
                 return queryResult;
             });
         }
-        System.out.println(suggestion);
         return suggestion;
+    }
+
+    public ArrayList<Book>top100Books(String type){
+        ArrayList<Book> books;
+        ArrayList<Book> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            books = (ArrayList<Book>) session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
+                Result result = tx.run("MATCH u=()-[r:'" + type + "']->(b:Book) " +
+                        "RETURN b.id,b.title " +
+                        "LIMIT 100");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Book(r.get("b.title").asString(),r.get("b.id").asString()));
+                }
+                return queryResult;
+            });
+        }
+        return books;
+    }
+
+    public JSONArray searchRankBook(Integer year){
+        Date dt=new Date();
+
+        MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
+        MongoCursor<Document> cursor;
+        ArrayList<Book> total_years = new ArrayList<>();
+
+        JSONArray genre = new JSONArray();
+        Bson match = match(in("publication_year", year));
+        Bson unwind = unwind("$genres");
+        Bson group = group("$genres", sum("counter", 1));
+
+
+
+        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match,unwind, group)).iterator();) {
+
+            while (result.hasNext()) {
+                Document y = result.next();
+                total_years.add(new Book("",""));
+                genre.put(y.getString("_id"));
+                genre.put(y.getInteger("counter"));
+
+            }
+
+
+            System.out.println(genre.length());
+        }
+
+        return genre;
+    }
+
+    public ArrayList<RankingObject> rankReview()
+    {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        ArrayList<RankingObject> array = new ArrayList<>();
+
+
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(new Document("$unwind",
+                        new Document("path", "$reviews")
+                                .append("includeArrayIndex", "string")
+                                .append("preserveNullAndEmptyArrays", false)),
+                new Document("$project",
+                        new Document("reviews.username", 1L)
+                                .append("reviews.likes",
+                                        new Document("$ifNull", Arrays.asList("$reviews.likes", "$reviews.helpful")))),
+                new Document("$group",
+                        new Document("_id", "$reviews.username")
+                                .append("reviews_number",
+                                        new Document("$count",
+                                                new Document()))
+                                .append("average_likes",
+                                        new Document("$avg", "$reviews.likes"))),
+                new Document("$match",
+                        new Document("reviews_number",
+                                new Document("$gte", 200L))),
+                new Document("$sort",
+                        new Document("average_likes", -1L)),
+                new Document("$limit", 100L))).iterator();) {
+
+            while (result.hasNext()) {
+                Document document = result.next();
+                array.add(new RankingObject(document.getString("_id"),
+                        document.getInteger("reviews_number"),
+                        document.getDouble("average_likes")));
+            }
+        }
+        return array;
+
     }
 
     //==================================================================================================================
