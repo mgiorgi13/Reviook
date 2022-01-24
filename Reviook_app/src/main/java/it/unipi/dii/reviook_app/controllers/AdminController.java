@@ -22,6 +22,7 @@ import it.unipi.dii.reviook_app.entity.Review;
 import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.SearchManager;
+import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -104,6 +105,7 @@ public class AdminController {
 
     private SearchManager searchManager = new SearchManager();
     private BookManager bookManager = new BookManager();
+    private UserManager userManager = new UserManager();
     private Session session = Session.getInstance();
 
     @FXML
@@ -121,13 +123,18 @@ public class AdminController {
     void deleteListElem(ActionEvent event) {
         if (bookOption.isSelected()) {
             Book selectedBook = (Book) bookList.getSelectionModel().getSelectedItem();
+            bookManager.deleteBook(selectedBookID); //TODO non funziona capire perche
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
+            userManager.deleteUserN4J(selectedUser.getNickname(),"user");
+            userManager.deleteUserMongo(selectedUser.getNickname(),"user");
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
+            userManager.deleteUserN4J(selectedAuthor.getNickname(),"author");
+            userManager.deleteUserMongo(selectedAuthor.getNickname(),"author");
         }
     }
-    
+
     @FXML
     void addAdminAction(ActionEvent event) throws IOException {
         Parent newAdminInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/newAdmin.fxml"));

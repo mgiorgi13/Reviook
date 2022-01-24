@@ -62,17 +62,18 @@ public class UserManager {
         }
     }
 
-    public boolean deleteUserN4J() {
+    public boolean deleteUserN4J(String username, String type) {
         boolean result = false;
-        String username;
-        String type = this.session.getIsAuthor() ? "Author" : "User";
-        if (this.session.getIsAuthor())
-            username = this.session.getLoggedAuthor().getNickname();
-        else
-            username = this.session.getLoggedUser().getNickname();
+//        String username;
+//        String type = this.session.getIsAuthor() ? "Author" : "User";
+//        if (this.session.getIsAuthor())
+//            username = this.session.getLoggedAuthor().getNickname();
+//        else
+//            username = this.session.getLoggedUser().getNickname();
+        String t = type.equals("author") ? "Author" : "User";
         try (Session session = nd.getDriver().session()) {
             result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
-                tx.run("MATCH (n : " + type + " { username: '" + username + "'}) DETACH DELETE n");
+                tx.run("MATCH (n : " + t + " { username: '" + username + "'}) DETACH DELETE n");
                 return true;
             });
         }
@@ -296,13 +297,13 @@ public class UserManager {
 
     }
 
-    public boolean deleteUserMongo() {
-        MongoCollection<Document> user = md.getCollection(session.getIsAuthor() ? authorCollection : usersCollection);
-        String username;
-        if (session.getIsAuthor())
-            username = session.getLoggedAuthor().getNickname();
-        else
-            username = session.getLoggedUser().getNickname();
+    public boolean deleteUserMongo(String username, String type) {
+        MongoCollection<Document> user = md.getCollection(type.equals("author") ? authorCollection : usersCollection);
+//        String username;
+//        if (session.getIsAuthor())
+//            username = session.getLoggedAuthor().getNickname();
+//        else
+//            username = session.getLoggedUser().getNickname();
 
         DeleteResult deleteResult = user.deleteOne(eq("username", username));
         if (deleteResult.getDeletedCount() == 1)

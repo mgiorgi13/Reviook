@@ -112,7 +112,7 @@ public class LoginController {
                 }
             }
         }
-
+        // TODO commentato perche inutile
         /*if (session.getIsAuthor() == null) {
             return;
         }*/

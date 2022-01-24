@@ -265,6 +265,7 @@ public class BookManager {
         }
 
     }
+
     public static boolean foundMyBook(String id_book, String id_author){
 
         MongoCollection<Document> book = md.getCollection(bookCollection);
