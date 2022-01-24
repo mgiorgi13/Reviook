@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
@@ -17,6 +18,7 @@ import org.bson.conversions.Bson;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import javax.print.Doc;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -24,13 +26,18 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.mongodb.client.model.Accumulators.sum;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Projections.exclude;
 import static org.neo4j.driver.Values.parameters;
 
 
 public class BookManager {
-    private MongoDriver md;
-    private Neo4jDriver nd;
+    private static MongoDriver md;
+    private static Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
     private UserManager userManager;
 
@@ -43,6 +50,7 @@ public class BookManager {
         this.nd = Neo4jDriver.getInstance();
         this.userManager = new UserManager();
     }
+
 
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
@@ -257,5 +265,43 @@ public class BookManager {
             UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
         }
 
+    }
+    public static boolean foundMyBook(String id_book, String id_author){
+
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+
+        Bson match = match(in("book_id", id_book));
+        Bson project = project(fields(include("authors.author_id")));
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match, project)).iterator();) {
+            if (result.hasNext())
+            {
+                ArrayList<Document> myAuthor = (ArrayList<Document>) result.next().get("authors");
+                for (int i =0;i < myAuthor.size();i++) {
+                    if (myAuthor.get(i).getString("author_id").equals(id_author))
+                        return true;
+                }
+
+            }
+
+        }
+
+
+        return false;
+    }
+
+    public static boolean deleteBook(String book_id){
+        MongoCollection<Document> user = md.getCollection(bookCollection);
+        DeleteResult deleteResult = user.deleteOne(eq("book_id", book_id));
+        if (deleteResult.getDeletedCount() == 1){
+            try (Session session = nd.getDriver().session()) {
+                    session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                    tx.run("MATCH (n : Book { id: '" + book_id + "'}) DETACH DELETE n");
+                    return true;
+                });
+            }
+            return true;
+        }
+        return false;
     }
 }

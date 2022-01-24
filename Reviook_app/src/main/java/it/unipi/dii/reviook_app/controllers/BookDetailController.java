@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -34,8 +35,12 @@ import javafx.util.Callback;
 
 
 public class BookDetailController {
+
     @FXML
     public JFXButton deleteReviewButton;
+
+    @FXML
+    public Button deleteBook;
 
     @FXML
     private ResourceBundle resources;
@@ -65,7 +70,7 @@ public class BookDetailController {
     private Text bookCategories;
 
     @FXML
-    private Text bookDescription;
+    private Text bookDescription, isbnKey,isbnValue,dataPubblication,languageCode,totalPage;
 
     @FXML
     private Text bookTitle;
@@ -249,6 +254,43 @@ public class BookDetailController {
     }
 
     public void setInfoBook(Book bookSelected) {
+        String isbn;
+
+        if (bookSelected.getIsbn()!=null) {
+            isbnKey.setText("ISBN");
+            isbnValue.setText(bookSelected.getIsbn());
+        }else if (bookSelected.getAsin()!=null)
+        {
+            isbnKey.setText("ASIN");
+            isbnValue.setText(bookSelected.getAsin());
+        }
+        else isbnValue.setText("???");
+        if (bookSelected.getNum_pages()!=null) {
+            totalPage.setText(String.valueOf(bookSelected.getNum_pages()));
+        }else totalPage.setText("???");
+        if (bookSelected.getPublication_month()!=null && bookSelected.getPublication_day()!=null && bookSelected.getPublication_year()!=null) {
+            dataPubblication.setText(String.valueOf(bookSelected.getPublication_day())+"/"+String.valueOf(bookSelected.getPublication_month())+"/"+String.valueOf(bookSelected.getPublication_year()));
+        }else dataPubblication.setText("???");
+        if (bookSelected.getLanguage_code()!=null) {
+            languageCode.setText(String.valueOf(bookSelected.getLanguage_code()));
+        }else languageCode.setText("???");
+
+
+//        System.out.println(bookSelected.getAsin());
+//        System.out.println(bookSelected.getIsbn());
+//        System.out.println(bookSelected.getNum_pages());
+//        System.out.println(bookSelected.getPublication_day());
+//        System.out.println(bookSelected.getPublication_month());
+//        System.out.println(bookSelected.getPublication_year());
+//        System.out.println(bookSelected.getLanguage_code());
+        deleteBook.setVisible(false);
+        if (session.getLoggedAuthor() != null)
+        {
+            if(BookManager.foundMyBook(bookSelected.getBook_id(),session.getLoggedAuthor().getId()))
+                deleteBook.setVisible(true);
+
+            //se il libro è mio abilito tasto
+        }
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
@@ -278,9 +320,23 @@ public class BookDetailController {
         // BOOK ID
         this.book_id = bookSelected.getBook_id();
     }
+    @FXML
+    void deleteBookFun(ActionEvent event) throws IOException {
+        if (BookManager.deleteBook(book_id)){
+            Parent userInterface;
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            userInterface = (Parent) fxmlLoader.load();
+            Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
+            actual_stage.setScene(new Scene(userInterface));
+            actual_stage.setResizable(false);
+            actual_stage.show();
+        }
+        return;
+    }
 
     @FXML
     void initialize() {
+
         // setListView();
     }
 
