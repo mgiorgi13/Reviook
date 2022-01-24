@@ -182,19 +182,19 @@ public class UserInterfaceController {
 
         if(size >= 1){
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname());
+            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname().substring(0,20));
         }
         if(size >= 2){
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname());
+            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname().substring(0,20));
         }
         if(size >= 3){
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname());
+            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname().substring(0,20));
         }
         if(size >= 4){
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(suggestedAuthors.get(3).getNickname());
+            suggestedAuthor4.setText((suggestedAuthors.get(3).getNickname()));
         }
 
     }
@@ -212,19 +212,19 @@ public class UserInterfaceController {
 
         if(size >= 1){
             HBUser1.setVisible(true);
-            suggestedUser1.setText(suggestedUsers.get(0).getNickname());
+            suggestedUser1.setText(suggestedUsers.get(0).getNickname().substring(0,20));
         }
         if(size >= 2){
             HBUser2.setVisible(true);
-            suggestedUser2.setText(suggestedUsers.get(1).getNickname());
+            suggestedUser2.setText(suggestedUsers.get(1).getNickname().substring(0,20));
         }
         if(size >= 3){
             HBUser3.setVisible(true);
-            suggestedUser3.setText(suggestedUsers.get(2).getNickname());
+            suggestedUser3.setText(suggestedUsers.get(2).getNickname().substring(0,20));
         }
         if(size >= 4){
             HBUser4.setVisible(true);
-            suggestedUser4.setText(suggestedUsers.get(3).getNickname());
+            suggestedUser4.setText(suggestedUsers.get(3).getNickname().substring(0,20));
         }
 
     }

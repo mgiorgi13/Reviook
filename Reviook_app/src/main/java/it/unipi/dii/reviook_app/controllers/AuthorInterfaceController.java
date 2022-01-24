@@ -171,22 +171,22 @@ public class AuthorInterfaceController {
         if(size >= 1){
             Stat1.setVisible(true);
             bookCatText1.setText(genresReformatted.get(0).getType());
-            bookCatValue1.setText(genresReformatted.get(0).getValue().toString());
+            bookCatValue1.setText(genresReformatted.get(0).getValue().toString().substring(0,20));
         }
         if(size >= 2){
             Stat2.setVisible(true);
             bookCatText2.setText(genresReformatted.get(1).getType());
-            bookCatValue2.setText(genresReformatted.get(1).getValue().toString());
+            bookCatValue2.setText(genresReformatted.get(1).getValue().toString().substring(0,20));
         }
         if(size >= 3){
             Stat3.setVisible(true);
             bookCatText3.setText(genresReformatted.get(2).getType());
-            bookCatValue3.setText(genresReformatted.get(2).getValue().toString());
+            bookCatValue3.setText(genresReformatted.get(2).getValue().toString().substring(0,20));
         }
         if(size >= 4){
             Stat4.setVisible(true);
             bookCatText4.setText(genresReformatted.get(3).getType());
-            bookCatValue4.setText(genresReformatted.get(3).getValue().toString());
+            bookCatValue4.setText(genresReformatted.get(3).getValue().toString().substring(0,20));
         }
     }
 
@@ -203,19 +203,19 @@ public class AuthorInterfaceController {
 
         if(size >= 1){
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname());
+            suggestedAuthor1.setText(suggestedAuthors.get(0).getNickname().substring(0,20));
         }
         if(size >= 2){
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname());
+            suggestedAuthor2.setText(suggestedAuthors.get(1).getNickname().substring(0,20));
         }
         if(size >= 3){
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname());
+            suggestedAuthor3.setText(suggestedAuthors.get(2).getNickname().substring(0,20));
         }
         if(size >= 4){
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(suggestedAuthors.get(3).getNickname());
+            suggestedAuthor4.setText(suggestedAuthors.get(3).getNickname().substring(0,20));
         }
 
     }

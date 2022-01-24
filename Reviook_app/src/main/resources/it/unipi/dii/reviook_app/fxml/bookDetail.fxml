@@ -107,7 +107,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -120,7 +120,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -130,7 +130,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -140,7 +140,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -164,7 +164,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -177,7 +177,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -187,7 +187,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -197,7 +197,7 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4" textAlignment="CENTER" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4" wrappingWidth="146.8046875" />
                                             </children>
                                         </Pane>
                                     </children>
