@@ -292,8 +292,8 @@ public class BookManager {
     }
 
     public static boolean deleteBook(String book_id){
-        MongoCollection<Document> user = md.getCollection(bookCollection);
-        DeleteResult deleteResult = user.deleteOne(eq("book_id", book_id));
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        DeleteResult deleteResult = books.deleteOne(eq("book_id", book_id));
         if (deleteResult.getDeletedCount() == 1){
             try (Session session = nd.getDriver().session()) {
                     session.writeTransaction((TransactionWork<Boolean>) tx -> {
