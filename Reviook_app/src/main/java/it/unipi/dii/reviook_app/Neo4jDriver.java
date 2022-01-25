@@ -11,7 +11,7 @@ public class Neo4jDriver {
     private final Driver driver;
 
     private Neo4jDriver() {
-        driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "root"));
+        driver = GraphDatabase.driver("bolt://172.16.4.102:7687", AuthTokens.basic("neo4j", "reviook"));
     }
 
     public static Neo4jDriver getInstance() {

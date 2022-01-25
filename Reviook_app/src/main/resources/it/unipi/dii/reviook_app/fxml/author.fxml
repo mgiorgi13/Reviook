@@ -222,6 +222,7 @@
                 <Pane prefHeight="200.0" prefWidth="200.0">
                     <children>
                         <Button fx:id="editButtonAuthor" layoutX="41.0" layoutY="27.0" mnemonicParsing="false" onAction="#viewEditButtonAuthor" prefHeight="69.0" prefWidth="101.0" text="MY PROFILE" />
+                  <JFXButton fx:id="logoutButton" layoutY="1.0" onAction="#logoutActon" text="Logout" />
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="512.0">

@@ -62,7 +62,7 @@ public class AuthorInterfaceController {
     private JFXListView listRead;
 
     @FXML
-    private Button editButtonAuthor, addButtonBook;
+    private Button editButtonAuthor, addButtonBook,logoutButton;
 
     @FXML
     private CheckBox follow;
@@ -446,6 +446,16 @@ public class AuthorInterfaceController {
                 }
             }
         });
+    }
+    @FXML
+    void logoutActon(ActionEvent event) throws IOException {
+        // TODO va invalidata la sessione
+        session.clear();
+        Parent loginInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+        Stage actual_stage = (Stage) logoutButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(loginInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 
     @FXML
