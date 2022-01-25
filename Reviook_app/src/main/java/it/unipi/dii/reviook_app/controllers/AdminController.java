@@ -123,7 +123,7 @@ public class AdminController {
     void deleteListElem(ActionEvent event) {
         if (bookOption.isSelected()) {
             Book selectedBook = (Book) bookList.getSelectionModel().getSelectedItem();
-            bookManager.deleteBook(selectedBookID); //TODO non funziona capire perche
+            bookManager.deleteBook(selectedBook.getBook_id()); //TODO non funziona capire perche
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedUser.getNickname(),"user");
