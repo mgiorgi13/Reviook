@@ -208,6 +208,7 @@ public class SearchManager {
             ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
             result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
         }
+
         //search on name or surname
         if (!Username.equals("")) {
             queryResults = user.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
@@ -233,6 +234,7 @@ public class SearchManager {
             queryResults = author.find(eq("username", Username)).into(new ArrayList());
         }
         ArrayList<Author> result = new ArrayList<>();
+
         for (Document r : queryResults) {
             ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
             result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
@@ -256,7 +258,9 @@ public class SearchManager {
         MongoCollection<Document> genres = md.getCollection(genreCollection);
         MongoCursor<Document> cursor;
         ArrayList<Genre> result = new ArrayList<>();
+
         cursor = genres.find().iterator();
+
         while (cursor.hasNext()) {
             result.add(new Genre(cursor.next().getString("_id")));
         }
@@ -275,65 +279,6 @@ public class SearchManager {
         return result;
     }
 
-    public JSONArray searchRankBook(Integer year) {
-        Date dt = new Date();
-        MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
-        MongoCursor<Document> cursor;
-        ArrayList<Book> total_years = new ArrayList<>();
-
-        JSONArray genre = new JSONArray();
-        Bson match = match(in("publication_year", year));
-        Bson unwind = unwind("$genres");
-        Bson group = group("$genres", sum("counter", 1));
-        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match, unwind, group)).iterator();) {
-            while (result.hasNext()) {
-                Document y = result.next();
-                total_years.add(new Book("", ""));
-                genre.put(y.getString("_id"));
-                genre.put(y.getInteger("counter"));
-            }
-//            System.out.println(genre.length());
-        }
-
-        return genre;
-    }
-
-    public ArrayList<RankingObject> rankReview() {
-        MongoCollection<Document> book = md.getCollection(bookCollection);
-        ArrayList<RankingObject> array = new ArrayList<>();
-        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(new Document("$unwind",
-                        new Document("path", "$reviews")
-                                .append("includeArrayIndex", "string")
-                                .append("preserveNullAndEmptyArrays", false)),
-                new Document("$project",
-                        new Document("reviews.username", 1L)
-                                .append("reviews.likes",
-                                        new Document("$ifNull", Arrays.asList("$reviews.likes", "$reviews.helpful")))),
-                new Document("$group",
-                        new Document("_id", "$reviews.username")
-                                .append("reviews_number",
-                                        new Document("$count",
-                                                new Document()))
-                                .append("average_likes",
-                                        new Document("$avg", "$reviews.likes"))),
-                new Document("$match",
-                        new Document("reviews_number",
-                                new Document("$gte", 200L))),
-                new Document("$sort",
-                        new Document("average_likes", -1L)),
-                new Document("$limit", 100L))).iterator();) {
-
-            while (result.hasNext()) {
-                Document document = result.next();
-                array.add(new RankingObject(document.getString("_id"),
-                        document.getInteger("reviews_number"),
-                        document.getDouble("average_likes")));
-            }
-        }
-        return array;
-
-    }
-
     public ArrayList<String> searchYears() {
         MongoCollection<Document> years = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
@@ -341,7 +286,10 @@ public class SearchManager {
         Bson match = match(and(gte("publication_year", 1900), lte("publication_year", 2022)));
         Bson group = group("$publication_year");
         Bson sort = sort(orderBy(descending("_id")));
+
+
         try (MongoCursor<Document> result = years.aggregate(Arrays.asList(match, group, sort)).iterator();) {
+
             while (result.hasNext()) {
                 Document y = result.next();
                 total_years.add(String.valueOf(y.getInteger("_id")));
