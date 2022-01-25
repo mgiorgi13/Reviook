@@ -38,4 +38,12 @@ public class Author extends User {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "Author{" +
+                "writtenBook=" + writtenBook +
+                ", writtenBookStatistic=" + writtenBookStatistic +
+                ", userManager=" + userManager.toString() +
+                '}';
+    }
 }

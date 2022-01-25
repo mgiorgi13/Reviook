@@ -7,6 +7,7 @@ import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
+import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -72,6 +73,15 @@ public class AuthorInterfaceController {
     @FXML
     private HBox Stat1,Stat2,Stat3,Stat4;
 
+    @FXML
+    private HBox HBAuthor1,HBAuthor2,HBAuthor3,HBAuthor4,HBUser1,HBUser2,HBUser3,HBUser4;
+
+    @FXML
+    private Text suggestedAuthor1, suggestedAuthor2, suggestedAuthor3, suggestedAuthor4;
+
+    @FXML
+    private Text suggestedUser1, suggestedUser2, suggestedUser3, suggestedUser4;
+
     private String nickname;
 
     private Session session = Session.getInstance();
@@ -125,12 +135,19 @@ public class AuthorInterfaceController {
         }
     }
 
-    private void setAnalyticsResult(){
+    private String truckString(String input) {
+        if (input.length() > 14) {
+            return input.substring(0, 14);
+        }
+        return input;
+    }
+
+    private void viewBookAnalytic(){
         Double previousValue = -1.0;
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
-          analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
+        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
         if(analytics == null) {
             //load analytics from db
             analytics = userManager.averageRatingCategoryAuthor(nickname);
@@ -180,12 +197,74 @@ public class AuthorInterfaceController {
         }
     }
 
+    private void viewSuggestedAuthors() {
+        ArrayList<Author> suggestedAuthors = userManager.similarAuthors(nickname,"Author");
+        Collections.shuffle(suggestedAuthors);
+
+        HBAuthor1.setVisible(false);
+        HBAuthor2.setVisible(false);
+        HBAuthor3.setVisible(false);
+        HBAuthor4.setVisible(false);
+
+        int size = suggestedAuthors.size();
+
+        if(size >= 1){
+            HBAuthor1.setVisible(true);
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+        }
+        if(size >= 2){
+            HBAuthor2.setVisible(true);
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+        }
+        if(size >= 3){
+            HBAuthor3.setVisible(true);
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+        }
+        if(size >= 4){
+            HBAuthor4.setVisible(true);
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+        }
+
+    }
+
+    private void viewSuggestedUsers() {
+        ArrayList<User> suggestedUsers = userManager.similarUsers(nickname,"Author");
+        Collections.shuffle(suggestedUsers);
+
+        HBUser1.setVisible(false);
+        HBUser2.setVisible(false);
+        HBUser3.setVisible(false);
+        HBUser4.setVisible(false);
+
+        int size = suggestedUsers.size();
+
+        if(size >= 1){
+            HBUser1.setVisible(true);
+            suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
+        }
+        if(size >= 2){
+            HBUser2.setVisible(true);
+            suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
+        }
+        if(size >= 3){
+            HBUser3.setVisible(true);
+            suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
+        }
+        if(size >= 4){
+            HBUser4.setVisible(true);
+            suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
+        }
+
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
         usernameAuthor.setText(this.nickname);
 
-
-        setAnalyticsResult();
+        //set analytics result
+        viewBookAnalytic();
+        viewSuggestedAuthors();
+        viewSuggestedUsers();
 
         viewFollow();
         viewFollower();
@@ -228,6 +307,8 @@ public class AuthorInterfaceController {
             }
         }
     }
+
+
 
     @FXML
     void viewEditButtonAuthor(ActionEvent event) throws IOException {
@@ -285,32 +366,32 @@ public class AuthorInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell, false);
-                    if (result == -1)
+                    //check if author or user
+                    int result = userManager.verifyUsername(selectedCell,"author", false);
+                    if (result == -1 || result == 2)
                         return;
-                    else
-                        try {
-                            Parent userInterface;
-                            FXMLLoader fxmlLoader;
-                            if (result == 1) {
-                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                                controller.setNickname(selectedCell);
-                            } else {
-                                fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                                controller.setNickname(selectedCell);
-                            }
-
-                            Stage actual_stage = (Stage) listFollow.getScene().getWindow();
-                            actual_stage.setScene(new Scene(userInterface));
-                            actual_stage.setResizable(false);
-                            actual_stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    try {
+                        Parent userInterface;
+                        FXMLLoader fxmlLoader;
+                        if (result == 1) {
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(selectedCell);
+                        } else {
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                            controller.setNickname(selectedCell);
                         }
+
+                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
+                        actual_stage.setScene(new Scene(userInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -452,8 +533,8 @@ public class AuthorInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell, false);
-                    if (result == -1)
+                    int result = userManager.verifyUsername(selectedCell, "author",false);
+                    if (result == -1 || result == 2)
                         return;
                     try {
                         Parent userInterface;
@@ -489,12 +570,7 @@ public class AuthorInterfaceController {
             session.getLoggedAuthor().getBooks().listBooksClear();
         else
             session.getLoggedUser().getBooks().listBooksClear();
-        //ObservableList<String> obsPublishedList = FXCollections.observableArrayList();
         // TODO recuperare id  autore e fare la ricerca con quello
-        String revtID = userManager.retrieveID(usernameAuthor.getText());
-        //  obsPublishedList.addAll(searchManager.searchBooksAuthor(revtID));
-        ObservableList<String> statistic = FXCollections.observableArrayList();
-        statistic.addAll(searchManager.searchStatisticBooks(usernameAuthor.getText()));
         ArrayList<Book> published;
 
         published = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "WROTE");
@@ -535,22 +611,10 @@ public class AuthorInterfaceController {
                 }
             }
         });
-//        //TODO statistiche scrittore
-//        String gener;
-//        Integer perc;
-//        for (int i = 0; i < statistic.size(); i++) {
-//            String[] split = statistic.get(i).split(":");
-//            gener = split[0];
-//            perc = Integer.valueOf(split[1]) * 100 / obsPublishedList.size();
-////            System.out.println(gener + " " + perc);
-//        }
-
-
-//        System.out.println(session.getLoggedAuthor().getWrittenBookStatisitc());
     }
+
     @FXML
     void selectRanking(ActionEvent event) throws IOException {
-        Session session = Session.getInstance();
         Parent homeInterface;
 
         homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/ranking.fxml"));

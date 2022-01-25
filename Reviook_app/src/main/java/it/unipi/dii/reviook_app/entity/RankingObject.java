@@ -5,11 +5,39 @@ public class RankingObject {
     private Integer count;
     private Double avg;
 
-    public RankingObject(String user, Integer count, Double avg)
+    public RankingObject(String name, Integer count, Double avg)
     {
-        this.name = user;
+        this.name = name;
         this.count= count;
         this.avg = Math.round(avg*100.0)/100.0;
+    }
+
+    public RankingObject(String name, Integer count){
+        this(name,count,0.0);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Double getAvg() {
+        return avg;
+    }
+
+    public void setAvg(Double avg) {
+        this.avg = avg;
     }
 
     @Override
@@ -19,4 +47,5 @@ public class RankingObject {
                 "   Average Helpful: " + avg
                 ;
     }
+
 }

@@ -20,6 +20,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import javax.print.Doc;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -40,18 +41,16 @@ public class UserManager {
     private MongoDriver md;
     private Neo4jDriver nd;
     private it.unipi.dii.reviook_app.Session session = it.unipi.dii.reviook_app.Session.getInstance();
-
     private static final String usersCollection = "users";
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
+    private static final String adminsCollection = "admins";
     private static final String genreCollection = "genres";
-
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
         this.nd = Neo4jDriver.getInstance();
     }
-
 
     // N4J
     public void addNewUsers(String type, String id, String name, String username) {
@@ -63,18 +62,18 @@ public class UserManager {
         }
     }
 
-    public boolean deleteUserN4J() {
+    public boolean deleteUserN4J(String username, String type) {
         boolean result = false;
-        String username;
-        String type = this.session.getIsAuthor() ? "Author" : "User";
-
-        if (this.session.getIsAuthor())
-            username = this.session.getLoggedAuthor().getNickname();
-        else
-            username = this.session.getLoggedUser().getNickname();
+//        String username;
+//        String type = this.session.getIsAuthor() ? "Author" : "User";
+//        if (this.session.getIsAuthor())
+//            username = this.session.getLoggedAuthor().getNickname();
+//        else
+//            username = this.session.getLoggedUser().getNickname();
+        String t = type.equals("author") ? "Author" : "User";
         try (Session session = nd.getDriver().session()) {
             result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
-                tx.run("MATCH (n : " + type + " { username: '" + username + "'}) DETACH DELETE n");
+                tx.run("MATCH (n : " + t + " { username: '" + username + "'}) DETACH DELETE n");
                 return true;
             });
         }
@@ -89,6 +88,7 @@ public class UserManager {
                 return null;
             });
         }
+        incrementFollowerCount(username2);
     }
 
     public void deleteFollowing(String username1, String type1, String username2, String type2) {
@@ -100,6 +100,7 @@ public class UserManager {
                 return null;
             });
         }
+        decrementFollowerCount(username2);
     }
 
     public ArrayList<Book> loadRelationsBook(String type, String username, String read) {
@@ -212,35 +213,47 @@ public class UserManager {
         return ID;
     }
 
-    public int verifyUsername(String Username, boolean main) {
+    public int verifyUsername(String Username, String type, boolean loggingIn) {
+        MongoCollection<Document> admins = md.getCollection(adminsCollection);
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
-        try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                if (main) {
-                    ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                    session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+
+        if (type.equals("admin")) {
+            try (MongoCursor<Document> cursor = admins.find(eq("username", Username)).iterator()) {
+                while (cursor.hasNext()) {
+                    return 2;
                 }
-                return 0;
+            }
+        } else if (type.equals("author")) {
+            try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+                while (cursor.hasNext()) {
+                    Document user = cursor.next();
+                    if (loggingIn) {
+                        ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
+                        session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                    }
+                    return 1;
+                }
+            }
+        } else {
+            try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
+                while (cursor.hasNext()) {
+                    Document user = cursor.next();
+                    if (loggingIn) {
+                        ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
+                        session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                    }
+                    return 0;
+                }
             }
         }
-        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                if (main) {
-                    ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                    session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
-                }
-                return 1;
-            }
-        }
+
         return -1;
     }
 
-    public boolean verifyPassword(boolean type, String Username, String Password) {
-        MongoCollection<Document> users = md.getCollection(type ? authorCollection : usersCollection);
-        try (MongoCursor<Document> cursor = users.find(and(eq("username", Username), eq("password", Password))).iterator()) {
+    public boolean verifyPassword(String loginType, String Username, String Password) {
+        MongoCollection<Document> collection = md.getCollection(loginType.equals("author") ? authorCollection : loginType.equals("user") ? usersCollection : adminsCollection);
+        try (MongoCursor<Document> cursor = collection.find(and(eq("username", Username), eq("password", Password))).iterator()) {
             while (cursor.hasNext()) {
                 return true;
             }
@@ -284,13 +297,13 @@ public class UserManager {
 
     }
 
-    public boolean deleteUserMongo() {
-        MongoCollection<Document> user = md.getCollection(session.getIsAuthor() ? authorCollection : usersCollection);
-        String username;
-        if (session.getIsAuthor())
-            username = session.getLoggedAuthor().getNickname();
-        else
-            username = session.getLoggedUser().getNickname();
+    public boolean deleteUserMongo(String username, String type) {
+        MongoCollection<Document> user = md.getCollection(type.equals("author") ? authorCollection : usersCollection);
+//        String username;
+//        if (session.getIsAuthor())
+//            username = session.getLoggedAuthor().getNickname();
+//        else
+//            username = session.getLoggedUser().getNickname();
 
         DeleteResult deleteResult = user.deleteOne(eq("username", username));
         if (deleteResult.getDeletedCount() == 1)
@@ -342,85 +355,75 @@ public class UserManager {
 
     //ANALYTICS ==========================================================================================================
 
-    public ArrayList<Genre> averageRatingCategoryAuthor(String username){
+    public ArrayList<Genre> averageRatingCategoryAuthor(String username) {
         MongoCollection<Document> author = md.getCollection(authorCollection);
         MongoCollection<Document> books = md.getCollection(bookCollection);
         String author_id = null;
-        ArrayList<Genre> topRated= new ArrayList<>();
-
+        ArrayList<Genre> topRated = new ArrayList<>();
         Bson getAuthor;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-
-
         //get id of the author using the username
-        try (MongoCursor<Document> cursor = author.find(eq ("username",username)).iterator()) {
+        try (MongoCursor<Document> cursor = author.find(eq("username", username)).iterator()) {
             while (cursor.hasNext()) {
                 author_id = cursor.next().getString("author_id");
             }
         }
-
-        if(author_id == null)
+        if (author_id == null)
             return null;
-
-        getAuthor = match(eq("authors.author_id",author_id));
+        getAuthor = match(eq("authors.author_id", author_id));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$average_rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
-
         try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(getAuthor, unwindGenres, groupGenres, sortAvg)).iterator()) {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
 
-                Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
+                Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
         }
         return topRated;
     }
 
-    public ArrayList<Genre> averageRatingCategoryUser(String username){
+    public ArrayList<Genre> averageRatingCategoryUser(String username) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        ArrayList<Genre> topRated= new ArrayList<>();
-
+        ArrayList<Genre> topRated = new ArrayList<>();
         Bson getUser;
         Bson unwindReviews;
         Bson unwindGenres;
         Bson groupGenres;
         Bson sortAvg;
-
-        getUser =  match(eq("reviews.username",username));
+        getUser = match(eq("reviews.username", username));
         unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
         unwindGenres = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         groupGenres = group("$genres", avg("average_rating", "$reviews.rating"));
         sortAvg = sort(orderBy(descending("average_rating")));
-
         try (MongoCursor<Document> cursor = books.aggregate(Arrays.asList(unwindReviews, getUser, unwindGenres, groupGenres, sortAvg)).iterator()) {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
-
-                Genre genre = new Genre(stat.getString("_id"),Double.valueOf(avg));
+                Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
         }
         return topRated;
     }
 
-    public ArrayList<User> similarUsers(String username,String type){
+    public ArrayList<User> similarUsers(String username, String type) {
         ArrayList<User> suggestion = new ArrayList<>();
+        ArrayList<User> queryResult = new ArrayList<>();
 
         try (Session session = nd.getDriver().session()) {
-            suggestion = (ArrayList<User>) session.readTransaction((TransactionWork<List<User>>) tx -> {
-                Result result = tx.run("MATCH (u1:" + type + ")-[]-(b:Book)-[]-(u2:User) " +
-                        "WHERE u1.username = '" + username + "' AND u1<>u2" +
-                        "RETURN DISTINCT u2");
-                ArrayList<User> queryResult = new ArrayList<>();
+            suggestion = session.readTransaction((TransactionWork<ArrayList<User>>) tx -> {
+                Result result = tx.run("MATCH (u1:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +
+                        "WHERE u1.username = '" + username + "' AND u1<>u2 " +
+                        "RETURN DISTINCT u2.id,u2.name,u2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new User(r.get("u2.id").toString(),r.get("u2.name").toString(),"",r.get("u2.username").toString(),"","",new ArrayList<>(),0));
+                    queryResult.add(new User(r.get("u2.id").asString(), r.get("u2.name").asString(), "", r.get("u2.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });
@@ -428,18 +431,17 @@ public class UserManager {
         return suggestion;
     }
 
-     public ArrayList<Author> similarAuthors(String username,String type){
+    public ArrayList<Author> similarAuthors(String username, String type) {
         ArrayList<Author> suggestion;
-
+        ArrayList<Author> queryResult = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
-            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<List<Author>>) tx -> {
-                Result result = tx.run("MATCH (u:" + type + ")-[]-(b:Book)-[]-(a:Author) " +
-                        "WHERE u.username = '" + username + "' AND u<>a" +
-                        "RETURN DISTINCT a");
-                ArrayList<Author> queryResult = new ArrayList<>();
+            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
+                Result result = tx.run("MATCH (u:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[:READ|:TO_READ]-(a:Author) " +
+                        "WHERE u.username = '" + username + "' AND u<>a " +
+                        "RETURN DISTINCT a.id,a.name,a.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Author(r.get("a.id").toString(),r.get("a.name").toString(),"",r.get("a.username").toString(),"","",new ArrayList<>(),0));
+                    queryResult.add(new Author(r.get("a.id").asString(), r.get("a.name").asString(), "", r.get("a.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });

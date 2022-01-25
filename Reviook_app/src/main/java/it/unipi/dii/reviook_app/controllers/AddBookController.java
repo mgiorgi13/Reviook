@@ -212,7 +212,7 @@ public class AddBookController {
 
     @FXML
     void initialize() {
-        availableChoices.addAll(searchManager.searchlanguageCode());
+        availableChoices.addAll(searchManager.searchLanguageCode());
         languageCode.setItems(availableChoices);
 
     }
@@ -239,7 +239,7 @@ public class AddBookController {
         String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String ISBN_ = ISBN.getText();
         String URL_image = URLImage.getText();
-        Integer num_pages = Integer.parseInt(numPage.getText()) ;
+        Integer num_pages = numPage.getText() == null ? 0 :  Integer.valueOf(numPage.getText()) ;
         String Description = description.getText();
         ArrayList<String> Genre=new ArrayList<String>((ObservableList)genreTag.getItems());
         ArrayList<String> UsernameTagged=new ArrayList<String>((ObservableList)listTagged.getItems());

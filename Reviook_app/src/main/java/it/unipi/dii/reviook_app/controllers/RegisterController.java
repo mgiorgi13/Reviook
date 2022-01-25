@@ -58,7 +58,7 @@ public class RegisterController {
             //convalid email
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher mEmail = p.matcher(email);
-            if (userManager.verifyUsername(nickname, true) != -1)
+            if (userManager.verifyUsername(nickname,"", false) != -1)
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";

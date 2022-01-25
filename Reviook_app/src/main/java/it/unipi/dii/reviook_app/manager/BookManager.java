@@ -6,19 +6,16 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import it.unipi.dii.reviook_app.entity.Book;
-import it.unipi.dii.reviook_app.entity.Review;
+import it.unipi.dii.reviook_app.entity.*;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
-import it.unipi.dii.reviook_app.entity.User;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -26,12 +23,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.mongodb.client.model.Accumulators.avg;
 import static com.mongodb.client.model.Accumulators.sum;
 import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
 import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Sorts.descending;
+import static com.mongodb.client.model.Sorts.orderBy;
 import static org.neo4j.driver.Values.parameters;
 
 
@@ -266,6 +266,7 @@ public class BookManager {
         }
 
     }
+
     public static boolean foundMyBook(String id_book, String id_author){
 
         MongoCollection<Document> book = md.getCollection(bookCollection);
@@ -291,8 +292,8 @@ public class BookManager {
     }
 
     public static boolean deleteBook(String book_id){
-        MongoCollection<Document> user = md.getCollection(bookCollection);
-        DeleteResult deleteResult = user.deleteOne(eq("book_id", book_id));
+        MongoCollection<Document> books = md.getCollection(bookCollection);
+        DeleteResult deleteResult = books.deleteOne(eq("book_id", book_id));
         if (deleteResult.getDeletedCount() == 1){
             try (Session session = nd.getDriver().session()) {
                     session.writeTransaction((TransactionWork<Boolean>) tx -> {
@@ -304,4 +305,114 @@ public class BookManager {
         }
         return false;
     }
+
+    //ANALYTICS ==========================================================================================================
+
+    public ArrayList<Book> similarBooks(String book_id){
+        ArrayList<Book> suggestion = new ArrayList<>();
+        ArrayList<Book> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
+                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a:Author)-[]->(b2:Book) " +
+                        "WHERE b1.id = '" + book_id + "' AND b1<>b2 " +
+                        "RETURN DISTINCT b2.book_id,b2.title");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Book(r.get("b2.title").asString(),r.get("b2.book_id").asString()));
+                }
+                return queryResult;
+            });
+        }
+        return suggestion;
+    }
+
+     public ArrayList<Author> similarAuthors(String book_id){
+        ArrayList<Author> suggestion;
+        ArrayList<Author> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
+                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a1:Author)-[]->(b2:Book)<-[:WROTE]-(a2:Author) " +
+                       "WHERE b1.id = '" + book_id + "' AND b1<>b2 AND a1<>a2 " +
+                        "RETURN DISTINCT a2.id,a2.name,a2.username");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new Author(r.get("a2.id").asString(),r.get("a2.name").asString(),"",r.get("a2.username").asString(),"","",new ArrayList<>(),0));
+                }
+                return queryResult;
+            });
+        }
+        return suggestion;
+    }
+
+    public ArrayList<RankingObject> topBooks(String type,Integer limit){
+        ArrayList<RankingObject> books;
+        ArrayList<RankingObject> queryResult = new ArrayList<>();
+
+        try (Session session = nd.getDriver().session()) {
+            books = (ArrayList<RankingObject>) session.readTransaction((TransactionWork<ArrayList<RankingObject>>) tx -> {
+                Result result = tx.run("MATCH (b:Book)<-[r:" + type + "]-() " +
+                        "RETURN b.id,b.title,count(r) as count " +
+                        "ORDER BY count DESC " +
+                        "LIMIT " + limit +"");
+                while (result.hasNext()) {
+                    Record r = result.next();
+                    queryResult.add(new RankingObject(r.get("b.title").asString(),Integer.valueOf(r.get("count").toString())));
+                }
+                return queryResult;
+            });
+        }
+        return books;
+    }
+
+    public ArrayList<Genre> searchRankBook(Integer year){
+        MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
+
+        ArrayList<Genre> genres = new ArrayList<>();
+        Bson match = match(in("publication_year", year));
+        Bson unwind = unwind("$genres");
+        Bson group = group("$genres", sum("counter", 1));
+
+        try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match,unwind,group)).iterator()) {
+
+            while (result.hasNext()) {
+                Document y = result.next();
+                genres.add(new Genre(y.getString("_id"),Double.valueOf(y.get("counter").toString())));
+            }
+        }
+
+        return genres;
+    }
+
+    public ArrayList<RankingObject> rankReview()
+    {
+        MongoCollection<Document> book = md.getCollection(bookCollection);
+        ArrayList<RankingObject> array = new ArrayList<>();
+
+        Bson unwindReviews = unwind("$reviews");
+        Bson projectLikes = new Document("$project",
+                                new Document("reviews.username", 1L)
+                                .append("reviews.likes",
+                                        new Document("$ifNull", Arrays.asList("$reviews.likes", "$reviews.helpful"))));
+        Bson groupUsername = group("$reviews.username", sum("reviews_number", 1), avg("average_likes","$reviews.likes"));
+        Bson matchGreaterThan200 = match(gte("reviews_number", 200));
+        Bson sort = sort(orderBy(descending("average_likes")));
+        Bson limit = limit(100);
+
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(unwindReviews,projectLikes,groupUsername,matchGreaterThan200,sort,limit)).iterator()) {
+
+            while (result.hasNext()) {
+                Document document = result.next();
+                array.add(new RankingObject(document.getString("_id"),
+                        document.getInteger("reviews_number"),
+                        document.getDouble("average_likes")));
+            }
+        }
+        return array;
+
+    }
+
+    //==================================================================================================================
+
 }
