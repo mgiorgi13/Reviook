@@ -31,7 +31,6 @@ public class ListBooks {
 
     public String getIdBookToRead(String title) {
         for (Book Books : this.toRead) {
-
             if (Books.getTitle().equals(title))
                 return Books.getBook_id();
         }

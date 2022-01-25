@@ -79,7 +79,7 @@ public class SearchManager {
             }
             result = (new Book(
                     document.get("isbn") == null ? null : document.getString("isbn"),
-                    document.get("language_code")  == null ? null : document.getString("language_code"),
+                    document.get("language_code") == null ? null : document.getString("language_code"),
                     document.get("asin") == null ? null : document.getString("asin"),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description") == null ? null : document.getString("description"),
@@ -171,7 +171,7 @@ public class SearchManager {
 
             result.add(new Book(
                     document.get("isbn") == null ? null : document.getString("isbn"),
-                    document.get("language_code")  == null ? null : document.getString("language_code"),
+                    document.get("language_code") == null ? null : document.getString("language_code"),
                     document.get("asin") == null ? null : document.getString("asin"),
                     document.get("average_rating").toString().equals("") ? Double.valueOf(0) : Double.valueOf(document.get("average_rating").toString()),
                     document.get("description") == null ? null : document.getString("description"),
@@ -264,39 +264,26 @@ public class SearchManager {
         while (cursor.hasNext()) {
             result.add(new Genre(cursor.next().getString("_id")));
         }
-
         return result;
     }
+
     public ArrayList<String> searchLanguageCode() {
         MongoCollection<Document> languageCode = md.getCollection(bookCollection);
-
         ArrayList<String> result = new ArrayList<>();
-
-
         Bson group = group("$language_code", sum("counter", 1));
-
-
-
         try (MongoCursor<Document> cursor = languageCode.aggregate(Arrays.asList(group)).iterator();) {
-
-
             while (cursor.hasNext()) {
                 result.add(cursor.next().getString("_id"));
-
             }
         }
-
         return result;
     }
 
-    public ArrayList<String> searchYears(){
-
+    public ArrayList<String> searchYears() {
         MongoCollection<Document> years = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
         ArrayList<String> total_years = new ArrayList<>();
-
-
-        Bson match = match(and(gte("publication_year", 1900),lte("publication_year", 2022)));
+        Bson match = match(and(gte("publication_year", 1900), lte("publication_year", 2022)));
         Bson group = group("$publication_year");
         Bson sort = sort(orderBy(descending("_id")));
 

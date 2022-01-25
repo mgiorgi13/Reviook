@@ -7,18 +7,15 @@
 
 <Pane fx:id="pane" prefHeight="69.0" prefWidth="613.0" style="-fx-background-color: #f8f8ff; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Circle fill="#ffffff00" layoutX="483.0" layoutY="52.0" radius="13.0" stroke="CORNFLOWERBLUE" strokeType="INSIDE" />
-        <Circle fill="#ffffff00" layoutX="370.0" layoutY="52.0" radius="13.0" stroke="CORNFLOWERBLUE" strokeType="INSIDE" />
-        <Text fx:id="reviewCounter" fill="CORNFLOWERBLUE" layoutX="364.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375" />
-        <Text fx:id="likeCounter" fill="CORNFLOWERBLUE" layoutX="477.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375" />
+        <Circle fill="#ffffff00" layoutX="479.0" layoutY="51.0" radius="13.0" stroke="CORNFLOWERBLUE" strokeType="INSIDE" />
+        <Text fx:id="reviewCounter" fill="CORNFLOWERBLUE" layoutX="473.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375" />
         <Text fx:id="titleField" fill="CORNFLOWERBLUE" layoutX="22.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="book title" wrappingWidth="568.330078125">
             <font>
                 <Font size="14.0" />
             </font>
         </Text>
         <Text fx:id="authorsField" fill="CORNFLOWERBLUE" layoutX="14.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="authors" wrappingWidth="291.330078125" />
-        <Text fill="CORNFLOWERBLUE" layoutX="307.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="review" textAlignment="CENTER" wrappingWidth="43.330078125" />
-        <Text fill="CORNFLOWERBLUE" layoutX="411.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="likes" textAlignment="CENTER" wrappingWidth="49.330078125" />
+        <Text fill="CORNFLOWERBLUE" layoutX="416.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="review" textAlignment="CENTER" wrappingWidth="43.330078125" />
       <Circle fill="#ffffff00" layoutX="588.0" layoutY="51.0" radius="13.0" stroke="CORNFLOWERBLUE" strokeType="INSIDE" />
       <Text fx:id="ratingCounter" fill="CORNFLOWERBLUE" layoutX="575.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="26.0" />
       <Text fill="CORNFLOWERBLUE" layoutX="516.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="rating" textAlignment="CENTER" wrappingWidth="49.330078125" />

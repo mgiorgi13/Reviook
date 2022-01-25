@@ -14,7 +14,7 @@
                 <Pane prefHeight="54.0" prefWidth="757.0">
                <children>
                         <ChoiceBox fx:id="yearsFilter" layoutX="651.0" layoutY="11.0" prefHeight="26.0" prefWidth="83.0" />
-                  <Label fx:id="labelError" layoutX="444.0" layoutY="16.0" prefHeight="17.0" prefWidth="186.0" />
+                  <Label fx:id="labelError" layoutX="466.0" layoutY="16.0" prefHeight="17.0" prefWidth="173.0" />
                </children>
                 </Pane>
                 <Pane prefHeight="768.0" prefWidth="757.0">

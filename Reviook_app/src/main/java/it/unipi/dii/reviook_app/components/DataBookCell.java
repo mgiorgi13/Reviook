@@ -24,9 +24,6 @@ public class DataBookCell {
     private Text authorsField;
 
     @FXML
-    private Text likeCounter;
-
-    @FXML
     private Pane pane;
 
     @FXML
@@ -57,7 +54,6 @@ public class DataBookCell {
         }
 //        titleField.setText(book.getTitle());
         authorsField.setText(book.getAuthors().get(0));
-        likeCounter.setText(String.valueOf(book.getRatings_count()));
         reviewCounter.setText(String.valueOf(book.getReviews().size()));
         Float ratingSum = 0.0f;
         DecimalFormat df = new DecimalFormat("#.#");

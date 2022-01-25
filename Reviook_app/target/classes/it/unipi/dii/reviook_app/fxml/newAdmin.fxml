@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -12,35 +11,34 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AddAdminController">
     <padding>
         <Insets bottom="10" left="25" right="25" top="25" />
     </padding>
     <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButton" text="Login" />
-        <Button fx:id="registerButton" onAction="#openRegisterScene" text="Sign Up" />
+      <JFXButton fx:id="loginButton" onAction="#loginAction" text="LOGIN" />
+        <JFXButton fx:id="addAdminButton" onAction="#addAdminAction" text="INSERT" />
     </HBox>
 
     <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-    <Text text="Welcome" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+    <Text text="New Admin" wrappingWidth="62.05078125" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
 
-    <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <Label text="Username" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-    <TextField fx:id="usernameLogin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
     <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-   <ChoiceBox fx:id="loginType" prefWidth="150.0" GridPane.rowIndex="4" />
     <columnConstraints>
         <ColumnConstraints />
         <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
+        <RowConstraints maxHeight="30.0" minHeight="20.0" prefHeight="24.0" />
+        <RowConstraints maxHeight="25.0" minHeight="12.0" prefHeight="19.0" />
+        <RowConstraints maxHeight="24.0" minHeight="18.0" prefHeight="24.0" />
         <RowConstraints />
         <RowConstraints />
         <RowConstraints />

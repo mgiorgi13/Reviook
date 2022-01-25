@@ -38,12 +38,13 @@ public class SecurityController {
 
     @FXML
     void acceptDeleteButton(ActionEvent event) throws IOException {
-        if (userManager.deleteUserMongo() && userManager.deleteUserN4J()) {
+        String username = session.getIsAuthor() ? session.getLoggedAuthor().getNickname() : session.getLoggedUser().getNickname();
+        String type = session.getIsAuthor() ? "author" : "user";
+        if (userManager.deleteUserMongo(username, type) && userManager.deleteUserN4J(username, type)) {
             Session session = Session.getInstance();
             session.setSession(null);
             session.setCurrentLoggedUser(null);
             session.setCurrentLoggedAuthor(null);
-
             Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
             Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
             actual_stage.setScene(new Scene(login));

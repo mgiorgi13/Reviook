@@ -3,6 +3,7 @@ package it.unipi.dii.reviook_app;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Cache;
 import it.unipi.dii.reviook_app.entity.User;
+
 import java.util.ArrayList;
 
 
@@ -30,6 +31,16 @@ public class Session {
     }
 
     private Session() {
+    }
+
+    // TODO inizializzarla in qualche modo con il tipo ADMIN
+
+    public void clear() {
+        this.loggedAuthor = null;
+        this.loggedUser = null;
+        this.isAuthor = null;
+        session = null;
+        cache.ClearCache();
     }
 
     public Cache getCache() {
