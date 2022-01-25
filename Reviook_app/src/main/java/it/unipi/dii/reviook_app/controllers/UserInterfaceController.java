@@ -47,7 +47,7 @@ public class UserInterfaceController {
     private CheckBox follow;
 
     @FXML
-    private Button editButtonUser;
+    private Button editButtonUser,logoutButton;
 
     @FXML
     private JFXButton searchButton;
@@ -78,6 +78,17 @@ public class UserInterfaceController {
     private SearchManager searchManager = new SearchManager();
 
     private Session session = Session.getInstance();
+
+    @FXML
+    void logoutActon(ActionEvent event) throws IOException {
+        // TODO va invalidata la sessione
+        session.clear();
+        Parent loginInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+        Stage actual_stage = (Stage) logoutButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(loginInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
+    }
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
