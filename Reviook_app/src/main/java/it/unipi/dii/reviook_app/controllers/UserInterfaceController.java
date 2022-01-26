@@ -247,8 +247,6 @@ public class UserInterfaceController {
 
         int size = suggestedAuthors.size();
 
-
-        System.out.println(suggestedAuthors);
         if(size >= 1){
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
@@ -281,8 +279,6 @@ public class UserInterfaceController {
         HBUser4.setVisible(false);
 
         int size = suggestedUsers.size();
-
-        System.out.println(suggestedUsers);
         if(size >= 1){
             HBUser1.setVisible(true);
             suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));

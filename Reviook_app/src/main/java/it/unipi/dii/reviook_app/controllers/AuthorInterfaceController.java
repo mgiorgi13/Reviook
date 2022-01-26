@@ -254,7 +254,6 @@ public class AuthorInterfaceController {
 
         int size = suggestedAuthors.size();
 
-        System.out.println(suggestedAuthors);
 
         if(size >= 1){
             HBAuthor1.setVisible(true);
@@ -287,9 +286,6 @@ public class AuthorInterfaceController {
         HBUser2.setVisible(false);
         HBUser3.setVisible(false);
         HBUser4.setVisible(false);
-
-
-        System.out.println(suggestedUsers);
 
 
         int size = suggestedUsers.size();
