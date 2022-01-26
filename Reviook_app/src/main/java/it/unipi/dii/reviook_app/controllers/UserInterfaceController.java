@@ -591,14 +591,14 @@ public class UserInterfaceController {
     }
     public void initialize() {
         follow.setVisible(false);
-        System.out.println("caio");
+
         if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
 
         }
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
-
+        setButtonConnection();
        // viewFollower();
        // viewFollow();
 
