@@ -2,9 +2,7 @@ package it.unipi.dii.reviook_app.entity;
 
 import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.fxml.FXML;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     @FXML
@@ -17,13 +15,7 @@ public class User {
     private Interaction interactions;
     private ArrayList<String> listReviewID;
     private Integer follower_count;
-    //follower list
-    //following list
-    //to read list
-    //read list
-    //genres list
-    //suggested books
-    //suggested user
+    private ArrayList<Genre> statistics;
     private ListBooks listBooks;
 
     UserManager userManager = new UserManager();
@@ -39,6 +31,15 @@ public class User {
         this.listBooks = new ListBooks();
         this.listReviewID = listReviewID;
         this.follower_count = follower_count;
+        this.statistics = new ArrayList<>();
+    }
+
+    public ArrayList<Genre> getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(ArrayList<Genre> statistics) {
+        this.statistics = statistics;
     }
 
     public ArrayList<String> getListReviewID() {

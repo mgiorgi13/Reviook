@@ -1,13 +1,11 @@
 package it.unipi.dii.reviook_app.controllers;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.JFXListView;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
@@ -73,6 +71,9 @@ public class UserInterfaceController {
     private ArrayList<Genre> analytics;
 
     private String nickname;
+
+    private ArrayList<Author> suggestedAuthors = new ArrayList<>();
+    private ArrayList<User> suggestedUsers = new ArrayList<User>();
 
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
@@ -176,9 +177,50 @@ public class UserInterfaceController {
         return input;
     }
 
+    private void setOnMouseClicked(HBox HbSuggestion,Integer index, String type){
+        HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        if(type.equals("User")) {
+                            User userSuggested = suggestedUsers.get(index);
+                            try {
+                            Parent userInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                            userInterfaceController.setUser(userSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(userInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Author authorSuggested = suggestedAuthors.get(index);
+                            try {
+                            Parent userInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                            userInterfaceController.setUser(userSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(userInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
+    }
+
 
     private void viewSuggestedAuthors() {
-        ArrayList<Author> suggestedAuthors = userManager.similarAuthors(nickname,"User");
+        suggestedAuthors = userManager.similarAuthors(nickname,"User");
         Collections.shuffle(suggestedAuthors);
 
         HBAuthor1.setVisible(false);
@@ -191,24 +233,28 @@ public class UserInterfaceController {
         if(size >= 1){
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            setOnMouseClicked(HBAuthor1,0,"Author");
         }
         if(size >= 2){
             HBAuthor2.setVisible(true);
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            setOnMouseClicked(HBAuthor2,1,"Author");
         }
         if(size >= 3){
             HBAuthor3.setVisible(true);
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            setOnMouseClicked(HBAuthor3,2,"Author");
         }
         if(size >= 4){
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            setOnMouseClicked(HBAuthor4,3,"Author");
         }
 
     }
 
     private void viewSuggestedUsers() {
-        ArrayList<User> suggestedUsers = userManager.similarUsers(nickname,"User");
+        suggestedUsers = userManager.similarUsers(nickname,"User");
         Collections.shuffle(suggestedUsers);
         HBUser1.setVisible(false);
         HBUser2.setVisible(false);
@@ -218,18 +264,22 @@ public class UserInterfaceController {
         if(size >= 1){
             HBUser1.setVisible(true);
             suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
+            setOnMouseClicked(HBUser1,0,"User");
         }
         if(size >= 2){
             HBUser2.setVisible(true);
             suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
+            setOnMouseClicked(HBUser2,1,"User");
         }
         if(size >= 3){
             HBUser3.setVisible(true);
             suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
+            setOnMouseClicked(HBUser3,2,"User");
         }
         if(size >= 4){
             HBUser4.setVisible(true);
             suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
+            setOnMouseClicked(HBUser4,3,"User");
         }
 
     }
@@ -247,6 +297,7 @@ public class UserInterfaceController {
         //carico le info dello user
         viewFollow();
         viewFollower();
+
         rankingButton.setVisible(true);
         if (session.getLoggedAuthor() != null) {
             rankingButton.setVisible(false);

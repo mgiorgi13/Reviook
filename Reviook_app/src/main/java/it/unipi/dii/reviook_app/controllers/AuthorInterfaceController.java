@@ -84,6 +84,9 @@ public class AuthorInterfaceController {
 
     private String nickname;
 
+    private ArrayList<Author> suggestedAuthors;
+    private ArrayList<User> suggestedUsers;
+
     private Session session = Session.getInstance();
 
     private ArrayList<Genre> analytics;
@@ -197,8 +200,51 @@ public class AuthorInterfaceController {
         }
     }
 
+    private void setOnMouseClicked(HBox HbSuggestion,Integer index, String type){
+        HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        if(type.equals("User")) {
+                            User userSuggested = suggestedUsers.get(index);
+
+                            try {
+                                Parent userInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                                userInterface = (Parent) fxmlLoader.load();
+                                UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                                userInterfaceController.setUser(userSuggested);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(userInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Author authorSuggested = suggestedAuthors.get(index);
+
+                            try {
+                                Parent authorInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                                authorInterface = (Parent) fxmlLoader.load();
+                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                                authorInterfaceController.setAuthor(authorSuggested);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(authorInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
+    }
+
     private void viewSuggestedAuthors() {
-        ArrayList<Author> suggestedAuthors = userManager.similarAuthors(nickname,"Author");
+        suggestedAuthors = userManager.similarAuthors(nickname,"Author");
         Collections.shuffle(suggestedAuthors);
 
         HBAuthor1.setVisible(false);
@@ -211,24 +257,28 @@ public class AuthorInterfaceController {
         if(size >= 1){
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            setOnMouseClicked(HBAuthor1,0,"Author");
         }
         if(size >= 2){
             HBAuthor2.setVisible(true);
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            setOnMouseClicked(HBAuthor1,1,"Author");
         }
         if(size >= 3){
             HBAuthor3.setVisible(true);
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            setOnMouseClicked(HBAuthor2,2,"Author");
         }
         if(size >= 4){
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            setOnMouseClicked(HBAuthor3,3,"Author");
         }
 
     }
 
     private void viewSuggestedUsers() {
-        ArrayList<User> suggestedUsers = userManager.similarUsers(nickname,"Author");
+        suggestedUsers = userManager.similarUsers(nickname,"Author");
         Collections.shuffle(suggestedUsers);
 
         HBUser1.setVisible(false);
@@ -241,18 +291,22 @@ public class AuthorInterfaceController {
         if(size >= 1){
             HBUser1.setVisible(true);
             suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
+            setOnMouseClicked(HBUser1,0,"User");
         }
         if(size >= 2){
             HBUser2.setVisible(true);
             suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
+            setOnMouseClicked(HBUser1,1,"User");
         }
         if(size >= 3){
             HBUser3.setVisible(true);
             suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
+            setOnMouseClicked(HBUser2,2,"User");
         }
         if(size >= 4){
             HBUser4.setVisible(true);
             suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
+            setOnMouseClicked(HBUser3,3,"User");
         }
 
     }

@@ -5,6 +5,7 @@ import it.unipi.dii.reviook_app.components.ListReview;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
+import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -90,6 +91,9 @@ public class BookDetailController {
     @FXML
     private Text suggestedBook1, suggestedBook2, suggestedBook3, suggestedBook4;
 
+    private ArrayList<Author> suggestedAuthors;
+    private ArrayList<Book> suggestedBooks;
+
     Session session = Session.getInstance();
 
     private UserManager userManager = new UserManager();
@@ -142,6 +146,49 @@ public class BookDetailController {
         } else {
             ratingAVG.setText(df.format(ratingSum));
         }
+    }
+
+    private void setOnMouseClicked(HBox HbSuggestion,Integer index, String type){
+        HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        if(type.equals("Book")) {
+                            Book bookSuggested = suggestedBooks.get(index);
+
+                            try {
+                                Parent bookInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                                bookInterface = (Parent) fxmlLoader.load();
+                                BookDetailController bookDetailController = fxmlLoader.getController();
+                                bookDetailController.setInfoBook(bookSuggested);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(bookInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Author authorSuggested = suggestedAuthors.get(index);
+
+                            try {
+                                Parent authorInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                                authorInterface = (Parent) fxmlLoader.load();
+                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                                authorInterfaceController.setAuthor(authorSuggested);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(authorInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
     }
 
     @FXML
@@ -273,7 +320,7 @@ public class BookDetailController {
     }
 
     private void viewSuggestedAuthors(String book_id) {
-        ArrayList<Author> suggestedAuthors = bookManager.similarAuthors(book_id);
+        suggestedAuthors = bookManager.similarAuthors(book_id);
         Collections.shuffle(suggestedAuthors);
         HBAuthor1.setVisible(false);
         HBAuthor2.setVisible(false);
@@ -283,48 +330,56 @@ public class BookDetailController {
         if (size >= 1) {
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            setOnMouseClicked(HBAuthor1,0,"Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            setOnMouseClicked(HBAuthor2,1,"Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            setOnMouseClicked(HBAuthor3,2,"Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            setOnMouseClicked(HBAuthor4,3,"Author");
         }
 
     }
 
     private void viewSuggestedBooks(String book_id) {
-        ArrayList<Book> suggestedUsers = bookManager.similarBooks(book_id);
-        Collections.shuffle(suggestedUsers);
+        suggestedBooks = bookManager.similarBooks(book_id);
+        Collections.shuffle(suggestedBooks);
 
         HBBook1.setVisible(false);
         HBBook2.setVisible(false);
         HBBook3.setVisible(false);
         HBBook4.setVisible(false);
 
-        int size = suggestedUsers.size();
+        int size = suggestedBooks.size();
 
         if (size >= 1) {
             HBBook1.setVisible(true);
-            suggestedBook1.setText(truckString(suggestedUsers.get(0).getTitle()));
+            suggestedBook1.setText(truckString(suggestedBooks.get(0).getTitle()));
+            setOnMouseClicked(HBBook1,0,"Book");
         }
         if (size >= 2) {
             HBBook2.setVisible(true);
-            suggestedBook2.setText(truckString(suggestedUsers.get(1).getTitle()));
+            suggestedBook2.setText(truckString(suggestedBooks.get(1).getTitle()));
+            setOnMouseClicked(HBBook2,1,"Book");
         }
         if (size >= 3) {
             HBBook3.setVisible(true);
-            suggestedBook3.setText(truckString(suggestedUsers.get(2).getTitle()));
+            suggestedBook3.setText(truckString(suggestedBooks.get(2).getTitle()));
+            setOnMouseClicked(HBBook3,2,"Book");
         }
         if (size >= 4) {
             HBBook4.setVisible(true);
-            suggestedBook4.setText(truckString(suggestedUsers.get(3).getTitle()));
+            suggestedBook4.setText(truckString(suggestedBooks.get(3).getTitle()));
+            setOnMouseClicked(HBBook4,3,"Book");
         }
 
     }
