@@ -5,6 +5,7 @@ import it.unipi.dii.reviook_app.components.ListReview;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
+import it.unipi.dii.reviook_app.manager.AdminManager;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -43,7 +44,7 @@ public class BookDetailController {
     public JFXButton deleteReviewButton;
 
     @FXML
-    public Button deleteBook;
+    public JFXButton deleteBook;
 
     @FXML
     private ResourceBundle resources;
@@ -62,6 +63,9 @@ public class BookDetailController {
 
     @FXML
     private JFXButton editReviewButton;
+
+    @FXML
+    private JFXButton reportButton;
 
     @FXML
     private ListView<Review> listView;
@@ -101,6 +105,7 @@ public class BookDetailController {
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
     BookManager bookManager = new BookManager();
+    AdminManager adminManager = new AdminManager();
 
     public void setListView() {
         this.observableList.setAll(this.reviewsList);
@@ -296,7 +301,6 @@ public class BookDetailController {
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
         }
-
     }
 
     private void viewSuggestedBooks(String book_id) {
@@ -311,7 +315,6 @@ public class BookDetailController {
         int size = suggestedUsers.size();
 
         if (size >= 1) {
-            HBBook1.setVisible(true);
             suggestedBook1.setText(truckString(suggestedUsers.get(0).getTitle()));
         }
         if (size >= 2) {
@@ -403,9 +406,14 @@ public class BookDetailController {
     }
 
     @FXML
-    void initialize() {
+    void reportAction() {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        adminManager.ReportReview(selectedReview, book_id);
     }
 
-
+    @FXML
+    public void reportBookAction(ActionEvent actionEvent) {
+        adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null));
+    }
 }
 

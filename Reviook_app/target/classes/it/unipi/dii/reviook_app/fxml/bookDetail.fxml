@@ -50,15 +50,20 @@
                                         </ScrollPane>
                                         <Text layoutX="32.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:" />
                                         <Text fx:id="ratingAVG" layoutX="81.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-                              <Text fx:id="isbnKey" layoutX="159.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
-                              <Text fx:id="isbnValue" layoutX="277.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="isbnValue" wrappingWidth="245.25115966796875" />
-                              <Text layoutX="159.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Pubblication" />
-                              <Text fx:id="dataPubblication" layoutX="277.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="dataPubblication" wrappingWidth="161.0" />
-                              <Text layoutX="159.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language code" />
-                              <Text fx:id="languageCode" layoutX="277.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="languageCode" wrappingWidth="215.4000244140625" />
-                              <Text layoutX="159.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Page" />
-                              <Text fx:id="totalPage" layoutX="277.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="totalPage" />
-                              <Button fx:id="deleteBook" layoutX="25.0" layoutY="215.0" mnemonicParsing="false" onAction="#deleteBookFun" prefHeight="25.0" prefWidth="125.0" text="Delete book" />
+                                        <Text fx:id="isbnKey" layoutX="159.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
+                                        <Text fx:id="isbnValue" layoutX="277.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="isbnValue" wrappingWidth="245.25115966796875" />
+                                        <Text layoutX="159.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Pubblication" />
+                                        <Text fx:id="dataPubblication" layoutX="277.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="dataPubblication" wrappingWidth="161.0" />
+                                        <Text layoutX="159.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language code" />
+                                        <Text fx:id="languageCode" layoutX="277.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="languageCode" wrappingWidth="215.4000244140625" />
+                                        <Text layoutX="159.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Page" />
+                                        <Text fx:id="totalPage" layoutX="277.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="totalPage" />
+                                        <JFXButton fx:id="deleteBook" layoutX="6.0" layoutY="215.0" mnemonicParsing="false" onAction="#deleteBookFun" prefHeight="25.0" prefWidth="81.0" text="Delete book" />
+                              <JFXButton fx:id="reportBookButton" layoutX="108.0" layoutY="215.0" onAction="#reportBookAction" text="Report Book">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="EXCLAMATION" />
+                                 </graphic>
+                              </JFXButton>
                                     </children>
                                 </Pane>
                                 <Pane fx:id="test" prefHeight="632.0" prefWidth="594.0">
@@ -81,6 +86,11 @@
                                     <JFXButton fx:id="likeButton" layoutX="512.0" layoutY="14.0" onAction="#putLikeAction" text="Like">
                                         <graphic>
                                             <FontAwesomeIconView glyphName="HEART" />
+                                        </graphic>
+                                    </JFXButton>
+                                    <JFXButton fx:id="reportButton" layoutX="14.0" layoutY="471.0" onAction="#reportAction" text="Report Review">
+                                        <graphic>
+                                            <FontAwesomeIconView glyphName="EXCLAMATION" />
                                         </graphic>
                                     </JFXButton>
                                 </Pane>
