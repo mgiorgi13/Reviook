@@ -12,13 +12,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
     <padding>
         <Insets bottom="10" left="25" right="25" top="25" />
     </padding>
     <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButton" text="Login" />
-        <Button fx:id="registerButton" onAction="#openRegisterScene" text="Sign Up" />
+        <JFXButton fx:id="loginButton" mnemonicParsing="false" onAction="#loginButton" text="Login" />
+        <JFXButton fx:id="registerButton" onAction="#openRegisterScene" text="Sign Up" />
     </HBox>
 
     <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />

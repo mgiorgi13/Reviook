@@ -10,6 +10,7 @@
 <?import javafx.scene.text.Text?>
 
 
+<?import com.jfoenix.controls.JFXButton?>
 <Pane prefHeight="179.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="it.unipi.dii.reviook_app.controllers.SecurityController">
     <children>
@@ -32,9 +33,9 @@
             <children>
                 <Label prefHeight="18.0" prefWidth="256.0" text="Are you sure you want to delete your account?"
                        translateX="20.0" GridPane.columnIndex="1"/>
-                <Button fx:id="acceptDelete" mnemonicParsing="false" onAction="#acceptDeleteButton" text="Yes"
+                <JFXButton fx:id="acceptDelete" mnemonicParsing="false" onAction="#acceptDeleteButton" text="Yes"
                         translateX="50.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Button fx:id="negateDelete" mnemonicParsing="false" onAction="#negateDeleteButton" text="No"
+                <JFXButton fx:id="negateDelete" mnemonicParsing="false" onAction="#negateDeleteButton" text="No"
                         translateX="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
             </children>
