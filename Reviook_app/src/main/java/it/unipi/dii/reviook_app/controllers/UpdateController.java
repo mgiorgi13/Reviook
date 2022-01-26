@@ -26,7 +26,7 @@ public class UpdateController {
     private Text actiontarget;
 
     @FXML
-    private Button deleteButton, updateButton;
+    private Button deleteButton, updateButton, homeButton;
 
     @FXML
     private Text nameUpdate;
@@ -55,6 +55,20 @@ public class UpdateController {
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.setTitle("Are you sure you want to delete your account?");
+        actual_stage.show();
+    }
+
+    @FXML
+    void homeAction(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
+        if (session.getIsAuthor())
+            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+        else
+            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+        Stage actual_stage = (Stage) homeButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
+        actual_stage.setResizable(false);
         actual_stage.show();
     }
 

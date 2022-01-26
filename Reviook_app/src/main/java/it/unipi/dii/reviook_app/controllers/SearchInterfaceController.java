@@ -58,9 +58,6 @@ public class SearchInterfaceController {
     private JFXButton homeButton;
 
     @FXML
-    private JFXButton profileButton;
-
-    @FXML
     private TextField searchText;
 
     @FXML
@@ -136,27 +133,6 @@ public class SearchInterfaceController {
             homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
         Stage actual_stage = (Stage) homeButton.getScene().getWindow();
         actual_stage.setScene(new Scene(homeInterface));
-        actual_stage.setResizable(false);
-        actual_stage.show();
-    }
-
-    @FXML
-    void profileInterface() throws IOException {
-        Session session = Session.getInstance();
-        Parent userInterface;
-        if (session.getIsAuthor()) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-            // controller.setNickname(nickSelected);
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-        }
-
-        Stage actual_stage = (Stage) profileButton.getScene().getWindow();
-        actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
     }
@@ -277,7 +253,7 @@ public class SearchInterfaceController {
                             bookInterface = (Parent) fxmlLoader.load();
                             BookDetailController bookController = fxmlLoader.getController();
                             bookController.setInfoBook(selectedCell);
-                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(bookInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
@@ -305,7 +281,7 @@ public class SearchInterfaceController {
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
                             controller.setUser(selectedCell);
-                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
@@ -334,7 +310,7 @@ public class SearchInterfaceController {
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
                             controller.setAuthor(selectedCell);
 
-                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();

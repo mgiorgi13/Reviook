@@ -60,6 +60,9 @@ public class BookDetailController {
     private JFXButton searchButton;
 
     @FXML
+    private JFXButton homeButton;
+
+    @FXML
     private JFXButton addReviewButton;
 
     @FXML
@@ -110,6 +113,11 @@ public class BookDetailController {
 
     BookManager bookManager = new BookManager();
     AdminManager adminManager = new AdminManager();
+
+    @FXML
+    public void reportBookAction(ActionEvent actionEvent) {
+        adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null));
+    }
 
     public void setListView() {
         this.observableList.setAll(this.reviewsList);
@@ -201,6 +209,20 @@ public class BookDetailController {
         Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search.fxml"));
         Stage actual_stage = (Stage) searchButton.getScene().getWindow();
         actual_stage.setScene(new Scene(searchInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
+    }
+
+    @FXML
+    void homeAction(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
+        if (session.getIsAuthor())
+            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+        else
+            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+        Stage actual_stage = (Stage) homeButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
     }
@@ -314,7 +336,6 @@ public class BookDetailController {
                 setListView();
             }
         }
-
     }
 
     private String truckString(String input) {
