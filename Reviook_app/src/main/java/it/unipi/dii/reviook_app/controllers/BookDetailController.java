@@ -467,9 +467,6 @@ public class BookDetailController {
         adminManager.ReportReview(selectedReview, book_id);
     }
 
-    @FXML
-    public void reportBookAction(ActionEvent actionEvent) {
-        adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null));
-    }
+
 }
 

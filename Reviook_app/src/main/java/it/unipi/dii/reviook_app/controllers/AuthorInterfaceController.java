@@ -62,7 +62,7 @@ public class AuthorInterfaceController {
     private JFXListView listRead;
 
     @FXML
-    private Button editButtonAuthor, addButtonBook;
+    private Button editButtonAuthor, addButtonBook, logoutButton;
 
     @FXML
     private CheckBox follow;
@@ -311,8 +311,8 @@ public class AuthorInterfaceController {
 
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setAuthor(Author nickname) {
+        this.nickname = nickname.getNickname();
         usernameAuthor.setText(this.nickname);
 
         //set analytics result
@@ -428,15 +428,17 @@ public class AuthorInterfaceController {
                         Parent userInterface;
                         FXMLLoader fxmlLoader;
                         if (result == 1) {
+                            Author author = new Author(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setAuthor(author);
                         } else {
+                            User user = new User(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setUser(user);
                         }
 
                         Stage actual_stage = (Stage) listFollow.getScene().getWindow();
@@ -500,6 +502,16 @@ public class AuthorInterfaceController {
                 }
             }
         });
+    }
+    @FXML
+    void logoutActon(ActionEvent event) throws IOException {
+        // TODO va invalidata la sessione
+        session.clear();
+        Parent loginInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+        Stage actual_stage = (Stage) logoutButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(loginInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
     }
 
     @FXML
@@ -594,15 +606,17 @@ public class AuthorInterfaceController {
                         Parent userInterface;
                         FXMLLoader fxmlLoader;
                         if (result == 1) {
+                            Author author = new Author(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setAuthor(author);
                         } else {
+                            User user = new User(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setUser(user);
                         }
 
                         Stage actual_stage = (Stage) listFollower.getScene().getWindow();

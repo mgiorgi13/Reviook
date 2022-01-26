@@ -20,6 +20,18 @@ public class User {
 
     UserManager userManager = new UserManager();
 
+    public User(String nickname){
+        this.id = "";
+        this.name = "";
+        this.surname = "";
+        this.nickname = nickname;
+        this.email = "";
+        this.password = "";
+        this.interactions = new Interaction();
+        this.listBooks = new ListBooks();
+        this.listReviewID = new ArrayList<>();
+        this.follower_count = 0;
+    }
     public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         this.id = id;
         this.name = name;
