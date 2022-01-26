@@ -98,7 +98,7 @@
                                 </Pane>
                             </children>
                         </VBox>
-                        <JFXButton layoutX="191.0" layoutY="795.0" mnemonicParsing="false" text="HOME">
+                        <JFXButton fx:id="homeButton" layoutX="191.0" layoutY="795.0" mnemonicParsing="false" onAction="#homeAction" text="HOME">
                             <graphic>
                                 <FontAwesomeIconView glyphName="HOME" />
                             </graphic>
