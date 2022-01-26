@@ -48,12 +48,16 @@ public class DataBookCell {
     public void setInfo(Book book) {
         String title = book.getTitle();
         if (title.length() > 65) {
-            titleField.setText(book.getTitle().substring(0, Math.min(book.getTitle().length(), 65))+" ...");
+            titleField.setText(book.getTitle().substring(0, Math.min(book.getTitle().length(), 65)) + " ...");
         } else {
             titleField.setText(title);
         }
 //        titleField.setText(book.getTitle());
-        authorsField.setText(book.getAuthors().get(0));
+        if (book.getAuthors().size() > 0) {
+            authorsField.setText(book.getAuthors().get(0));
+        } else {
+            authorsField.setText("");
+        }
         reviewCounter.setText(String.valueOf(book.getReviews().size()));
         Float ratingSum = 0.0f;
         DecimalFormat df = new DecimalFormat("#.#");

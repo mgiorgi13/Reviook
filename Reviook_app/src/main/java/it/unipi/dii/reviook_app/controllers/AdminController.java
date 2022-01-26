@@ -12,14 +12,9 @@ import java.util.ResourceBundle;
 
 import com.mongodb.MongoException;
 import it.unipi.dii.reviook_app.Session;
-import it.unipi.dii.reviook_app.components.ListAuthor;
-import it.unipi.dii.reviook_app.components.ListBook;
-import it.unipi.dii.reviook_app.components.ListReview;
-import it.unipi.dii.reviook_app.components.ListUser;
-import it.unipi.dii.reviook_app.entity.Author;
-import it.unipi.dii.reviook_app.entity.Book;
-import it.unipi.dii.reviook_app.entity.Review;
-import it.unipi.dii.reviook_app.entity.User;
+import it.unipi.dii.reviook_app.components.*;
+import it.unipi.dii.reviook_app.entity.*;
+import it.unipi.dii.reviook_app.manager.AdminManager;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
@@ -33,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -54,13 +50,10 @@ public class AdminController {
     private JFXCheckBox bookOption;
 
     @FXML
-    private JFXButton deleteButtonList;
+    private JFXCheckBox reviewOption;
 
     @FXML
-    private JFXButton deleteReviewButton;
-
-    @FXML
-    private JFXListView<Review> reviewsListView;
+    private JFXButton deleteElemButton;
 
     @FXML
     private JFXButton searchButton;
@@ -72,7 +65,10 @@ public class AdminController {
     private JFXCheckBox userOption;
 
     @FXML
-    private JFXListView<Book> bookList;
+    private JFXListView<Report> bookList;
+
+    @FXML
+    private JFXListView<Report> reviewList;
 
     @FXML
     private JFXListView<User> usersList;
@@ -81,22 +77,22 @@ public class AdminController {
     private JFXListView<Author> authorsList;
 
     @FXML
+    private TextField usernameField;
+
+    @FXML
     private Text nameTitle;
 
     @FXML
-    private Text rating;
+    private Text description;
 
     @FXML
-    private Text description;
+    private Text reviewText;
 
     @FXML
     private Text follower;
 
     @FXML
     private Text username;
-
-    @FXML
-    private Text categories;
 
     @FXML
     private JFXButton addAdminButton;
@@ -106,7 +102,13 @@ public class AdminController {
     private SearchManager searchManager = new SearchManager();
     private BookManager bookManager = new BookManager();
     private UserManager userManager = new UserManager();
+    private AdminManager adminManager = new AdminManager();
     private Session session = Session.getInstance();
+
+    ObservableList<Report> obsBooksList = FXCollections.observableArrayList();
+    ObservableList<User> obsUserList = FXCollections.observableArrayList();
+    ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
+    ObservableList<Report> obsListReview = FXCollections.observableArrayList();
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
@@ -120,18 +122,27 @@ public class AdminController {
     }
 
     @FXML
-    void deleteListElem(ActionEvent event) {
+    void deleteElemAction(ActionEvent event) {
         if (bookOption.isSelected()) {
-            Book selectedBook = (Book) bookList.getSelectionModel().getSelectedItem();
-            bookManager.deleteBook(selectedBook.getBook_id()); //TODO non funziona capire perche
+            Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
+            bookManager.deleteBook(selectedBook.getBook_id());
+            adminManager.DeleteReport(selectedBook);
+            addCustomFactory("book");
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-            userManager.deleteUserN4J(selectedUser.getNickname(),"user");
-            userManager.deleteUserMongo(selectedUser.getNickname(),"user");
+            userManager.deleteUserN4J(selectedUser.getNickname(), "user");
+            userManager.deleteUserMongo(selectedUser.getNickname(), "user");
+            addCustomFactory("user");
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-            userManager.deleteUserN4J(selectedAuthor.getNickname(),"author");
-            userManager.deleteUserMongo(selectedAuthor.getNickname(),"author");
+            userManager.deleteUserN4J(selectedAuthor.getNickname(), "author");
+            userManager.deleteUserMongo(selectedAuthor.getNickname(), "author");
+            addCustomFactory("author");
+        } else if (reviewOption.isSelected()) {
+            Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
+            adminManager.DeleteReport(selectedReview);
+            bookManager.DeleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
+            addCustomFactory("review");
         }
     }
 
@@ -145,85 +156,90 @@ public class AdminController {
     }
 
     @FXML
-    void deleteReviewAction(ActionEvent event) {
-        Review selectedReview = (Review) reviewsListView.getSelectionModel().getSelectedItem();
-        if (selectedReview != null && selectedBookID != null) {
-            bookManager.DeleteReview(selectedReview.getReview_id(), selectedBookID);
-            Book book = bookManager.getBookByID(this.selectedBookID); // query to update review
-            ObservableList<Review> obsListReview = FXCollections.observableArrayList();
-            obsListReview.setAll(book.getReviews());
-            this.reviewsListView.getItems().clear();
-            this.reviewsListView.setItems(obsListReview);
+    void unReport() {
+        if (bookOption.isSelected()) {
+            Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
+            int index = bookList.getSelectionModel().getSelectedIndex();
+            adminManager.DeleteReport(selectedBook);
+            addCustomFactory("book");
+        } else if (reviewOption.isSelected()) {
+            Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
+            int index = reviewList.getSelectionModel().getSelectedIndex();
+            adminManager.DeleteReport(selectedReview);
+            reviewList.getItems().remove(index);
+            addCustomFactory("review");
         }
     }
 
+//    void deleteReviewAction() {
+//        Review selectedReview = (Review) reviewList.getSelectionModel().getSelectedItem();
+//        if (selectedReview != null && selectedBookID != null) {
+//            bookManager.DeleteReview(selectedReview.getReview_id(), selectedBookID);
+//            Book book = bookManager.getBookByID(this.selectedBookID); // query to update review
+//            ObservableList<Review> obsListReview = FXCollections.observableArrayList();
+//            obsListReview.setAll(book.getReviews());
+//            this.reviewsListView.getItems().clear();
+//            this.reviewsListView.setItems(obsListReview);
+//        }
+//    }
+
     @FXML
-    void searchAction(ActionEvent event) {
-        //TODO formattare meglio i risultati
-        usersList.getItems().clear();
-        bookList.getItems().clear();
-        authorsList.getItems().clear();
-        reviewsListView.getItems().clear();
+    void searchAction() {
+        clearList();
         if (bookOption.isSelected()) {
+            ArrayList<Report> list = adminManager.loadBookReported();
+            obsBooksList.addAll(list);
             bookList.setVisible(true);
             authorsList.setVisible(false);
             usersList.setVisible(false);
-            ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
-            ArrayList<Book> list = searchManager.searchBooks("", "");
-            obsBooksList.addAll(list);
-            bookList.getItems().addAll(obsBooksList);
+            reviewList.setVisible(false);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
+            ArrayList<User> list = searchManager.searchUser(usernameField.getText());
+            obsUserList.addAll(list);
             bookList.setVisible(false);
             authorsList.setVisible(false);
             usersList.setVisible(true);
-            ObservableList<User> obsUserList = FXCollections.observableArrayList();
-            ArrayList<User> list = searchManager.searchUser("");
-            obsUserList.addAll(list);
-            usersList.getItems().addAll(obsUserList);
+            reviewList.setVisible(false);
             addCustomFactory("user");
         } else if (authorOption.isSelected()) {
+            ArrayList<Author> list = searchManager.searchAuthor(usernameField.getText());
+            obsAuthorList.addAll(list);
             bookList.setVisible(false);
             authorsList.setVisible(true);
             usersList.setVisible(false);
-            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-            ArrayList<Author> list = searchManager.searchAuthor("");
-            obsUserList.addAll(list);
-            authorsList.getItems().addAll(obsUserList);
+            reviewList.setVisible(false);
             addCustomFactory("author");
+        } else if (reviewOption.isSelected()) {
+            ArrayList<Report> listRev = adminManager.loadReviewReported();
+            obsListReview.addAll(listRev);
+            usersList.setVisible(false);
+            authorsList.setVisible(false);
+            bookList.setVisible(false);
+            reviewList.setVisible(true);
+            addCustomFactory("review");
         }
     }
 
-    private void addCustomFactory(String type) {
+    private void addCustomFactory(String type)  {
         if (type.equals("book")) {
-            this.bookList.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>() {
+            this.bookList.setCellFactory(new Callback<ListView<Report>, ListCell<Report>>() {
                 @Override
-                public ListCell<Book> call(ListView<Book> listView) {
-                    return new ListBook();
+                public ListCell<Report> call(ListView<Report> listView) {
+                    return new ListReport();
                 }
             });
             this.bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                        Book selectedBook = (Book) bookList.getSelectionModel().getSelectedItem();
+                        Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
                         selectedBookID = selectedBook.getBook_id();
                         nameTitle.setText(selectedBook.getTitle());
                         username.setText("-");
-                        rating.setText(selectedBook.getAverage_rating().toString());
                         description.setText(selectedBook.getDescription());
-                        categories.setText(String.join(", ", selectedBook.getGenres()));
                         follower.setText("-");
-                        ObservableList<Review> obsListReview = FXCollections.observableArrayList();
-                        obsListReview.setAll(selectedBook.getReviews());
-                        reviewsListView.getItems().clear();
-                        reviewsListView.setItems(obsListReview);
-                        reviewsListView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
-                            @Override
-                            public ListCell<Review> call(ListView<Review> listView) {
-                                return new ListReview();
-                            }
-                        });
+                        reviewText.setText("-");
                     }
                 }
             });
@@ -243,8 +259,7 @@ public class AdminController {
                         username.setText(selectedUser.getNickname());
                         follower.setText(((Integer) selectedUser.getFollowerCount()).toString());
                         description.setText("-");
-                        categories.setText("-");
-                        rating.setText("-");
+                        reviewText.setText("-");
                     }
                 }
             });
@@ -259,14 +274,32 @@ public class AdminController {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                        // va settata la parte destra della interfaccia
                         Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
                         nameTitle.setText(selectedAuthor.getName());
                         username.setText(selectedAuthor.getNickname());
                         follower.setText(((Integer) selectedAuthor.getFollowerCount()).toString());
                         description.setText("-");
-                        categories.setText("-");
-                        rating.setText("-");
+                        reviewText.setText("-");
+                    }
+                }
+            });
+        } else if (type.equals("review")) {
+            reviewList.setCellFactory(new Callback<ListView<Report>, javafx.scene.control.ListCell<Report>>() {
+                @Override
+                public ListCell<Report> call(ListView<Report> listView) {
+                    return new ListReport();
+                }
+            });
+            this.reviewList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        Report selectedRev = (Report) reviewList.getSelectionModel().getSelectedItem();
+                        reviewText.setText(selectedRev.getReview_text());
+                        username.setText(selectedRev.getUsername());
+                        description.setText("-");
+                        follower.setText("-");
+                        nameTitle.setText("-");
                     }
                 }
             });
@@ -278,6 +311,7 @@ public class AdminController {
         bookOption.setSelected(true);
         authorOption.setSelected(false);
         userOption.setSelected(false);
+        reviewOption.setSelected(false);
     }
 
     @FXML
@@ -285,6 +319,7 @@ public class AdminController {
         bookOption.setSelected(false);
         userOption.setSelected(false);
         authorOption.setSelected(true);
+        reviewOption.setSelected(false);
     }
 
     @FXML
@@ -292,5 +327,31 @@ public class AdminController {
         bookOption.setSelected(false);
         authorOption.setSelected(false);
         userOption.setSelected(true);
+        reviewOption.setSelected(false);
+    }
+
+    @FXML
+    public void selectReviewCheckAction(ActionEvent actionEvent) {
+        bookOption.setSelected(false);
+        authorOption.setSelected(false);
+        userOption.setSelected(false);
+        reviewOption.setSelected(true);
+    }
+
+    //TODO clear all obs list
+    private void clearList() {
+        obsListReview.clear();
+        obsBooksList.clear();
+        obsUserList.clear();
+        obsAuthorList.clear();
+    }
+
+    @FXML
+    void initialize() {
+        clearList();
+        reviewList.setItems(obsListReview);
+        usersList.setItems(obsUserList);
+        authorsList.setItems(obsAuthorList);
+        bookList.setItems(obsBooksList);
     }
 }
