@@ -308,8 +308,6 @@ public class AuthorInterfaceController {
         }
     }
 
-
-
     @FXML
     void viewEditButtonAuthor(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/updateAccount.fxml"));
@@ -327,7 +325,6 @@ public class AuthorInterfaceController {
         actual_stage.setResizable(false);
         actual_stage.show();
     }
-
 
     @FXML
     void viewFollow() {
