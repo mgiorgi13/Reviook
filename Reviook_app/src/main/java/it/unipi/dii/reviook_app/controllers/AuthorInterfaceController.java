@@ -257,8 +257,8 @@ public class AuthorInterfaceController {
 
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickname(Author nickname) {
+        this.nickname = nickname.getNickname();
         usernameAuthor.setText(this.nickname);
 
         //set analytics result
@@ -374,15 +374,17 @@ public class AuthorInterfaceController {
                         Parent userInterface;
                         FXMLLoader fxmlLoader;
                         if (result == 1) {
+                            Author author = new Author(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setNickname(author);
                         } else {
+                            User user = new User(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setNickname(user);
                         }
 
                         Stage actual_stage = (Stage) listFollow.getScene().getWindow();
@@ -550,15 +552,17 @@ public class AuthorInterfaceController {
                         Parent userInterface;
                         FXMLLoader fxmlLoader;
                         if (result == 1) {
+                            Author author = new Author(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setNickname(author);
                         } else {
+                            User user = new User(selectedCell);
                             fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell);
+                            controller.setNickname(user);
                         }
 
                         Stage actual_stage = (Stage) listFollower.getScene().getWindow();

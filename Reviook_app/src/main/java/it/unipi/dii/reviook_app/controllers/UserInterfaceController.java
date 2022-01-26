@@ -9,10 +9,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.JFXListView;
-import it.unipi.dii.reviook_app.entity.Author;
-import it.unipi.dii.reviook_app.entity.Book;
-import it.unipi.dii.reviook_app.entity.Genre;
-import it.unipi.dii.reviook_app.entity.User;
+import it.unipi.dii.reviook_app.entity.*;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -78,6 +75,13 @@ public class UserInterfaceController {
     private SearchManager searchManager = new SearchManager();
 
     private Session session = Session.getInstance();
+
+    private User visualizedUser = new User("");
+
+
+
+
+
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
@@ -245,19 +249,26 @@ public class UserInterfaceController {
 
     }
 
-    public void setNickname(String nickname) {
+    public void setNickname(User user) {
         //TODO caricaListeLibri()
-        this.nickname = nickname;
+        System.out.println("set");
+        this.nickname = user.getNickname();
         usernameUser.setText(this.nickname);
-
+        visualizedUser = user;
+        Boolean existInteraction= true;
+        session.getCache().getSearchedUsers().contains(user);
+        if(user.getInteractions().getFollow().isEmpty()&&user.getInteractions().getFollower().isEmpty())
+            existInteraction =false;
         //load analytics
-        viewReviewAnalytic();
-        viewSuggestedAuthors();
-        viewSuggestedUsers();
 
-        //carico le info dello user
-        viewFollow();
-        viewFollower();
+            viewReviewAnalytic();
+            viewSuggestedAuthors();
+            viewSuggestedUsers();
+            //carico le info dello user
+        if (!existInteraction) {
+            viewFollow();
+            viewFollower();
+        }
         rankingButton.setVisible(true);
         if (session.getLoggedAuthor() != null) {
             rankingButton.setVisible(false);
@@ -309,137 +320,37 @@ public class UserInterfaceController {
 
     @FXML
     void viewFollow() {
+        User user = visualizedUser;
         listFollow.getItems().clear();
         ObservableList<String> listFollows = FXCollections.observableArrayList();
         List<String> Follow;
-        //I'm in my user profile
-        if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
-            session.getLoggedUser().getInteractions().delFollow();
-            Follow = userManager.loadRelations("User", usernameUser.getText());
-            session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
-            for (int i = 0; i < Follow.size(); i++) {
-                session.getLoggedUser().getInteractions().setFollow(Follow.get(i));
-            }
-            for (int i = 0; i < session.getLoggedUser().getInteractions().getNumberFollow(); i++)
-                listFollows.add(session.getLoggedUser().getInteractions().getFollow().get(i));
-            listFollow.getItems().addAll(listFollows);
-        } else {
-            User user = new User("", "", "", usernameUser.getText(), "", "", null, 0);
-            user.getInteractions().delFollow();
-            Follow = userManager.loadRelations("User", usernameUser.getText());
-            user.getInteractions().setNumberFollow(Follow.size());
-            for (int i = 0; i < Follow.size(); i++) {
-                user.getInteractions().setFollow(Follow.get(i));
-            }
-
-            for (int i = 0; i < user.getInteractions().getNumberFollow(); i++)
-                listFollows.add(user.getInteractions().getFollow().get(i));
-            listFollow.getItems().addAll(listFollows);
+        Follow = userManager.loadRelations("User", usernameUser.getText());
+        user.getInteractions().setNumberFollow(Follow.size());
+        for (int i = 0; i < Follow.size(); i++) {
+            user.getInteractions().setFollow(Follow.get(i));
+            listFollows.add(Follow.get(i));
         }
+         listFollow.getItems().addAll(listFollows);
+
         followCount.setText(String.valueOf(Follow.size()));
         listFollows.clear();
-
-        listFollow.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
-                    String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell,"", false);
-                    if (result == -1 || result == 2)
-                        return;
-                    try {
-                        Parent userInterface;
-                        FXMLLoader fxmlLoader;
-                        if (result == 1) {
-                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                            userInterface = (Parent) fxmlLoader.load();
-                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell);
-                        } else {
-                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                            userInterface = (Parent) fxmlLoader.load();
-                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell);
-                        }
-
-                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
-                        actual_stage.setScene(new Scene(userInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     @FXML
     void viewFollower() {
+        User user = visualizedUser;
         listFollower.getItems().clear();
         ObservableList<String> listFollowers = FXCollections.observableArrayList();
         List<String> Follower;
-        if ((session.getLoggedUser() != null) && (session.getLoggedUser().getNickname().equals(usernameUser.getText()))) {
-            session.getLoggedUser().getInteractions().delFollower();
-            Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
-            session.getLoggedUser().getInteractions().setNumberFollower(Follower.size());
-            for (int i = 0; i < Follower.size(); i++) {
-                session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
-            }
-
-            for (int i = 0; i < session.getLoggedUser().getInteractions().getNumberFollower(); i++)
-                listFollowers.add(session.getLoggedUser().getInteractions().getFollower().get(i));
-            listFollower.getItems().addAll(listFollowers);
-        } else {
-            User users = new User("", "", "", usernameUser.getText(), "", "", null, 0);
-            users.getInteractions().delFollower();
-            Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
-            users.getInteractions().setNumberFollower(Follower.size());
-
-            for (int i = 0; i < Follower.size(); i++) {
-                users.getInteractions().setFollower(Follower.get(i));
-            }
-
-            for (int i = 0; i < users.getInteractions().getNumberFollower(); i++)
-                listFollowers.add(users.getInteractions().getFollower().get(i));
-            listFollower.getItems().addAll(listFollowers);
+        Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
+        user.getInteractions().setNumberFollower(Follower.size());
+        for (int i = 0; i < Follower.size(); i++) {
+            user.getInteractions().setFollower(Follower.get(i));
+            listFollowers.add(Follower.get(i));
         }
+        listFollower.getItems().addAll(listFollowers);
         followersCount.setText(String.valueOf(Follower.size()));
         listFollowers.clear();
-        listFollower.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
-                    String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell,"tipo",false);
-                    if (result == -1 || result == 2)
-                        return;
-                    try {
-                        Parent userInterface;
-                        FXMLLoader fxmlLoader;
-                        if (result == 1) {
-                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                            userInterface = (Parent) fxmlLoader.load();
-                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell);
-                        } else {
-                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                            userInterface = (Parent) fxmlLoader.load();
-                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell);
-                        }
-
-                        Stage actual_stage = (Stage) listFollower.getScene().getWindow();
-                        actual_stage.setScene(new Scene(userInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
     }
 
     @FXML
@@ -462,34 +373,6 @@ public class UserInterfaceController {
                 ListRead.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
         }
         listRead.getItems().addAll(ListRead);
-        listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
-                    String selectedCell = (String) listRead.getSelectionModel().getSelectedItem();
-                    String id_book;
-                    if (session.getLoggedAuthor() != null) {
-                        id_book = session.getLoggedAuthor().getBooks().getIdBookRead(selectedCell);
-                    } else {
-                        id_book = session.getLoggedUser().getBooks().getIdBookRead(selectedCell);
-                    }
-                    Book allInfo = searchManager.searchIdBook(id_book);
-                    try {
-                        Parent bookInterface;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                        bookInterface = (Parent) fxmlLoader.load();
-                        BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo);
-                        Stage actual_stage = (Stage) listRead.getScene().getWindow();
-                        actual_stage.setScene(new Scene(bookInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     @FXML
@@ -512,7 +395,21 @@ public class UserInterfaceController {
                 ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(), book.getBook_id()));
         }
         listToRead.getItems().addAll(ListToRead);
+    }
 
+    @FXML
+    void selectRanking(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
+
+        homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/ranking.fxml"));
+
+        Stage actual_stage = (Stage) rankingButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
+    }
+    public void setButtonConnection(){
         listToRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -541,32 +438,117 @@ public class UserInterfaceController {
                 }
             }
         });
+        listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listRead.getSelectionModel().getSelectedItem();
+                    String id_book;
+                    if (session.getLoggedAuthor() != null) {
+                        id_book = session.getLoggedAuthor().getBooks().getIdBookRead(selectedCell);
+                    } else {
+                        id_book = session.getLoggedUser().getBooks().getIdBookRead(selectedCell);
+                    }
+                    Book allInfo = searchManager.searchIdBook(id_book);
+                    try {
+                        Parent bookInterface;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                        bookInterface = (Parent) fxmlLoader.load();
+                        BookDetailController bookController = fxmlLoader.getController();
+                        bookController.setInfoBook(allInfo);
+                        Stage actual_stage = (Stage) listRead.getScene().getWindow();
+                        actual_stage.setScene(new Scene(bookInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        listFollower.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
+                    int result = userManager.verifyUsername(selectedCell,"tipo",false);
+                    if (result == -1 || result == 2)
+                        return;
+                    try {
+                        Parent userInterface;
+                        FXMLLoader fxmlLoader;
+                        if (result == 1) {
+                            Author author = new Author(selectedCell);
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(author);
+                        } else {
+                            User user = new User(selectedCell);
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                            controller.setNickname(user);
+                        }
+
+                        Stage actual_stage = (Stage) listFollower.getScene().getWindow();
+                        actual_stage.setScene(new Scene(userInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        listFollow.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
+                    int result = userManager.verifyUsername(selectedCell,"", false);
+                    if (result == -1 || result == 2)
+                        return;
+                    try {
+                        Parent userInterface;
+                        FXMLLoader fxmlLoader;
+                        if (result == 1) {
+                            Author author = new Author(selectedCell);
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
+                            controller.setNickname(author);
+                        } else {
+                            User user = new User(selectedCell);
+                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
+                            controller.setNickname(user);
+                        }
+
+                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
+                        actual_stage.setScene(new Scene(userInterface));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
-
-    @FXML
-    void selectRanking(ActionEvent event) throws IOException {
-        Session session = Session.getInstance();
-        Parent homeInterface;
-
-        homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/ranking.fxml"));
-
-        Stage actual_stage = (Stage) rankingButton.getScene().getWindow();
-        actual_stage.setScene(new Scene(homeInterface));
-        actual_stage.setResizable(false);
-        actual_stage.show();
-    }
-
     public void initialize() {
         follow.setVisible(false);
-
+        System.out.println("caio");
         if (session.getLoggedUser() != null) {
             usernameUser.setText(session.getLoggedUser().getNickname());
+
         }
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
-        viewFollower();
-        viewFollow();
 
+       // viewFollower();
+       // viewFollow();
 
     }
 }
