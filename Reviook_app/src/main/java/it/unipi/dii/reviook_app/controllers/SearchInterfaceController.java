@@ -280,7 +280,7 @@ public class SearchInterfaceController {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
+                            controller.setUser(selectedCell);
                             Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
@@ -308,7 +308,7 @@ public class SearchInterfaceController {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
+                            controller.setAuthor(selectedCell);
 
                             Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));

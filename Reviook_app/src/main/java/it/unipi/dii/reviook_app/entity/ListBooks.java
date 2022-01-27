@@ -6,19 +6,16 @@ public class ListBooks {
     private ArrayList<Book> readed;
     private ArrayList<Book> toRead;
     private ArrayList<Book> published;
-    private ArrayList<Book> statistic;
 
     public ListBooks() {
         this.readed = new ArrayList<>();
         this.toRead = new ArrayList<>();
-        this.statistic = new ArrayList<>();
         this.published = new ArrayList<>();
     }
 
     public void listBooksClear() {
         readed.clear();
         toRead.clear();
-        statistic.clear();
         published.clear();
     }
 
