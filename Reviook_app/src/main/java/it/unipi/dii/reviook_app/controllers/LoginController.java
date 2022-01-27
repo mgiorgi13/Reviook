@@ -10,13 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
-
 import org.json.JSONException;
 
 import javax.xml.bind.DatatypeConverter;
@@ -25,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class LoginController {
@@ -42,6 +40,12 @@ public class LoginController {
     private ImageView logout;
 
     @FXML
+    private ProgressBar progressBar;
+
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    @FXML
     private Button registerButton;
 
     @FXML
@@ -54,78 +58,89 @@ public class LoginController {
 
     private Session session = Session.getInstance();
 
-    public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException {
+    String username, password;
+
+
+    public boolean logIn(String username, String password) throws NoSuchAlgorithmException, JSONException, InterruptedException {
         MessageDigest md;
         String pswHash;
         int result = userManager.verifyUsername(username, loginType.getSelectionModel().getSelectedItem().toString(), true);
-        if (result == -1)
+        if (result == -1) {
             return false;
-        if (result != 2)
+        }
+        if (result != 2) {
             session.setIsAuthor(result == 1 ? true : false);
-
+        }
         //Hashing control
         md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
         byte[] digest = md.digest();
         pswHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
         Boolean c = userManager.verifyPassword(loginType.getSelectionModel().getSelectedItem().toString(), username, pswHash);
-        if (!userManager.verifyPassword(loginType.getSelectionModel().getSelectedItem().toString(), username, pswHash))
+        if (!userManager.verifyPassword(loginType.getSelectionModel().getSelectedItem().toString(), username, pswHash)) {
             return false;
+        }
+
+        Thread.sleep(10000);
 
         return true;
     }
 
-    String username, password;
-
     @FXML
-    void loginButton(ActionEvent event) throws IOException, NoSuchAlgorithmException, JSONException {
-        username = usernameLogin.getText();
-        password = passwordField.getText();
-
-        if (usernameLogin.getText().isEmpty() || passwordField.getText().isEmpty() || loginType.getSelectionModel().getSelectedItem() == null) {
-            actiontarget.setText("You must fill in all fields");
-            return;
-        }
-        if (!logIn(username, password)) {
-            actiontarget.setText("Wrong Login");
-            return;
-        }
+    void loginButton(ActionEvent event) throws IOException {
+        progressBar.setVisible(true);
+        progressBar.setProgress(-1);
         Parent user_scene;
+        try {
+            username = usernameLogin.getText();
+            password = passwordField.getText();
 
+            if (usernameLogin.getText().isEmpty() || passwordField.getText().isEmpty() || loginType.getSelectionModel().getSelectedItem() == null) {
+                actiontarget.setText("You must fill in all fields");
+                progressBar.setVisible(false);
+                return;
+            }
 
-        if (loginType.getSelectionModel().getSelectedItem().toString().equals("admin")) {
-            user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
-        } else {
-            if (session.getIsAuthor()) {
-                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            if (!logIn(username, password)) {
+                actiontarget.setText("Wrong Login");
+                progressBar.setVisible(false);
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("Error in loginButton() ---" + e);
+        } finally {
+            if (loginType.getSelectionModel().getSelectedItem().toString().equals("admin")) {
+                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
             } else {
-                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                List<String> Follow = userManager.loadRelations("User", username);
-                session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
-                for (int i = 0; i < Follow.size(); i++) {
-                    session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
-                }
-                List<String> Follower = userManager.loadRelationsFollower("User", username);
-                session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
-                for (int i = 0; i < Follower.size(); i++) {
-                    session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
+                if (session.getIsAuthor()) {
+                    user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                } else {
+                    user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                    List<String> Follow = userManager.loadRelations("User", username);
+                    session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
+                    for (int i = 0; i < Follow.size(); i++) {
+                        session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
+                    }
+                    List<String> Follower = userManager.loadRelationsFollower("User", username);
+                    session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
+                    for (int i = 0; i < Follower.size(); i++) {
+                        session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
+                    }
                 }
             }
+            Stage actual_stage = (Stage) loginButton.getScene().getWindow();
+            actual_stage.setScene(new Scene(user_scene));
+            actual_stage.setResizable(false);
+            actual_stage.show();
         }
+
         // TODO commentato perche inutile
         /*if (session.getIsAuthor() == null) {
             return;
         }*/
 
-        Stage actual_stage = (Stage) loginButton.getScene().getWindow();
-        actual_stage.setScene(new Scene(user_scene));
-        actual_stage.setResizable(false);
-        actual_stage.show();
     }
 
-    public User getUsers() {
-        return users;
-    }
 
     @FXML
     void openRegisterScene(ActionEvent event) throws IOException {
@@ -139,5 +154,7 @@ public class LoginController {
     @FXML
     void initialize() {
         loginType.setItems(FXCollections.observableArrayList("user", "author", "admin"));
+//        progressBar.setVisible(false);
+        progressBar.setProgress(-1);
     }
 }

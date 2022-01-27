@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
-    <padding>
-        <Insets bottom="10" left="25" right="25" top="25" />
-    </padding>
-    <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <JFXButton fx:id="loginButton" mnemonicParsing="false" onAction="#loginButton" text="Login" />
-        <JFXButton fx:id="registerButton" onAction="#openRegisterScene" text="Sign Up" />
-    </HBox>
+<?import javafx.scene.control.ProgressBar?>
+<Pane prefHeight="296.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
+    <children>
+        <JFXButton fx:id="loginButton" layoutX="335.0" layoutY="123.0" mnemonicParsing="false" onAction="#loginButton"
+                   text="Login"/>
+        <JFXButton fx:id="registerButton" layoutX="329.0" layoutY="165.0" onAction="#openRegisterScene" text="Sign Up"/>
 
-    <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <Text fx:id="actiontarget" layoutX="133.0" layoutY="221.0" textAlignment="CENTER" wrappingWidth="169.0"/>
 
-    <Text text="Welcome" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+        <Text layoutX="192.0" layoutY="33.0" text="Welcome">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Text>
 
-    <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label layoutX="53.0" layoutY="123.0" text="User Name:"/>
 
-    <TextField fx:id="usernameLogin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="usernameLogin" layoutX="142.0" layoutY="115.0"/>
 
-    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label layoutX="57.0" layoutY="182.0" text="Password:"/>
 
-    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-   <ChoiceBox fx:id="loginType" prefWidth="150.0" GridPane.rowIndex="4" />
-    <columnConstraints>
-        <ColumnConstraints />
-        <ColumnConstraints />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
-    </rowConstraints>
-</GridPane>
+        <PasswordField fx:id="passwordField" layoutX="142.0" layoutY="174.0"/>
+        <ChoiceBox fx:id="loginType" layoutX="142.0" layoutY="64.0" prefWidth="150.0"/>
+        <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="273.0" prefHeight="18.0" prefWidth="407.0"
+                     progress="0.0"/>
+        <!--<ProgressIndicator fx:id="progressIndicator" layoutX="199.0" layoutY="242.0" prefHeight="40.0" prefWidth="61.0" progress="0.0" />-->
+    </children>
+</Pane>
