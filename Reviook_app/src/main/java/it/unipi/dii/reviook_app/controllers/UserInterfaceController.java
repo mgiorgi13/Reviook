@@ -251,11 +251,11 @@ public class UserInterfaceController {
 
     public void setNickname(User user) {
         //TODO caricaListeLibri()
-        System.out.println("set");
         this.nickname = user.getNickname();
         usernameUser.setText(this.nickname);
         visualizedUser = user;
         Boolean existInteraction= true;
+
         session.getCache().getSearchedUsers().contains(user);
         if(user.getInteractions().getFollow().isEmpty()&&user.getInteractions().getFollower().isEmpty())
             existInteraction =false;
@@ -544,11 +544,12 @@ public class UserInterfaceController {
             usernameUser.setText(session.getLoggedUser().getNickname());
 
         }
+        setButtonConnection();
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
 
-       // viewFollower();
-       // viewFollow();
+        viewFollower();
+        viewFollow();
 
     }
 }
