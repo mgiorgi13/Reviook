@@ -208,7 +208,7 @@ public class AddBookController {
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void initialize() {

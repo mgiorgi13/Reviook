@@ -51,7 +51,7 @@ public class SecurityController {
             actual_stage.setResizable(false);
             actual_stage.setTitle("Create new account");
             actual_stage.show();
-        } else {
+actual_stage.centerOnScreen();        } else {
             actiontarget.setText("Error during delete");
         }
     }
@@ -64,5 +64,5 @@ public class SecurityController {
         actual_stage.setResizable(false);
         actual_stage.setTitle("Are you sure you want to delete your account?");
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 }

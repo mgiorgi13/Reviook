@@ -101,7 +101,7 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
@@ -219,7 +219,7 @@ public class AuthorInterfaceController {
                                 actual_stage.setScene(new Scene(userInterface));
                                 actual_stage.setResizable(false);
                                 actual_stage.show();
-                            } catch (IOException e) {
+actual_stage.centerOnScreen();                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         } else {
@@ -235,7 +235,7 @@ public class AuthorInterfaceController {
                                 actual_stage.setScene(new Scene(authorInterface));
                                 actual_stage.setResizable(false);
                                 actual_stage.show();
-                            } catch (IOException e) {
+actual_stage.centerOnScreen();                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -377,7 +377,7 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -386,7 +386,7 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
 
     @FXML
@@ -461,7 +461,7 @@ public class AuthorInterfaceController {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -501,7 +501,7 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void viewToRead() {
@@ -577,7 +577,7 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
     public void setButtonConnection(){
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -596,12 +596,12 @@ public class AuthorInterfaceController {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo);
+                        bookController.setInfoBook(allInfo,false);
                         Stage actual_stage = (Stage) listRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -624,12 +624,12 @@ public class AuthorInterfaceController {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo);
+                        bookController.setInfoBook(allInfo,false);
                         Stage actual_stage = (Stage) listToRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -664,7 +664,7 @@ public class AuthorInterfaceController {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -687,12 +687,12 @@ public class AuthorInterfaceController {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo);
+                        bookController.setInfoBook(allInfo,false);
                         Stage actual_stage = (Stage) listPublished.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -728,7 +728,7 @@ public class AuthorInterfaceController {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -739,16 +739,14 @@ public class AuthorInterfaceController {
     public void initialize() {
         follow.setVisible(false);
 
-        if (session.getLoggedAuthor() != null) {
-            usernameAuthor.setText(session.getLoggedAuthor().getNickname());
-        } /*else if (session.getLoggedUser() != null) {
-            usernameAuthor.setText(session.getLoggedUser().getNickname());
-        }*/
+//        if (session.getLoggedAuthor() != null) {
+//            usernameAuthor.setText(session.getLoggedAuthor().getNickname());
+//        } /*else if (session.getLoggedUser() != null) {
+//            usernameAuthor.setText(session.getLoggedUser().getNickname());
+//        }*/
 
         setButtonConnection();
 
-        viewFollow();
-        viewFollower();
     }
 
 }
