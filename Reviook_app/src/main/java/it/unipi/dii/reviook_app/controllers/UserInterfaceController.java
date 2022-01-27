@@ -93,7 +93,7 @@ public class UserInterfaceController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
@@ -210,7 +210,7 @@ public class UserInterfaceController {
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-                            } catch (IOException e) {
+actual_stage.centerOnScreen();                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }else {
@@ -226,7 +226,7 @@ public class UserInterfaceController {
                             actual_stage.setScene(new Scene(authorInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-                            } catch (IOException e) {
+actual_stage.centerOnScreen();                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -360,7 +360,7 @@ public class UserInterfaceController {
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void viewEditButtonUser(ActionEvent event) throws IOException {
@@ -369,7 +369,7 @@ public class UserInterfaceController {
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void viewFollow() {
@@ -461,7 +461,7 @@ public class UserInterfaceController {
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
     public void setButtonConnection(){
         listToRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -480,12 +480,12 @@ public class UserInterfaceController {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo);
+                        bookController.setInfoBook(allInfo,false);
                         Stage actual_stage = (Stage) listToRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -508,12 +508,12 @@ public class UserInterfaceController {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo);
+                        bookController.setInfoBook(allInfo,false);
                         Stage actual_stage = (Stage) listRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -548,7 +548,7 @@ public class UserInterfaceController {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -583,7 +583,7 @@ public class UserInterfaceController {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-                    } catch (IOException e) {
+actual_stage.centerOnScreen();                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -593,16 +593,14 @@ public class UserInterfaceController {
     public void initialize() {
         follow.setVisible(false);
 
-        if (session.getLoggedUser() != null) {
-            usernameUser.setText(session.getLoggedUser().getNickname());
-
-        }
+//        if (session.getLoggedUser() != null) {
+//            usernameUser.setText(session.getLoggedUser().getNickname());
+//
+//        }
         setButtonConnection();
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
 
-        viewFollower();
-        viewFollow();
        // viewFollower();
        // viewFollow();
 

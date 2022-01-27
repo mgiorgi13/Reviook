@@ -119,7 +119,7 @@ public class AdminController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void deleteElemAction(ActionEvent event) {
@@ -153,7 +153,7 @@ public class AdminController {
         actual_stage.setScene(new Scene(newAdminInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void unReport() {
