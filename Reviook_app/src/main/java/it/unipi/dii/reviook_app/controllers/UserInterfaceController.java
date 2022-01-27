@@ -309,6 +309,7 @@ public class UserInterfaceController {
         usernameUser.setText(this.nickname);
         visualizedUser = user;
         Boolean existInteraction= true;
+
         if(user.getInteractions().getFollow().isEmpty()&&user.getInteractions().getFollower().isEmpty())
             existInteraction =false;
         //load analytics
@@ -596,9 +597,12 @@ public class UserInterfaceController {
             usernameUser.setText(session.getLoggedUser().getNickname());
 
         }
+        setButtonConnection();
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
         // TODO credo perche senno non si caricherebbero follower e follow count nella pagina dello logged user/author
-        setButtonConnection();
+
+        viewFollower();
+        viewFollow();
        // viewFollower();
        // viewFollow();
 

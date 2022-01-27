@@ -319,6 +319,7 @@
                                 <FontAwesomeIconView glyphName="USER"/>
                             </graphic>
                         </JFXButton>
+                        <JFXButton fx:id="logoutButton" layoutY="2.0" onAction="#logoutActon" text="Logout" />
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="512.0">
