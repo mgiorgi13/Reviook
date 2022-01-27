@@ -4,38 +4,31 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.ProgressBar?>
-<Pane prefHeight="296.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
+<Pane prefHeight="278.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
     <children>
-        <JFXButton fx:id="loginButton" layoutX="335.0" layoutY="123.0" mnemonicParsing="false" onAction="#loginButton"
-                   text="Login"/>
-        <JFXButton fx:id="registerButton" layoutX="329.0" layoutY="165.0" onAction="#openRegisterScene" text="Sign Up"/>
+        <JFXButton fx:id="loginButton" layoutX="335.0" layoutY="123.0" mnemonicParsing="false" onAction="#loginButton" text="Login" />
+        <JFXButton fx:id="registerButton" layoutX="329.0" layoutY="165.0" onAction="#openRegisterScene" text="Sign Up" />
 
-        <Text fx:id="actiontarget" layoutX="133.0" layoutY="221.0" textAlignment="CENTER" wrappingWidth="169.0"/>
+        <Text fx:id="actiontarget" layoutX="132.0" layoutY="243.0" textAlignment="CENTER" wrappingWidth="169.0" />
 
         <Text layoutX="192.0" layoutY="33.0" text="Welcome">
             <font>
-                <Font size="18.0"/>
+                <Font size="18.0" />
             </font>
         </Text>
 
-        <Label layoutX="53.0" layoutY="123.0" text="User Name:"/>
+        <Label layoutX="53.0" layoutY="123.0" text="User Name:" />
 
-        <TextField fx:id="usernameLogin" layoutX="142.0" layoutY="115.0"/>
+        <TextField fx:id="usernameLogin" layoutX="142.0" layoutY="115.0" />
 
-        <Label layoutX="57.0" layoutY="182.0" text="Password:"/>
+        <Label layoutX="57.0" layoutY="182.0" text="Password:" />
 
-        <PasswordField fx:id="passwordField" layoutX="142.0" layoutY="174.0"/>
-        <ChoiceBox fx:id="loginType" layoutX="142.0" layoutY="64.0" prefWidth="150.0"/>
-        <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="273.0" prefHeight="18.0" prefWidth="407.0"
-                     progress="0.0"/>
-        <!--<ProgressIndicator fx:id="progressIndicator" layoutX="199.0" layoutY="242.0" prefHeight="40.0" prefWidth="61.0" progress="0.0" />-->
+        <PasswordField fx:id="passwordField" layoutX="142.0" layoutY="174.0" />
+        <ChoiceBox fx:id="loginType" layoutX="142.0" layoutY="64.0" prefWidth="150.0" />
     </children>
 </Pane>
