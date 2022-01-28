@@ -255,7 +255,7 @@ public class UserInterfaceController {
         usernameUser.setText(this.nickname);
         visualizedUser = user;
         Boolean existInteraction= true;
-
+        setButtonConnection();
         session.getCache().getSearchedUsers().contains(user);
         if(user.getInteractions().getFollow().isEmpty()&&user.getInteractions().getFollower().isEmpty())
             existInteraction =false;
@@ -269,6 +269,7 @@ public class UserInterfaceController {
             viewFollow();
             viewFollower();
         }
+
         rankingButton.setVisible(true);
         if (session.getLoggedAuthor() != null) {
             rankingButton.setVisible(false);
@@ -438,7 +439,7 @@ public class UserInterfaceController {
                 }
             }
         });
-        listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        listRead.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
@@ -539,10 +540,9 @@ public class UserInterfaceController {
     }
     public void initialize() {
         follow.setVisible(false);
-        System.out.println("caio");
-        if (session.getLoggedUser() != null) {
-            usernameUser.setText(session.getLoggedUser().getNickname());
 
+        if (session.getLoggedUser() != null){
+            usernameUser.setText(session.getLoggedUser().getNickname());
         }
         setButtonConnection();
         // TODO per mattia capire perche vengono chiamate anche qui e non solo sulla set_nickname()
