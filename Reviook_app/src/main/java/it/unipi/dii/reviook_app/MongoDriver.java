@@ -37,8 +37,6 @@ public class MongoDriver {
 //        }catch (Exception e){
 //            System.out.println(e);
 //        }
-//
-//
 //        System.out.println("Servers are ready");
 //    }
 

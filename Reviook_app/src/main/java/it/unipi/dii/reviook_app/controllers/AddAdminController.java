@@ -45,7 +45,7 @@ public class AddAdminController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();actual_stage.centerOnScreen();    }
 
     @FXML
     void addAdminAction(ActionEvent event) throws NoSuchAlgorithmException, IOException {

@@ -5,6 +5,8 @@ import it.unipi.dii.reviook_app.components.ListReview;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
+import it.unipi.dii.reviook_app.entity.User;
+import it.unipi.dii.reviook_app.manager.AdminManager;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -43,7 +45,7 @@ public class BookDetailController {
     public JFXButton deleteReviewButton;
 
     @FXML
-    public Button deleteBook;
+    public JFXButton deleteBook;
 
     @FXML
     private ResourceBundle resources;
@@ -58,10 +60,16 @@ public class BookDetailController {
     private JFXButton searchButton;
 
     @FXML
+    private JFXButton homeButton;
+
+    @FXML
     private JFXButton addReviewButton;
 
     @FXML
     private JFXButton editReviewButton;
+
+    @FXML
+    private JFXButton reportButton;
 
     @FXML
     private ListView<Review> listView;
@@ -90,6 +98,9 @@ public class BookDetailController {
     @FXML
     private Text suggestedBook1, suggestedBook2, suggestedBook3, suggestedBook4;
 
+    private ArrayList<Author> suggestedAuthors;
+    private ArrayList<Book> suggestedBooks;
+
     Session session = Session.getInstance();
 
     private UserManager userManager = new UserManager();
@@ -101,6 +112,12 @@ public class BookDetailController {
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
     BookManager bookManager = new BookManager();
+    AdminManager adminManager = new AdminManager();
+
+    @FXML
+    public void reportBookAction(ActionEvent actionEvent) {
+        adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null));
+    }
 
     public void setListView() {
         this.observableList.setAll(this.reviewsList);
@@ -144,6 +161,49 @@ public class BookDetailController {
         }
     }
 
+    private void setOnMouseClicked(HBox HbSuggestion,Integer index, String type){
+        HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                        if(type.equals("Book")) {
+                            Book bookSuggested = suggestedBooks.get(index);
+
+                            try {
+                                Parent bookInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                                bookInterface = (Parent) fxmlLoader.load();
+                                BookDetailController bookDetailController = fxmlLoader.getController();
+                                bookDetailController.setInfoBook(bookSuggested,true);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(bookInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+actual_stage.centerOnScreen();                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Author authorSuggested = suggestedAuthors.get(index);
+
+                            try {
+                                Parent authorInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                                authorInterface = (Parent) fxmlLoader.load();
+                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                                authorInterfaceController.setAuthor(authorSuggested);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(authorInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+actual_stage.centerOnScreen();                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
+    }
+
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
         Parent searchInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/search.fxml"));
@@ -151,7 +211,28 @@ public class BookDetailController {
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
+
+    @FXML
+    void homeAction(ActionEvent event) throws IOException {
+        Session session = Session.getInstance();
+        Parent homeInterface;
+        if (session.getIsAuthor()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+            userInterfaceController.setUser(session.getLoggedUser());
+        }
+        Stage actual_stage = (Stage) homeButton.getScene().getWindow();
+        actual_stage.setScene(new Scene(homeInterface));
+        actual_stage.setResizable(false);
+        actual_stage.show();
+actual_stage.centerOnScreen();    }
 
     @FXML
     void toRead(ActionEvent event) throws IOException {
@@ -262,7 +343,6 @@ public class BookDetailController {
                 setListView();
             }
         }
-
     }
 
     private String truckString(String input) {
@@ -273,7 +353,7 @@ public class BookDetailController {
     }
 
     private void viewSuggestedAuthors(String book_id) {
-        ArrayList<Author> suggestedAuthors = bookManager.similarAuthors(book_id);
+        suggestedAuthors = bookManager.similarAuthors(book_id);
         Collections.shuffle(suggestedAuthors);
         HBAuthor1.setVisible(false);
         HBAuthor2.setVisible(false);
@@ -283,54 +363,64 @@ public class BookDetailController {
         if (size >= 1) {
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            setOnMouseClicked(HBAuthor1,0,"Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            setOnMouseClicked(HBAuthor2,1,"Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            setOnMouseClicked(HBAuthor3,2,"Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            setOnMouseClicked(HBAuthor4,3,"Author");
         }
-
     }
 
     private void viewSuggestedBooks(String book_id) {
-        ArrayList<Book> suggestedUsers = bookManager.similarBooks(book_id);
-        Collections.shuffle(suggestedUsers);
+        suggestedBooks = bookManager.similarBooks(book_id);
+        Collections.shuffle(suggestedBooks);
 
         HBBook1.setVisible(false);
         HBBook2.setVisible(false);
         HBBook3.setVisible(false);
         HBBook4.setVisible(false);
 
-        int size = suggestedUsers.size();
+        int size = suggestedBooks.size();
 
         if (size >= 1) {
             HBBook1.setVisible(true);
-            suggestedBook1.setText(truckString(suggestedUsers.get(0).getTitle()));
+            suggestedBook1.setText(truckString(suggestedBooks.get(0).getTitle()));
+            setOnMouseClicked(HBBook1,0,"Book");
         }
         if (size >= 2) {
             HBBook2.setVisible(true);
-            suggestedBook2.setText(truckString(suggestedUsers.get(1).getTitle()));
+            suggestedBook2.setText(truckString(suggestedBooks.get(1).getTitle()));
+            setOnMouseClicked(HBBook2,1,"Book");
         }
         if (size >= 3) {
             HBBook3.setVisible(true);
-            suggestedBook3.setText(truckString(suggestedUsers.get(2).getTitle()));
+            suggestedBook3.setText(truckString(suggestedBooks.get(2).getTitle()));
+            setOnMouseClicked(HBBook3,2,"Book");
         }
         if (size >= 4) {
             HBBook4.setVisible(true);
-            suggestedBook4.setText(truckString(suggestedUsers.get(3).getTitle()));
+            suggestedBook4.setText(truckString(suggestedBooks.get(3).getTitle()));
+            setOnMouseClicked(HBBook4,3,"Book");
         }
 
     }
 
-    public void setInfoBook(Book bookSelected) {
-        String isbn;
+    public void setInfoBook(Book bookSelected, boolean fromSuggestion) {
+        if(fromSuggestion){
+            bookSelected = bookManager.getBookByID(bookSelected.getBook_id());
+        }
+
         //book&author suggestion
         viewSuggestedBooks(bookSelected.getBook_id());
         viewSuggestedAuthors(bookSelected.getBook_id());
@@ -398,12 +488,14 @@ public class BookDetailController {
             actual_stage.setScene(new Scene(userInterface));
             actual_stage.setResizable(false);
             actual_stage.show();
-        }
+actual_stage.centerOnScreen();        }
         return;
     }
 
     @FXML
-    void initialize() {
+    void reportAction() {
+        Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        adminManager.ReportReview(selectedReview, book_id);
     }
 
 

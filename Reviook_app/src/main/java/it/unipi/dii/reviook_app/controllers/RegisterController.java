@@ -123,7 +123,7 @@ public class RegisterController {
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
 
     @FXML
@@ -133,5 +133,5 @@ public class RegisterController {
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 }

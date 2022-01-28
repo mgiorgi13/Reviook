@@ -5,12 +5,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <GridPane alignment="center" hgap="10" prefHeight="261.0" prefWidth="522.0" vgap="10" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RegisterController">
   <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
    <Label text="Password" translateX="30.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
   <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="3" GridPane.rowIndex="5">
       <CheckBox fx:id="CheckAuthor" mnemonicParsing="false" text="Author" />
-    <Button fx:id="loginButton" onAction="#openLoginScene" text="Login" />
+    <JFXButton fx:id="loginButton" onAction="#openLoginScene" text="Login" />
   </HBox>
 
 
@@ -30,7 +31,7 @@
    <Label text="Name" GridPane.rowIndex="1" />
    <Label text="Surname" GridPane.rowIndex="2" />
    <Label text="e-mail" GridPane.rowIndex="3" />
-   <Button mnemonicParsing="false" onAction="#registerButton" scaleX="2.0" text="Register" translateX="25.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+   <JFXButton mnemonicParsing="false" onAction="#registerButton" scaleX="2.0" text="Register" translateX="25.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    <columnConstraints>
       <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
       <ColumnConstraints maxWidth="176.7999969482422" minWidth="76.0000244140625" prefWidth="119.20002441406251" />
