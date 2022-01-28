@@ -68,6 +68,15 @@ public class SearchInterfaceController {
     private Session session = Session.getInstance();
 
     private ObservableList<Genre> availableChoices = FXCollections.observableArrayList();
+    private ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
+    private ObservableList<User> obsUserList = FXCollections.observableArrayList();
+    private ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
+
+    private void clearList(){
+        obsBooksList.clear();
+        obsUserList.clear();
+        obsAuthorList.clear();
+    }
 
     @FXML
     void initialize() {
@@ -76,14 +85,17 @@ public class SearchInterfaceController {
         bookFilter.setItems(availableChoices);
         bookFilter.setVisible(false);
 
+        //set jfxlist
+        bookList.setItems(obsBooksList);
+        usersList.setItems(obsUserList);
+        authorsList.setItems(obsAuthorList);
+
         if (checkCacheValid()) {
             //inizializzo le liste se ho la cache piena
             //TODO eliminare ripetizione codice dei cell factory
             if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("book") && session.getCache().getSearchedBooks() != null) {
 //            System.out.println("book: "+session.getCache().getSearchedBooks().size());
-                ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
                 obsBooksList.addAll(session.getCache().getSearchedBooks());
-                bookList.setItems(obsBooksList);
                 addCustomFactory("book");
                 bookCheck.setSelected(true);
                 authorCheck.setSelected(false);
@@ -93,9 +105,7 @@ public class SearchInterfaceController {
                 authorsList.setVisible(false);
             } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("user") && session.getCache().getSearchedUsers() != null) {
 //            System.out.println("user: "+session.getCache().getSearchedUsers().size());
-                ObservableList<User> obsUserList = FXCollections.observableArrayList();
                 obsUserList.addAll(session.getCache().getSearchedUsers());
-                usersList.setItems(obsUserList);
                 addCustomFactory("user");
                 bookCheck.setSelected(false);
                 authorCheck.setSelected(false);
@@ -105,9 +115,7 @@ public class SearchInterfaceController {
                 bookList.setVisible(false);
             } else if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("author") && session.getCache().getSearchedAuthors() != null) {
 //            System.out.println("author: "+session.getCache().getSearchedAuthors().size());
-                ObservableList<Author> obsUserList = FXCollections.observableArrayList();
-                obsUserList.addAll(session.getCache().getSearchedAuthors());
-                authorsList.setItems(obsUserList);
+                obsAuthorList.addAll(session.getCache().getSearchedAuthors());
                 addCustomFactory("author");
                 bookCheck.setSelected(false);
                 userCheck.setSelected(false);
@@ -116,9 +124,7 @@ public class SearchInterfaceController {
                 bookList.setVisible(false);
                 usersList.setVisible(false);
             } else {
-                usersList.getItems().clear();
-                bookList.getItems().clear();
-                authorsList.getItems().clear();
+                clearList();
             }
         }
     }
@@ -149,42 +155,35 @@ actual_stage.centerOnScreen();    }
     @FXML
     public void searchAction(ActionEvent actionEvent) {
         //TODO formattare meglio i risultati
-        usersList.getItems().clear();
-        bookList.getItems().clear();
-        authorsList.getItems().clear();
+        clearList();
+
         if (bookCheck.isSelected()) {
             bookList.setVisible(true);
             authorsList.setVisible(false);
             usersList.setVisible(false);
             String selectedChoice = bookFilter.getSelectionModel().getSelectedItem() == null ? "" : bookFilter.getSelectionModel().getSelectedItem().toString();
-            ObservableList<Book> obsBooksList = FXCollections.observableArrayList();
             ArrayList<Book> list = searchManager.searchBooks(searchText.getText(), selectedChoice);
             session.getCache().setSearchedBooks(list);
             session.getCache().setLastUpdate(new Date());
             obsBooksList.addAll(list);
-            bookList.getItems().addAll(obsBooksList);
             addCustomFactory("book");
         } else if (userCheck.isSelected()) {
             bookList.setVisible(false);
             authorsList.setVisible(false);
             usersList.setVisible(true);
-            ObservableList<User> obsUserList = FXCollections.observableArrayList();
             ArrayList<User> list = searchManager.searchUser(searchText.getText());
             session.getCache().setSearchedUsers(list);
             session.getCache().setLastUpdate(new Date());
             obsUserList.addAll(list);
-            usersList.getItems().addAll(obsUserList);
             addCustomFactory("user");
         } else if (authorCheck.isSelected()) {
             bookList.setVisible(false);
             authorsList.setVisible(true);
             usersList.setVisible(false);
-            ObservableList<Author> obsUserList = FXCollections.observableArrayList();
             ArrayList<Author> list = searchManager.searchAuthor(searchText.getText());
             session.getCache().setSearchedAuthors(list);
             session.getCache().setLastUpdate(new Date());
-            obsUserList.addAll(list);
-            authorsList.getItems().addAll(obsUserList);
+            obsAuthorList.addAll(list);
             addCustomFactory("author");
         }
     }
@@ -197,9 +196,7 @@ actual_stage.centerOnScreen();    }
         bookFilter.setVisible(true);
         session.getCache().setSearchType("book");
         if (session.getCache().getSearchedBooks() != null && checkCacheValid()) {
-            ObservableList<Book> obsBookList = FXCollections.observableArrayList();
-            obsBookList.addAll(session.getCache().getSearchedBooks());
-            bookList.setItems(obsBookList);
+            obsBooksList.addAll(session.getCache().getSearchedBooks());
             addCustomFactory("book");
             bookList.setVisible(true);
             usersList.setVisible(false);
@@ -215,9 +212,7 @@ actual_stage.centerOnScreen();    }
         bookFilter.setVisible(false);
         session.getCache().setSearchType("author");
         if (session.getCache().getSearchedAuthors() != null && checkCacheValid()) {
-            ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
             obsAuthorList.addAll(session.getCache().getSearchedAuthors());
-            authorsList.setItems(obsAuthorList);
             addCustomFactory("author");
             bookList.setVisible(false);
             usersList.setVisible(false);
@@ -233,9 +228,7 @@ actual_stage.centerOnScreen();    }
         bookFilter.setVisible(false);
         session.getCache().setSearchType("user");
         if (session.getCache().getSearchedUsers() != null && checkCacheValid()) {
-            ObservableList<User> obsUserList = FXCollections.observableArrayList();
             obsUserList.addAll(session.getCache().getSearchedUsers());
-            usersList.setItems(obsUserList);
             addCustomFactory("user");
             bookList.setVisible(false);
             usersList.setVisible(true);
@@ -266,7 +259,8 @@ actual_stage.centerOnScreen();    }
                             actual_stage.setScene(new Scene(bookInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-actual_stage.centerOnScreen();                        } catch (IOException e) {
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -294,7 +288,8 @@ actual_stage.centerOnScreen();                        } catch (IOException e) {
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-actual_stage.centerOnScreen();                        } catch (IOException e) {
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -323,7 +318,8 @@ actual_stage.centerOnScreen();                        } catch (IOException e) {
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-actual_stage.centerOnScreen();                        } catch (IOException e) {
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -338,9 +334,7 @@ actual_stage.centerOnScreen();                        } catch (IOException e) {
         long difference_In_Minutes = (difference_In_Time / (1000 * 60)) % 60;
         if (difference_In_Minutes >= 10) {
             session.getCache().ClearCache();
-            this.bookList.getItems().clear();
-            this.usersList.getItems().clear();
-            this.authorsList.getItems().clear();
+            clearList();
             return false;
         }
         return true;
