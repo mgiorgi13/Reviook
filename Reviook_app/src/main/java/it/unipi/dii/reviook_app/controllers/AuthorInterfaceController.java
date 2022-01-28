@@ -153,11 +153,11 @@ public class AuthorInterfaceController {
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
-        analytics = session.getCache().getAnalyticsExecuted().get(nickname + "author");
+        analytics = visualizedAuthor.getStatistics();
         if (analytics == null) {
             //load analytics from db
             analytics = userManager.averageRatingCategoryAuthor(nickname);
-            session.getCache().getAnalyticsExecuted().put(nickname + "author", analytics);
+            visualizedAuthor.setStatistics(analytics);
         }
 
         for (int i = 0; i < analytics.size(); i++) {
@@ -409,32 +409,6 @@ public class AuthorInterfaceController {
             listFollows.add(Follow.get(i));
         }
         listFollow.getItems().addAll(listFollows);
-
-        //        if ((session.getLoggedAuthor() != null) && (session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText()))) {
-//            session.getLoggedAuthor().getInteractions().delFollow();
-//            Follow = userManager.loadRelations("Author", usernameAuthor.getText());
-//            session.getLoggedAuthor().getInteractions().setNumberFollow(Follow.size());
-//            for (int i = 0; i < Follow.size(); i++) {
-//                session.getLoggedAuthor().getInteractions().setFollow(Follow.get(i));
-//            }
-//
-//            for (int i = 0; i < session.getLoggedAuthor().getInteractions().getNumberFollow(); i++)
-//                listFollows.add(session.getLoggedAuthor().getInteractions().getFollow().get(i));
-//            listFollow.getItems().addAll(listFollows);
-//        } else {
-//            Author author = new Author("", "", "", usernameAuthor.getText(), "", "", null, 0);
-//            author.getInteractions().delFollow();
-//            Follow = userManager.loadRelations("Author", usernameAuthor.getText());
-//            author.getInteractions().setNumberFollow(Follow.size());
-//            for (int i = 0; i < Follow.size(); i++) {
-//                author.getInteractions().setFollow(Follow.get(i));
-//            }
-//
-//            for (int i = 0; i < author.getInteractions().getNumberFollow(); i++)
-//                listFollows.add(author.getInteractions().getFollow().get(i));
-//            listFollow.getItems().addAll(listFollows);
-//        }
-
         followCount.setText(String.valueOf(Follow.size()));
         listFollows.clear();
         listFollow.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -754,13 +728,6 @@ public class AuthorInterfaceController {
 
     public void initialize() {
         follow.setVisible(false);
-
-//        if (session.getLoggedAuthor() != null) {
-//            usernameAuthor.setText(session.getLoggedAuthor().getNickname());
-//        } /*else if (session.getLoggedUser() != null) {
-//            usernameAuthor.setText(session.getLoggedUser().getNickname());
-//        }*/
-
         setButtonConnection();
 
     }

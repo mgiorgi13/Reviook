@@ -107,6 +107,8 @@ public class BookDetailController {
 
     private String title, author, categories, description, img_url, book_id;
 
+    private Book visualizedBook;
+
     private ArrayList<Review> reviewsList;
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
@@ -268,7 +270,7 @@ public class BookDetailController {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            Book book = bookManager.getBookByID(this.book_id); // query to update review
+            Book book = bookManager.getBookByID(this.book_id); // query get update book
             this.reviewsList = book.getReviews();
             setListView();
             DecimalFormat df = new DecimalFormat("#.#");
@@ -287,30 +289,31 @@ public class BookDetailController {
                 // I already liked it
                 session.getLoggedUser().removeReviewID(selectedReview.getReview_id());
                 bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
-                setListView();
             } else {
                 session.getLoggedUser().addReviewID(selectedReview.getReview_id());
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
-                setListView();
             }
         } else if (session.getLoggedAuthor() != null) {
             if (selectedReview.getLiked()) {
                 // I already liked it
                 session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
                 bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
-                setListView();
             } else {
                 session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
-                setListView();
             }
         }
+        setListView();
     }
 
     public void setListView() {
         this.observableList.clear();
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
+
+        visualizedBook.setReviews(this.reviewsList);
+        visualizedBook.setAverage_rating(Double.valueOf(ratingAVG.getText().replace(",",".")));
+
         listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
             @Override
             public ListCell<Review> call(ListView<Review> listView) {
@@ -425,6 +428,8 @@ public class BookDetailController {
         if (fromSuggestion) {
             bookSelected = bookManager.getBookByID(bookSelected.getBook_id());
         }
+        if(visualizedBook == null)
+            visualizedBook = bookSelected;
 
         //book&author suggestion
         viewSuggestedBooks(bookSelected.getBook_id());

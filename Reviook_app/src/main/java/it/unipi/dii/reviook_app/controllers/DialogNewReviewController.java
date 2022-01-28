@@ -85,8 +85,9 @@ public class DialogNewReviewController {
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
-                Book book = bookManager.getBookByID(this.book_id); // query to update review
-                this.previousList = book.getReviews();
+                Book book = bookManager.getBookByID(this.book_id); // retrieve updated book
+                this.previousList.clear();
+                this.previousList.addAll(book.getReviews());
                 this.previousObsList.setAll(book.getReviews());
                 DecimalFormat df = new DecimalFormat("#.#");
                 this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
@@ -99,8 +100,9 @@ public class DialogNewReviewController {
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
-                Book book = bookManager.getBookByID(this.book_id); // query to update review
-                this.previousList = book.getReviews();
+                Book book = bookManager.getBookByID(this.book_id); // retrieve updated book
+                this.previousList.clear();
+                this.previousList.addAll(book.getReviews());
                 this.previousObsList.setAll(book.getReviews());
                 DecimalFormat df = new DecimalFormat("#.#");
                 this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
