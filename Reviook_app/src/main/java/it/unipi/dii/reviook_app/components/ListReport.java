@@ -12,6 +12,8 @@ public class ListReport extends ListCell<Report> {
             DataReportCell dataReportCell = new DataReportCell();
             dataReportCell.setInfo(report);
             setGraphic(dataReportCell.getPane());
+        } else {
+            setGraphic(null);
         }
     }
 }
