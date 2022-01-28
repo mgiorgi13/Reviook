@@ -161,47 +161,47 @@ public class BookDetailController {
         }
     }
 
-    private void setOnMouseClicked(HBox HbSuggestion,Integer index, String type){
+    private void setOnMouseClicked(HBox HbSuggestion, Integer index, String type) {
         HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                        if(type.equals("Book")) {
-                            Book bookSuggested = suggestedBooks.get(index);
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                    if (type.equals("Book")) {
+                        Book bookSuggested = suggestedBooks.get(index);
 
-                            try {
-                                Parent bookInterface;
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                                bookInterface = (Parent) fxmlLoader.load();
-                                BookDetailController bookDetailController = fxmlLoader.getController();
-                                bookDetailController.setInfoBook(bookSuggested);
-                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                                actual_stage.setScene(new Scene(bookInterface));
-                                actual_stage.setResizable(false);
-                                actual_stage.show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Author authorSuggested = suggestedAuthors.get(index);
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookDetailController = fxmlLoader.getController();
+                            bookDetailController.setInfoBook(bookSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Author authorSuggested = suggestedAuthors.get(index);
 
-                            try {
-                                Parent authorInterface;
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                                authorInterface = (Parent) fxmlLoader.load();
-                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
-                                authorInterfaceController.setAuthor(authorSuggested);
-                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                                actual_stage.setScene(new Scene(authorInterface));
-                                actual_stage.setResizable(false);
-                                actual_stage.show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            Parent authorInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            authorInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                            authorInterfaceController.setAuthor(authorSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(authorInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
-            });
+            }
+        });
     }
 
     @FXML
@@ -356,22 +356,22 @@ public class BookDetailController {
         if (size >= 1) {
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
-            setOnMouseClicked(HBAuthor1,0,"Author");
+            setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
-            setOnMouseClicked(HBAuthor2,1,"Author");
+            setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
-            setOnMouseClicked(HBAuthor3,2,"Author");
+            setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
-            setOnMouseClicked(HBAuthor4,3,"Author");
+            setOnMouseClicked(HBAuthor4, 3, "Author");
         }
     }
 
@@ -389,22 +389,22 @@ public class BookDetailController {
         if (size >= 1) {
             HBBook1.setVisible(true);
             suggestedBook1.setText(truckString(suggestedBooks.get(0).getTitle()));
-            setOnMouseClicked(HBBook1,0,"Book");
+            setOnMouseClicked(HBBook1, 0, "Book");
         }
         if (size >= 2) {
             HBBook2.setVisible(true);
             suggestedBook2.setText(truckString(suggestedBooks.get(1).getTitle()));
-            setOnMouseClicked(HBBook2,1,"Book");
+            setOnMouseClicked(HBBook2, 1, "Book");
         }
         if (size >= 3) {
             HBBook3.setVisible(true);
             suggestedBook3.setText(truckString(suggestedBooks.get(2).getTitle()));
-            setOnMouseClicked(HBBook3,2,"Book");
+            setOnMouseClicked(HBBook3, 2, "Book");
         }
         if (size >= 4) {
             HBBook4.setVisible(true);
             suggestedBook4.setText(truckString(suggestedBooks.get(3).getTitle()));
-            setOnMouseClicked(HBBook4,3,"Book");
+            setOnMouseClicked(HBBook4, 3, "Book");
         }
 
     }

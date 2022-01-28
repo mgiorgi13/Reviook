@@ -110,7 +110,7 @@ public class RegisterController {
             return;
         }
         if (CheckAuthor.isSelected()) {
-            userManager.addNewUsers("Author", id, Name+surname, nickname);
+            userManager.addNewscnUsers("Author", id, Name+surname, nickname);
             userManager.register(Name, surname, email, nickname, password, "Author", id);
         } else {
             userManager.addNewUsers("User", id, Name+surname, nickname);

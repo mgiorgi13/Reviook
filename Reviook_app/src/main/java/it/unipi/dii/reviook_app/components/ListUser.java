@@ -11,6 +11,8 @@ public class ListUser extends ListCell<User> {
             DataUserCell dataUserCell = new DataUserCell();
             dataUserCell.setInfo(user);
             setGraphic(dataUserCell.getPane());
+        } else {
+            setGraphic(null);
         }
     }
 }
