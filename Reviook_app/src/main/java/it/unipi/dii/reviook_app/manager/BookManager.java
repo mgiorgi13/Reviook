@@ -308,10 +308,10 @@ public class BookManager {
             suggestion = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
                 Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a:Author)-[]->(b2:Book) " +
                         "WHERE b1.id = '" + book_id + "' AND b1<>b2 " +
-                        "RETURN DISTINCT b2.book_id,b2.title");
+                        "RETURN DISTINCT b2.id,b2.title");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Book(r.get("b2.title").asString(), r.get("b2.book_id").asString()));
+                    queryResult.add(new Book(r.get("b2.title").asString(), r.get("b2.id").asString()));
                 }
                 return queryResult;
             });

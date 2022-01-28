@@ -110,7 +110,7 @@ public class RegisterController {
             return;
         }
         if (CheckAuthor.isSelected()) {
-            userManager.addNewscnUsers("Author", id, Name+surname, nickname);
+            userManager.addNewUsers("Author", id, Name+surname, nickname);
             userManager.register(Name, surname, email, nickname, password, "Author", id);
         } else {
             userManager.addNewUsers("User", id, Name+surname, nickname);
@@ -123,7 +123,7 @@ public class RegisterController {
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
 
     @FXML
@@ -133,5 +133,5 @@ public class RegisterController {
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 }

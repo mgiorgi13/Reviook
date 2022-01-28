@@ -169,39 +169,39 @@ public class BookDetailController {
                     if (type.equals("Book")) {
                         Book bookSuggested = suggestedBooks.get(index);
 
-                        try {
-                            Parent bookInterface;
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                            bookInterface = (Parent) fxmlLoader.load();
-                            BookDetailController bookDetailController = fxmlLoader.getController();
-                            bookDetailController.setInfoBook(bookSuggested);
-                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                            actual_stage.setScene(new Scene(bookInterface));
-                            actual_stage.setResizable(false);
-                            actual_stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Author authorSuggested = suggestedAuthors.get(index);
+                            try {
+                                Parent bookInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                                bookInterface = (Parent) fxmlLoader.load();
+                                BookDetailController bookDetailController = fxmlLoader.getController();
+                                bookDetailController.setInfoBook(bookSuggested,true);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(bookInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+actual_stage.centerOnScreen();                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Author authorSuggested = suggestedAuthors.get(index);
 
-                        try {
-                            Parent authorInterface;
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                            authorInterface = (Parent) fxmlLoader.load();
-                            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
-                            authorInterfaceController.setAuthor(authorSuggested);
-                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                            actual_stage.setScene(new Scene(authorInterface));
-                            actual_stage.setResizable(false);
-                            actual_stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            try {
+                                Parent authorInterface;
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                                authorInterface = (Parent) fxmlLoader.load();
+                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                                authorInterfaceController.setAuthor(authorSuggested);
+                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                                actual_stage.setScene(new Scene(authorInterface));
+                                actual_stage.setResizable(false);
+                                actual_stage.show();
+actual_stage.centerOnScreen();                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
     }
 
     @FXML
@@ -211,21 +211,28 @@ public class BookDetailController {
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void homeAction(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
         Parent homeInterface;
-        if (session.getIsAuthor())
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-        else
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+        if (session.getIsAuthor()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+            userInterfaceController.setUser(session.getLoggedUser());
+        }
         Stage actual_stage = (Stage) homeButton.getScene().getWindow();
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void toRead(ActionEvent event) throws IOException {
@@ -409,8 +416,11 @@ public class BookDetailController {
 
     }
 
-    public void setInfoBook(Book bookSelected) {
-        String isbn;
+    public void setInfoBook(Book bookSelected, boolean fromSuggestion) {
+        if(fromSuggestion){
+            bookSelected = bookManager.getBookByID(bookSelected.getBook_id());
+        }
+
         //book&author suggestion
         viewSuggestedBooks(bookSelected.getBook_id());
         viewSuggestedAuthors(bookSelected.getBook_id());
@@ -478,7 +488,7 @@ public class BookDetailController {
             actual_stage.setScene(new Scene(userInterface));
             actual_stage.setResizable(false);
             actual_stage.show();
-        }
+actual_stage.centerOnScreen();        }
         return;
     }
 

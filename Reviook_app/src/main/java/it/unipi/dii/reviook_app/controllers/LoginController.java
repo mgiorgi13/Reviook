@@ -98,26 +98,34 @@ public class LoginController {
             user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/admin.fxml"));
         } else {
             if (session.getIsAuthor()) {
-                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                user_scene = (Parent) fxmlLoader.load();
+                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                authorInterfaceController.setAuthor(session.getLoggedAuthor());
             } else {
-                user_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                List<String> Follow = userManager.loadRelations("User", username);
-                session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
-                for (int i = 0; i < Follow.size(); i++) {
-                    session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
-                }
-                List<String> Follower = userManager.loadRelationsFollower("User", username);
-                session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
-                for (int i = 0; i < Follower.size(); i++) {
-                    session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
-                }
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                user_scene = (Parent) fxmlLoader.load();
+                UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                userInterfaceController.setUser(session.getLoggedUser());
+
+
+//                List<String> Follow = userManager.loadRelations("User", username);
+//                session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
+//                for (int i = 0; i < Follow.size(); i++) {
+//                    session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
+//                }
+//                List<String> Follower = userManager.loadRelationsFollower("User", username);
+//                session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
+//                for (int i = 0; i < Follower.size(); i++) {
+//                    session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
+//                }
             }
         }
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
 
     @FXML
@@ -127,7 +135,7 @@ public class LoginController {
         actual_stage.setScene(new Scene(register_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     void initialize() {
