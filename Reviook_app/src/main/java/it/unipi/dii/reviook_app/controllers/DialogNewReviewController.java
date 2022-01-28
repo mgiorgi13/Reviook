@@ -10,13 +10,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class DialogNewReviewController {
     @FXML
@@ -37,7 +41,8 @@ public class DialogNewReviewController {
 
     private Review reviewToEdit;
 
-    private ObservableList<Review> previousList;
+    private ArrayList<Review> previousList;
+    private ObservableList<Review> previousObsList;
     private Text previousRatingAVG;
     private BookDetailController controll;
 
@@ -48,8 +53,9 @@ public class DialogNewReviewController {
     }
 
     @FXML
-    public void setBook_id(String id, ObservableList<Review> list, Text ratingAVG) {
+    public void setBook_id(String id, ArrayList<Review> list, ObservableList<Review> obsList, Text ratingAVG) {
         this.previousList = list;
+        this.previousObsList = obsList;
         this.previousRatingAVG = ratingAVG;
         this.book_id = id;
     }
@@ -80,7 +86,8 @@ public class DialogNewReviewController {
                 e.printStackTrace();
             } finally {
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
-                this.previousList.setAll(book.getReviews());
+                this.previousList = book.getReviews();
+                this.previousObsList.setAll(book.getReviews());
                 DecimalFormat df = new DecimalFormat("#.#");
                 this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
                 Stage actual_stage = (Stage) addButton.getScene().getWindow();
@@ -93,7 +100,8 @@ public class DialogNewReviewController {
                 e.printStackTrace();
             } finally {
                 Book book = bookManager.getBookByID(this.book_id); // query to update review
-                this.previousList.setAll(book.getReviews());
+                this.previousList = book.getReviews();
+                this.previousObsList.setAll(book.getReviews());
                 DecimalFormat df = new DecimalFormat("#.#");
                 this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
                 Stage actual_stage = (Stage) addButton.getScene().getWindow();

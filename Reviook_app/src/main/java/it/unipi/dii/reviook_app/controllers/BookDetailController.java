@@ -119,48 +119,6 @@ public class BookDetailController {
         adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null));
     }
 
-    public void setListView() {
-        this.observableList.setAll(this.reviewsList);
-        listView.setItems(this.observableList);
-        listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
-            @Override
-            public ListCell<Review> call(ListView<Review> listView) {
-                return new ListReview();
-            }
-        });
-        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                    Review selectedCell = (Review) listView.getSelectionModel().getSelectedItem();
-                    try {
-                        Parent dialogReview;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/previewReview.fxml"));
-                        dialogReview = (Parent) fxmlLoader.load();
-                        PreviewReviewController prevRevContr = fxmlLoader.getController();
-                        prevRevContr.setInfoReview(selectedCell);
-                        Stage dialogNewReviewStage = new Stage();
-                        Scene dialogScene = new Scene(dialogReview);
-                        dialogNewReviewStage.setScene(dialogScene);
-                        dialogNewReviewStage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        Float ratingSum = 0.0f;
-        DecimalFormat df = new DecimalFormat("#.#");
-        if (listView.getItems().size() > 0) {
-            for (Review r : listView.getItems()) {
-                ratingSum += Float.parseFloat(r.getRating());
-            }
-            ratingAVG.setText(String.valueOf(df.format(ratingSum / listView.getItems().size())));
-        } else {
-            ratingAVG.setText(df.format(ratingSum));
-        }
-    }
-
     private void setOnMouseClicked(HBox HbSuggestion, Integer index, String type) {
         HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -169,39 +127,41 @@ public class BookDetailController {
                     if (type.equals("Book")) {
                         Book bookSuggested = suggestedBooks.get(index);
 
-                            try {
-                                Parent bookInterface;
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                                bookInterface = (Parent) fxmlLoader.load();
-                                BookDetailController bookDetailController = fxmlLoader.getController();
-                                bookDetailController.setInfoBook(bookSuggested,true);
-                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                                actual_stage.setScene(new Scene(bookInterface));
-                                actual_stage.setResizable(false);
-                                actual_stage.show();
-actual_stage.centerOnScreen();                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Author authorSuggested = suggestedAuthors.get(index);
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookDetailController = fxmlLoader.getController();
+                            bookDetailController.setInfoBook(bookSuggested, true);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Author authorSuggested = suggestedAuthors.get(index);
 
-                            try {
-                                Parent authorInterface;
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                                authorInterface = (Parent) fxmlLoader.load();
-                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
-                                authorInterfaceController.setAuthor(authorSuggested);
-                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                                actual_stage.setScene(new Scene(authorInterface));
-                                actual_stage.setResizable(false);
-                                actual_stage.show();
-actual_stage.centerOnScreen();                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            Parent authorInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            authorInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                            authorInterfaceController.setAuthor(authorSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(authorInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
-            });
+            }
+        });
     }
 
     @FXML
@@ -211,7 +171,8 @@ actual_stage.centerOnScreen();                            } catch (IOException e
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void homeAction(ActionEvent event) throws IOException {
@@ -232,7 +193,8 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void toRead(ActionEvent event) throws IOException {
@@ -253,13 +215,13 @@ actual_stage.centerOnScreen();    }
     }
 
     @FXML
-    public void addReviewAction(ActionEvent actionEvent) throws IOException {
+    public void addReviewAction() throws IOException {
         Stage dialogNewReviewStage = new Stage();
         Parent dialogInterface;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
+        controller.setBook_id(this.book_id, this.reviewsList, this.observableList, this.ratingAVG);
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
         dialogNewReviewStage.show();
@@ -271,10 +233,10 @@ actual_stage.centerOnScreen();    }
         if (selectedReview == null) {
             return;
         }
-        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+        if (session.getLoggedUser() != null && !selectedReview.getUsername().equals(session.getLoggedUser().getNickname())) {
             return;
         }
-        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+        if (session.getLoggedAuthor() != null && !selectedReview.getUsername().equals(session.getLoggedAuthor().getNickname())) {
             return;
         }
         Stage dialogNewReviewStage = new Stage();
@@ -282,7 +244,7 @@ actual_stage.centerOnScreen();    }
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
-        controller.setBook_id(this.book_id, this.observableList, this.ratingAVG);
+        controller.setBook_id(this.book_id, this.reviewsList, this.observableList, this.ratingAVG);
         controller.setEditReview(selectedReview); //set to edit review fields
         Scene dialogScene = new Scene(dialogInterface);
         dialogNewReviewStage.setScene(dialogScene);
@@ -290,15 +252,15 @@ actual_stage.centerOnScreen();    }
     }
 
     @FXML
-    public void deleteReviewAction(ActionEvent actionEvent) {
+    public void deleteReviewAction() {
         Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
         if (selectedReview == null) {
             return;
         }
-        if (session.getLoggedUser() != null && !selectedReview.getUser_id().equals(session.getLoggedUser().getNickname())) {
+        if (session.getLoggedUser() != null && !selectedReview.getUsername().equals(session.getLoggedUser().getNickname())) {
             return;
         }
-        if (session.getLoggedAuthor() != null && !selectedReview.getUser_id().equals(session.getLoggedAuthor().getNickname())) {
+        if (session.getLoggedAuthor() != null && !selectedReview.getUsername().equals(session.getLoggedAuthor().getNickname())) {
             return;
         }
         try {
@@ -342,6 +304,49 @@ actual_stage.centerOnScreen();    }
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
                 setListView();
             }
+        }
+    }
+
+    public void setListView() {
+        this.observableList.clear();
+        this.observableList.setAll(this.reviewsList);
+        listView.setItems(this.observableList);
+        listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
+            @Override
+            public ListCell<Review> call(ListView<Review> listView) {
+                return new ListReview();
+            }
+        });
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                    Review selectedCell = (Review) listView.getSelectionModel().getSelectedItem();
+                    try {
+                        Parent dialogReview;
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/previewReview.fxml"));
+                        dialogReview = (Parent) fxmlLoader.load();
+                        PreviewReviewController prevRevContr = fxmlLoader.getController();
+                        prevRevContr.setInfoReview(selectedCell);
+                        Stage dialogNewReviewStage = new Stage();
+                        Scene dialogScene = new Scene(dialogReview);
+                        dialogNewReviewStage.setScene(dialogScene);
+                        dialogNewReviewStage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        Float ratingSum = 0.0f;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (listView.getItems().size() > 0) {
+            for (Review r : listView.getItems()) {
+                ratingSum += Float.parseFloat(r.getRating());
+            }
+            ratingAVG.setText(String.valueOf(df.format(ratingSum / listView.getItems().size())));
+        } else {
+            ratingAVG.setText(df.format(ratingSum));
         }
     }
 
@@ -417,7 +422,7 @@ actual_stage.centerOnScreen();    }
     }
 
     public void setInfoBook(Book bookSelected, boolean fromSuggestion) {
-        if(fromSuggestion){
+        if (fromSuggestion) {
             bookSelected = bookManager.getBookByID(bookSelected.getBook_id());
         }
 
@@ -488,7 +493,8 @@ actual_stage.centerOnScreen();    }
             actual_stage.setScene(new Scene(userInterface));
             actual_stage.setResizable(false);
             actual_stage.show();
-actual_stage.centerOnScreen();        }
+            actual_stage.centerOnScreen();
+        }
         return;
     }
 

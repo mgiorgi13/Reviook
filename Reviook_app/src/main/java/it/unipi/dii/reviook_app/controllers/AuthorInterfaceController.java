@@ -71,10 +71,10 @@ public class AuthorInterfaceController {
     private Text bookCatValue1, bookCatText1, bookCatValue2, bookCatText2, bookCatValue3, bookCatText3, bookCatValue4, bookCatText4, bookCatValue5, bookCatText5;
 
     @FXML
-    private HBox Stat1,Stat2,Stat3,Stat4;
+    private HBox Stat1, Stat2, Stat3, Stat4;
 
     @FXML
-    private HBox HBAuthor1,HBAuthor2,HBAuthor3,HBAuthor4,HBUser1,HBUser2,HBUser3,HBUser4;
+    private HBox HBAuthor1, HBAuthor2, HBAuthor3, HBAuthor4, HBUser1, HBUser2, HBUser3, HBUser4;
 
     @FXML
     private Text suggestedAuthor1, suggestedAuthor2, suggestedAuthor3, suggestedAuthor4;
@@ -94,6 +94,7 @@ public class AuthorInterfaceController {
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
     private Author visualizedAuthor = new Author("");
+
     @FXML
     public void addButtonBookFunction(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/addBook.fxml"));
@@ -101,7 +102,8 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
@@ -146,29 +148,29 @@ actual_stage.centerOnScreen();    }
         return input;
     }
 
-    private void viewBookAnalytic(){
+    private void viewBookAnalytic() {
         Double previousValue = -1.0;
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
-        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
-        if(analytics == null) {
+        analytics = session.getCache().getAnalyticsExecuted().get(nickname + "author");
+        if (analytics == null) {
             //load analytics from db
             analytics = userManager.averageRatingCategoryAuthor(nickname);
-            session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
+            session.getCache().getAnalyticsExecuted().put(nickname + "author", analytics);
         }
 
-        for(int i = 0; i < analytics.size(); i ++){
-            if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
-                newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
-            }else{
-                genresReformatted.add(new Genre(newGenre,previousValue));
+        for (int i = 0; i < analytics.size(); i++) {
+            if (previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)) {
+                newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
+            } else {
+                genresReformatted.add(new Genre(newGenre, previousValue));
                 newGenre = "";
                 newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
             }
             previousValue = analytics.get(i).getValue();
-            if(i == analytics.size() - 1){
-                genresReformatted.add(new Genre(newGenre,previousValue));
+            if (i == analytics.size() - 1) {
+                genresReformatted.add(new Genre(newGenre, previousValue));
             }
         }
 
@@ -179,73 +181,75 @@ actual_stage.centerOnScreen();    }
         Stat3.setVisible(false);
         Stat4.setVisible(false);
 
-        if(size >= 1){
+        if (size >= 1) {
             Stat1.setVisible(true);
             bookCatText1.setText(genresReformatted.get(0).getType());
             bookCatValue1.setText(genresReformatted.get(0).getValue().toString());
         }
-        if(size >= 2){
+        if (size >= 2) {
             Stat2.setVisible(true);
             bookCatText2.setText(genresReformatted.get(1).getType());
             bookCatValue2.setText(genresReformatted.get(1).getValue().toString());
         }
-        if(size >= 3){
+        if (size >= 3) {
             Stat3.setVisible(true);
             bookCatText3.setText(genresReformatted.get(2).getType());
             bookCatValue3.setText(genresReformatted.get(2).getValue().toString());
         }
-        if(size >= 4){
+        if (size >= 4) {
             Stat4.setVisible(true);
             bookCatText4.setText(genresReformatted.get(3).getType());
             bookCatValue4.setText(genresReformatted.get(3).getValue().toString());
         }
     }
 
-    private void setOnMouseClicked(HBox HbSuggestion,Integer index, String type){
+    private void setOnMouseClicked(HBox HbSuggestion, Integer index, String type) {
         HbSuggestion.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                        if(type.equals("User")) {
-                            User userSuggested = suggestedUsers.get(index);
-                            System.out.println(userSuggested.getNickname());
-                            try {
-                                Parent userInterface;
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                                userInterface = (Parent) fxmlLoader.load();
-                                UserInterfaceController userInterfaceController = fxmlLoader.getController();
-                                userInterfaceController.setUser(userSuggested);
-                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                                actual_stage.setScene(new Scene(userInterface));
-                                actual_stage.setResizable(false);
-                                actual_stage.show();
-actual_stage.centerOnScreen();                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Author authorSuggested = suggestedAuthors.get(index);
-                            System.out.println(authorSuggested.getNickname());
-                            try {
-                                Parent authorInterface;
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                                authorInterface = (Parent) fxmlLoader.load();
-                                AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
-                                authorInterfaceController.setAuthor(authorSuggested);
-                                Stage actual_stage = (Stage) searchButton.getScene().getWindow();
-                                actual_stage.setScene(new Scene(authorInterface));
-                                actual_stage.setResizable(false);
-                                actual_stage.show();
-actual_stage.centerOnScreen();                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                    if (type.equals("User")) {
+                        User userSuggested = suggestedUsers.get(index);
+                        System.out.println(userSuggested.getNickname());
+                        try {
+                            Parent userInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            userInterface = (Parent) fxmlLoader.load();
+                            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                            userInterfaceController.setUser(userSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(userInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Author authorSuggested = suggestedAuthors.get(index);
+                        System.out.println(authorSuggested.getNickname());
+                        try {
+                            Parent authorInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            authorInterface = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                            authorInterfaceController.setAuthor(authorSuggested);
+                            Stage actual_stage = (Stage) searchButton.getScene().getWindow();
+                            actual_stage.setScene(new Scene(authorInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
-            });
+            }
+        });
     }
 
     private void viewSuggestedAuthors() {
-        suggestedAuthors = userManager.similarAuthors(nickname,"Author");
+        suggestedAuthors = userManager.similarAuthors(nickname, "Author");
         Collections.shuffle(suggestedAuthors);
 
         HBAuthor1.setVisible(false);
@@ -256,31 +260,31 @@ actual_stage.centerOnScreen();                            } catch (IOException e
         int size = suggestedAuthors.size();
 
 
-        if(size >= 1){
+        if (size >= 1) {
             HBAuthor1.setVisible(true);
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
-            setOnMouseClicked(HBAuthor1,0,"Author");
+            setOnMouseClicked(HBAuthor1, 0, "Author");
         }
-        if(size >= 2){
+        if (size >= 2) {
             HBAuthor2.setVisible(true);
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
-            setOnMouseClicked(HBAuthor2,1,"Author");
+            setOnMouseClicked(HBAuthor2, 1, "Author");
         }
-        if(size >= 3){
+        if (size >= 3) {
             HBAuthor3.setVisible(true);
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
-            setOnMouseClicked(HBAuthor3,2,"Author");
+            setOnMouseClicked(HBAuthor3, 2, "Author");
         }
-        if(size >= 4){
+        if (size >= 4) {
             HBAuthor4.setVisible(true);
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
-            setOnMouseClicked(HBAuthor4,3,"Author");
+            setOnMouseClicked(HBAuthor4, 3, "Author");
         }
 
     }
 
     private void viewSuggestedUsers() {
-        suggestedUsers = userManager.similarUsers(nickname,"Author");
+        suggestedUsers = userManager.similarUsers(nickname, "Author");
         Collections.shuffle(suggestedUsers);
 
         HBUser1.setVisible(false);
@@ -291,25 +295,25 @@ actual_stage.centerOnScreen();                            } catch (IOException e
 
         int size = suggestedUsers.size();
 
-        if(size >= 1){
+        if (size >= 1) {
             HBUser1.setVisible(true);
             suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
-            setOnMouseClicked(HBUser1,0,"User");
+            setOnMouseClicked(HBUser1, 0, "User");
         }
-        if(size >= 2){
+        if (size >= 2) {
             HBUser2.setVisible(true);
             suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
-            setOnMouseClicked(HBUser2,1,"User");
+            setOnMouseClicked(HBUser2, 1, "User");
         }
-        if(size >= 3){
+        if (size >= 3) {
             HBUser3.setVisible(true);
             suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
-            setOnMouseClicked(HBUser3,2,"User");
+            setOnMouseClicked(HBUser3, 2, "User");
         }
-        if(size >= 4){
+        if (size >= 4) {
             HBUser4.setVisible(true);
             suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
-            setOnMouseClicked(HBUser4,3,"User");
+            setOnMouseClicked(HBUser4, 3, "User");
         }
 
     }
@@ -318,14 +322,14 @@ actual_stage.centerOnScreen();                            } catch (IOException e
         this.nickname = author.getNickname();
         usernameAuthor.setText(this.nickname);
         visualizedAuthor = author;
-        Boolean existInteraction= true;
+        Boolean existInteraction = true;
         //set analytics result
         viewBookAnalytic();
         viewSuggestedAuthors();
         viewSuggestedUsers();
 
-        if(author.getInteractions().getFollow().isEmpty()&&author.getInteractions().getFollower().isEmpty())
-            existInteraction =false;
+        if (author.getInteractions().getFollow().isEmpty() && author.getInteractions().getFollower().isEmpty())
+            existInteraction = false;
         if (!existInteraction) {
             viewFollow();
             viewFollower();
@@ -377,7 +381,8 @@ actual_stage.centerOnScreen();                            } catch (IOException e
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -386,7 +391,8 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
 
     @FXML
@@ -437,7 +443,7 @@ actual_stage.centerOnScreen();    }
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
                     //check if author or user
-                    int result = userManager.verifyUsername(selectedCell,"author", false);
+                    int result = userManager.verifyUsername(selectedCell, "author", false);
                     if (result == -1 || result == 2)
                         return;
                     try {
@@ -461,7 +467,8 @@ actual_stage.centerOnScreen();    }
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -492,6 +499,7 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
         listRead.getItems().addAll(ListRead);
 
     }
+
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
         // TODO va invalidata la sessione
@@ -501,7 +509,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void viewToRead() {
@@ -577,8 +586,10 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
-    public void setButtonConnection(){
+        actual_stage.centerOnScreen();
+    }
+
+    public void setButtonConnection() {
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -596,12 +607,13 @@ actual_stage.centerOnScreen();    }
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo,false);
+                        bookController.setInfoBook(allInfo, false);
                         Stage actual_stage = (Stage) listRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -624,12 +636,13 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo,false);
+                        bookController.setInfoBook(allInfo, false);
                         Stage actual_stage = (Stage) listToRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -640,7 +653,7 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell, "author",false);
+                    int result = userManager.verifyUsername(selectedCell, "author", false);
                     if (result == -1 || result == 2)
                         return;
                     try {
@@ -664,7 +677,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -687,12 +701,13 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo,false);
+                        bookController.setInfoBook(allInfo, false);
                         Stage actual_stage = (Stage) listPublished.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -704,7 +719,7 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
                     //check if author or user
-                    int result = userManager.verifyUsername(selectedCell,"author", false);
+                    int result = userManager.verifyUsername(selectedCell, "author", false);
                     if (result == -1 || result == 2)
                         return;
                     try {
@@ -728,7 +743,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
