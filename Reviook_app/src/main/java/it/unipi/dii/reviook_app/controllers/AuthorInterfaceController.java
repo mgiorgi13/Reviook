@@ -94,6 +94,9 @@ public class AuthorInterfaceController {
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
     private Author visualizedAuthor = new Author("");
+    private ObservableList<String> ListPublished = FXCollections.observableArrayList();
+    private ObservableList<String> ListToRead = FXCollections.observableArrayList();
+    private ObservableList<String> ListRead = FXCollections.observableArrayList();
     @FXML
     public void addButtonBookFunction(ActionEvent event) throws IOException {
         Parent updateInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/addBook.fxml"));
@@ -388,7 +391,6 @@ actual_stage.centerOnScreen();    }
         actual_stage.show();
 actual_stage.centerOnScreen();    }
 
-
     @FXML
     void viewFollow() {
         Author author = visualizedAuthor;
@@ -472,26 +474,33 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
 
     @FXML
     void viewRead() {
-        if (session.getLoggedAuthor() != null)
-            session.getLoggedAuthor().getBooks().listBooksClear();
-        else
-            session.getLoggedUser().getBooks().listBooksClear();
-        String test = usernameAuthor.getText();
         listRead.getItems().clear();
         ArrayList<Book> read;
-
         read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
         System.out.println(read);
-        ObservableList<String> ListRead = FXCollections.observableArrayList();
-        for (Book book : read) {
-            if (session.getLoggedAuthor() != null)
-                ListRead.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(), book.getBook_id()));
-            else
-                ListRead.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
+        if (visualizedAuthor.getBooks().getReaded().isEmpty()){
+            for (Book book : read) {
+                    ListRead.add(visualizedAuthor.getBooks().setRead(book.getTitle(), book.getBook_id()));
+            }
         }
+
         listRead.getItems().addAll(ListRead);
 
     }
+
+    @FXML
+    void viewToRead() {
+        listToRead.getItems().clear();
+        ArrayList<Book> toRead;
+        if (visualizedAuthor.getBooks().getToRead().isEmpty()) {
+            toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "TO_READ");
+            for (Book book : toRead) {
+                ListToRead.add(visualizedAuthor.getBooks().setToRead(book.getTitle(), book.getBook_id()));
+            }
+        }
+        listToRead.getItems().addAll(ListToRead);
+    }
+
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
         // TODO va invalidata la sessione
@@ -503,29 +512,7 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
         actual_stage.show();
 actual_stage.centerOnScreen();    }
 
-    @FXML
-    void viewToRead() {
-        if (session.getLoggedAuthor() != null)
-            session.getLoggedAuthor().getBooks().listBooksClear();
-        else
-            session.getLoggedUser().getBooks().listBooksClear();
 
-        listToRead.getItems().clear();
-        ArrayList<Book> toRead;
-
-        toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "TO_READ");
-
-        ObservableList<String> ListToRead = FXCollections.observableArrayList();
-        for (Book book : toRead) {
-            if (session.getLoggedAuthor() != null)
-                ListToRead.add(session.getLoggedAuthor().getBooks().setToRead(book.getTitle(), book.getBook_id()));
-            else
-                ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(), book.getBook_id()));
-        }
-        listToRead.getItems().addAll(ListToRead);
-
-
-    }
 
     @FXML
     void viewFollower() {
@@ -553,16 +540,15 @@ actual_stage.centerOnScreen();    }
             session.getLoggedUser().getBooks().listBooksClear();
         // TODO recuperare id  autore e fare la ricerca con quello
         ArrayList<Book> published;
-
-        published = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "WROTE");
-
-        ObservableList<String> ListPublished = FXCollections.observableArrayList();
-        for (Book book : published) {
-            if (session.getLoggedAuthor() != null) {
-                ListPublished.add(session.getLoggedAuthor().getBooks().setPublished(book.getTitle(), book.getBook_id()));
-            } else
-                ListPublished.add(session.getLoggedUser().getBooks().setPublished(book.getTitle(), book.getBook_id()));
+        if (visualizedAuthor.getPublished().isEmpty()) {
+            published = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "WROTE");
+            for (Book book : published) {
+                ListPublished.add(visualizedAuthor.setPublished(book.getTitle(), book.getBook_id()));
+            }
         }
+
+
+
         listPublished.getItems().addAll(ListPublished);
 
     }
@@ -578,6 +564,7 @@ actual_stage.centerOnScreen();    }
         actual_stage.setResizable(false);
         actual_stage.show();
 actual_stage.centerOnScreen();    }
+
     public void setButtonConnection(){
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -676,11 +663,7 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listPublished.getSelectionModel().getSelectedItem();
                     String id_book;
-                    if (session.getLoggedAuthor() != null) {
-                        id_book = session.getLoggedAuthor().getBooks().getIdBookPublished(selectedCell);
-                    } else {
-                        id_book = session.getLoggedUser().getBooks().getIdBookPublished(selectedCell);
-                    }
+                    id_book = visualizedAuthor.getIdBookPublished(selectedCell);
                     Book allInfo = searchManager.searchIdBook(id_book);
                     try {
                         Parent bookInterface;

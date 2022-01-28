@@ -83,6 +83,8 @@ public class UserInterfaceController {
 
     private User visualizedUser = new User("");
 
+    private ObservableList<String> ListRead = FXCollections.observableArrayList();
+    private ObservableList<String> ListToRead = FXCollections.observableArrayList();
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
@@ -408,44 +410,28 @@ actual_stage.centerOnScreen();    }
 
     @FXML
     void viewRead() {
-        if (session.getLoggedAuthor() != null)
-            session.getLoggedAuthor().getBooks().listBooksClear();
-        else
-            session.getLoggedUser().getBooks().listBooksClear();
-        String test = usernameUser.getText();
         listRead.getItems().clear();
         ArrayList<Book> read;
-
-        read = userManager.loadRelationsBook("User", usernameUser.getText(), "READ");
-        System.out.println(read);
-        ObservableList<String> ListRead = FXCollections.observableArrayList();
-        for (Book book : read) {
-            if (session.getLoggedAuthor() != null)
-                ListRead.add(session.getLoggedAuthor().getBooks().setRead(book.getTitle(), book.getBook_id()));
-            else
-                ListRead.add(session.getLoggedUser().getBooks().setRead(book.getTitle(), book.getBook_id()));
+        if(visualizedUser.getBooks().getReaded().isEmpty())
+        {
+            read = userManager.loadRelationsBook("User", usernameUser.getText(), "READ");
+            for (Book book : read) {
+                ListRead.add(visualizedUser.getBooks().setRead(book.getTitle(), book.getBook_id()));
+            }
         }
         listRead.getItems().addAll(ListRead);
     }
 
     @FXML
     void viewToRead() {
-        if (session.getLoggedAuthor() != null)
-            session.getLoggedAuthor().getBooks().listBooksClear();
-        else
-            session.getLoggedUser().getBooks().listBooksClear();
-        String test = usernameUser.getText();
         listToRead.getItems().clear();
         ArrayList<Book> toRead;
-
-        toRead = userManager.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
-
-        ObservableList<String> ListToRead = FXCollections.observableArrayList();
-        for (Book book : toRead) {
-            if (session.getLoggedAuthor() != null)
-                ListToRead.add(session.getLoggedAuthor().getBooks().setToRead(book.getTitle(), book.getBook_id()));
-            else
-                ListToRead.add(session.getLoggedUser().getBooks().setToRead(book.getTitle(), book.getBook_id()));
+        if(visualizedUser.getBooks().getToRead().isEmpty())
+        {
+            toRead = userManager.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
+            for (Book book : toRead) {
+                ListToRead.add(visualizedUser.getBooks().setToRead(book.getTitle(), book.getBook_id()));
+            }
         }
         listToRead.getItems().addAll(ListToRead);
     }
