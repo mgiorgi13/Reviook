@@ -43,7 +43,7 @@ public class User {
         this.listBooks = new ListBooks();
         this.listReviewID = listReviewID;
         this.follower_count = follower_count;
-        this.statistics = new ArrayList<>();
+        this.statistics = null;
     }
 
     public ArrayList<Genre> getStatistics() {
