@@ -126,4 +126,19 @@ public class Review {
         this.review_text = review_text;
     }
 
+    @Override
+    public String toString() {
+        return "Review{" +
+                "date_added='" + date_added + '\'' +
+                ", review_id='" + review_id + '\'' +
+                ", date_update='" + date_update + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", username='" + username + '\'' +
+                ", rating='" + rating + '\'' +
+                ", review_text='" + review_text + '\'' +
+                ", likes=" + likes +
+                ", liked=" + liked +
+                '}';
+    }
+
 }

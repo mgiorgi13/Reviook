@@ -144,7 +144,7 @@ public class RankingInterfaceController {
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
 
     @FXML
@@ -165,7 +165,7 @@ public class RankingInterfaceController {
         actual_stage.setScene(new Scene(userInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
     @FXML
     void initialize() {
         availableChoices.addAll(searchManager.searchYears());

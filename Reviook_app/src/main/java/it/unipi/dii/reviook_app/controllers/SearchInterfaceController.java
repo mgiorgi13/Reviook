@@ -58,9 +58,6 @@ public class SearchInterfaceController {
     private JFXButton homeButton;
 
     @FXML
-    private JFXButton profileButton;
-
-    @FXML
     private TextField searchText;
 
     @FXML
@@ -130,36 +127,24 @@ public class SearchInterfaceController {
     void homeInterface(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
         Parent homeInterface;
-        if (session.getIsAuthor())
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-        else
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+
+        if (session.getIsAuthor()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+        }else{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+            userInterfaceController.setUser(session.getLoggedUser());
+        }
+
         Stage actual_stage = (Stage) homeButton.getScene().getWindow();
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-    }
-
-    @FXML
-    void profileInterface() throws IOException {
-        Session session = Session.getInstance();
-        Parent userInterface;
-        if (session.getIsAuthor()) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-            // controller.setNickname(nickSelected);
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-        }
-
-        Stage actual_stage = (Stage) profileButton.getScene().getWindow();
-        actual_stage.setScene(new Scene(userInterface));
-        actual_stage.setResizable(false);
-        actual_stage.show();
-    }
+actual_stage.centerOnScreen();    }
 
     @FXML
     public void searchAction(ActionEvent actionEvent) {
@@ -276,12 +261,12 @@ public class SearchInterfaceController {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                             bookInterface = (Parent) fxmlLoader.load();
                             BookDetailController bookController = fxmlLoader.getController();
-                            bookController.setInfoBook(selectedCell);
-                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            bookController.setInfoBook(selectedCell,false);
+                            Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(bookInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-                        } catch (IOException e) {
+actual_stage.centerOnScreen();                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -304,12 +289,12 @@ public class SearchInterfaceController {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
-                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            controller.setUser(selectedCell);
+                            Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-                        } catch (IOException e) {
+actual_stage.centerOnScreen();                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -332,13 +317,13 @@ public class SearchInterfaceController {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setNickname(selectedCell.getNickname());
+                            controller.setAuthor(selectedCell);
 
-                            Stage actual_stage = (Stage) profileButton.getScene().getWindow();
+                            Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);
                             actual_stage.show();
-                        } catch (IOException e) {
+actual_stage.centerOnScreen();                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
