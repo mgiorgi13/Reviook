@@ -11,6 +11,8 @@ public class ListAuthor extends ListCell<Author> {
             DataAuthorCell dataAuthorCell = new DataAuthorCell();
             dataAuthorCell.setInfo(author);
             setGraphic(dataAuthorCell.getPane());
+        } else {
+            setGraphic(null);
         }
     }
 }

@@ -32,6 +32,7 @@ public class User {
         this.listReviewID = new ArrayList<>();
         this.follower_count = 0;
     }
+
     public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         this.id = id;
         this.name = name;
@@ -55,7 +56,7 @@ public class User {
     }
 
     public ArrayList<String> getListReviewID() {
-        return listReviewID;
+        return this.listReviewID;
     }
 
     public void setListReviewID(ArrayList<String> listReviewID) {
@@ -68,8 +69,6 @@ public class User {
 
     public void removeReviewID(String id) {
         this.listReviewID.remove(id);
-        this.listBooks = new ListBooks();
-
     }
 
     public String getId() {

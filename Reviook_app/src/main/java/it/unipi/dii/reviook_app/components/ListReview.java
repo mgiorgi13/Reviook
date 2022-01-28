@@ -11,6 +11,8 @@ public class ListReview extends ListCell<Review> {
             DataReviewCell dataReviewCell = new DataReviewCell();
             dataReviewCell.setInfo(review);
             setGraphic(dataReviewCell.getPane());
+        } else {
+            setGraphic(null);
         }
     }
 }
