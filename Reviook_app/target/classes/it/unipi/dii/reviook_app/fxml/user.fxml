@@ -104,7 +104,7 @@
                 <Text fill="#1e3bbc" layoutX="61.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0"
                       text="MY REVIEWS">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                 </Text>
                 <JFXButton fx:id="rankingButton" layoutX="23.0" layoutY="402.0" mnemonicParsing="false"
@@ -256,7 +256,7 @@
                                 </Pane>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0"/>
+                                <Insets top="15.0" />
                             </VBox.margin>
                         </HBox>
                         <HBox fx:id="HBAuthor2" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
@@ -353,13 +353,6 @@
                                   onAction="#addFollow" text="add follow"/>
                         <Text fx:id="usernameUser" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0"
                               text="USER PROFILE"/>
-                        <VBox alignment="CENTER" layoutX="231.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
-                            <children>
-                                <Text fx:id="likesCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11"
-                                      textAlignment="CENTER"/>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Likes"/>
-                            </children>
-                        </VBox>
                         <VBox alignment="CENTER" layoutX="324.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
                                 <Text fx:id="followersCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0"

@@ -351,7 +351,7 @@
                                 <FontAwesomeIconView glyphName="USER"/>
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="logoutButton" layoutY="2.0" onAction="#logoutActon" text="Logout"/>
+                        <JFXButton fx:id="logoutButton" layoutY="2.0" onAction="#logoutActon" text="Logout" />
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="512.0">
@@ -360,13 +360,6 @@
                                      onAction="#addFollow" text="follow"/>
                         <Text fx:id="usernameAuthor" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE"
                               strokeWidth="0.0"/>
-                        <VBox alignment="CENTER" layoutX="231.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
-                            <children>
-                                <Text fx:id="likesCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11"
-                                      textAlignment="CENTER"/>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Likes"/>
-                            </children>
-                        </VBox>
                         <VBox alignment="CENTER" layoutX="324.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
                                 <Text fx:id="followersCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0"
