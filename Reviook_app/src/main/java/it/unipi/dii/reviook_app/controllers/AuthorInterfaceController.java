@@ -104,7 +104,8 @@ public class AuthorInterfaceController {
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
@@ -154,24 +155,24 @@ actual_stage.centerOnScreen();    }
         String newGenre = "";
         ArrayList<Genre> genresReformatted = new ArrayList<>();
 
-        analytics = session.getCache().getAnalyticsExecuted().get(nickname+"author");
-        if(analytics == null) {
+        analytics = visualizedAuthor.getStatistics();
+        if (analytics == null) {
             //load analytics from db
             analytics = userManager.averageRatingCategoryAuthor(nickname);
-            session.getCache().getAnalyticsExecuted().put(nickname+"author", analytics);
+            visualizedAuthor.setStatistics(analytics);
         }
 
-        for(int i = 0; i < analytics.size(); i ++){
-            if(previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)){
-                newGenre =  newGenre.concat(analytics.get(i).getType() + "\n");
-            }else{
-                genresReformatted.add(new Genre(newGenre,previousValue));
+        for (int i = 0; i < analytics.size(); i++) {
+            if (previousValue == -1.0 || analytics.get(i).getValue().equals(previousValue)) {
+                newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
+            } else {
+                genresReformatted.add(new Genre(newGenre, previousValue));
                 newGenre = "";
                 newGenre = newGenre.concat(analytics.get(i).getType() + "\n");
             }
             previousValue = analytics.get(i).getValue();
-            if(i == analytics.size() - 1){
-                genresReformatted.add(new Genre(newGenre,previousValue));
+            if (i == analytics.size() - 1) {
+                genresReformatted.add(new Genre(newGenre, previousValue));
             }
         }
 
@@ -380,7 +381,8 @@ actual_stage.centerOnScreen();                            } catch (IOException e
         actual_stage.setScene(new Scene(updateInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void searchInterface(ActionEvent event) throws IOException {
@@ -389,7 +391,9 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(searchInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
+
 
     @FXML
     void viewFollow() {
@@ -463,7 +467,8 @@ actual_stage.centerOnScreen();    }
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -476,9 +481,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
     void viewRead() {
         listRead.getItems().clear();
         ArrayList<Book> read;
-        read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
-        System.out.println(read);
         if (visualizedAuthor.getBooks().getReaded().isEmpty()){
+            read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
             for (Book book : read) {
                     ListRead.add(visualizedAuthor.getBooks().setRead(book.getTitle(), book.getBook_id()));
             }
@@ -510,7 +514,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
 
 
@@ -546,9 +551,6 @@ actual_stage.centerOnScreen();    }
                 ListPublished.add(visualizedAuthor.setPublished(book.getTitle(), book.getBook_id()));
             }
         }
-
-
-
         listPublished.getItems().addAll(ListPublished);
 
     }
@@ -583,12 +585,13 @@ actual_stage.centerOnScreen();    }
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo,false);
+                        bookController.setInfoBook(allInfo, false);
                         Stage actual_stage = (Stage) listRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -611,12 +614,13 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
                         bookInterface = (Parent) fxmlLoader.load();
                         BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo,false);
+                        bookController.setInfoBook(allInfo, false);
                         Stage actual_stage = (Stage) listToRead.getScene().getWindow();
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -651,7 +655,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -675,7 +680,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         actual_stage.setScene(new Scene(bookInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -711,7 +717,8 @@ actual_stage.centerOnScreen();                    } catch (IOException e) {
                         actual_stage.setScene(new Scene(userInterface));
                         actual_stage.setResizable(false);
                         actual_stage.show();
-actual_stage.centerOnScreen();                    } catch (IOException e) {
+                        actual_stage.centerOnScreen();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
