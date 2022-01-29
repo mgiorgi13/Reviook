@@ -119,7 +119,8 @@ public class AdminController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void deleteElemAction(ActionEvent event) {
@@ -127,21 +128,25 @@ actual_stage.centerOnScreen();    }
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
             adminManager.DeleteReport(selectedBook);
+            obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedUser.getNickname(), "user");
             userManager.deleteUserMongo(selectedUser.getNickname(), "user");
+            obsUserList.remove(selectedUser);
             addCustomFactory("user");
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedAuthor.getNickname(), "author");
             userManager.deleteUserMongo(selectedAuthor.getNickname(), "author");
+            obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
             adminManager.DeleteReport(selectedReview);
             bookManager.DeleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
+            obsListReview.remove(selectedReview);
             addCustomFactory("review");
         }
     }
@@ -153,7 +158,8 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(newAdminInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void unReport() {
@@ -161,12 +167,12 @@ actual_stage.centerOnScreen();    }
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             int index = bookList.getSelectionModel().getSelectedIndex();
             adminManager.DeleteReport(selectedBook);
+            obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            int index = reviewList.getSelectionModel().getSelectedIndex();
             adminManager.DeleteReport(selectedReview);
-            reviewList.getItems().remove(index);
+            obsListReview.remove(selectedReview);
             addCustomFactory("review");
         }
     }
@@ -221,7 +227,7 @@ actual_stage.centerOnScreen();    }
         }
     }
 
-    private void addCustomFactory(String type)  {
+    private void addCustomFactory(String type) {
         if (type.equals("book")) {
             this.bookList.setCellFactory(new Callback<ListView<Report>, ListCell<Report>>() {
                 @Override

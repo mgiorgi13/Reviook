@@ -17,7 +17,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.UserInterfaceController">
+<?import javafx.scene.Cursor?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0"
+            prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.unipi.dii.reviook_app.controllers.UserInterfaceController">
     <left>
         <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
@@ -27,66 +30,85 @@
                             <children>
                                 <Pane layoutX="10.0" prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#1e3bbc" strokeType="INSIDE" strokeWidth="5.0" translateX="-1.0" />
-                                        <Text fx:id="reviewCatValue1" fill="#1e3bbc" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#1e3bbc" strokeType="INSIDE" strokeWidth="5.0"
+                                                translateX="-1.0"/>
+                                        <Text fx:id="reviewCatValue1" fill="#1e3bbc" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fx:id="reviewCatText1" fill="#1e3bbc" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 1" wrappingWidth="120.0" />
+                                <Text fx:id="reviewCatText1" fill="#1e3bbc" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 1" wrappingWidth="120.0"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
                         <HBox fx:id="Stat2" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#cd7818" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="reviewCatValue2" fill="#cd7818" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#cd7818" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="reviewCatValue2" fill="#cd7818" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fx:id="reviewCatText2" fill="#cd7818" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 2" wrappingWidth="120.0" />
+                                <Text fx:id="reviewCatText2" fill="#cd7818" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 2" wrappingWidth="120.0"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
                         <HBox fx:id="Stat3" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#1eba22" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="reviewCatValue3" fill="#1eba22" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#1eba22" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="reviewCatValue3" fill="#1eba22" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fx:id="reviewCatText3" fill="#1eba22" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 3" wrappingWidth="120.0" />
+                                <Text fx:id="reviewCatText3" fill="#1eba22" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 3" wrappingWidth="120.0"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
                         <HBox fx:id="Stat4" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="62.0" prefWidth="66.0">
                                     <children>
-                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0" stroke="#ba1e68" strokeType="INSIDE" strokeWidth="5.0" />
-                                        <Text fx:id="reviewCatValue4" fill="#ba1e68" layoutX="22.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Circle fill="#ffffff00" layoutX="28.0" layoutY="31.0" radius="27.0"
+                                                stroke="#ba1e68" strokeType="INSIDE" strokeWidth="5.0"/>
+                                        <Text fx:id="reviewCatValue4" fill="#ba1e68" layoutX="22.0" layoutY="35.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="11" textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
-                                <Text fx:id="reviewCatText4" fill="#ba1e68" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book category 4" wrappingWidth="120.0" />
+                                <Text fx:id="reviewCatText4" fill="#ba1e68" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      style="-fx-font-weight: bold;" text="Book category 4" wrappingWidth="120.0"/>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
                     </children>
                 </VBox>
-                <Text fill="#1e3bbc" layoutX="61.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MY REVIEWS">
+                <Text fill="#1e3bbc" layoutX="61.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="MY REVIEWS">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </Text>
-            <JFXButton fx:id="rankingButton" layoutX="23.0" layoutY="402.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="25.0" prefWidth="155.0" text="Ranking" />
+                <JFXButton fx:id="rankingButton" layoutX="23.0" layoutY="402.0" mnemonicParsing="false"
+                           onAction="#selectRanking" prefHeight="25.0" prefWidth="155.0" text="Ranking"/>
             </children>
         </Pane>
     </left>
@@ -99,25 +121,49 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedUser1" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1" wrappingWidth="117.0" />
-                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: blue;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedUser1" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Book 1" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: blue;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
                             <VBox.margin>
-                                <Insets top="15.0" />
+                                <Insets top="15.0"/>
                             </VBox.margin>
                         </HBox>
                         <HBox fx:id="HBUser2" alignment="CENTER" prefHeight="62.0" prefWidth="166.0">
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedUser2" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2" wrappingWidth="117.0" />
-                                        <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #cd7818;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedUser2" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Book 2" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: #cd7818;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
@@ -126,10 +172,22 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedUser3" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3" wrappingWidth="117.0" />
-                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #1eba22;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedUser3" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Book 3" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: #1eba22;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
@@ -138,24 +196,38 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedUser4" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4" wrappingWidth="117.0" />
-                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #ba1e68;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedUser4" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Book 4" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: #ba1e68;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
                         </HBox>
                     </children>
                 </VBox>
-                <Text fill="#1e3bbc" layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED USER">
+                <Text fill="#1e3bbc" layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="SUGGESTED USER">
                     <font>
-                        <Font size="16.0" />
+                        <Font size="16.0"/>
                     </font>
                 </Text>
-                <Text fill="#1e3bbc" layoutX="24.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED AUTHOR">
+                <Text fill="#1e3bbc" layoutX="24.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="SUGGESTED AUTHOR">
                     <font>
-                        <Font size="16.0" />
+                        <Font size="16.0"/>
                     </font>
                 </Text>
                 <VBox alignment="CENTER" layoutX="1.0" layoutY="350.0" prefHeight="267.0" prefWidth="200.0">
@@ -164,10 +236,22 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedAuthor1" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1" wrappingWidth="117.0" />
-                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: blue;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedAuthor1" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Author1" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: blue;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
@@ -179,10 +263,22 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedAuthor2" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2" wrappingWidth="117.0" />
-                                        <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #cd7818;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedAuthor2" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Author 2" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: #cd7818;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
@@ -191,10 +287,22 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedAuthor3" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3" wrappingWidth="117.0" />
-                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #1eba22;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedAuthor3" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Author 3" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: #1eba22;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
@@ -203,10 +311,22 @@
                             <children>
                                 <Pane prefHeight="52.0" prefWidth="185.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                        <Text fx:id="suggestedAuthor4" fill="WHITE" layoutX="60.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4" wrappingWidth="117.0" />
-                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #ba1e68;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0"
+                                                   layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE"
+                                                   style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0"/>
+                                        <Text fx:id="suggestedAuthor4" fill="WHITE" layoutX="60.0" layoutY="31.0"
+                                              strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+                                              text="Author 4" wrappingWidth="117.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND"/>
+                                            </cursor>
+                                        </Text>
+                                        <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0"
+                                                stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0"
+                                                style="-fx-fill: #ba1e68;"/>
+                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE"
+                                              strokeWidth="0.0" style="-fx-font-weight: bold;" text="11"
+                                              textAlignment="CENTER"/>
                                     </children>
                                 </Pane>
                             </children>
@@ -221,30 +341,30 @@
             <children>
                 <Pane prefHeight="200.0" prefWidth="200.0">
                     <children>
-                        <JFXButton fx:id="editButtonUser" layoutX="41.0" layoutY="27.0" mnemonicParsing="false" onAction="#viewEditButtonUser" prefHeight="69.0" prefWidth="101.0" text="MY PROFILE" />
-                  <JFXButton fx:id="logoutButton" layoutY="2.0" onAction="#logoutActon" text="Logout" />
+                        <JFXButton fx:id="editButtonUser" layoutX="41.0" layoutY="27.0" mnemonicParsing="false"
+                                   onAction="#viewEditButtonUser" prefHeight="69.0" prefWidth="101.0"
+                                   text="MY PROFILE"/>
+                        <JFXButton fx:id="logoutButton" layoutY="2.0" onAction="#logoutActon" text="Logout"/>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="512.0">
                     <children>
-                        <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false" onAction="#addFollow" text="add follow" />
-                        <Text fx:id="usernameUser" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USER PROFILE" />
-                        <VBox alignment="CENTER" layoutX="231.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
-                            <children>
-                                <Text fx:id="likesCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Likes" />
-                            </children>
-                        </VBox>
+                        <CheckBox fx:id="follow" layoutX="308.0" layoutY="31.0" mnemonicParsing="false"
+                                  onAction="#addFollow" text="add follow"/>
+                        <Text fx:id="usernameUser" layoutX="199.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="USER PROFILE"/>
                         <VBox alignment="CENTER" layoutX="324.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
-                                <Text fx:id="followersCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follower" />
+                                <Text fx:id="followersCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      text="11" textAlignment="CENTER"/>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follower"/>
                             </children>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="125.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
-                                <Text fx:id="followCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follow" />
+                                <Text fx:id="followCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0"
+                                      text="11" textAlignment="CENTER"/>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follow"/>
                             </children>
                         </VBox>
                     </children>
@@ -255,12 +375,14 @@
     <center>
         <Pane prefHeight="675.0" prefWidth="512.0" BorderPane.alignment="CENTER">
             <children>
-                <TabPane layoutX="-1.0" layoutY="-1.0" prefHeight="599.0" prefWidth="516.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane layoutX="-1.0" layoutY="-1.0" prefHeight="599.0" prefWidth="516.0"
+                         tabClosingPolicy="UNAVAILABLE">
                     <Tab onSelectionChanged="#viewToRead" text="ToRead">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <JFXListView fx:id="listToRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0" prefWidth="488.0" />
+                                    <JFXListView fx:id="listToRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                 prefWidth="488.0"/>
                                 </children>
                             </AnchorPane>
                         </content>
@@ -269,7 +391,8 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <JFXListView fx:id="listRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0" prefWidth="488.0" />
+                                    <JFXListView fx:id="listRead" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                 prefWidth="488.0"/>
                                 </children>
                             </AnchorPane>
                         </content>
@@ -278,7 +401,8 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <JFXListView fx:id="listFollow" layoutX="14.0" layoutY="15.0" prefHeight="540.0" prefWidth="488.0" />
+                                    <JFXListView fx:id="listFollow" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                 prefWidth="488.0"/>
                                 </children>
                             </AnchorPane>
                         </content>
@@ -287,14 +411,16 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <JFXListView fx:id="listFollower" layoutX="14.0" layoutY="15.0" prefHeight="540.0" prefWidth="488.0" />
+                                    <JFXListView fx:id="listFollower" layoutX="14.0" layoutY="15.0" prefHeight="540.0"
+                                                 prefWidth="488.0"/>
                                 </children>
                             </AnchorPane>
                         </content>
                     </Tab>
                 </TabPane>
-                <JFXButton layoutX="169.0" layoutY="619.0" mnemonicParsing="false" text="HOME" />
-                <JFXButton fx:id="searchButton" layoutX="332.0" layoutY="619.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH" />
+                <JFXButton layoutX="169.0" layoutY="619.0" mnemonicParsing="false" text="HOME"/>
+                <JFXButton fx:id="searchButton" layoutX="332.0" layoutY="619.0" mnemonicParsing="false"
+                           onAction="#searchInterface" text="SEARCH"/>
             </children>
         </Pane>
     </center>

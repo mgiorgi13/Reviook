@@ -71,7 +71,7 @@ public class AuthorInterfaceController {
     private Text bookCatValue1, bookCatText1, bookCatValue2, bookCatText2, bookCatValue3, bookCatText3, bookCatValue4, bookCatText4, bookCatValue5, bookCatText5;
 
     @FXML
-    private HBox Stat1, Stat2, Stat3, Stat4;
+    private HBox Stat1,Stat2,Stat3,Stat4;
 
     @FXML
     private HBox HBAuthor1, HBAuthor2, HBAuthor3, HBAuthor4, HBUser1, HBUser2, HBUser3, HBUser4;
@@ -397,6 +397,7 @@ public class AuthorInterfaceController {
         actual_stage.centerOnScreen();
     }
 
+
     @FXML
     void viewFollow() {
         Author author = visualizedAuthor;
@@ -411,6 +412,32 @@ public class AuthorInterfaceController {
             listFollows.add(Follow.get(i));
         }
         listFollow.getItems().addAll(listFollows);
+
+        //        if ((session.getLoggedAuthor() != null) && (session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText()))) {
+//            session.getLoggedAuthor().getInteractions().delFollow();
+//            Follow = userManager.loadRelations("Author", usernameAuthor.getText());
+//            session.getLoggedAuthor().getInteractions().setNumberFollow(Follow.size());
+//            for (int i = 0; i < Follow.size(); i++) {
+//                session.getLoggedAuthor().getInteractions().setFollow(Follow.get(i));
+//            }
+//
+//            for (int i = 0; i < session.getLoggedAuthor().getInteractions().getNumberFollow(); i++)
+//                listFollows.add(session.getLoggedAuthor().getInteractions().getFollow().get(i));
+//            listFollow.getItems().addAll(listFollows);
+//        } else {
+//            Author author = new Author("", "", "", usernameAuthor.getText(), "", "", null, 0);
+//            author.getInteractions().delFollow();
+//            Follow = userManager.loadRelations("Author", usernameAuthor.getText());
+//            author.getInteractions().setNumberFollow(Follow.size());
+//            for (int i = 0; i < Follow.size(); i++) {
+//                author.getInteractions().setFollow(Follow.get(i));
+//            }
+//
+//            for (int i = 0; i < author.getInteractions().getNumberFollow(); i++)
+//                listFollows.add(author.getInteractions().getFollow().get(i));
+//            listFollow.getItems().addAll(listFollows);
+//        }
+
         followCount.setText(String.valueOf(Follow.size()));
         listFollows.clear();
         listFollow.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -457,9 +484,8 @@ public class AuthorInterfaceController {
     void viewRead() {
         listRead.getItems().clear();
         ArrayList<Book> read;
-        read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
-        System.out.println(read);
         if (visualizedAuthor.getBooks().getReaded().isEmpty()){
+            read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
             for (Book book : read) {
                     ListRead.add(visualizedAuthor.getBooks().setRead(book.getTitle(), book.getBook_id()));
             }
@@ -493,6 +519,7 @@ public class AuthorInterfaceController {
         actual_stage.show();
         actual_stage.centerOnScreen();
     }
+
 
 
     @FXML
@@ -609,7 +636,7 @@ public class AuthorInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    int result = userManager.verifyUsername(selectedCell, "author", false);
+                    int result = userManager.verifyUsername(selectedCell, "author",false);
                     if (result == -1 || result == 2)
                         return;
                     try {

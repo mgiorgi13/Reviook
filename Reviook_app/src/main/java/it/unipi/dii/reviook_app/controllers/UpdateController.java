@@ -56,21 +56,30 @@ public class UpdateController {
         actual_stage.setResizable(false);
         actual_stage.setTitle("Are you sure you want to delete your account?");
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void homeAction(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
         Parent homeInterface;
-        if (session.getIsAuthor())
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-        else
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+        if (session.getIsAuthor()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+            userInterfaceController.setUser(session.getLoggedUser());
+        }
         Stage actual_stage = (Stage) homeButton.getScene().getWindow();
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void updateButtonFun(ActionEvent event) throws IOException, NoSuchAlgorithmException {
@@ -117,7 +126,8 @@ actual_stage.centerOnScreen();    }
             actual_stage.setResizable(false);
             actual_stage.setTitle("Login");
             actual_stage.show();
-actual_stage.centerOnScreen();        } else {
+            actual_stage.centerOnScreen();
+        } else {
             actiontarget.setText("update failed");
         }
 

@@ -5,15 +5,14 @@ public class RankingObject {
     private Integer count;
     private Double avg;
 
-    public RankingObject(String name, Integer count, Double avg)
-    {
+    public RankingObject(String name, Integer count, Double avg) {
         this.name = name;
-        this.count= count;
-        this.avg = Math.round(avg*100.0)/100.0;
+        this.count = count;
+        this.avg = Math.round(avg * 100.0) / 100.0;
     }
 
-    public RankingObject(String name, Integer count){
-        this(name,count,0.0);
+    public RankingObject(String name, Integer count) {
+        this(name, count, 0.0);
     }
 
     public String getName() {
@@ -42,10 +41,9 @@ public class RankingObject {
 
     @Override
     public String toString() {
-        return "Username: " + name +
-                "   Total Review" + count +
-                "   Average Helpful: " + avg
-                ;
+        return /*"username: " +*/ name +
+                "\n\n   - " + count + " reviews" +
+                "\n\n   - " + avg + " average helpful";
     }
 
 }

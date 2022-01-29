@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -11,8 +12,14 @@
 
 <Pane prefHeight="278.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.LoginController">
     <children>
-        <JFXButton fx:id="loginButton" layoutX="335.0" layoutY="123.0" mnemonicParsing="false" onAction="#loginButton" text="Login" />
-        <JFXButton fx:id="registerButton" layoutX="329.0" layoutY="165.0" onAction="#openRegisterScene" text="Sign Up" />
+        <JFXButton fx:id="loginButton" layoutX="335.0" layoutY="123.0" mnemonicParsing="false" onAction="#loginButton" text="Login">
+         <graphic>
+            <FontAwesomeIconView glyphName="HOME" />
+         </graphic></JFXButton>
+        <JFXButton fx:id="registerButton" layoutX="335.0" layoutY="170.0" onAction="#openRegisterScene" text="Sign Up">
+         <graphic>
+            <FontAwesomeIconView glyphName="USER" />
+         </graphic></JFXButton>
 
         <Text fx:id="actiontarget" layoutX="132.0" layoutY="243.0" textAlignment="CENTER" wrappingWidth="169.0" />
 
