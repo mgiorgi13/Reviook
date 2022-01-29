@@ -11,6 +11,8 @@ public class ListGenre extends ListCell<Genre> {
             DataGenreCell dataGenreCell = new DataGenreCell();
             dataGenreCell.setInfo(genre);
             setGraphic(dataGenreCell.getPane());
+        } else {
+            setGraphic(null);
         }
     }
 }

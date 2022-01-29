@@ -11,6 +11,8 @@ public class ListBook extends ListCell<Book> {
             DataBookCell dataBookCell = new DataBookCell();
             dataBookCell.setInfo(book);
             setGraphic(dataBookCell.getPane());
+        } else {
+            setGraphic(null);
         }
     }
 }

@@ -62,7 +62,6 @@ public class BookManager {
         return false;
     }
 
-
     public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date, String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
         Calendar calendar = Calendar.getInstance();
