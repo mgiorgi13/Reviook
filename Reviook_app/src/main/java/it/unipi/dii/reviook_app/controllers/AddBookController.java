@@ -259,8 +259,6 @@ actual_stage.centerOnScreen();    }
 
         bookManager.addBook( num_pages, URL_image, selectedChoice, date,id,  Title,  ISBN_,  Description,  Genre, param);
         session.getLoggedAuthor().setWrittenBook(new Book(num_pages,URL_image,selectedChoice,date,id,  Title,  ISBN_,  Description,  Genre, UsernameTagged));
-        for (int i= 0; i< Genre.size(); i++)
-            session.getLoggedAuthor().setWrittenBookStatistic(Genre.get(i));
         actiontarget.setText("Congratulations you added a book!!");
 
 
