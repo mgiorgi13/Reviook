@@ -36,6 +36,8 @@ public class AuthorInterfaceController {
 
     @FXML
     private JFXButton button;
+    @FXML
+    private JFXButton homeButton;
 
     @FXML
     private JFXButton searchButton;
@@ -437,43 +439,6 @@ actual_stage.centerOnScreen();                            } catch (IOException e
 
         followCount.setText(String.valueOf(Follow.size()));
         listFollows.clear();
-        listFollow.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
-                    String selectedCell = (String) listFollow.getSelectionModel().getSelectedItem();
-                    //check if author or user
-                    int result = userManager.verifyUsername(selectedCell,"author", false);
-                    if (result == -1 || result == 2)
-                        return;
-                    try {
-                        Parent userInterface;
-                        FXMLLoader fxmlLoader;
-                        if (result == 1) {
-                            Author author = new Author(selectedCell);
-                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-                            userInterface = (Parent) fxmlLoader.load();
-                            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-                            controller.setAuthor(author);
-                        } else {
-                            User user = new User(selectedCell);
-                            fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-                            userInterface = (Parent) fxmlLoader.load();
-                            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-                            controller.setUser(user);
-                        }
-
-                        Stage actual_stage = (Stage) listFollow.getScene().getWindow();
-                        actual_stage.setScene(new Scene(userInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                        actual_stage.centerOnScreen();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
         //    System.out.println(Follow.size()+ " "+session.getLoggedAuthor().getInteractions().getFollow()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
 
@@ -568,6 +533,36 @@ actual_stage.centerOnScreen();                            } catch (IOException e
 actual_stage.centerOnScreen();    }
 
     public void setButtonConnection(){
+        this.homeButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 1 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    try {
+                        Parent user_scene;
+                        Stage actual_stage = (Stage) homeButton.getScene().getWindow();
+                        if (session.getIsAuthor()) {
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            user_scene = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+                        } else {
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            user_scene = (Parent) fxmlLoader.load();
+                            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                            userInterfaceController.setUser(session.getLoggedUser());
+                            Parent root = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+                        }
+                        actual_stage.setScene(new Scene(user_scene));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                        actual_stage.centerOnScreen();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -728,7 +723,8 @@ actual_stage.centerOnScreen();    }
 
     public void initialize() {
         follow.setVisible(false);
-
+        viewFollower();
+        viewFollow();
 //        if (session.getLoggedAuthor() != null) {
 //            usernameAuthor.setText(session.getLoggedAuthor().getNickname());
 //        } /*else if (session.getLoggedUser() != null) {

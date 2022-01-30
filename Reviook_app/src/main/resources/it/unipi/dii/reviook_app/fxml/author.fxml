@@ -448,12 +448,8 @@
                         </Tab>
                     </tabs>
                 </TabPane>
-                <JFXButton fx:id="searchButton" layoutX="226.0" layoutY="616.0" mnemonicParsing="false"
-                           onAction="#searchInterface" text="SEARCH">
-                    <graphic>
-                        <FontAwesomeIconView glyphName="SEARCH"/>
-                    </graphic>
-                </JFXButton>
+                <JFXButton fx:id="homeButton" layoutX="169.0" layoutY="619.0" mnemonicParsing="false" text="HOME" />
+                <JFXButton fx:id="searchButton" layoutX="332.0" layoutY="619.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH" />
             </children>
         </Pane>
     </center>

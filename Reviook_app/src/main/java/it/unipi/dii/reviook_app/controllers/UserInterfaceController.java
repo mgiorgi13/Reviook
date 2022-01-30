@@ -68,6 +68,8 @@ public class UserInterfaceController {
 
     @FXML
     private Button rankingButton;
+    @FXML
+    private JFXButton homeButton;
 
     private ArrayList<Genre> analytics;
 
@@ -454,6 +456,36 @@ public class UserInterfaceController {
     }
 
     public void setButtonConnection() {
+        this.homeButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 1 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    try {
+                        Parent user_scene;
+                        Stage actual_stage = (Stage) homeButton.getScene().getWindow();
+                        if (session.getIsAuthor()) {
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                            user_scene = (Parent) fxmlLoader.load();
+                            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+                            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+                        } else {
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+                            user_scene = (Parent) fxmlLoader.load();
+                            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+                            userInterfaceController.setUser(session.getLoggedUser());
+                            Parent root = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+                        }
+                        actual_stage.setScene(new Scene(user_scene));
+                        actual_stage.setResizable(false);
+                        actual_stage.show();
+                        actual_stage.centerOnScreen();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         listToRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
