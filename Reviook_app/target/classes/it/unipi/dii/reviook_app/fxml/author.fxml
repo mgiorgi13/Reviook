@@ -351,6 +351,7 @@
                         </Tab>
                     </tabs>
                 </TabPane>
+                <JFXButton fx:id="homeButton" layoutX="169.0" layoutY="619.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" />
                 <JFXButton fx:id="searchButton" layoutX="220.0" layoutY="614.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
                     <graphic>
                         <FontAwesomeIconView glyphName="SEARCH" />

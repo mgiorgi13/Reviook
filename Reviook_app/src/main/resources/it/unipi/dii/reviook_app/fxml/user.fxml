@@ -335,7 +335,7 @@
                         </content>
                     </Tab>
                 </TabPane>
-                <JFXButton layoutX="138.0" layoutY="618.0" mnemonicParsing="false" text="HOME">
+                <JFXButton fx:id="homeButton" layoutX="138.0" layoutY="618.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" >
                <graphic>
                   <FontAwesomeIconView glyphName="HOME" />
                </graphic></JFXButton>
