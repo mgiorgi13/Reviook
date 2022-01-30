@@ -20,10 +20,6 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
-import javax.print.Doc;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -224,7 +220,8 @@ public class UserManager {
                     return 2;
                 }
             }
-        } else if (type.equals("author")) {
+        }
+        if (type.equals("author")||type.equals("")) {
             try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
@@ -235,7 +232,8 @@ public class UserManager {
                     return 1;
                 }
             }
-        } else {
+        }
+        if(type.equals("user")||type.equals("")){
             try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
@@ -247,7 +245,6 @@ public class UserManager {
                 }
             }
         }
-
         return -1;
     }
 

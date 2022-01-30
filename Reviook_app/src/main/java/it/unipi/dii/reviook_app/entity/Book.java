@@ -179,8 +179,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "book_id='" + book_id + '\'' +
-                '}';
+        return title;
     }
 }
