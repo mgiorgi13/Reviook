@@ -240,12 +240,14 @@ public class AdminController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
-                        selectedBookID = selectedBook.getBook_id();
-                        nameTitle.setText(selectedBook.getTitle());
-                        username.setText("-");
-                        description.setText(selectedBook.getDescription());
-                        follower.setText("-");
-                        reviewText.setText("-");
+                        if (selectedBook != null) {
+                            selectedBookID = selectedBook.getBook_id();
+                            nameTitle.setText(selectedBook.getTitle());
+                            username.setText("-");
+                            description.setText(selectedBook.getDescription());
+                            follower.setText("-");
+                            reviewText.setText("-");
+                        }
                     }
                 }
             });
@@ -261,11 +263,13 @@ public class AdminController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-                        nameTitle.setText(selectedUser.getName());
-                        username.setText(selectedUser.getNickname());
-                        follower.setText(((Integer) selectedUser.getFollowerCount()).toString());
-                        description.setText("-");
-                        reviewText.setText("-");
+                        if (selectedUser != null) {
+                            nameTitle.setText(selectedUser.getName());
+                            username.setText(selectedUser.getNickname());
+                            follower.setText(((Integer) selectedUser.getFollowerCount()).toString());
+                            description.setText("-");
+                            reviewText.setText("-");
+                        }
                     }
                 }
             });
@@ -281,11 +285,13 @@ public class AdminController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-                        nameTitle.setText(selectedAuthor.getName());
-                        username.setText(selectedAuthor.getNickname());
-                        follower.setText(((Integer) selectedAuthor.getFollowerCount()).toString());
-                        description.setText("-");
-                        reviewText.setText("-");
+                        if (selectedAuthor != null) {
+                            nameTitle.setText(selectedAuthor.getName());
+                            username.setText(selectedAuthor.getNickname());
+                            follower.setText(((Integer) selectedAuthor.getFollowerCount()).toString());
+                            description.setText("-");
+                            reviewText.setText("-");
+                        }
                     }
                 }
             });
@@ -301,11 +307,13 @@ public class AdminController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Report selectedRev = (Report) reviewList.getSelectionModel().getSelectedItem();
-                        reviewText.setText(selectedRev.getReview_text());
-                        username.setText(selectedRev.getUsername());
-                        description.setText("-");
-                        follower.setText("-");
-                        nameTitle.setText("-");
+                        if (selectedRev != null){
+                            reviewText.setText(selectedRev.getReview_text());
+                            username.setText(selectedRev.getUsername());
+                            description.setText("-");
+                            follower.setText("-");
+                            nameTitle.setText("-");
+                        }
                     }
                 }
             });

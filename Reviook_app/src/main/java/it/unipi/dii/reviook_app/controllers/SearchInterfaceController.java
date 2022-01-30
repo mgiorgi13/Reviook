@@ -248,6 +248,9 @@ public class SearchInterfaceController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Book selectedCell = (Book) bookList.getSelectionModel().getSelectedItem();
+                        if (selectedCell == null){
+                            return;
+                        }
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
@@ -277,6 +280,9 @@ public class SearchInterfaceController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                         User selectedCell = (User) usersList.getSelectionModel().getSelectedItem();
+                        if (selectedCell == null){
+                            return;
+                        }
                         try {
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
@@ -304,15 +310,17 @@ public class SearchInterfaceController {
             this.authorsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Author selectedCell = (Author) authorsList.getSelectionModel().getSelectedItem();
+                        if (selectedCell == null){
+                            return;
+                        }
                         try {
                             Parent userInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                             userInterface = (Parent) fxmlLoader.load();
                             AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
                             controller.setAuthor(selectedCell);
-
                             Stage actual_stage = (Stage) homeButton.getScene().getWindow();
                             actual_stage.setScene(new Scene(userInterface));
                             actual_stage.setResizable(false);

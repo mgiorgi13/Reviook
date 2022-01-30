@@ -125,7 +125,8 @@ public class LoginController {
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
 
     @FXML
@@ -135,7 +136,8 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(register_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void initialize() {

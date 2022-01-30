@@ -1,57 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane alignment="center" hgap="10" prefHeight="261.0" prefWidth="522.0" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RegisterController">
-  <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
-   <Label text="Password" translateX="30.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-  <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="3" GridPane.rowIndex="5">
-      <CheckBox fx:id="CheckAuthor" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Author" />
-    <JFXButton fx:id="loginButton" onAction="#openLoginScene" text="Login" />
-  </HBox>
 
-
-  <Text fx:id="actionTarget" GridPane.columnIndex="3" GridPane.rowIndex="7" />
-
-  <Text text="Welcome" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-
-  <Label text="User Name" translateX="30.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-
-  <PasswordField fx:id="singInPassword" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-   <TextField fx:id="singInUName" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-   <PasswordField fx:id="singInRepeatPsw" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-   <Label prefHeight="17.0" prefWidth="104.0" text="Repeat Password" translateX="30.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-   <TextField fx:id="singInName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-   <TextField fx:id="singInSurname" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-   <TextField fx:id="singInEmail" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-   <Label text="Name" GridPane.rowIndex="1" />
-   <Label text="Surname" GridPane.rowIndex="2" />
-   <Label text="e-mail" GridPane.rowIndex="3" />
-   <JFXButton mnemonicParsing="false" onAction="#registerButton" prefHeight="26.0" prefWidth="63.0" scaleX="2.0" text="Register" translateX="25.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-   <columnConstraints>
-      <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-      <ColumnConstraints maxWidth="176.7999969482422" minWidth="76.0000244140625" prefWidth="119.20002441406251" />
-      <ColumnConstraints maxWidth="163.99997558593748" minWidth="10.0" prefWidth="117.39997558593748" />
-      <ColumnConstraints maxWidth="187.19997558593752" minWidth="134.99998779296874" prefWidth="152.6000244140625" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
-</GridPane>
+<Pane prefHeight="445.0" prefWidth="697.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RegisterController">
+   <children>
+      <Label layoutX="395.0" layoutY="214.0" text="Password" />
+      <CheckBox fx:id="CheckAuthor" layoutX="319.0" layoutY="84.0" mnemonicParsing="false" text="Author" />
+    <JFXButton fx:id="loginButton" layoutX="264.0" layoutY="397.0" onAction="#openLoginScene" text="Login">
+         <graphic>
+            <FontAwesomeIconView glyphName="HOME" />
+         </graphic>
+      </JFXButton>
+   
+      
+        <Text fx:id="actiontarget" layoutX="311.0" layoutY="365.0" wrappingWidth="74.3642578125" />
+   
+        <Text layoutX="311.0" layoutY="40.0" text="Welcome">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+   
+        <Label layoutX="55.0" layoutY="293.0" text="Username:" />
+   
+        <PasswordField fx:id="singInPassword" layoutX="494.0" layoutY="210.0" />
+      <TextField fx:id="singInUName" layoutX="162.0" layoutY="289.0" />
+      <PasswordField fx:id="singInRepeatPsw" layoutX="492.0" layoutY="289.0" />
+      <Label layoutX="374.0" layoutY="293.0" text="Repeat Password" />
+      <TextField fx:id="singInName" layoutX="162.0" layoutY="132.0" />
+      <TextField fx:id="singInSurname" layoutX="162.0" layoutY="210.0" />
+      <TextField fx:id="singInEmail" layoutX="492.0" layoutY="132.0" />
+      <Label layoutX="57.0" layoutY="136.0" text="Name" />
+      <Label layoutX="57.0" layoutY="214.0" text="Surname" />
+      <Label layoutX="403.0" layoutY="136.0" text="E-mail" />
+      <JFXButton layoutX="361.0" layoutY="397.0" mnemonicParsing="false" onAction="#registerButton" text="Register">
+         <graphic>
+            <FontAwesomeIconView glyphName="USER" />
+         </graphic>
+      </JFXButton>
+   </children>
+</Pane>
