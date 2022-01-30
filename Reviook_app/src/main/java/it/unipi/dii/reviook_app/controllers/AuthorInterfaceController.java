@@ -723,8 +723,6 @@ actual_stage.centerOnScreen();    }
 
     public void initialize() {
         follow.setVisible(false);
-        viewFollower();
-        viewFollow();
 //        if (session.getLoggedAuthor() != null) {
 //            usernameAuthor.setText(session.getLoggedAuthor().getNickname());
 //        } /*else if (session.getLoggedUser() != null) {
