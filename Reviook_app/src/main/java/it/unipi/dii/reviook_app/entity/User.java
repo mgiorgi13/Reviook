@@ -18,8 +18,6 @@ public class User {
     private ArrayList<Genre> statistics;
     private ListBooks listBooks;
 
-    UserManager userManager = new UserManager();
-
     public User(String nickname){
         this.id = "";
         this.name = "";
@@ -142,17 +140,16 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", interactions=" + interactions +
-                ", listReviewID=" + listReviewID +
-                ", follower_count=" + follower_count +
-                ", listBooks=" + listBooks +
-                ", userManager=" + userManager +
+                "id='" + id + '\'' +  ",\n" +
+                "name='" + name + '\'' + ",\n" +
+                "surname='" + surname + '\'' + ",\n" +
+                "nickname='" + nickname + '\'' + ",\n" +
+                "email='" + email + '\'' + ",\n" +
+                "password='" + password + '\'' + ",\n" +
+                "interactions=" + interactions + ",\n" +
+                "listReviewID=" + listReviewID + ",\n" +
+                "follower_count=" + follower_count + ",\n" +
+                "listBooks=" + listBooks + "\n" +
                 '}';
     }
 }

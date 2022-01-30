@@ -270,7 +270,7 @@
                         <Text fx:id="usernameUser" layoutX="119.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USER PROFILE" />
                         <VBox alignment="CENTER" layoutX="249.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
-                                <Text fx:id="followersCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
+                                <Text fx:id="followerCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follower" />
                             </children>
                         </VBox>
@@ -335,7 +335,7 @@
                         </content>
                     </Tab>
                 </TabPane>
-                <JFXButton layoutX="138.0" layoutY="618.0" mnemonicParsing="false" text="HOME">
+                <JFXButton fx:id="homeButton" layoutX="138.0" layoutY="618.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" >
                <graphic>
                   <FontAwesomeIconView glyphName="HOME" />
                </graphic></JFXButton>

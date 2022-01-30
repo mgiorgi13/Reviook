@@ -274,7 +274,7 @@
                     <children>
                         <VBox alignment="CENTER" layoutX="169.0" layoutY="69.0" prefHeight="64.0" prefWidth="50.0">
                             <children>
-                                <Text fx:id="followersCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
+                                <Text fx:id="followerCount" fill="#004dff" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textAlignment="CENTER" />
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follower" />
                             </children>
                         </VBox>
@@ -322,7 +322,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#publishedFunction" text="PUBLISHED">
+                        <Tab onSelectionChanged="#viewPublished" text="PUBLISHED">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -351,6 +351,7 @@
                         </Tab>
                     </tabs>
                 </TabPane>
+                <JFXButton fx:id="homeButton" layoutX="169.0" layoutY="619.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" />
                 <JFXButton fx:id="searchButton" layoutX="220.0" layoutY="614.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
                     <graphic>
                         <FontAwesomeIconView glyphName="SEARCH" />
