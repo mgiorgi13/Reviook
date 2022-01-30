@@ -312,7 +312,7 @@ public class BookDetailController {
         listView.setItems(this.observableList);
 
         visualizedBook.setReviews(this.reviewsList);
-        visualizedBook.setAverage_rating(Double.valueOf(ratingAVG.getText().replace(",",".")));
+        visualizedBook.setAverage_rating(Double.valueOf(ratingAVG.getText().replace(",", ".")));
 
         listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
             @Override
@@ -325,6 +325,9 @@ public class BookDetailController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                     Review selectedCell = (Review) listView.getSelectionModel().getSelectedItem();
+                    if (selectedCell == null) {
+                        return;
+                    }
                     try {
                         Parent dialogReview;
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/previewReview.fxml"));
@@ -428,7 +431,7 @@ public class BookDetailController {
         if (fromSuggestion) {
             bookSelected = bookManager.getBookByID(bookSelected.getBook_id());
         }
-        if(visualizedBook == null)
+        if (visualizedBook == null)
             visualizedBook = bookSelected;
 
         //book&author suggestion
@@ -506,6 +509,9 @@ public class BookDetailController {
     @FXML
     void reportAction() {
         Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
+        if (selectedReview == null) {
+            return;
+        }
         adminManager.ReportReview(selectedReview, book_id);
     }
 
