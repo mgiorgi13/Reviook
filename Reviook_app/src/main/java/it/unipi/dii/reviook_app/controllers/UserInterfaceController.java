@@ -320,18 +320,21 @@ public class UserInterfaceController {
     }
 
     public void setUser(User user) {
-        System.out.println(session);
         //TODO caricaListeLibri()
-        this.nickname = user.getNickname();
-        usernameUser.setText(this.nickname);
-        visualizedUser = user;
+        if(!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
+            visualizedUser = session.getLoggedUser();
+        else
+            visualizedUser = user;
 
-        if (user.getInteractions().getFollow().isEmpty() && user.getInteractions().getFollower().isEmpty()){
+        this.nickname = visualizedUser.getNickname();
+        usernameUser.setText(this.nickname);
+
+        if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()){
             viewFollow();
             viewFollower();
         }else{
-            followCount.setText(String.valueOf(user.getInteractions().getFollow().size()));
-            followerCount.setText(String.valueOf(user.getInteractions().getFollower().size()));
+            followCount.setText(String.valueOf(visualizedUser.getInteractions().getFollow().size()));
+            followerCount.setText(String.valueOf(visualizedUser.getInteractions().getFollower().size()));
         }
         //load analytics
 
