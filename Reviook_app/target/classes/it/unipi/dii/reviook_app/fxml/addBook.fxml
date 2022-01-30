@@ -2,12 +2,13 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
-<?import javafx.scene.control.Button?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AddBookController">
@@ -15,16 +16,24 @@
       <Text layoutX="41.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title book" />
       <TextField fx:id="titleBook" layoutX="42.0" layoutY="76.0" prefHeight="25.0" prefWidth="258.0" />
       <TextField fx:id="numPage" layoutX="325.0" layoutY="76.0" prefHeight="25.0" prefWidth="258.0" />
-      <TextArea fx:id="description" layoutX="181.0" layoutY="443.0" prefHeight="124.0" prefWidth="258.0" />
-      <JFXButton fx:id="addBookButton" layoutX="180.0" layoutY="567.0" mnemonicParsing="false" onAction="#addBookFunction" prefHeight="25.0" prefWidth="264.0" text="Add your book" />
-      <Text fx:id="actiontarget" layoutX="222.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="215.455078125" />
+      <TextArea fx:id="description" layoutX="184.0" layoutY="468.0" prefHeight="124.0" prefWidth="258.0" />
+      <JFXButton fx:id="addBookButton" layoutX="180.0" layoutY="592.0" mnemonicParsing="false" onAction="#addBookFunction" prefHeight="25.0" prefWidth="264.0" text="Add your book">
+         <graphic>
+            <FontAwesomeIconView glyphName="PLUS" />
+         </graphic></JFXButton>
+      <Text fx:id="actiontarget" layoutX="191.0" layoutY="643.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="215.455078125" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text layoutX="269.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NEW BOOK" />
+      <Text layoutX="269.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="NEW BOOK">
+         <font>
+            <Font size="14.0" />
+         </font></Text>
       <TextField fx:id="ISBN" layoutX="43.0" layoutY="117.0" prefHeight="25.0" prefWidth="258.0" />
       <Text layoutX="42.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
-      <Text fx:id="actiontarget1" layoutX="15.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Delete with double tap" />
-      <JFXButton fx:id="backButton" layoutX="20.0" layoutY="567.0" onAction="#backFunction" prefHeight="25.0" prefWidth="69.0" text="BACK" />
-      <Text layoutX="279.0" layoutY="439.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+      <JFXButton fx:id="backButton" layoutX="20.0" layoutY="613.0" onAction="#backFunction" prefHeight="25.0" prefWidth="69.0" text="HOME">
+         <graphic>
+            <FontAwesomeIconView glyphName="HOME" />
+         </graphic></JFXButton>
+      <Text layoutX="282.0" layoutY="464.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
       <Text layoutX="326.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Num pages" />
       <DatePicker fx:id="publication_date" layoutX="325.0" layoutY="160.0" prefHeight="25.0" prefWidth="258.0" />
       <Text layoutX="327.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Publication date" />
@@ -51,12 +60,20 @@
             </Pane>
             <Text layoutX="413.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author Tag" />
             <TextField fx:id="authorTag" layoutX="406.0" layoutY="31.0" prefHeight="25.0" prefWidth="156.0" />
-            <JFXButton layoutX="501.0" layoutY="31.0" onAction="#searchAction" prefHeight="25.0" prefWidth="69.0" text="SEARCH" />
+            <JFXButton layoutX="529.0" layoutY="31.0" onAction="#searchAction" prefHeight="25.0" prefWidth="22.0" text=" ">
+               <graphic>
+                  <FontAwesomeIconView glyphName="SEARCH" />
+               </graphic></JFXButton>
             <Text layoutX="413.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tagged*:" />
             <TextField fx:id="searchGenres" layoutX="11.0" layoutY="31.0" prefHeight="25.0" prefWidth="156.0" />
-            <JFXButton layoutX="98.0" layoutY="31.0" onAction="#searchActionGenres" prefHeight="25.0" prefWidth="69.0" text="SEARCH" />
+            <JFXButton layoutX="130.0" layoutY="31.0" onAction="#searchActionGenres" prefHeight="25.0" prefWidth="25.0" text=" ">
+               <graphic>
+                  <FontAwesomeIconView glyphName="SEARCH" />
+               </graphic></JFXButton>
             <Text layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres" />
             <Text layoutX="10.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres added*:" />
+            <Text fx:id="actiontarget1" layoutX="26.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Delete with double tap" />
+            <Text fx:id="actiontarget11" layoutX="421.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Delete with double tap" />
          </children>
       </Pane>
       <ChoiceBox fx:id="languageCode" layoutX="41.0" layoutY="160.0" prefHeight="25.0" prefWidth="258.0" />
