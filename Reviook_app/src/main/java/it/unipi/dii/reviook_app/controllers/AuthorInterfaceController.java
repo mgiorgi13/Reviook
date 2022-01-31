@@ -406,7 +406,6 @@ public class AuthorInterfaceController {
 
     @FXML
     void viewFollow() {
-
         Author author = visualizedAuthor;
         obsFollow.clear();
         List<String> Follow;
@@ -418,9 +417,10 @@ public class AuthorInterfaceController {
                 obsFollow.add(Follow.get(i));
             }
             followCount.setText(String.valueOf(Follow.size()));
+            visualizedAuthor = author;
         }else{
-            obsFollow.addAll(author.getInteractions().getFollow());
-            followCount.setText(String.valueOf(author.getInteractions().getNumberFollow()));
+            obsFollow.addAll(visualizedAuthor.getInteractions().getFollow());
+            followCount.setText(String.valueOf(visualizedAuthor.getInteractions().getNumberFollow()));
         }
     }
 
@@ -550,6 +550,20 @@ public class AuthorInterfaceController {
                         e.printStackTrace();
                     }
                 }
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    if (session.getLoggedAuthor() != null) {
+                        if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
+                            Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
+                            searchManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameAuthor.getText(), "Author");
+                            listRead.getItems().remove(removeCell);
+                            for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
+                                if(visualizedAuthor.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+                                    visualizedAuthor.getBooks().removeRead();
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
         listToRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -574,6 +588,20 @@ public class AuthorInterfaceController {
                         actual_stage.centerOnScreen();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                }
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    if (session.getLoggedAuthor() != null) {
+                        if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
+                            Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
+                            searchManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameAuthor.getText(), "Author");
+                            listToRead.getItems().remove(removeCell);
+                            for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
+                                if(visualizedAuthor.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+                                    visualizedAuthor.getBooks().removeToRead();
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -37,6 +37,12 @@ public class ListBooks {
     public void setRead(ArrayList<Book> read) {
         this.read = read;
     }
+    public void removeToRead(){
+        toRead.clear();
+    }
+    public void removeRead(){
+        read.clear();
+    }
 
     public void setToRead(ArrayList<Book> toRead) {
         this.toRead = toRead;
