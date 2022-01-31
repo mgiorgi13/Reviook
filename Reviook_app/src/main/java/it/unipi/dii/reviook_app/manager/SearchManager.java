@@ -11,6 +11,8 @@ import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.json.JSONArray;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.TransactionWork;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +45,16 @@ public class SearchManager {
         this.nd = Neo4jDriver.getInstance();
     }
 
+    public void removeBookFromList (String idBook,String Relation, String username, String Type ){
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MATCH (n:" + Type + "{username: '" + username + "' })-[r:"+Relation+"]->" +
+                        "(c : Book{id: '" + idBook + "'}) " +
+                        "DELETE r");
+                return null;
+            });
+        }
+    }
     public Book searchIdBook(String idBook) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         MongoCursor<Document> cursor;
