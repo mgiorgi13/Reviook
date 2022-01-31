@@ -41,7 +41,7 @@
                                           <FontAwesomeIconView glyphName="BOOKMARK" />
                                       </graphic>
                                   </JFXButton>
-                                  <JFXButton layoutX="17.0" layoutY="222.0" onAction="#readed" text="Readed">
+                                  <JFXButton layoutX="17.0" layoutY="222.0" onAction="#read" text="Readed">
                                       <graphic>
                                           <FontAwesomeIconView glyphName="BOOK" />
                                       </graphic>
@@ -73,7 +73,7 @@
                                   <Text fx:id="isbnKey" layoutX="159.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
                                   <Text fx:id="isbnValue" layoutX="276.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="245.25115966796875" />
                                   <Text layoutX="158.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Pubblication" />
-                                  <Text fx:id="dataPubblication" layoutX="275.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="161.0" />
+                                  <Text fx:id="dataPublication" layoutX="275.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="161.0" />
                                   <Text layoutX="157.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language code" />
                                   <Text fx:id="languageCode" layoutX="276.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="215.4000244140625" />
                                   <Text layoutX="157.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Page" />

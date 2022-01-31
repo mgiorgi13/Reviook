@@ -164,7 +164,7 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Text fill="#1e3bbc" layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED BOOK">
+                <Text fill="#1e3bbc" layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED USER">
                     <font>
                         <Font size="16.0" />
                     </font>

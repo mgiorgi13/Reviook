@@ -321,28 +321,35 @@ public class AuthorInterfaceController {
     }
 
     public void setAuthor(Author author) {
-        this.nickname = author.getNickname();
+        if(session.getIsAuthor() && author.getNickname().equals(session.getLoggedAuthor().getNickname()))
+            visualizedAuthor = session.getLoggedAuthor();
+        else
+            visualizedAuthor = author;
+
+        this.nickname = visualizedAuthor.getNickname();
         usernameAuthor.setText(this.nickname);
-        visualizedAuthor = author;
+
         //set analytics result
         viewBookAnalytic();
         viewSuggestedAuthors();
         viewSuggestedUsers();
 
-        if (author.getInteractions().getFollow().isEmpty() && author.getInteractions().getFollower().isEmpty()){
+        if (visualizedAuthor.getInteractions().getFollow().isEmpty() && visualizedAuthor.getInteractions().getFollower().isEmpty()){
             viewFollow();
             viewFollower();
         }else{
-            followCount.setText(String.valueOf(author.getInteractions().getFollow().size()));
-            followerCount.setText(String.valueOf(author.getInteractions().getFollower().size()));
+            followCount.setText(String.valueOf(visualizedAuthor.getInteractions().getFollow().size()));
+            followerCount.setText(String.valueOf(visualizedAuthor.getInteractions().getFollower().size()));
         }
         rankingButton.setVisible(false);
         if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
             addButtonBook.setVisible(true);
             rankingButton.setVisible(true);
+            homeButton.setVisible(false);
         } else {
             addButtonBook.setVisible(false);
             rankingButton.setVisible(false);
+            homeButton.setVisible(true);
         }
         // I'm author
         if (session.getLoggedAuthor() != null) {

@@ -320,31 +320,36 @@ public class UserInterfaceController {
     }
 
     public void setUser(User user) {
-        System.out.println(session);
         //TODO caricaListeLibri()
-        this.nickname = user.getNickname();
-        usernameUser.setText(this.nickname);
-        visualizedUser = user;
+        if(!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
+            visualizedUser = session.getLoggedUser();
+        else
+            visualizedUser = user;
 
-        if (user.getInteractions().getFollow().isEmpty() && user.getInteractions().getFollower().isEmpty()){
+        this.nickname = visualizedUser.getNickname();
+        usernameUser.setText(this.nickname);
+
+        if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()){
             viewFollow();
             viewFollower();
         }else{
-            followCount.setText(String.valueOf(user.getInteractions().getFollow().size()));
-            followerCount.setText(String.valueOf(user.getInteractions().getFollower().size()));
+            followCount.setText(String.valueOf(visualizedUser.getInteractions().getFollow().size()));
+            followerCount.setText(String.valueOf(visualizedUser.getInteractions().getFollower().size()));
         }
         //load analytics
 
         viewReviewAnalytic();
         viewSuggestedAuthors();
         viewSuggestedUsers();
+
         rankingButton.setVisible(true);
+        homeButton.setVisible(false);
         if (session.getLoggedAuthor() != null) {
-            rankingButton.setVisible(false);
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
-
+                rankingButton.setVisible(false);
+                homeButton.setVisible(true);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
@@ -358,6 +363,7 @@ public class UserInterfaceController {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
+                homeButton.setVisible(true);
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
