@@ -97,4 +97,12 @@ public class Session {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Session{" +
+                "isAuthor=" + isAuthor + "\n" +
+                ", loggedUser=" + loggedUser + "\n" +
+                ", loggedAuthor=" + loggedAuthor + "\n" +
+                '}';
+    }
 }

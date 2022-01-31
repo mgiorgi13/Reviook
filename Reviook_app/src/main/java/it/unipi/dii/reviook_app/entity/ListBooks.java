@@ -3,66 +3,50 @@ package it.unipi.dii.reviook_app.entity;
 import java.util.ArrayList;
 
 public class ListBooks {
-    private ArrayList<Book> readed;
+    private ArrayList<Book> read;
     private ArrayList<Book> toRead;
-    private ArrayList<Book> published;
+
 
     public ListBooks() {
-        this.readed = new ArrayList<>();
+        this.read = new ArrayList<>();
         this.toRead = new ArrayList<>();
-        this.published = new ArrayList<>();
+
     }
 
     public void listBooksClear() {
-        readed.clear();
+        read.clear();
         toRead.clear();
-        published.clear();
     }
 
-    public String setRead(String title, String book_id) {
-        Book b = new Book(title, book_id);
-        b.setTitle((readed.size() + 1) + ":" + b.getTitle());
-        this.readed.add(b);
-        return b.getTitle();
+    public ArrayList<Book> getToRead(){
+        return this.toRead;
     }
 
-    public String getIdBookToRead(String title) {
-        for (Book Books : this.toRead) {
-            if (Books.getTitle().equals(title))
-                return Books.getBook_id();
-        }
-        return null;
+    public ArrayList<Book> getRead(){
+        return this.read;
     }
 
-
-    public String getIdBookRead(String title) {
-        for (Book Books : this.readed) {
-            if (Books.getTitle().equals(title))
-                return Books.getBook_id();
-        }
-        return null;
+    public void addToSetRead(Book book) {
+        this.read.add(book);
     }
 
-    public String setToRead(String title, String book_id) {
-        Book b = new Book(title, book_id);
-        b.setTitle((toRead.size() + 1) + ":" + b.getTitle());
-        this.toRead.add(b);
-        return b.getTitle();
+    public void addToSetToRead(Book book) {
+        this.toRead.add(book);
     }
 
-    public String setPublished(String title, String book_id) {
-        Book b = new Book(title, book_id);
-        b.setTitle((published.size() + 1) + ":" + b.getTitle());
-        this.published.add(b);
-        return b.getTitle();
+    public void setRead(ArrayList<Book> read) {
+        this.read = read;
     }
 
-    public String getIdBookPublished(String title) {
-        for (Book Books : this.published) {
-            if (Books.getTitle().equals(title))
-                return Books.getBook_id();
-        }
-        return null;
+    public void setToRead(ArrayList<Book> toRead) {
+        this.toRead = toRead;
     }
 
+    @Override
+    public String toString() {
+        return "ListBooks{" +
+                "read=" + read +
+                ", toRead=" + toRead +
+                '}';
+    }
 }

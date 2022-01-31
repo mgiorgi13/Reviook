@@ -62,14 +62,14 @@ public class RankingInterfaceController {
     private BookManager bookManager = new BookManager();
     private UserManager userManager = new UserManager();
 
-    private void clearLists(){
+    private void clearLists() {
         yearBooksObs.clear();
         desiredBooksObs.clear();
         popularBooksObs.clear();
         reliableUsersObs.clear();
     }
 
-    private void hideLists(){
+    private void hideLists() {
         yearBooksJFX.setVisible(false);
         desiredBooksJFX.setVisible(false);
         popularBooksJFX.setVisible(false);
@@ -94,7 +94,7 @@ public class RankingInterfaceController {
             ArrayList<String> genresList = new ArrayList<>();
             for (int i = 0; i < array.size(); i++) {
                 if (i % 2 == 0) {
-                    genres = "GENRES BOOK: " + array.get(i).getType() + "     TOTAL PUBLISHED: " + array.get(i).getValue().intValue();
+                    genres = /*"genres: " +*/ array.get(i).getType() + "\n\n    - total: " + array.get(i).getValue().intValue();
                     genresList.add(genres);
                 }
             }
@@ -114,20 +114,33 @@ public class RankingInterfaceController {
     public void mostPopularBooks(ActionEvent actionEvent) {
         clearLists();
         hideLists();
-        ArrayList<RankingObject> res = bookManager.topBooks("READ",100);
-        for(RankingObject b : res){
-            popularBooksObs.add(b.getCount() + " users read : " + b.getName());
+        ArrayList<RankingObject> res = bookManager.topBooks("READ", 100);
+        for (RankingObject b : res) {
+//            popularBooksObs.add(b.getCount() + " users read : " + b.getName());
+            popularBooksObs.add(
+                    "Title: " +
+                            b.getName() +
+                            "\n\n   - " +
+                            b.getCount() + " users read it"
+            );
         }
         popularBooksJFX.setVisible(true);
 
     }
+
     @FXML
     public void mostDesiredBooks(ActionEvent actionEvent) {
         clearLists();
         hideLists();
-        ArrayList<RankingObject> res = bookManager.topBooks("TO_READ",100);
-        for(RankingObject b : res){
-            desiredBooksObs.add(b.getCount() + " users are interested in : " + b.getName());
+        ArrayList<RankingObject> res = bookManager.topBooks("TO_READ", 100);
+        for (RankingObject b : res) {
+//            desiredBooksObs.add(b.getCount() + " users are interested in : " + b.getName());
+            desiredBooksObs.add(
+                    "Title: " +
+                            b.getName() +
+                            "\n\n   - " +
+                            b.getCount() + " users are interested"
+            );
         }
         desiredBooksJFX.setVisible(true);
     }
@@ -136,42 +149,29 @@ public class RankingInterfaceController {
     void homeInterface(ActionEvent event) throws IOException {
         Session session = Session.getInstance();
         Parent homeInterface;
-        if (session.getIsAuthor())
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-        else
-            homeInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+        if (session.getIsAuthor()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            AuthorInterfaceController authorInterfaceController = fxmlLoader.getController();
+            authorInterfaceController.setAuthor(session.getLoggedAuthor());
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
+            homeInterface = (Parent) fxmlLoader.load();
+            UserInterfaceController userInterfaceController = fxmlLoader.getController();
+            userInterfaceController.setUser(session.getLoggedUser());
+        }
         Stage actual_stage = (Stage) homeButton.getScene().getWindow();
         actual_stage.setScene(new Scene(homeInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
-
-    @FXML
-    public void profileInterface(ActionEvent actionEvent) throws IOException {
-        Parent userInterface;
-        if (session.getIsAuthor()) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            AuthorInterfaceController controller = fxmlLoader.<AuthorInterfaceController>getController();
-            // controller.setNickname(nickSelected);
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/user.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            UserInterfaceController controller = fxmlLoader.<UserInterfaceController>getController();
-        }
-
-        Stage actual_stage = (Stage) profileButton.getScene().getWindow();
-        actual_stage.setScene(new Scene(userInterface));
-        actual_stage.setResizable(false);
-        actual_stage.show();
-actual_stage.centerOnScreen();    }
     @FXML
     void initialize() {
         availableChoices.addAll(searchManager.searchYears());
         yearsFilter.setItems(availableChoices);
         yearsFilter.setVisible(true);
-
         yearBooksJFX.setItems(yearBooksObs);
         reliableUsersJFX.setItems(reliableUsersObs);
         popularBooksJFX.setItems(popularBooksObs);

@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
@@ -13,101 +14,110 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="852.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.BookDetailController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="895.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.BookDetailController">
     <children>
-        <HBox layoutX="14.0" layoutY="15.0" prefHeight="822.0" prefWidth="799.0">
+        <HBox layoutX="14.0" layoutY="15.0" prefHeight="870.0" prefWidth="799.0">
             <children>
                 <Pane prefHeight="822.0" prefWidth="594.0">
                     <children>
-                        <VBox prefHeight="775.0" prefWidth="594.0">
-                            <children>
-                                <Pane prefHeight="388.0" prefWidth="594.0">
-                                    <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="124.0" layoutX="14.0" layoutY="12.0" stroke="#1f0fff" strokeType="INSIDE" strokeWidth="5.0" width="133.0" />
-                                        <Text layoutX="159.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
-                                        <Text layoutX="159.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:" />
-                                        <Text layoutX="159.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category:" />
-                                        <JFXButton layoutX="14.0" layoutY="176.0" onAction="#toRead" text="To Read">
-                                            <graphic>
-                                                <FontAwesomeIconView glyphName="BOOKMARK" />
-                                            </graphic>
-                                        </JFXButton>
-                                        <JFXButton layoutX="87.0" layoutY="176.0" onAction="#readed" text="Readed">
-                                            <graphic>
-                                                <FontAwesomeIconView glyphName="BOOK" />
-                                            </graphic>
-                                        </JFXButton>
-                                        <Text fx:id="bookTitle" layoutX="277.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="290.800048828125" />
-                                        <Text fx:id="bookAuthor" layoutX="277.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="228.0" />
-                                        <Text fx:id="bookCategories" layoutX="277.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="255.0" />
-                                        <Text layoutX="159.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
-                                        <ImageView fx:id="imageContainer" fitHeight="107.0" fitWidth="115.0" layoutX="23.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
-                                        <ScrollPane layoutX="240.0" layoutY="165.0" prefHeight="86.0" prefWidth="354.0">
-                                            <content>
-                                                <Text fx:id="bookDescription" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="337.0" />
-                                            </content>
-                                        </ScrollPane>
-                                        <Text layoutX="32.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:" />
-                                        <Text fx:id="ratingAVG" layoutX="81.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-                                        <Text fx:id="isbnKey" layoutX="159.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
-                                        <Text fx:id="isbnValue" layoutX="277.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="245.25115966796875" />
-                                        <Text layoutX="159.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Pubblication" />
-                                        <Text fx:id="dataPubblication" layoutX="277.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="161.0" />
-                                        <Text layoutX="159.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language code" />
-                                        <Text fx:id="languageCode" layoutX="277.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="215.4000244140625" />
-                                        <Text layoutX="159.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Page" />
-                                        <Text fx:id="totalPage" layoutX="277.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
-                                        <JFXButton fx:id="deleteBook" layoutX="122.0" layoutY="214.0" mnemonicParsing="false" onAction="#deleteBookFun" prefHeight="25.0" prefWidth="100.0" text="Delete book" textFill="#ae2626">
-                                 <graphic>
-                                    <FontAwesomeIconView fill="#b22c2c" glyphName="TRASH" />
-                                 </graphic></JFXButton>
-                              <JFXButton fx:id="reportBookButton" layoutX="14.0" layoutY="214.0" onAction="#reportBookAction" text="Report Book">
-                                 <graphic>
-                                    <FontAwesomeIconView glyphName="EXCLAMATION" />
-                                 </graphic>
-                              </JFXButton>
-                                    </children>
-                                </Pane>
-                                <Pane fx:id="test" prefHeight="632.0" prefWidth="594.0">
-                                    <ListView fx:id="listView" layoutX="4.0" layoutY="38.0" prefHeight="429.0" prefWidth="586.0" />
-                                    <JFXButton fx:id="addReviewButton" layoutX="297.0" layoutY="471.0" onAction="#addReviewAction" text="Add Review">
-                                        <graphic>
-                                            <FontAwesomeIconView glyphName="PLUS" />
-                                        </graphic>
-                                    </JFXButton>
-                                    <JFXButton fx:id="editReviewButton" layoutX="384.0" layoutY="471.0" onAction="#editReviewAction" text="Edit Review">
-                                        <graphic>
-                                            <FontAwesomeIconView glyphName="EDIT" />
-                                        </graphic>
-                                    </JFXButton>
-                                    <JFXButton fx:id="deleteReviewButton" layoutX="474.0" layoutY="471.0" onAction="#deleteReviewAction" text="Delete Review" textAlignment="CENTER">
-                                        <graphic>
-                                            <FontAwesomeIconView glyphName="TRASH" />
-                                        </graphic>
-                                    </JFXButton>
-                                    <JFXButton fx:id="likeButton" layoutX="512.0" layoutY="14.0" onAction="#putLikeAction" text="Like">
-                                        <graphic>
-                                            <FontAwesomeIconView glyphName="HEART" />
-                                        </graphic>
-                                    </JFXButton>
-                                    <JFXButton fx:id="reportButton" layoutX="14.0" layoutY="471.0" onAction="#reportAction" text="Report Review">
-                                        <graphic>
-                                            <FontAwesomeIconView glyphName="EXCLAMATION" />
-                                        </graphic>
-                                    </JFXButton>
-                                </Pane>
-                            </children>
-                        </VBox>
-                        <JFXButton fx:id="homeButton" layoutX="191.0" layoutY="795.0" mnemonicParsing="false" onAction="#homeAction" text="HOME">
+                        <JFXButton fx:id="homeButton" layoutX="191.0" layoutY="844.0" mnemonicParsing="false" onAction="#homeAction" text="HOME">
                             <graphic>
                                 <FontAwesomeIconView glyphName="HOME" />
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="795.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
+                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="844.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
                             <graphic>
                                 <FontAwesomeIconView glyphName="SEARCH" />
                             </graphic>
                         </JFXButton>
+                          <Pane prefHeight="351.0" prefWidth="594.0">
+                              <children>
+                                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="124.0" layoutX="14.0" layoutY="12.0" stroke="#1f0fff" strokeType="INSIDE" strokeWidth="5.0" width="133.0" />
+                                  <Text layoutX="159.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
+                                  <Text layoutX="159.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:" />
+                                  <Text layoutX="157.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category:" />
+                                  <JFXButton layoutX="17.0" layoutY="182.0" onAction="#toRead" text="To Read">
+                                      <graphic>
+                                          <FontAwesomeIconView glyphName="BOOKMARK" />
+                                      </graphic>
+                                  </JFXButton>
+                                  <JFXButton layoutX="17.0" layoutY="222.0" onAction="#read" text="Readed">
+                                      <graphic>
+                                          <FontAwesomeIconView glyphName="BOOK" />
+                                      </graphic>
+                                  </JFXButton>
+                        <ScrollPane layoutX="275.0" layoutY="5.0" minHeight="-Infinity" prefHeight="36.0" prefWidth="318.0" vbarPolicy="NEVER">
+                           <content>
+                                        <Text fx:id="bookTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="308.800048828125" />
+                           </content>
+                        </ScrollPane>
+                        <ScrollPane layoutX="275.0" layoutY="45.0" minHeight="-Infinity" prefHeight="37.0" prefWidth="318.0" vbarPolicy="NEVER">
+                           <content>
+                                        <Text fx:id="bookAuthor" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="313.0" />
+                           </content>
+                        </ScrollPane>
+                        <ScrollPane layoutX="275.0" layoutY="85.0" prefHeight="36.0" prefWidth="318.0" vbarPolicy="NEVER">
+                           <content>
+                                        <Text fx:id="bookCategories" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="308.0" />
+                           </content>
+                        </ScrollPane>
+                                  <Text layoutX="157.0" layoutY="274.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+                                  <ImageView fx:id="imageContainer" fitHeight="107.0" fitWidth="72.0" layoutX="45.0" layoutY="21.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
+                                  <ScrollPane layoutX="241.0" layoutY="256.0" prefHeight="86.0" prefWidth="354.0" vbarPolicy="NEVER">
+                                      <content>
+                                          <Text fx:id="bookDescription" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="337.0" />
+                                      </content>
+                                  </ScrollPane>
+                                  <Text layoutX="53.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:" />
+                                  <Text fx:id="ratingAVG" layoutX="102.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                                  <Text fx:id="isbnKey" layoutX="159.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
+                                  <Text fx:id="isbnValue" layoutX="276.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="245.25115966796875" />
+                                  <Text layoutX="158.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Pubblication" />
+                                  <Text fx:id="dataPublication" layoutX="275.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="161.0" />
+                                  <Text layoutX="157.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language code" />
+                                  <Text fx:id="languageCode" layoutX="276.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="215.4000244140625" />
+                                  <Text layoutX="157.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Page" />
+                                  <Text fx:id="totalPage" layoutX="276.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="92.451171875" />
+                                  <JFXButton fx:id="deleteBook" layoutX="15.0" layoutY="310.0" mnemonicParsing="false" onAction="#deleteBookFun" prefHeight="25.0" prefWidth="100.0" text="Delete book" textFill="#ae2626">
+                                      <graphic>
+                                          <FontAwesomeIconView fill="#b22c2c" glyphName="TRASH" />
+                                      </graphic>
+                                  </JFXButton>
+                                  <JFXButton fx:id="reportBookButton" layoutX="19.0" layoutY="266.0" onAction="#reportBookAction" text="Report Book">
+                                      <graphic>
+                                          <FontAwesomeIconView glyphName="EXCLAMATION" />
+                                      </graphic>
+                                  </JFXButton>
+                              </children>
+                          </Pane>
+                          <Pane fx:id="test" layoutY="343.0" prefHeight="488.0" prefWidth="594.0">
+                              <ListView fx:id="listView" layoutX="4.0" layoutY="38.0" prefHeight="418.0" prefWidth="586.0" />
+                              <JFXButton fx:id="addReviewButton" layoutX="298.0" layoutY="462.0" onAction="#addReviewAction" text="Add Review">
+                                  <graphic>
+                                      <FontAwesomeIconView glyphName="PLUS" />
+                                  </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="editReviewButton" layoutX="385.0" layoutY="462.0" onAction="#editReviewAction" text="Edit Review">
+                                  <graphic>
+                                      <FontAwesomeIconView glyphName="EDIT" />
+                                  </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="deleteReviewButton" layoutX="475.0" layoutY="462.0" onAction="#deleteReviewAction" text="Delete Review" textAlignment="CENTER">
+                                  <graphic>
+                                      <FontAwesomeIconView glyphName="TRASH" />
+                                  </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="likeButton" layoutX="518.0" layoutY="14.0" onAction="#putLikeAction" text="Like">
+                                  <graphic>
+                                      <FontAwesomeIconView glyphName="HEART" />
+                                  </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="reportButton" layoutX="15.0" layoutY="462.0" onAction="#reportAction" text="Report Review">
+                                  <graphic>
+                                      <FontAwesomeIconView glyphName="EXCLAMATION" />
+                                  </graphic>
+                              </JFXButton>
+                          </Pane>
                     </children>
                 </Pane>
                 <Pane prefHeight="822.0" prefWidth="203.0">
@@ -119,7 +129,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 1" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -132,7 +146,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 2" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -142,7 +160,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 3" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -152,7 +174,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedBook4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedBook4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Book 4" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -176,7 +202,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor1" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author1" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -189,7 +219,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cd7818" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor2" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 2" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -199,7 +233,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1eba22" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor3" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 3" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>
@@ -209,7 +247,11 @@
                                         <Pane prefHeight="52.0" prefWidth="185.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ba1e68" height="37.0" layoutX="17.0" layoutY="8.0" stroke="WHITE" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="160.0" />
-                                                <Text fx:id="suggestedAuthor4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4" wrappingWidth="146.8046875" />
+                                                <Text fx:id="suggestedAuthor4" fill="WHITE" layoutX="24.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Author 4" wrappingWidth="146.8046875">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND" />
+                                                    </cursor>
+                                                </Text>
                                             </children>
                                         </Pane>
                                     </children>

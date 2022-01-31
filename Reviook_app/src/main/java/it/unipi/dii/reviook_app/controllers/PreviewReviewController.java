@@ -42,7 +42,7 @@ public class PreviewReviewController {
 
     public void setInfoReview(Review selectedReview) {
         ratingField.setText(selectedReview.getRating());
-        authorReviewField.setText(selectedReview.getUser_id());
+        authorReviewField.setText(selectedReview.getUsername());
         reviewText.setText(selectedReview.getReview_text());
     }
 

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class RegisterController {
     @FXML
-    private Text actiontarget;
+    private Text actionTarget;
 
     @FXML
     private CheckBox CheckAuthor;
@@ -58,7 +58,7 @@ public class RegisterController {
             //convalid email
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher mEmail = p.matcher(email);
-            if (userManager.verifyUsername(nickname,"", false) != -1)
+            if (userManager.verifyUsername(nickname,CheckAuthor.isSelected() ? "author":"user", false) != -1)
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";
@@ -98,7 +98,7 @@ public class RegisterController {
         password = singInPassword.getText();
         repeatPsw = singInRepeatPsw.getText();
         if (singInName.getText().isEmpty() || singInSurname.getText().isEmpty() || singInEmail.getText().isEmpty() || singInUName.getText().isEmpty() || singInPassword.getText().isEmpty() || singInRepeatPsw.getText().isEmpty()) {
-            actiontarget.setText("You must fill in all fields");
+            actionTarget.setText("You must fill in all fields");
             return;
         }
 
@@ -106,7 +106,7 @@ public class RegisterController {
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
         String singIn = SignIn(Name, surname, email, nickname, password, repeatPsw);
         if (!singIn.equals("Registered")) {
-            actiontarget.setText(singIn);
+            actionTarget.setText(singIn);
             return;
         }
         if (CheckAuthor.isSelected()) {
@@ -116,7 +116,7 @@ public class RegisterController {
             userManager.addNewUsers("User", id, Name+surname, nickname);
             userManager.register(Name, surname, email, nickname, password, "User", id);
         }
-        actiontarget.setText(singIn);
+        actionTarget.setText(singIn);
         Thread.sleep(1000);
         Parent login_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();

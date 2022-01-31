@@ -65,7 +65,7 @@ public class DataReviewCell {
                 review.setLiked();
             } else {
                 likeIcon.setVisible(false);
-                review.unseLiked();
+                review.unSetLiked();
             }
         } else if (session.getLoggedAuthor() != null) {
             ArrayList<String> listReviewID = session.getLoggedAuthor().getListReviewID();
@@ -74,7 +74,7 @@ public class DataReviewCell {
                 review.setLiked();
             } else {
                 likeIcon.setVisible(false);
-                review.unseLiked();
+                review.unSetLiked();
             }
         }
     }

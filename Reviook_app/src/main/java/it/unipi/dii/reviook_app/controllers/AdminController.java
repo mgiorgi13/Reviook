@@ -119,7 +119,8 @@ public class AdminController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void deleteElemAction(ActionEvent event) {
@@ -127,21 +128,25 @@ actual_stage.centerOnScreen();    }
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
             adminManager.DeleteReport(selectedBook);
+            obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedUser.getNickname(), "user");
             userManager.deleteUserMongo(selectedUser.getNickname(), "user");
+            obsUserList.remove(selectedUser);
             addCustomFactory("user");
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedAuthor.getNickname(), "author");
             userManager.deleteUserMongo(selectedAuthor.getNickname(), "author");
+            obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
             adminManager.DeleteReport(selectedReview);
             bookManager.DeleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
+            obsListReview.remove(selectedReview);
             addCustomFactory("review");
         }
     }
@@ -153,7 +158,8 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(newAdminInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
     @FXML
     void unReport() {
@@ -161,12 +167,12 @@ actual_stage.centerOnScreen();    }
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             int index = bookList.getSelectionModel().getSelectedIndex();
             adminManager.DeleteReport(selectedBook);
+            obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            int index = reviewList.getSelectionModel().getSelectedIndex();
             adminManager.DeleteReport(selectedReview);
-            reviewList.getItems().remove(index);
+            obsListReview.remove(selectedReview);
             addCustomFactory("review");
         }
     }
@@ -221,7 +227,7 @@ actual_stage.centerOnScreen();    }
         }
     }
 
-    private void addCustomFactory(String type)  {
+    private void addCustomFactory(String type) {
         if (type.equals("book")) {
             this.bookList.setCellFactory(new Callback<ListView<Report>, ListCell<Report>>() {
                 @Override
@@ -234,12 +240,14 @@ actual_stage.centerOnScreen();    }
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
-                        selectedBookID = selectedBook.getBook_id();
-                        nameTitle.setText(selectedBook.getTitle());
-                        username.setText("-");
-                        description.setText(selectedBook.getDescription());
-                        follower.setText("-");
-                        reviewText.setText("-");
+                        if (selectedBook != null) {
+                            selectedBookID = selectedBook.getBook_id();
+                            nameTitle.setText(selectedBook.getTitle());
+                            username.setText("-");
+                            description.setText(selectedBook.getDescription());
+                            follower.setText("-");
+                            reviewText.setText("-");
+                        }
                     }
                 }
             });
@@ -255,11 +263,13 @@ actual_stage.centerOnScreen();    }
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-                        nameTitle.setText(selectedUser.getName());
-                        username.setText(selectedUser.getNickname());
-                        follower.setText(((Integer) selectedUser.getFollowerCount()).toString());
-                        description.setText("-");
-                        reviewText.setText("-");
+                        if (selectedUser != null) {
+                            nameTitle.setText(selectedUser.getName());
+                            username.setText(selectedUser.getNickname());
+                            follower.setText(((Integer) selectedUser.getFollowerCount()).toString());
+                            description.setText("-");
+                            reviewText.setText("-");
+                        }
                     }
                 }
             });
@@ -275,11 +285,13 @@ actual_stage.centerOnScreen();    }
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-                        nameTitle.setText(selectedAuthor.getName());
-                        username.setText(selectedAuthor.getNickname());
-                        follower.setText(((Integer) selectedAuthor.getFollowerCount()).toString());
-                        description.setText("-");
-                        reviewText.setText("-");
+                        if (selectedAuthor != null) {
+                            nameTitle.setText(selectedAuthor.getName());
+                            username.setText(selectedAuthor.getNickname());
+                            follower.setText(((Integer) selectedAuthor.getFollowerCount()).toString());
+                            description.setText("-");
+                            reviewText.setText("-");
+                        }
                     }
                 }
             });
@@ -295,11 +307,13 @@ actual_stage.centerOnScreen();    }
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Report selectedRev = (Report) reviewList.getSelectionModel().getSelectedItem();
-                        reviewText.setText(selectedRev.getReview_text());
-                        username.setText(selectedRev.getUsername());
-                        description.setText("-");
-                        follower.setText("-");
-                        nameTitle.setText("-");
+                        if (selectedRev != null){
+                            reviewText.setText(selectedRev.getReview_text());
+                            username.setText(selectedRev.getUsername());
+                            description.setText("-");
+                            follower.setText("-");
+                            nameTitle.setText("-");
+                        }
                     }
                 }
             });

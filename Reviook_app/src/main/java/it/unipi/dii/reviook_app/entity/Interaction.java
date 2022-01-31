@@ -63,4 +63,15 @@ public class Interaction {
     public void setNumberUseful(int numberUseful) {
         this.numberUseful = numberUseful;
     }
+
+    @Override
+    public String toString() {
+        return "Interaction{" +
+                "follow=" + follow +
+                ", follower=" + follower +
+                ", numberFollow=" + numberFollow +
+                ", numberFollower=" + numberFollower +
+                ", numberUseful=" + numberUseful +
+                '}';
+    }
 }
