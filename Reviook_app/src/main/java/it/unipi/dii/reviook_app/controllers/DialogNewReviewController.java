@@ -10,15 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -81,7 +78,7 @@ public class DialogNewReviewController {
         String book_id = this.book_id;
         if (editMode) {
             try {
-                bookManager.EditReview(reviewText, ratingBook, book_id, this.reviewToEdit.getReview_id());
+                bookManager.editReview(reviewText, ratingBook, book_id, this.reviewToEdit.getReview_id());
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {
@@ -96,7 +93,7 @@ public class DialogNewReviewController {
             }
         } else {
             try {
-                bookManager.AddReviewToBook(reviewText, ratingBook, book_id);
+                bookManager.addReviewToBook(reviewText, ratingBook, book_id);
             } catch (MongoException e) {
                 e.printStackTrace();
             } finally {

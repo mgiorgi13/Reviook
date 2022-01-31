@@ -101,7 +101,7 @@ public class BookManager {
         }
     }
 
-    public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+    public void addReviewToBook(String reviewText, Integer ratingBook, String book_id) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
@@ -134,7 +134,7 @@ public class BookManager {
         UpdateResult updateResult2 = book.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
-    public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
+    public void editReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
@@ -145,7 +145,7 @@ public class BookManager {
         UpdateResult updateResult3 = books.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
-    public void DeleteReview(String review_id, String book_id) {
+    public void deleteReview(String review_id, String book_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         //  Bson getReview = eq("reviews.review_id", review_id);

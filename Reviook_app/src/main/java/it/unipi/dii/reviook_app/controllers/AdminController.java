@@ -7,10 +7,8 @@ import com.jfoenix.controls.JFXListView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.ResourceBundle;
 
-import com.mongodb.MongoException;
 import it.unipi.dii.reviook_app.Session;
 import it.unipi.dii.reviook_app.components.*;
 import it.unipi.dii.reviook_app.entity.*;
@@ -57,6 +55,9 @@ public class AdminController {
 
     @FXML
     private JFXButton searchButton;
+
+    @FXML
+    private Text actionTarget;
 
     @FXML
     private JFXButton logoutButton;
@@ -124,10 +125,12 @@ public class AdminController {
 
     @FXML
     void deleteElemAction(ActionEvent event) {
+        actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
-            adminManager.DeleteReport(selectedBook);
+            if(!adminManager.deleteReport(selectedBook))
+                actionTarget.setText("Error: unable to remove Book");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
@@ -144,8 +147,9 @@ public class AdminController {
             addCustomFactory("author");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            adminManager.DeleteReport(selectedReview);
-            bookManager.DeleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
+            if(!adminManager.deleteReport(selectedReview))
+                actionTarget.setText("Error: unable to remove Review");
+            bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
         }
@@ -166,12 +170,14 @@ public class AdminController {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             int index = bookList.getSelectionModel().getSelectedIndex();
-            adminManager.DeleteReport(selectedBook);
+            if(!adminManager.deleteReport(selectedBook))
+                actionTarget.setText("Error: unable to remove bookReport");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            adminManager.DeleteReport(selectedReview);
+            if(!adminManager.deleteReport(selectedReview))
+                actionTarget.setText("Error: unable to remove reviewReport");
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
         }
@@ -180,7 +186,7 @@ public class AdminController {
 //    void deleteReviewAction() {
 //        Review selectedReview = (Review) reviewList.getSelectionModel().getSelectedItem();
 //        if (selectedReview != null && selectedBookID != null) {
-//            bookManager.DeleteReview(selectedReview.getReview_id(), selectedBookID);
+//            bookManager.deleteReview(selectedReview.getReview_id(), selectedBookID);
 //            Book book = bookManager.getBookByID(this.selectedBookID); // query to update review
 //            ObservableList<Review> obsListReview = FXCollections.observableArrayList();
 //            obsListReview.setAll(book.getReviews());
