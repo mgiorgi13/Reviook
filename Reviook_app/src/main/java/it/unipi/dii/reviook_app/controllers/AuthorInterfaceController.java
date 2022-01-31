@@ -8,6 +8,7 @@ import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
+import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -89,6 +90,8 @@ public class AuthorInterfaceController {
 
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
+    private BookManager bookManager = new BookManager();
+
     private Author visualizedAuthor = new Author("");
 
     private ObservableList<Book> obsPublished = FXCollections.observableArrayList();
@@ -554,7 +557,7 @@ public class AuthorInterfaceController {
                     if (session.getLoggedAuthor() != null) {
                         if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
                             Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
-                            searchManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameAuthor.getText(), "Author");
+                            bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameAuthor.getText(), "Author");
                             listRead.getItems().remove(removeCell);
                             for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
                                 if(visualizedAuthor.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
@@ -594,7 +597,7 @@ public class AuthorInterfaceController {
                     if (session.getLoggedAuthor() != null) {
                         if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
                             Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
-                            searchManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameAuthor.getText(), "Author");
+                            bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameAuthor.getText(), "Author");
                             listToRead.getItems().remove(removeCell);
                             for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
                                 if(visualizedAuthor.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){

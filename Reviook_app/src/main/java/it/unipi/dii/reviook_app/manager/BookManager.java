@@ -51,6 +51,16 @@ public class BookManager {
         this.userManager = new UserManager();
     }
 
+    public void removeBookFromList (String idBook,String Relation, String username, String Type ){
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MATCH (n:" + Type + "{username: '" + username + "' })-[r:"+Relation+"]->" +
+                        "(c : Book{id: '" + idBook + "'}) " +
+                        "DELETE r");
+                return null;
+            });
+        }
+    }
 
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
