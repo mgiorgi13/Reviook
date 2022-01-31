@@ -157,7 +157,7 @@
 //        int c = 0;
 //        try (org.neo4j.driver.Session session = nd.getDriver().session()) {
 //            c = session.readTransaction((TransactionWork<Integer>) tx -> {
-//                Result result = tx.run("MATCH (ee:" + type + ")-[:FOLLOW]->(friends) where ee.username = '" + username + "' " +
+//                Result result = tx.run("MATCH (ee:" + type + ")<-[:FOLLOW]-(friends) where ee.username = '" + username + "' " +
 //                        "return count(friends) as cont");
 //                return Integer.valueOf(result.next().get("cont").toString());
 //            });
@@ -248,13 +248,13 @@
 ////                um.readAdd("User",nick,book5);
 ////                um.readAdd("User",nick,book6);
 //
-//                //add wrote relation
-//                books = searchBooksAuthor(id);
-//                //                System.out.println(nick);
-//                //                System.out.println(books);
-//                addwrote(nick,books);
+////                //add wrote relation
+////                books = searchBooksAuthor(id);
+////                //                System.out.println(nick);
+////                //                System.out.println(books);
+////                addwrote(nick,books);
 //                // //update follower count
-//                // loadRelations("User",nick);
+//                 loadRelations("Author",nick);
 //
 //
 //                if (contatore % 100 == 0)

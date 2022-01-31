@@ -1,8 +1,5 @@
 package it.unipi.dii.reviook_app.entity;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class Review {
     private String date_added;
     private String review_id;
@@ -30,7 +27,7 @@ public class Review {
         this.liked = true;
     }
 
-    public void unseLiked() {
+    public void unSetLiked() {
         this.liked = false;
     }
 
