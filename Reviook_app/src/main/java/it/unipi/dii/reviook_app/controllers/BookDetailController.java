@@ -81,7 +81,7 @@ public class BookDetailController {
     private Text bookCategories;
 
     @FXML
-    private Text bookDescription, isbnKey, isbnValue, dataPubblication, languageCode, totalPage;
+    private Text bookDescription, isbnKey, isbnValue, dataPublication, languageCode, totalPage;
 
     @FXML
     private Text bookTitle;
@@ -201,19 +201,25 @@ public class BookDetailController {
     @FXML
     void toRead(ActionEvent event) throws IOException {
         String bookTitleText = bookTitle.getText();
-        if (session.getLoggedAuthor() != null)
+        if (session.getLoggedAuthor() != null) {
             userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
-        else
+            session.getLoggedAuthor().getBooks().getToRead().add(visualizedBook);
+        } else {
             userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id);
+            session.getLoggedUser().getBooks().getToRead().add(visualizedBook);
+        }
     }
 
     @FXML
-    void readed(ActionEvent event) throws IOException {
+    void read(ActionEvent event) throws IOException {
         String bookTitleText = bookTitle.getText();
-        if (session.getLoggedAuthor() != null)
+        if (session.getLoggedAuthor() != null) {
             userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
-        else
+            session.getLoggedAuthor().getBooks().getRead().add(visualizedBook);
+        } else {
             userManager.readAdd("User", session.getLoggedUser().getNickname(), this.book_id);
+            session.getLoggedUser().getBooks().getRead().add(visualizedBook);
+        }
     }
 
     @FXML
@@ -449,8 +455,8 @@ public class BookDetailController {
             totalPage.setText(String.valueOf(bookSelected.getNum_pages()));
         } else totalPage.setText("-");
         if (bookSelected.getPublication_month() != null && bookSelected.getPublication_day() != null && bookSelected.getPublication_year() != null) {
-            dataPubblication.setText(String.valueOf(bookSelected.getPublication_day()) + "/" + String.valueOf(bookSelected.getPublication_month()) + "/" + String.valueOf(bookSelected.getPublication_year()));
-        } else dataPubblication.setText("-");
+            dataPublication.setText(String.valueOf(bookSelected.getPublication_day()) + "/" + String.valueOf(bookSelected.getPublication_month()) + "/" + String.valueOf(bookSelected.getPublication_year()));
+        } else dataPublication.setText("-");
         if (bookSelected.getLanguage_code() != null) {
             languageCode.setText(String.valueOf(bookSelected.getLanguage_code()));
         } else languageCode.setText("-");
@@ -497,6 +503,9 @@ public class BookDetailController {
             Parent userInterface;
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
+            AuthorInterfaceController controller = fxmlLoader.getController();
+            if(session.getIsAuthor())
+                controller.setAuthor(session.getLoggedAuthor());
             Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
             actual_stage.setScene(new Scene(userInterface));
             actual_stage.setResizable(false);

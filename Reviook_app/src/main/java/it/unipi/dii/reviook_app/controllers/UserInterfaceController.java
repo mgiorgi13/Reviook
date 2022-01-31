@@ -341,13 +341,15 @@ public class UserInterfaceController {
         viewReviewAnalytic();
         viewSuggestedAuthors();
         viewSuggestedUsers();
+
         rankingButton.setVisible(true);
+        homeButton.setVisible(false);
         if (session.getLoggedAuthor() != null) {
-            rankingButton.setVisible(false);
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
-
+                rankingButton.setVisible(false);
+                homeButton.setVisible(true);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
@@ -361,6 +363,7 @@ public class UserInterfaceController {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
+                homeButton.setVisible(true);
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {

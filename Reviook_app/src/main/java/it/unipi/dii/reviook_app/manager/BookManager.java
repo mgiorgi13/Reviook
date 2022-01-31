@@ -69,9 +69,8 @@ public class BookManager {
 
         //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
-        ArrayList<String> reviews = new ArrayList<String>();
-        Document doc = new Document("asin", "")
-                .append("language_code", languageCode)
+        ArrayList<Review> reviews = new ArrayList<Review>();
+        Document doc = new Document("language_code", languageCode)
                 .append("isbn", ISBN)
                 .append("description", Description)
                 .append("num_pages", num_pages)

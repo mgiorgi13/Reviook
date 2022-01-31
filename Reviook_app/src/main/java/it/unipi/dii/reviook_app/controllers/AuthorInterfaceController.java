@@ -345,9 +345,11 @@ public class AuthorInterfaceController {
         if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
             addButtonBook.setVisible(true);
             rankingButton.setVisible(true);
+            homeButton.setVisible(false);
         } else {
             addButtonBook.setVisible(false);
             rankingButton.setVisible(false);
+            homeButton.setVisible(true);
         }
         // I'm author
         if (session.getLoggedAuthor() != null) {
