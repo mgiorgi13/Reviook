@@ -76,28 +76,40 @@ public class UserManager {
         }
         return result;
     }
-
-    public void following(String username1, String type1, String username2, String type2) {
-        try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (n:" + type1 + "),(nn:" + type2 + ") WHERE n.username ='" + username1 + "' AND nn.username='" + username2 + "'" +
-                        "CREATE (n)-[:FOLLOW]->(nn)");
-                return null;
-            });
+//todo aggiungere gestione follow
+    public boolean following(String username1, String type1, String username2, String type2) {
+        boolean result = false;
+        if(incrementFollowerCount(username2)) {
+            try (Session session = nd.getDriver().session()) {
+                session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                    tx.run("MATCH (n:" + type1 + "),(nn:" + type2 + ") WHERE n.username ='" + username1 + "' AND nn.username='" + username2 + "'" +
+                            "CREATE (n)-[:FOLLOW]->(nn)");
+                    return true;
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+                decrementFollowerCount(username2);
+            }
         }
-        incrementFollowerCount(username2);
+        return result;
     }
 
-    public void deleteFollowing(String username1, String type1, String username2, String type2) {
-        try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (n:" + type1 + " { username: '" + username1 + "' })-[r:FOLLOW]-> " +
-                        "(c :" + type2 + " { username: '" + username2 + "' })" +
-                        "DELETE r");
-                return null;
-            });
+    public boolean deleteFollowing(String username1, String type1, String username2, String type2) {
+        boolean result = false;
+        if(decrementFollowerCount(username2)) {
+            try (Session session = nd.getDriver().session()) {
+                result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                    tx.run("MATCH (n:" + type1 + " { username: '" + username1 + "' })-[r:FOLLOW]-> " +
+                            "(c :" + type2 + " { username: '" + username2 + "' })" +
+                            "DELETE r");
+                    return true;
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+                incrementFollowerCount(username2);
+            }
         }
-        decrementFollowerCount(username2);
+        return result;
     }
 
     public ArrayList<Book> loadRelationsBook(String type, String username, String read) {
@@ -113,15 +125,15 @@ public class UserManager {
                 }
                 return books;
             });
-
-
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return readings;
     }
 
     public List<String> loadRelations(String type, String username) {
 
-        List<String> relationship;
+        List<String> relationship = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             relationship = session.readTransaction((TransactionWork<List<String>>) tx -> {
                 Result result = tx.run("MATCH (ee:" + type + ")-[:FOLLOW]->(friends) where ee.username = '" + username + "' " +
@@ -133,12 +145,14 @@ public class UserManager {
                 }
                 return following;
             });
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return relationship;
     }
 
     public List<String> loadRelationsFollower(String type, String username) {
-        List<String> relationship;
+        List<String> relationship = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             relationship = session.readTransaction((TransactionWork<List<String>>) tx -> {
                 Result result = tx.run("MATCH (ee:" + type + ")<-[:FOLLOW]-(friends) where ee.username = '" + username + "' " +
@@ -150,6 +164,8 @@ public class UserManager {
                 }
                 return follower;
             });
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return relationship;
     }
@@ -182,33 +198,33 @@ public class UserManager {
 
     //MongoDB ==========================================================================================================
 
-    public DBObject paramAuthor(String Username) {
-        MongoCollection<Document> authors = md.getCollection(authorCollection);
-        DBObject author = new BasicDBObject();
-        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                author.put("author_name", (String) user.get("name"));
-                author.put("author_role", "");
-                author.put("author_id", (String) user.get("author_id"));
-            }
-        }
-
-        return author;
-    }
-
-    public String retrieveID(String Username) {
-        MongoCollection<Document> authors = md.getCollection(authorCollection);
-        String ID = null;
-        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                ID = user.get("author_id").toString();
-
-            }
-        }
-        return ID;
-    }
+//    public DBObject paramAuthor(String Username) {
+//        MongoCollection<Document> authors = md.getCollection(authorCollection);
+//        DBObject author = new BasicDBObject();
+//        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+//            while (cursor.hasNext()) {
+//                Document user = cursor.next();
+//                author.put("author_name", (String) user.get("name"));
+//                author.put("author_role", "");
+//                author.put("author_id", (String) user.get("author_id"));
+//            }
+//        }
+//
+//        return author;
+//    }
+//
+//    public String retrieveID(String Username) {
+//        MongoCollection<Document> authors = md.getCollection(authorCollection);
+//        String ID = null;
+//        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+//            while (cursor.hasNext()) {
+//                Document user = cursor.next();
+//                ID = user.get("author_id").toString();
+//
+//            }
+//        }
+//        return ID;
+//    }
 
     public int verifyUsername(String Username, String type, boolean loggingIn) {
         MongoCollection<Document> admins = md.getCollection(adminsCollection);
@@ -327,30 +343,46 @@ public class UserManager {
         return false;
     }
 
-    private void incrementFollowerCount(String id) {
+    private boolean incrementFollowerCount(String id) {
         //increment follower count
-        if (session.getIsAuthor() != null) {
-            MongoCollection<Document> authors = md.getCollection(authorCollection);
-            Bson getAuthor = eq("author_id", id);
-            authors.updateOne(getAuthor, Updates.inc("follower_count", 1));
-        } else if (session.getLoggedUser() != null) {
-            MongoCollection<Document> users = md.getCollection(usersCollection);
-            Bson getUser = eq("user_id", id);
-            users.updateOne(getUser, Updates.inc("follower_count", 1));
+        UpdateResult result = null;
+        try {
+            if (session.getIsAuthor() != null) {
+                MongoCollection<Document> authors = md.getCollection(authorCollection);
+                Bson getAuthor = eq("author_id", id);
+                result = authors.updateOne(getAuthor, Updates.inc("follower_count", 1));
+            } else if (session.getLoggedUser() != null) {
+                MongoCollection<Document> users = md.getCollection(usersCollection);
+                Bson getUser = eq("user_id", id);
+                result = users.updateOne(getUser, Updates.inc("follower_count", 1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        if(result != null)
+            return result.wasAcknowledged();
+        return false;
     }
 
-    private void decrementFollowerCount(String id) {
+    private boolean decrementFollowerCount(String id) {
         //increment follower count
-        if (session.getIsAuthor() != null) {
-            MongoCollection<Document> authors = md.getCollection(authorCollection);
-            Bson getAuthor = eq("author_id", id);
-            authors.updateOne(getAuthor, Updates.inc("follower_count", -1));
-        } else if (session.getLoggedUser() != null) {
-            MongoCollection<Document> users = md.getCollection(usersCollection);
-            Bson getUser = eq("user_id", id);
-            users.updateOne(getUser, Updates.inc("follower_count", -1));
+        UpdateResult result = null;
+        try{
+            if (session.getIsAuthor() != null) {
+                MongoCollection<Document> authors = md.getCollection(authorCollection);
+                Bson getAuthor = eq("author_id", id);
+                result = authors.updateOne(getAuthor, Updates.inc("follower_count", -1));
+            } else if (session.getLoggedUser() != null) {
+                MongoCollection<Document> users = md.getCollection(usersCollection);
+                Bson getUser = eq("user_id", id);
+                result = users.updateOne(getUser, Updates.inc("follower_count", -1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        if(result != null)
+            return result.wasAcknowledged();
+        return false;
     }
 
     //==================================================================================================================

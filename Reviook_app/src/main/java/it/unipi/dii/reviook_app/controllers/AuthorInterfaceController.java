@@ -123,7 +123,6 @@ public class AuthorInterfaceController {
                 session.getLoggedUser().getInteractions().getFollow().add(usernameAuthor.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
                 userManager.following(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author");
-
                 visualizedAuthor.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
                 visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() + 1);
             }
