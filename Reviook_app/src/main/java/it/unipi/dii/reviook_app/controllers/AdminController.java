@@ -143,6 +143,7 @@ public class AdminController {
                 };
             }
         });
+        //TODO fare sul doppio click destro un ripristino dei log
     }
 
     @FXML
@@ -171,8 +172,11 @@ public class AdminController {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
-            if (!adminManager.deleteReport(selectedBook))
+            if (!adminManager.deleteReport(selectedBook)) {
                 actionTarget.setText("Error: unable to remove Book");
+            } else {
+                adminManager.addLog(selectedBook, "delete");
+            }
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
             resetRightDetail();
@@ -192,8 +196,11 @@ public class AdminController {
             resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if (!adminManager.deleteReport(selectedReview))
+            if (!adminManager.deleteReport(selectedReview)) {
                 actionTarget.setText("Error: unable to remove Review");
+            } else {
+                adminManager.addLog(selectedReview, "delete");
+            }
             bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
             obsListReview.remove(selectedReview);
             addCustomFactory("review");

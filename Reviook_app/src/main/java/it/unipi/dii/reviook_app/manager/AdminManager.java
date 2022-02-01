@@ -180,7 +180,7 @@ public class AdminManager {
         return logsList;
     }
 
-    public boolean addLog(Report report) {
+    public boolean addLog(Report report, String operation) {
         MongoCollection<Document> logs = md.getCollection("logs");
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
@@ -196,7 +196,7 @@ public class AdminManager {
             Document newLog = new Document("id", UUID.randomUUID().toString())
                     .append("report_id", report.getReport_id())
                     .append("date", date)
-                    .append("operation", "unreport")
+                    .append("operation", operation)
                     .append("admin", "admin")
                     .append("type", report.getType())
                     .append("book_id", report.getBook_id())
@@ -209,7 +209,7 @@ public class AdminManager {
             Document newLog = new Document("id", UUID.randomUUID().toString())
                     .append("report_id", report.getReport_id())
                     .append("date", date)
-                    .append("operation", "unreport")
+                    .append("operation", operation)
                     .append("admin", "admin")
                     .append("type", report.getType())
                     .append("review_id", report.getReview_id())
@@ -296,7 +296,7 @@ public class AdminManager {
         DeleteResult result = null;
         try {
             result = reports.deleteOne(eq("report_id", report.getReport_id()));
-            addLog(report);
+            addLog(report, "unreport");
         } catch (Exception e) {
             e.printStackTrace();
         }
