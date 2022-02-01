@@ -55,6 +55,8 @@ public class UserManager {
                 tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", id, "name", name, "username", username));
                 return null;
             });
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -72,6 +74,8 @@ public class UserManager {
                 tx.run("MATCH (n : " + t + " { username: '" + username + "'}) DETACH DELETE n");
                 return true;
             });
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return result;
     }

@@ -3,6 +3,7 @@ package it.unipi.dii.reviook_app.manager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
@@ -13,6 +14,7 @@ import it.unipi.dii.reviook_app.entity.Report;
 import it.unipi.dii.reviook_app.entity.Review;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.xml.transform.Result;
 import java.util.*;
 
@@ -102,8 +104,8 @@ public class AdminManager {
     public boolean reportBook(Book book) {
         MongoCollection<Document> reports = md.getCollection("reports");
         InsertOneResult result = null;
-        try{
-            if (!reports.find(and(eq("book_id", book.getBook_id()), eq("type", "book"))).iterator().hasNext()) {
+        try(MongoCursor<Document> cursor = reports.find(and(eq("book_id", book.getBook_id()), eq("type", "book"))).iterator()){
+            if (!cursor.hasNext()) {
                 Document newBook = new Document();
                 newBook.append("report_id", UUID.randomUUID().toString());
                 newBook.append("type", "book");
@@ -124,8 +126,8 @@ public class AdminManager {
         MongoCollection<Document> reports = md.getCollection("reports");
         UpdateResult result = null;
 
-        try{
-            if (!reports.find(and(eq("review_id", review.getReview_id()), eq("type", "review"))).iterator().hasNext()) {
+        try(MongoCursor<Document> cursor = reports.find(and(eq("review_id", review.getReview_id()), eq("type", "review"))).iterator()){
+            if (!cursor.hasNext()) {
                 Document newReview = new Document();
                 newReview.append("report_id", UUID.randomUUID().toString());
                 newReview.append("type", "review");

@@ -51,7 +51,7 @@ public class BookManager {
         this.userManager = new UserManager();
     }
 
-    public void removeBookFromList (String idBook,String Relation, String username, String Type ){
+    public boolean removeBookFromList (String idBook,String Relation, String username, String Type ){
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (n:" + Type + "{username: '" + username + "' })-[r:"+Relation+"]->" +
@@ -59,7 +59,11 @@ public class BookManager {
                         "DELETE r");
                 return null;
             });
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public boolean verifyISBN(String ISBN) {
