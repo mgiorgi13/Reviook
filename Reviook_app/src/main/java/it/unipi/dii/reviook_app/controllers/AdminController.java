@@ -129,25 +129,33 @@ public class AdminController {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
-            if(!adminManager.deleteReport(selectedBook))
+            if (!adminManager.deleteReport(selectedBook))
                 actionTarget.setText("Error: unable to remove Book");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-            userManager.deleteUserN4J(selectedUser.getNickname(), "user");
-            userManager.deleteUserMongo(selectedUser.getNickname(), "user");
+            if (userManager.deleteUserMongo(selectedUser.getNickname(), "user")) {
+                if (!userManager.deleteUserN4J(selectedUser.getNickname(), "user"))
+                    actionTarget.setText("Error: unable to register");
+            } else {
+                actionTarget.setText("Error: unable to register");
+            }
             obsUserList.remove(selectedUser);
             addCustomFactory("user");
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-            userManager.deleteUserN4J(selectedAuthor.getNickname(), "author");
-            userManager.deleteUserMongo(selectedAuthor.getNickname(), "author");
+            if (userManager.deleteUserMongo(selectedAuthor.getNickname(), "author")) {
+                if (!userManager.deleteUserN4J(selectedAuthor.getNickname(), "author"))
+                    actionTarget.setText("Error: unable to register");
+            } else {
+                actionTarget.setText("Error: unable to register");
+            }
             obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if(!adminManager.deleteReport(selectedReview))
+            if (!adminManager.deleteReport(selectedReview))
                 actionTarget.setText("Error: unable to remove Review");
             bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
             obsListReview.remove(selectedReview);
@@ -170,13 +178,13 @@ public class AdminController {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             int index = bookList.getSelectionModel().getSelectedIndex();
-            if(!adminManager.deleteReport(selectedBook))
+            if (!adminManager.deleteReport(selectedBook))
                 actionTarget.setText("Error: unable to remove bookReport");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if(!adminManager.deleteReport(selectedReview))
+            if (!adminManager.deleteReport(selectedReview))
                 actionTarget.setText("Error: unable to remove reviewReport");
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
@@ -313,7 +321,7 @@ public class AdminController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Report selectedRev = (Report) reviewList.getSelectionModel().getSelectedItem();
-                        if (selectedRev != null){
+                        if (selectedRev != null) {
                             reviewText.setText(selectedRev.getReview_text());
                             username.setText(selectedRev.getUsername());
                             description.setText("-");

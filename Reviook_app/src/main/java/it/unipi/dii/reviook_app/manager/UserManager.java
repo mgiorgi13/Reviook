@@ -6,6 +6,7 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
@@ -41,7 +42,6 @@ public class UserManager {
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
     private static final String adminsCollection = "admins";
-    private static final String genreCollection = "genres";
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -49,25 +49,22 @@ public class UserManager {
     }
 
     // N4J
-    public void addNewUsers(String type, String id, String name, String username) {
+    public boolean addNewUsers(User user,String type) {
+        boolean result = false;
         try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", id, "name", name, "username", username));
-                return null;
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", user.getId(), "name", user.getName(), "username", user.getNickname()));
+                return true;
             });
         }catch (Exception e){
             e.printStackTrace();
+            deleteUserMongo(user.getNickname(),type);
         }
+        return result;
     }
 
     public boolean deleteUserN4J(String username, String type) {
         boolean result = false;
-//        String username;
-//        String type = this.session.getIsAuthor() ? "Author" : "User";
-//        if (this.session.getIsAuthor())
-//            username = this.session.getLoggedAuthor().getNickname();
-//        else
-//            username = this.session.getLoggedUser().getNickname();
         String t = type.equals("author") ? "Author" : "User";
         try (Session session = nd.getDriver().session()) {
             result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
@@ -278,34 +275,38 @@ public class UserManager {
         return true;
     }
 
-    public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
+    public boolean register(User user, String type) {
         ArrayList<String> liked_review = new ArrayList<>();
-        Document doc = new Document("name", name + " " + surname)
-                .append("password", password)
-                .append("follower_count", 0)
-                .append("liked_review", liked_review)
-                .append("email", email)
-                .append("username", nickname);
-
-
-        if (type.equals("Author")) {
-            doc.append("author_id", id);
-            md.getCollection(authorCollection).insertOne(doc);
-        } else {
-            doc.append("user_id", id);
-            md.getCollection(usersCollection).insertOne(doc);
+        InsertOneResult result = null;
+        try{
+            Document doc = new Document("name", user.getName() + " " + user.getSurname())
+                    .append("password", user.getPassword())
+                    .append("follower_count", 0)
+                    .append("liked_review", liked_review)
+                    .append("email", user.getEmail())
+                    .append("username", user.getNickname());
+            if (type.equals("Author")) {
+                doc.append("author_id", user.getId());
+                result = md.getCollection(authorCollection).insertOne(doc);
+            } else {
+                doc.append("user_id", user.getId());
+                result = md.getCollection(usersCollection).insertOne(doc);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
+        if(result != null)
+            return result.wasAcknowledged();
+        return false;
     }
 
     public boolean deleteUserMongo(String username, String type) {
         MongoCollection<Document> user = md.getCollection(type.equals("author") ? authorCollection : usersCollection);
-//        String username;
-//        if (session.getIsAuthor())
-//            username = session.getLoggedAuthor().getNickname();
-//        else
-//            username = session.getLoggedUser().getNickname();
+        try{
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         DeleteResult deleteResult = user.deleteOne(eq("username", username));
         if (deleteResult.getDeletedCount() == 1)
             return true;

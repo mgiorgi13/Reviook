@@ -72,6 +72,8 @@ public class BookManager {
             while (cursor.hasNext()) {
                 return true;
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return false;
     }

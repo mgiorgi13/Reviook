@@ -1,5 +1,7 @@
 package it.unipi.dii.reviook_app.controllers;
 
+import it.unipi.dii.reviook_app.entity.Author;
+import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -97,6 +99,7 @@ public class RegisterController {
         nickname = singInUName.getText();
         password = singInPassword.getText();
         repeatPsw = singInRepeatPsw.getText();
+        User newUser = null;
         if (singInName.getText().isEmpty() || singInSurname.getText().isEmpty() || singInEmail.getText().isEmpty() || singInUName.getText().isEmpty() || singInPassword.getText().isEmpty() || singInRepeatPsw.getText().isEmpty()) {
             actionTarget.setText("You must fill in all fields");
             return;
@@ -109,12 +112,21 @@ public class RegisterController {
             actionTarget.setText(singIn);
             return;
         }
+        newUser = new User(id,Name,surname,nickname,email,password);
         if (CheckAuthor.isSelected()) {
-            userManager.addNewUsers("Author", id, Name+surname, nickname);
-            userManager.register(Name, surname, email, nickname, password, "Author", id);
+            if(userManager.register(newUser,"Author")) {
+                if (!userManager.addNewUsers(newUser,"Author"))
+                    singIn = "Error: unable to register";
+            }else{
+                singIn = "Error: unable to register";
+            }
         } else {
-            userManager.addNewUsers("User", id, Name+surname, nickname);
-            userManager.register(Name, surname, email, nickname, password, "User", id);
+            if(userManager.register(newUser,"User")) {
+                if (!userManager.addNewUsers(newUser,"User"))
+                    singIn = "Error: unable to register";
+            }else{
+                singIn = "Error: unable to register";
+            }
         }
         actionTarget.setText(singIn);
         Thread.sleep(1000);
