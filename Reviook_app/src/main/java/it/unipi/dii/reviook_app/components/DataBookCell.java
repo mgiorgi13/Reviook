@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.components;
 
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class DataBookCell {
@@ -54,7 +56,13 @@ public class DataBookCell {
         }
 //        titleField.setText(book.getTitle());
         if (book.getAuthors().size() > 0) {
-            authorsField.setText(book.getAuthors().get(0));
+            ArrayList<String> authorsName = new ArrayList<>();
+            for (Author a : book.getAuthors()) {
+                authorsName.add(a.getName());
+            }
+            String authors = String.join(", ", authorsName);
+            authorsField.setText(authors);
+//            authorsField.setText(book.getAuthors().get(0).getNickname());
         } else {
             authorsField.setText("");
         }

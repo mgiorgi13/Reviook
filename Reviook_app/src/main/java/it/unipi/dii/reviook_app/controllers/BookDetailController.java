@@ -120,7 +120,7 @@ public class BookDetailController {
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
         actionTarget.setText("");
-        if(adminManager.reportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null)))
+        if(adminManager.reportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, visualizedBook.getAuthors(), visualizedBook.getGenres(), null)))
             actionTarget.setText("Book reported");
         else
             actionTarget.setText("Error: unable to report book");
@@ -133,7 +133,6 @@ public class BookDetailController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                     if (type.equals("Book")) {
                         Book bookSuggested = suggestedBooks.get(index);
-
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
@@ -150,7 +149,6 @@ public class BookDetailController {
                         }
                     } else {
                         Author authorSuggested = suggestedAuthors.get(index);
-
                         try {
                             Parent authorInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
@@ -300,18 +298,22 @@ public class BookDetailController {
                 // I already liked it
                 session.getLoggedUser().removeReviewID(selectedReview.getReview_id());
                 bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.decrementLike();
             } else {
                 session.getLoggedUser().addReviewID(selectedReview.getReview_id());
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.incrementLike();
             }
         } else if (session.getLoggedAuthor() != null) {
             if (selectedReview.getLiked()) {
                 // I already liked it
                 session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
                 bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.decrementLike();
             } else {
                 session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.incrementLike();
             }
         }
         setListView();
@@ -321,10 +323,8 @@ public class BookDetailController {
         this.observableList.clear();
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
-
         visualizedBook.setReviews(this.reviewsList);
         visualizedBook.setAverage_rating(Double.valueOf(ratingAVG.getText().replace(",", ".")));
-
         listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
             @Override
             public ListCell<Review> call(ListView<Review> listView) {
@@ -475,8 +475,12 @@ public class BookDetailController {
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
         // AUTHORS LIST
-        ArrayList<String> authors = bookSelected.getAuthors();
-        this.author = String.join(", ", authors);
+        ArrayList<Author> authors = bookSelected.getAuthors();
+        ArrayList<String> authorsName = new ArrayList<>();
+        for (Author a : authors) {
+            authorsName.add(a.getName());
+        }
+        this.author = String.join(", ", authorsName);
         bookAuthor.setText(this.author);
         // CATEGORIES LIST
         ArrayList<String> genres = bookSelected.getGenres();
@@ -509,7 +513,7 @@ public class BookDetailController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
             userInterface = (Parent) fxmlLoader.load();
             AuthorInterfaceController controller = fxmlLoader.getController();
-            if(session.getIsAuthor())
+            if (session.getIsAuthor())
                 controller.setAuthor(session.getLoggedAuthor());
             Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
             actual_stage.setScene(new Scene(userInterface));

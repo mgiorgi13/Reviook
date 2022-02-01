@@ -123,6 +123,14 @@ public class AdminController {
         actual_stage.centerOnScreen();
     }
 
+    void resetRightDetail() {
+        nameTitle.setText("-");
+        username.setText("-");
+        description.setText("-");
+        follower.setText("-");
+        reviewText.setText("-");
+    }
+
     @FXML
     void deleteElemAction(ActionEvent event) {
         actionTarget.setText("");
@@ -133,6 +141,7 @@ public class AdminController {
                 actionTarget.setText("Error: unable to remove Book");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
+            resetRightDetail();
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
             if (userManager.deleteUserMongo(selectedUser.getNickname(), "user")) {
@@ -143,6 +152,7 @@ public class AdminController {
             }
             obsUserList.remove(selectedUser);
             addCustomFactory("user");
+            resetRightDetail();
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
             if (userManager.deleteUserMongo(selectedAuthor.getNickname(), "author")) {
@@ -153,6 +163,7 @@ public class AdminController {
             }
             obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
+            resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
             if (!adminManager.deleteReport(selectedReview))
@@ -160,6 +171,7 @@ public class AdminController {
             bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
+            resetRightDetail();
         }
     }
 
@@ -182,12 +194,14 @@ public class AdminController {
                 actionTarget.setText("Error: unable to remove bookReport");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
+            resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
             if (!adminManager.deleteReport(selectedReview))
                 actionTarget.setText("Error: unable to remove reviewReport");
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
+            resetRightDetail();
         }
     }
 
@@ -257,7 +271,13 @@ public class AdminController {
                         if (selectedBook != null) {
                             selectedBookID = selectedBook.getBook_id();
                             nameTitle.setText(selectedBook.getTitle());
-                            username.setText("-");
+                            ArrayList<Author> authors = selectedBook.getAuthors();
+                            ArrayList<String> authorsName = new ArrayList<>();
+                            for (Author a : authors) {
+                                authorsName.add(a.getName());
+                            }
+                            String author = String.join(", ", authorsName);
+                            username.setText(author);
                             description.setText(selectedBook.getDescription());
                             follower.setText("-");
                             reviewText.setText("-");

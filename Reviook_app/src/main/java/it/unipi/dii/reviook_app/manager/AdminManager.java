@@ -9,6 +9,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.MongoDriver;
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Report;
 import it.unipi.dii.reviook_app.entity.Review;
@@ -29,6 +30,7 @@ public class AdminManager {
     private static final String reportsCollection = "reports";
 
     BookManager bookManager = new BookManager();
+    UserManager userManager = new UserManager();
 
     public AdminManager() {
         this.md = MongoDriver.getInstance();
@@ -36,7 +38,7 @@ public class AdminManager {
 
     public ArrayList<Report> loadReviewReported() {
         ArrayList<Report> reportedReview = new ArrayList<>();
-        try{
+        try {
             MongoCollection<Document> reports = md.getCollection(reportsCollection);
             List<Document> queryResults;
             queryResults = reports.find().into(new ArrayList<>());
@@ -51,11 +53,13 @@ public class AdminManager {
                             r.getString("review_id"),
                             r.getString("review_text"),
                             r.getString("user_id"),
-                            r.getString("username")
+                            r.getString("username"),
+                            null,
+                            null
                     ));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return reportedReview;
@@ -67,8 +71,24 @@ public class AdminManager {
             MongoCollection<Document> reports = md.getCollection(reportsCollection);
             List<Document> queryResults;
             queryResults = reports.find().into(new ArrayList<>());
+            ArrayList<Author> authorsLis = new ArrayList<>();
             for (Document r : queryResults) {
                 if (r.getString("type").equals("book")) {
+                    ArrayList<Document> authors = (ArrayList<Document>) r.get("authors");
+                    ArrayList<String> genres = (ArrayList<String>) r.get("genres");
+                    for (Document a : authors) {
+                        Author author = new Author(
+                                a.getString("author_id"),
+                                a.getString("author_name"),
+                                "",
+                                a.getString("author_username"),
+                                "",
+                                "",
+                                null,
+                                0
+                        );
+                        authorsLis.add(author);
+                    }
                     reportedBook.add(new Report(
                             r.getString("report_id"),
                             r.getString("type"),
@@ -78,11 +98,13 @@ public class AdminManager {
                             "",
                             "",
                             "",
-                            ""
+                            "",
+                            authorsLis,
+                            genres
                     ));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return reportedBook;
@@ -93,10 +115,10 @@ public class AdminManager {
         try {
             Document doc = new Document("username", username).append("password", password);
             result = md.getCollection(adminCollection).insertOne(doc);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(result != null)
+        if (result != null)
             return result.wasAcknowledged();
         return false;
     }
@@ -104,20 +126,30 @@ public class AdminManager {
     public boolean reportBook(Book book) {
         MongoCollection<Document> reports = md.getCollection("reports");
         InsertOneResult result = null;
-        try(MongoCursor<Document> cursor = reports.find(and(eq("book_id", book.getBook_id()), eq("type", "book"))).iterator()){
+        try (MongoCursor<Document> cursor = reports.find(and(eq("book_id", book.getBook_id()), eq("type", "book"))).iterator()) {
             if (!cursor.hasNext()) {
+                ArrayList<DBObject> authorsList = new ArrayList<DBObject>();
+                for (Author a : book.getAuthors()) {
+                    DBObject author = new BasicDBObject();
+                    author.put("author_name", (String) a.getName());
+                    author.put("author_username", (String) a.getNickname());
+                    author.put("author_id", (String) a.getId());
+                    authorsList.add(author);
+                }
                 Document newBook = new Document();
                 newBook.append("report_id", UUID.randomUUID().toString());
                 newBook.append("type", "book");
                 newBook.append("book_id", book.getBook_id());
                 newBook.append("title", book.getTitle());
                 newBook.append("description", book.getDescription());
+                newBook.append("genres", book.getGenres());
+                newBook.append("authors", authorsList);
                 result = reports.insertOne(newBook);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(result!=null)
+        if (result != null)
             return result.wasAcknowledged();
         return false;
     }
@@ -126,7 +158,7 @@ public class AdminManager {
         MongoCollection<Document> reports = md.getCollection("reports");
         UpdateResult result = null;
 
-        try(MongoCursor<Document> cursor = reports.find(and(eq("review_id", review.getReview_id()), eq("type", "review"))).iterator()){
+        try (MongoCursor<Document> cursor = reports.find(and(eq("review_id", review.getReview_id()), eq("type", "review"))).iterator()) {
             if (!cursor.hasNext()) {
                 Document newReview = new Document();
                 newReview.append("report_id", UUID.randomUUID().toString());
@@ -138,10 +170,10 @@ public class AdminManager {
                 newReview.append("book_id", book_id);
                 reports.insertOne(newReview);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(result != null)
+        if (result != null)
             return result.wasAcknowledged();
         return false;
     }
@@ -151,11 +183,12 @@ public class AdminManager {
         DeleteResult result = null;
         try {
             result = reports.deleteOne(eq("report_id", report.getReport_id()));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(result != null)
+        if (result != null) {
             return result.wasAcknowledged();
+        }
         return false;
     }
 }

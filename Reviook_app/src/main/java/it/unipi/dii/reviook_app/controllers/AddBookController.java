@@ -46,7 +46,7 @@ public class AddBookController {
     JFXButton backButton;
 
     @FXML
-    private JFXListView<String> listTagged;
+    private JFXListView<Author> listTagged;
 
     @FXML
     private TextField authorTag, titleBook, ISBN, numPage, URLImage;
@@ -104,7 +104,6 @@ public class AddBookController {
                 boolean check = false;
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     Author selectedCell = (Author) authorsList.getSelectionModel().getSelectedItem();
-
                     for (int i = 0; i < contatoreUsername; i++) {
                         if (listTagged.getItems().get(i).equals(selectedCell.getNickname())) {
                             check = true;
@@ -113,16 +112,32 @@ public class AddBookController {
                     }
                     if (check)
                         return;
-                    listTagged.getItems().addAll(selectedCell.getNickname());
+                    listTagged.getItems().addAll(selectedCell);
                     contatoreUsername++;
                 }
+            }
+        });
+        listTagged.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
+            @Override
+            public ListCell<Author> call(ListView<Author> listView) {
+                return new ListCell<Author>() {
+                    @Override
+                    public void updateItem(Author item, boolean empty) {
+                        super.updateItem(item, empty);
+                        textProperty().unbind();
+                        if (item != null)
+                            setText(item.getNickname());
+                        else
+                            setText(null);
+                    }
+                };
             }
         });
         listTagged.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
-                    String removeCell = (String) listTagged.getSelectionModel().getSelectedItem();
+                    Author removeCell = (Author) listTagged.getSelectionModel().getSelectedItem();
                     listTagged.getItems().remove(removeCell);
                     contatoreUsername--;
                 }
@@ -161,7 +176,6 @@ public class AddBookController {
                 boolean check = false;
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = genreList.getSelectionModel().getSelectedItem().getType();
-
                     for (int i = 0; i < contatoreGener; i++) {
                         if (genreTag.getItems().get(i).equals(selectedCell)) {
                             check = true;
@@ -180,8 +194,6 @@ public class AddBookController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String removeCell = genreTag.getSelectionModel().getSelectedItem();
-                    //System.out.println(selectedCell.getNickname());
-
                     genreTag.getItems().remove(removeCell);
                     contatoreGener--;
                 }
@@ -202,11 +214,6 @@ public class AddBookController {
         actual_stage.centerOnScreen();
     }
 
-    @FXML
-    void initialize() {
-        availableChoices.addAll(searchManager.searchLanguageCode());
-        languageCode.setItems(availableChoices);
-    }
 
     public void addBookFunction() throws IOException {
         if (titleBook.getText().isEmpty()) {
@@ -229,20 +236,20 @@ public class AddBookController {
         Integer num_pages = numPage.getText() == null ? 0 : Integer.valueOf(numPage.getText());
         String Description = description.getText();
         ArrayList<String> Genre = new ArrayList<String>((ObservableList) genreTag.getItems());
-        ArrayList<String> UsernameTagged = new ArrayList<String>((ObservableList) listTagged.getItems());
-        UsernameTagged.add(session.getLoggedAuthor().getNickname());
-        ArrayList<DBObject> param = new ArrayList<DBObject>();
-        for (int i = 0; i < UsernameTagged.size(); i++) {
-            param.add(userManager.paramAuthor(UsernameTagged.get(i)));
-        }
+        ArrayList<Author> AuthorTagged = new ArrayList<Author>((ObservableList) listTagged.getItems());
+        AuthorTagged.add(session.getLoggedAuthor()); // get author logged
+       /* ArrayList<DBObject> param = new ArrayList<DBObject>();
+        for (int i = 0; i < AuthorTagged.size(); i++) {
+            param.add(userManager.paramAuthor(AuthorTagged.get(i)));
+        }*/
         if (bookManager.verifyISBN(ISBN_)) {
             actiontarget.setText("Existing ISBN");
             return;
         }
-        String concat = ISBN_ + Title + UsernameTagged;
+        String concat = ISBN_ + Title + session.getLoggedAuthor().getNickname();
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
-        bookManager.addBook( num_pages, URL_image, selectedChoice, date,id,  Title,  ISBN_,  Description,  Genre, param);
-        session.getLoggedAuthor().addToPublished(new Book(num_pages,URL_image,selectedChoice,date,id,  Title,  ISBN_,  Description,  Genre, UsernameTagged));
+        bookManager.addBook(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged);
+        session.getLoggedAuthor().addToPublished(new Book(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged));
         actiontarget.setText("Congratulations you added a book!!");
         titleBook.clear();
         ISBN.clear();
@@ -252,6 +259,10 @@ public class AddBookController {
         backFunction();
     }
 
-    
+    @FXML
+    void initialize() {
+        availableChoices.addAll(searchManager.searchLanguageCode());
+        languageCode.setItems(availableChoices);
+    }
 
 }

@@ -23,6 +23,14 @@ public class Review {
         this.username = username;
     }
 
+    public void incrementLike() {
+        this.likes += 1;
+    }
+
+    public void decrementLike() {
+        this.likes -= 1;
+    }
+
     public void setLiked() {
         this.liked = true;
     }

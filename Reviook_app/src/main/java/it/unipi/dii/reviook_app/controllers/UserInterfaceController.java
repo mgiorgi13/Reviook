@@ -116,14 +116,14 @@ public class UserInterfaceController {
                 userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
 
                 visualizedUser.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()+1);
+                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().getFollow().add(usernameUser.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
                 userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
 
                 visualizedUser.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()+1);
+                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
             }
 
         } else {
@@ -134,7 +134,7 @@ public class UserInterfaceController {
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
 
                 visualizedUser.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()-1);
+                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
             } else if (session.getLoggedUser() != null) {
                 userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
 
@@ -142,7 +142,7 @@ public class UserInterfaceController {
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
 
                 visualizedUser.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()-1);
+                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
             }
         }
     }
@@ -323,7 +323,7 @@ public class UserInterfaceController {
 
     public void setUser(User user) {
         //TODO caricaListeLibri()
-        if(!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
+        if (!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
             visualizedUser = session.getLoggedUser();
         else
             visualizedUser = user;
@@ -331,10 +331,10 @@ public class UserInterfaceController {
         this.nickname = visualizedUser.getNickname();
         usernameUser.setText(this.nickname);
 
-        if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()){
+        if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()) {
             viewFollow();
             viewFollower();
-        }else{
+        } else {
             followCount.setText(String.valueOf(visualizedUser.getInteractions().getFollow().size()));
             followerCount.setText(String.valueOf(visualizedUser.getInteractions().getFollower().size()));
         }
@@ -345,13 +345,13 @@ public class UserInterfaceController {
         viewSuggestedUsers();
 
         rankingButton.setVisible(true);
-        homeButton.setVisible(false);
+        homeButton.setDisable(true);
         if (session.getLoggedAuthor() != null) {
             if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
-                homeButton.setVisible(true);
+                homeButton.setDisable(false);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
@@ -365,7 +365,7 @@ public class UserInterfaceController {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
-                homeButton.setVisible(true);
+                homeButton.setDisable(false);
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
@@ -403,7 +403,7 @@ public class UserInterfaceController {
         User user = visualizedUser;
         obsFollow.clear();
         List<String> Follow;
-        if(visualizedUser.getInteractions().getFollow().isEmpty()){
+        if (visualizedUser.getInteractions().getFollow().isEmpty()) {
             Follow = userManager.loadRelations("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
@@ -411,7 +411,7 @@ public class UserInterfaceController {
                 obsFollow.add(Follow.get(i));
             }
             followCount.setText(String.valueOf(Follow.size()));
-        }else{
+        } else {
             obsFollow.addAll(user.getInteractions().getFollow());
             followCount.setText(String.valueOf(user.getInteractions().getNumberFollow()));
         }
@@ -423,7 +423,7 @@ public class UserInterfaceController {
         User user = visualizedUser;
         obsFollower.clear();
         List<String> Follower;
-        if(visualizedUser.getInteractions().getFollower().isEmpty()){
+        if (visualizedUser.getInteractions().getFollower().isEmpty()) {
             Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
             user.getInteractions().setNumberFollower(Follower.size());
             for (int i = 0; i < Follower.size(); i++) {
@@ -431,7 +431,7 @@ public class UserInterfaceController {
                 obsFollower.add(Follower.get(i));
             }
             followerCount.setText(String.valueOf(Follower.size()));
-        }else{
+        } else {
             obsFollower.addAll(user.getInteractions().getFollower());
             followerCount.setText(String.valueOf(user.getInteractions().getNumberFollower()));
         }

@@ -8,46 +8,79 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RankingInterfaceController">
+<?import javafx.scene.Cursor?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0"
+      prefWidth="843.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.unipi.dii.reviook_app.controllers.RankingInterfaceController">
     <children>
         <VBox layoutX="6.0" layoutY="4.0" prefHeight="814.0" prefWidth="832.0">
             <children>
                 <Pane prefHeight="54.0" prefWidth="757.0">
-               <children>
-                        <ChoiceBox fx:id="yearsFilter" layoutX="621.0" layoutY="12.0" prefHeight="26.0" prefWidth="173.0" />
-                  <Label fx:id="labelError" layoutX="439.0" layoutY="17.0" prefHeight="17.0" prefWidth="173.0" />
-               </children>
+                    <children>
+                        <ChoiceBox fx:id="yearsFilter" layoutX="621.0" layoutY="12.0" prefHeight="26.0"
+                                   prefWidth="173.0"/>
+                        <Label fx:id="labelError" layoutX="439.0" layoutY="17.0" prefHeight="17.0" prefWidth="173.0"/>
+                    </children>
                 </Pane>
                 <Pane prefHeight="768.0" prefWidth="818.0">
                     <children>
-                        <JFXListView fx:id="yearBooksJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0" prefWidth="590.0" />
-                        <JFXListView fx:id="reliableUsersJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0" prefWidth="590.0" />
-                        <JFXListView fx:id="desiredBooksJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0" prefWidth="590.0" />
-                        <JFXListView fx:id="popularBooksJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0" prefWidth="590.0" />
-                        <JFXButton fx:id="homeButton" layoutX="383.0" layoutY="716.0" onAction="#homeInterface" text="HOME">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="HOME" />
-                     </graphic></JFXButton>
-                  <VBox layoutX="21.0" layoutY="170.0" prefHeight="293.0" prefWidth="183.0">
-                     <children>
-                        <JFXButton onAction="#annualPublications" prefHeight="67.0" prefWidth="182.0" text="Annual Publications">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="BOOK" />
-                           </graphic></JFXButton>
-                        <JFXButton onAction="#mostReliableUsers" prefHeight="67.0" prefWidth="181.0" text="Most Reliable Users">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="USER" />
-                           </graphic></JFXButton>
-                        <JFXButton onAction="#mostPopularBooks" prefHeight="67.0" prefWidth="187.0" text="Most Popular Books">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="BOOK" />
-                           </graphic></JFXButton>
-                        <JFXButton onAction="#mostDesiredBooks" prefHeight="67.0" prefWidth="183.0" text="Most Desired Books">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="BOOKMARK" />
-                           </graphic></JFXButton>
-                     </children>
-                  </VBox>
+                        <JFXListView fx:id="yearBooksJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0"
+                                     prefWidth="590.0"/>
+                        <JFXListView fx:id="reliableUsersJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0"
+                                     prefWidth="590.0"/>
+                        <JFXListView fx:id="desiredBooksJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0"
+                                     prefWidth="590.0"/>
+                        <JFXListView fx:id="popularBooksJFX" layoutX="212.0" layoutY="14.0" prefHeight="690.0"
+                                     prefWidth="590.0"/>
+                        <JFXButton fx:id="homeButton" layoutX="383.0" layoutY="716.0" onAction="#homeInterface"
+                                   text="HOME">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="HOME"/>
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </JFXButton>
+                        <VBox layoutX="21.0" layoutY="170.0" prefHeight="293.0" prefWidth="183.0">
+                            <children>
+                                <JFXButton onAction="#annualPublications" prefHeight="67.0" prefWidth="182.0"
+                                           text="Annual Publications">
+                                    <graphic>
+                                        <FontAwesomeIconView glyphName="BOOK"/>
+                                    </graphic>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND"/>
+                                    </cursor>
+                                </JFXButton>
+                                <JFXButton onAction="#mostReliableUsers" prefHeight="67.0" prefWidth="181.0"
+                                           text="Most Reliable Users">
+                                    <graphic>
+                                        <FontAwesomeIconView glyphName="USER"/>
+                                    </graphic>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND"/>
+                                    </cursor>
+                                </JFXButton>
+                                <JFXButton onAction="#mostPopularBooks" prefHeight="67.0" prefWidth="187.0"
+                                           text="Most Popular Books">
+                                    <graphic>
+                                        <FontAwesomeIconView glyphName="BOOK"/>
+                                    </graphic>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND"/>
+                                    </cursor>
+                                </JFXButton>
+                                <JFXButton onAction="#mostDesiredBooks" prefHeight="67.0" prefWidth="183.0"
+                                           text="Most Desired Books">
+                                    <graphic>
+                                        <FontAwesomeIconView glyphName="BOOKMARK"/>
+                                    </graphic>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND"/>
+                                    </cursor>
+                                </JFXButton>
+                            </children>
+                        </VBox>
                     </children>
                 </Pane>
             </children>
