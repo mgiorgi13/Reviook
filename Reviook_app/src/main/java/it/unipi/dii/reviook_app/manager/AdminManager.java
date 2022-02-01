@@ -9,14 +9,13 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.MongoDriver;
-import it.unipi.dii.reviook_app.entity.Author;
-import it.unipi.dii.reviook_app.entity.Book;
-import it.unipi.dii.reviook_app.entity.Report;
-import it.unipi.dii.reviook_app.entity.Review;
+import it.unipi.dii.reviook_app.entity.*;
 import org.bson.Document;
 
 import javax.print.Doc;
 import javax.xml.transform.Result;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
@@ -28,6 +27,7 @@ public class AdminManager {
     private static final String adminCollection = "admins";
     private static final String bookCollection = "books";
     private static final String reportsCollection = "reports";
+    private static final String logsCollection = "logs";
 
     BookManager bookManager = new BookManager();
     UserManager userManager = new UserManager();
@@ -110,6 +110,119 @@ public class AdminManager {
         return reportedBook;
     }
 
+    public ArrayList<Log> loadLogs() {
+        ArrayList<Log> logsList = new ArrayList<>();
+        try {
+            MongoCollection<Document> logs = md.getCollection(logsCollection);
+            List<Document> results = logs.find().into(new ArrayList<>());
+            for (Document l : results) {
+                if (l.getString("type").equals("review")) {
+                    logsList.add(
+                            new Log(
+                                    l.getString("id"),
+                                    l.getDate("date"),
+                                    l.getString("operation"),
+                                    l.getString("admin"),
+                                    l.getString("report_id"),
+                                    l.getString("type"),
+                                    l.getString("book_id"),
+                                    "",
+                                    "",
+                                    l.getString("review_id"),
+                                    l.getString("review_text"),
+                                    l.getString("user_id"),
+                                    l.getString("username"),
+                                    null,
+                                    null
+                            )
+                    );
+                } else if (l.getString("type").equals("book")) {
+                    ArrayList<Author> authorsLis = new ArrayList<>();
+                    ArrayList<Document> authors = (ArrayList<Document>) l.get("authors");
+                    ArrayList<String> genres = (ArrayList<String>) l.get("genres");
+                    for (Document a : authors) {
+                        Author author = new Author(
+                                a.getString("author_id"),
+                                a.getString("author_name"),
+                                "",
+                                a.getString("author_username"),
+                                "",
+                                "",
+                                null,
+                                0
+                        );
+                        authorsLis.add(author);
+                    }
+                    logsList.add(
+                            new Log(
+                                    l.getString("id"),
+                                    l.getDate("date"),
+                                    l.getString("operation"),
+                                    l.getString("admin"),
+                                    l.getString("report_id"),
+                                    l.getString("type"),
+                                    l.getString("book_id"),
+                                    l.getString("title"),
+                                    l.getString("description"),
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    authorsLis,
+                                    genres
+                            )
+                    );
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return logsList;
+    }
+
+    public boolean addLog(Report report) {
+        MongoCollection<Document> logs = md.getCollection("logs");
+        LocalDateTime now = LocalDateTime.now();
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        if (report.getType().equals("book")) {
+            ArrayList<DBObject> authorsList = new ArrayList<DBObject>();
+            for (Author a : report.getAuthors()) {
+                DBObject author = new BasicDBObject();
+                author.put("author_name", (String) a.getName());
+                author.put("author_username", (String) a.getNickname());
+                author.put("author_id", (String) a.getId());
+                authorsList.add(author);
+            }
+            Document newLog = new Document("id", UUID.randomUUID().toString())
+                    .append("report_id", report.getReport_id())
+                    .append("date", date)
+                    .append("operation", "unreport")
+                    .append("admin", "admin")
+                    .append("type", report.getType())
+                    .append("book_id", report.getBook_id())
+                    .append("title", report.getTitle())
+                    .append("description", report.getDescription())
+                    .append("authors", authorsList)
+                    .append("genres", report.getGenres());
+            InsertOneResult res = logs.insertOne(newLog);
+        } else if (report.getType().equals("review")) {
+            Document newLog = new Document("id", UUID.randomUUID().toString())
+                    .append("report_id", report.getReport_id())
+                    .append("date", date)
+                    .append("operation", "unreport")
+                    .append("admin", "admin")
+                    .append("type", report.getType())
+                    .append("review_id", report.getReview_id())
+                    .append("review_text", report.getReview_text())
+                    .append("user_id", report.getUser_id())
+                    .append("username", report.getUsername())
+                    .append("book_id", report.getBook_id());
+            InsertOneResult res = logs.insertOne(newLog);
+        }
+
+        return true;
+    }
+
     public boolean addNewAdmin(String username, String password) {
         InsertOneResult result = null;
         try {
@@ -183,6 +296,7 @@ public class AdminManager {
         DeleteResult result = null;
         try {
             result = reports.deleteOne(eq("report_id", report.getReport_id()));
+            addLog(report);
         } catch (Exception e) {
             e.printStackTrace();
         }

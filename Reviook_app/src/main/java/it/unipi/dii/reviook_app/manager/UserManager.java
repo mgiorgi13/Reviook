@@ -55,7 +55,7 @@ public class UserManager {
                 tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", id, "name", name, "username", username));
                 return null;
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -74,7 +74,7 @@ public class UserManager {
                 tx.run("MATCH (n : " + t + " { username: '" + username + "'}) DETACH DELETE n");
                 return true;
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -116,14 +116,11 @@ public class UserManager {
                 }
                 return books;
             });
-
-
         }
         return readings;
     }
 
     public List<String> loadRelations(String type, String username) {
-
         List<String> relationship;
         try (Session session = nd.getDriver().session()) {
             relationship = session.readTransaction((TransactionWork<List<String>>) tx -> {
@@ -172,7 +169,6 @@ public class UserManager {
     public void readAdd(String type, String username, String book_id) {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
-
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.id='" + book_id + "'" +
                         "MERGE (n)-[:READ]->(nn)");
                 return null;
@@ -196,7 +192,6 @@ public class UserManager {
                 author.put("author_id", (String) user.get("author_id"));
             }
         }
-
         return author;
     }
 
@@ -207,7 +202,6 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document user = cursor.next();
                 ID = user.get("author_id").toString();
-
             }
         }
         return ID;
@@ -217,7 +211,6 @@ public class UserManager {
         MongoCollection<Document> admins = md.getCollection(adminsCollection);
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
-
         if (type.equals("admin")) {
             try (MongoCursor<Document> cursor = admins.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
@@ -225,7 +218,7 @@ public class UserManager {
                 }
             }
         }
-        if (type.equals("author")||type.equals("")) {
+        if (type.equals("author") || type.equals("")) {
             try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
@@ -237,7 +230,7 @@ public class UserManager {
                 }
             }
         }
-        if(type.equals("user")||type.equals("")){
+        if (type.equals("user") || type.equals("")) {
             try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
@@ -286,7 +279,6 @@ public class UserManager {
                 .append("liked_review", liked_review)
                 .append("email", email)
                 .append("username", nickname);
-
 
         if (type.equals("Author")) {
             doc.append("author_id", id);
@@ -381,7 +373,6 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
-
                 Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
@@ -416,7 +407,6 @@ public class UserManager {
     public ArrayList<User> similarUsers(String username, String type) {
         ArrayList<User> suggestion = new ArrayList<>();
         ArrayList<User> queryResult = new ArrayList<>();
-
         try (Session session = nd.getDriver().session()) {
             suggestion = session.readTransaction((TransactionWork<ArrayList<User>>) tx -> {
                 Result result = tx.run("MATCH (u1:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +

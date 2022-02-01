@@ -57,6 +57,9 @@ public class AdminController {
     private JFXButton searchButton;
 
     @FXML
+    private JFXButton logsButton;
+
+    @FXML
     private Text actionTarget;
 
     @FXML
@@ -76,6 +79,9 @@ public class AdminController {
 
     @FXML
     private JFXListView<Author> authorsList;
+
+    @FXML
+    private JFXListView<Log> logsList;
 
     @FXML
     private TextField usernameField;
@@ -110,6 +116,34 @@ public class AdminController {
     ObservableList<User> obsUserList = FXCollections.observableArrayList();
     ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
     ObservableList<Report> obsListReview = FXCollections.observableArrayList();
+    ObservableList<Log> obsListLog = FXCollections.observableArrayList();
+
+    @FXML
+    void logsAction() {
+        ArrayList<Log> list = adminManager.loadLogs();
+        obsListLog.addAll(list);
+        logsList.setVisible(true);
+        bookList.setVisible(false);
+        authorsList.setVisible(false);
+        usersList.setVisible(false);
+        reviewList.setVisible(false);
+        logsList.setCellFactory(new Callback<ListView<Log>, ListCell<Log>>() {
+            @Override
+            public ListCell<Log> call(ListView<Log> listView) {
+                return new ListCell<Log>() {
+                    @Override
+                    public void updateItem(Log item, boolean empty) {
+                        super.updateItem(item, empty);
+                        textProperty().unbind();
+                        if (item != null)
+                            setText(item.toString());
+                        else
+                            setText(null);
+                    }
+                };
+            }
+        });
+    }
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
@@ -132,7 +166,7 @@ public class AdminController {
     }
 
     @FXML
-    void deleteElemAction(ActionEvent event) {
+    void deleteElemAction() {
         actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
@@ -197,18 +231,6 @@ public class AdminController {
         }
     }
 
-//    void deleteReviewAction() {
-//        Review selectedReview = (Review) reviewList.getSelectionModel().getSelectedItem();
-//        if (selectedReview != null && selectedBookID != null) {
-//            bookManager.deleteReview(selectedReview.getReview_id(), selectedBookID);
-//            Book book = bookManager.getBookByID(this.selectedBookID); // query to update review
-//            ObservableList<Review> obsListReview = FXCollections.observableArrayList();
-//            obsListReview.setAll(book.getReviews());
-//            this.reviewsListView.getItems().clear();
-//            this.reviewsListView.setItems(obsListReview);
-//        }
-//    }
-
     @FXML
     void searchAction() {
         clearList();
@@ -219,6 +241,7 @@ public class AdminController {
             authorsList.setVisible(false);
             usersList.setVisible(false);
             reviewList.setVisible(false);
+            logsList.setVisible(false);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
             ArrayList<User> list = searchManager.searchUser(usernameField.getText());
@@ -227,6 +250,7 @@ public class AdminController {
             authorsList.setVisible(false);
             usersList.setVisible(true);
             reviewList.setVisible(false);
+            logsList.setVisible(false);
             addCustomFactory("user");
         } else if (authorOption.isSelected()) {
             ArrayList<Author> list = searchManager.searchAuthor(usernameField.getText());
@@ -235,6 +259,7 @@ public class AdminController {
             authorsList.setVisible(true);
             usersList.setVisible(false);
             reviewList.setVisible(false);
+            logsList.setVisible(false);
             addCustomFactory("author");
         } else if (reviewOption.isSelected()) {
             ArrayList<Report> listRev = adminManager.loadReviewReported();
@@ -243,6 +268,7 @@ public class AdminController {
             authorsList.setVisible(false);
             bookList.setVisible(false);
             reviewList.setVisible(true);
+            logsList.setVisible(false);
             addCustomFactory("review");
         }
     }
@@ -378,7 +404,6 @@ public class AdminController {
         reviewOption.setSelected(true);
     }
 
-    //TODO clear all obs list
     private void clearList() {
         obsListReview.clear();
         obsBooksList.clear();
@@ -393,5 +418,6 @@ public class AdminController {
         usersList.setItems(obsUserList);
         authorsList.setItems(obsAuthorList);
         bookList.setItems(obsBooksList);
+        logsList.setItems(obsListLog);
     }
 }

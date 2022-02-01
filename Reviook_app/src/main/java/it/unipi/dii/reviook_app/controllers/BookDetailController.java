@@ -533,7 +533,6 @@ public class BookDetailController {
         }
         if(adminManager.reportReview(selectedReview, book_id))
             actionTarget.setText("");
-
     }
 
 
