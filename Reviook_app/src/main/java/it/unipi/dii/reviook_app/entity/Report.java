@@ -8,7 +8,7 @@ public class Report {
     private String book_id;
     private String title;
     private String description;
-    private ArrayList<String> authors;
+    private ArrayList<Author> authors;
     private ArrayList<String> genres;
     private String review_id;
     private String review_text;
@@ -16,7 +16,7 @@ public class Report {
     private String username;
 
 
-    public Report(String report_id, String type, String book_id, String title, String description, String review_id, String review_text, String user_id, String username, ArrayList<String> authors, ArrayList<String> genres) {
+    public Report(String report_id, String type, String book_id, String title, String description, String review_id, String review_text, String user_id, String username, ArrayList<Author> authors, ArrayList<String> genres) {
         this.report_id = report_id;
         this.type = type;
         this.book_id = book_id;
@@ -27,6 +27,22 @@ public class Report {
         this.user_id = user_id;
         this.username = username;
         this.authors = authors;
+        this.genres = genres;
+    }
+
+    public ArrayList<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(ArrayList<Author> authors) {
+        this.authors = authors;
+    }
+
+    public ArrayList<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(ArrayList<String> genres) {
         this.genres = genres;
     }
 

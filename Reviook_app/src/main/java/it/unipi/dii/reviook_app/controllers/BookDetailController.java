@@ -5,7 +5,6 @@ import it.unipi.dii.reviook_app.components.ListReview;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
-import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.AdminManager;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
@@ -18,7 +17,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -52,6 +50,9 @@ public class BookDetailController {
 
     @FXML
     private ImageView imageContainer;
+
+    @FXML
+    private Text actionTarget;
 
     @FXML
     private URL location;
@@ -118,7 +119,11 @@ public class BookDetailController {
 
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
-        adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, visualizedBook.getAuthors(), visualizedBook.getGenres(), null));
+        actionTarget.setText("");
+        if(adminManager.reportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, visualizedBook.getAuthors(), visualizedBook.getGenres(), null)))
+            actionTarget.setText("Book reported");
+        else
+            actionTarget.setText("Error: unable to report book");
     }
 
     private void setOnMouseClicked(HBox HbSuggestion, Integer index, String type) {
@@ -270,7 +275,7 @@ public class BookDetailController {
             return;
         }
         try {
-            bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
+            bookManager.deleteReview(selectedReview.getReview_id(), this.book_id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -521,11 +526,14 @@ public class BookDetailController {
 
     @FXML
     void reportAction() {
+        actionTarget.setText("");
         Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
         if (selectedReview == null) {
             return;
         }
-        adminManager.ReportReview(selectedReview, book_id);
+        if(adminManager.reportReview(selectedReview, book_id))
+            actionTarget.setText("");
+
     }
 
 

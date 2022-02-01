@@ -7,10 +7,8 @@ import com.jfoenix.controls.JFXListView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.ResourceBundle;
 
-import com.mongodb.MongoException;
 import it.unipi.dii.reviook_app.Session;
 import it.unipi.dii.reviook_app.components.*;
 import it.unipi.dii.reviook_app.entity.*;
@@ -57,6 +55,9 @@ public class AdminController {
 
     @FXML
     private JFXButton searchButton;
+
+    @FXML
+    private Text actionTarget;
 
     @FXML
     private JFXButton logoutButton;
@@ -122,32 +123,47 @@ public class AdminController {
         actual_stage.centerOnScreen();
     }
 
+    void resetRightDetail() {
+        nameTitle.setText("-");
+        username.setText("-");
+        description.setText("-");
+        follower.setText("-");
+        reviewText.setText("-");
+    }
+
     @FXML
     void deleteElemAction(ActionEvent event) {
+        actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
-            adminManager.DeleteReport(selectedBook);
+            if (!adminManager.deleteReport(selectedBook))
+                actionTarget.setText("Error: unable to remove Book");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
+            resetRightDetail();
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedUser.getNickname(), "user");
             userManager.deleteUserMongo(selectedUser.getNickname(), "user");
             obsUserList.remove(selectedUser);
             addCustomFactory("user");
+            resetRightDetail();
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
             userManager.deleteUserN4J(selectedAuthor.getNickname(), "author");
             userManager.deleteUserMongo(selectedAuthor.getNickname(), "author");
             obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
+            resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            adminManager.DeleteReport(selectedReview);
-            bookManager.DeleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
+            if (!adminManager.deleteReport(selectedReview))
+                actionTarget.setText("Error: unable to remove Review");
+            bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
+            resetRightDetail();
         }
     }
 
@@ -166,21 +182,25 @@ public class AdminController {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             int index = bookList.getSelectionModel().getSelectedIndex();
-            adminManager.DeleteReport(selectedBook);
+            if (!adminManager.deleteReport(selectedBook))
+                actionTarget.setText("Error: unable to remove bookReport");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
+            resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            adminManager.DeleteReport(selectedReview);
+            if (!adminManager.deleteReport(selectedReview))
+                actionTarget.setText("Error: unable to remove reviewReport");
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
+            resetRightDetail();
         }
     }
 
 //    void deleteReviewAction() {
 //        Review selectedReview = (Review) reviewList.getSelectionModel().getSelectedItem();
 //        if (selectedReview != null && selectedBookID != null) {
-//            bookManager.DeleteReview(selectedReview.getReview_id(), selectedBookID);
+//            bookManager.deleteReview(selectedReview.getReview_id(), selectedBookID);
 //            Book book = bookManager.getBookByID(this.selectedBookID); // query to update review
 //            ObservableList<Review> obsListReview = FXCollections.observableArrayList();
 //            obsListReview.setAll(book.getReviews());
@@ -243,7 +263,13 @@ public class AdminController {
                         if (selectedBook != null) {
                             selectedBookID = selectedBook.getBook_id();
                             nameTitle.setText(selectedBook.getTitle());
-                            username.setText("-");
+                            ArrayList<Author> authors = selectedBook.getAuthors();
+                            ArrayList<String> authorsName = new ArrayList<>();
+                            for (Author a : authors) {
+                                authorsName.add(a.getName());
+                            }
+                            String author = String.join(", ", authorsName);
+                            username.setText(author);
                             description.setText(selectedBook.getDescription());
                             follower.setText("-");
                             reviewText.setText("-");
@@ -307,7 +333,7 @@ public class AdminController {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                         Report selectedRev = (Report) reviewList.getSelectionModel().getSelectedItem();
-                        if (selectedRev != null){
+                        if (selectedRev != null) {
                             reviewText.setText(selectedRev.getReview_text());
                             username.setText(selectedRev.getUsername());
                             description.setText("-");

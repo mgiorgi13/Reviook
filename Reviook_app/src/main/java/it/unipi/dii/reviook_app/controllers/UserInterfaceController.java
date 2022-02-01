@@ -11,6 +11,7 @@ import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
+import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -82,6 +83,7 @@ public class UserInterfaceController {
 
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
+    private BookManager bookManager = new BookManager();
 
     private Session session = Session.getInstance();
 
@@ -503,6 +505,20 @@ public class UserInterfaceController {
                         e.printStackTrace();
                     }
                 }
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    if (session.getLoggedUser() != null) {
+                        if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
+                            Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
+                            bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User");
+                            listToRead.getItems().remove(removeCell);
+                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
+                                if(visualizedUser.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+                                    visualizedUser.getBooks().removeToRead();
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
         listRead.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -524,6 +540,20 @@ public class UserInterfaceController {
                         actual_stage.centerOnScreen();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                }
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
+                    if (session.getLoggedUser() != null) {
+                        if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
+                            Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
+                            bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User");
+                            listRead.getItems().remove(removeCell);
+                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
+                                if(visualizedUser.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+                                    visualizedUser.getBooks().removeRead();
+                                }
+                            }
+                        }
                     }
                 }
             }

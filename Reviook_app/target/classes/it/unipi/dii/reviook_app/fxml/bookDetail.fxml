@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="895.0"
-      prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      prefWidth="827.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="it.unipi.dii.reviook_app.controllers.BookDetailController">
     <children>
         <HBox layoutX="14.0" layoutY="15.0" prefHeight="870.0" prefWidth="799.0">
@@ -388,6 +388,7 @@
                                 </HBox>
                             </children>
                         </VBox>
+                  <Text fx:id="actionTarget" layoutX="45.0" layoutY="822.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="133.0" />
                     </children>
                 </Pane>
             </children>

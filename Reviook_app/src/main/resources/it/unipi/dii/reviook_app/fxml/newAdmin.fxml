@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Text?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <?import javafx.scene.Cursor?>
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="it.unipi.dii.reviook_app.controllers.AddAdminController">
     <padding>
         <Insets bottom="10" left="25" right="25" top="25"/>
@@ -29,7 +24,7 @@
             </cursor>
         </JFXButton>
     </HBox>
-    <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+    <Text fx:id="actionTarget" wrappingWidth="152.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
     <Text text="New Admin" wrappingWidth="62.05078125" GridPane.columnIndex="0" GridPane.columnSpan="2"
           GridPane.rowIndex="0"/>
     <Label text="Username" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
