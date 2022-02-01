@@ -11,41 +11,47 @@
 <?import javafx.scene.text.Text?>
 
 
-<Pane prefHeight="445.0" prefWidth="697.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.RegisterController">
-   <children>
-      <Label layoutX="395.0" layoutY="214.0" text="Password" />
-      <CheckBox fx:id="CheckAuthor" layoutX="319.0" layoutY="84.0" mnemonicParsing="false" text="Author" />
-    <JFXButton fx:id="loginButton" layoutX="264.0" layoutY="397.0" onAction="#openLoginScene" text="Login">
-         <graphic>
-            <FontAwesomeIconView glyphName="HOME" />
-         </graphic>
-      </JFXButton>
-   
-      
-        <Text fx:id="actiontarget" layoutX="311.0" layoutY="365.0" wrappingWidth="74.3642578125" />
-   
+<?import javafx.scene.Cursor?>
+<Pane prefHeight="445.0" prefWidth="697.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.unipi.dii.reviook_app.controllers.RegisterController">
+    <children>
+        <Label layoutX="395.0" layoutY="214.0" text="Password"/>
+        <CheckBox fx:id="CheckAuthor" layoutX="319.0" layoutY="84.0" mnemonicParsing="false" text="Author"/>
+        <JFXButton fx:id="loginButton" layoutX="264.0" layoutY="397.0" onAction="#openLoginScene" text="Login">
+            <graphic>
+                <FontAwesomeIconView glyphName="HOME"/>
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </JFXButton>
+        <Text fx:id="actiontarget" layoutX="311.0" layoutY="365.0" wrappingWidth="74.3642578125"/>
+
         <Text layoutX="311.0" layoutY="40.0" text="Welcome">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Text>
-   
-        <Label layoutX="55.0" layoutY="293.0" text="Username:" />
-   
-        <PasswordField fx:id="singInPassword" layoutX="494.0" layoutY="210.0" />
-      <TextField fx:id="singInUName" layoutX="162.0" layoutY="289.0" />
-      <PasswordField fx:id="singInRepeatPsw" layoutX="492.0" layoutY="289.0" />
-      <Label layoutX="374.0" layoutY="293.0" text="Repeat Password" />
-      <TextField fx:id="singInName" layoutX="162.0" layoutY="132.0" />
-      <TextField fx:id="singInSurname" layoutX="162.0" layoutY="210.0" />
-      <TextField fx:id="singInEmail" layoutX="492.0" layoutY="132.0" />
-      <Label layoutX="57.0" layoutY="136.0" text="Name" />
-      <Label layoutX="57.0" layoutY="214.0" text="Surname" />
-      <Label layoutX="403.0" layoutY="136.0" text="E-mail" />
-      <JFXButton layoutX="361.0" layoutY="397.0" mnemonicParsing="false" onAction="#registerButton" text="Register">
-         <graphic>
-            <FontAwesomeIconView glyphName="USER" />
-         </graphic>
-      </JFXButton>
-   </children>
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Text>
+
+        <Label layoutX="55.0" layoutY="293.0" text="Username:"/>
+
+        <PasswordField fx:id="singInPassword" layoutX="494.0" layoutY="210.0"/>
+        <TextField fx:id="singInUName" layoutX="162.0" layoutY="289.0"/>
+        <PasswordField fx:id="singInRepeatPsw" layoutX="492.0" layoutY="289.0"/>
+        <Label layoutX="374.0" layoutY="293.0" text="Repeat Password"/>
+        <TextField fx:id="singInName" layoutX="162.0" layoutY="132.0"/>
+        <TextField fx:id="singInSurname" layoutX="162.0" layoutY="210.0"/>
+        <TextField fx:id="singInEmail" layoutX="492.0" layoutY="132.0"/>
+        <Label layoutX="57.0" layoutY="136.0" text="Name"/>
+        <Label layoutX="57.0" layoutY="214.0" text="Surname"/>
+        <Label layoutX="403.0" layoutY="136.0" text="E-mail"/>
+        <JFXButton layoutX="361.0" layoutY="397.0" mnemonicParsing="false" onAction="#registerButton" text="Register">
+            <graphic>
+                <FontAwesomeIconView glyphName="USER"/>
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </JFXButton>
+    </children>
 </Pane>

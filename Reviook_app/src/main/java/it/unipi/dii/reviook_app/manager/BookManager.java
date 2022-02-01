@@ -160,7 +160,7 @@ public class BookManager {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Document book = books.find(eq("book_id", book_id)).iterator().next();
 
-        ArrayList<String> authorsLis = new ArrayList<>();
+        ArrayList<Author> authorsLis = new ArrayList<>();
         ArrayList<Review> reviewsList = new ArrayList<>();
         ArrayList<Document> authors = (ArrayList<Document>) book.get("authors");
         ArrayList<Document> reviews = (ArrayList<Document>) book.get("reviews");
@@ -179,7 +179,18 @@ public class BookManager {
             ));
         }
         for (Document a : authors) {
-            authorsLis.add(a.getString("author_name"));
+            Author author = new Author(
+                    a.getString("author_id"),
+                    a.getString("author_name"),
+                    "",
+                    "",
+                    "",
+                    "",
+                    null,
+                    0
+            );
+            authorsLis.add(author);
+//            authorsLis.add(a.getString("author_name"));
         }
 
         Book outputBook = new Book(

@@ -1,17 +1,22 @@
 package it.unipi.dii.reviook_app.entity;
 
+import java.util.ArrayList;
+
 public class Report {
     private String report_id;
     private String type;
     private String book_id;
     private String title;
     private String description;
+    private ArrayList<String> authors;
+    private ArrayList<String> genres;
     private String review_id;
     private String review_text;
     private String user_id;
     private String username;
 
-    public Report(String report_id, String type, String book_id, String title, String description, String review_id, String review_text, String user_id, String username) {
+
+    public Report(String report_id, String type, String book_id, String title, String description, String review_id, String review_text, String user_id, String username, ArrayList<String> authors, ArrayList<String> genres) {
         this.report_id = report_id;
         this.type = type;
         this.book_id = book_id;
@@ -21,6 +26,8 @@ public class Report {
         this.review_text = review_text;
         this.user_id = user_id;
         this.username = username;
+        this.authors = authors;
+        this.genres = genres;
     }
 
     public String getReport_id() {

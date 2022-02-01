@@ -24,6 +24,7 @@ public class AdminManager {
     private static final String reportsCollection = "reports";
 
     BookManager bookManager = new BookManager();
+    UserManager userManager = new UserManager();
 
     public AdminManager() {
         this.md = MongoDriver.getInstance();
@@ -45,7 +46,9 @@ public class AdminManager {
                         r.getString("review_id"),
                         r.getString("review_text"),
                         r.getString("user_id"),
-                        r.getString("username")
+                        r.getString("username"),
+                        null,
+                        null
                 ));
             }
         }
@@ -57,8 +60,14 @@ public class AdminManager {
         List<Document> queryResults;
         queryResults = reports.find().into(new ArrayList<>());
         ArrayList<Report> reportedBook = new ArrayList<>();
+        ArrayList<String> authorsLis = new ArrayList<>();
         for (Document r : queryResults) {
             if (r.getString("type").equals("book")) {
+                ArrayList<Document> authors = (ArrayList<Document>) r.get("authors");
+                ArrayList<String> genres = (ArrayList<String>) r.get("genres");
+                for (Document a : authors) {
+                    authorsLis.add(a.getString("author_name"));
+                }
                 reportedBook.add(new Report(
                         r.getString("report_id"),
                         r.getString("type"),
@@ -68,7 +77,9 @@ public class AdminManager {
                         "",
                         "",
                         "",
-                        ""
+                        "",
+                        genres,
+                        authorsLis
                 ));
             }
         }
@@ -83,12 +94,18 @@ public class AdminManager {
     public void ReportBook(Book book) {
         MongoCollection<Document> reports = md.getCollection("reports");
         if (!reports.find(and(eq("book_id", book.getBook_id()), eq("type", "book"))).iterator().hasNext()) {
+            ArrayList<DBObject> authorsList = new ArrayList<DBObject>();
+            for (int i = 0; i < book.getAuthors().size(); i++) {
+                authorsList.add(userManager.paramAuthor(book.getAuthors().get(i)));
+            }
             Document newBook = new Document();
             newBook.append("report_id", UUID.randomUUID().toString());
             newBook.append("type", "book");
             newBook.append("book_id", book.getBook_id());
             newBook.append("title", book.getTitle());
             newBook.append("description", book.getDescription());
+            newBook.append("genres",book.getGenres());
+            newBook.append("authors",authorsList);
             reports.insertOne(newBook);
         }
     }
