@@ -40,6 +40,9 @@ public class UserInterfaceController {
     private Text usernameUser, followerCount, followCount;
 
     @FXML
+    private Text actionTarget;
+
+    @FXML
     private JFXListView<String> listFollow, listFollower;
 
     @FXML
@@ -113,15 +116,15 @@ public class UserInterfaceController {
             if (session.getLoggedAuthor() != null) {
                 session.getLoggedAuthor().getInteractions().getFollow().add(usernameUser.getText());
                 session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
-
+                if(!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to add follow");
                 visualizedUser.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
                 visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
             } else if (session.getLoggedUser() != null) {
                 session.getLoggedUser().getInteractions().getFollow().add(usernameUser.getText());
                 session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
-
+                if(!userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to add follow");
                 visualizedUser.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
                 visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
             }

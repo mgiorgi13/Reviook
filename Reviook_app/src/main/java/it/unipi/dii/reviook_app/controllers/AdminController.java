@@ -199,15 +199,23 @@ public class AdminController {
             resetRightDetail();
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-            userManager.deleteUserN4J(selectedUser.getNickname(), "user");
-            userManager.deleteUserMongo(selectedUser.getNickname(), "user");
+            if (userManager.deleteUserMongo(selectedUser, "user")) {
+                if (!userManager.deleteUserN4J(selectedUser, "user"))
+                    actionTarget.setText("Error: unable to register");
+            } else {
+                actionTarget.setText("Error: unable to register");
+            }
             obsUserList.remove(selectedUser);
             addCustomFactory("user");
             resetRightDetail();
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-            userManager.deleteUserN4J(selectedAuthor.getNickname(), "author");
-            userManager.deleteUserMongo(selectedAuthor.getNickname(), "author");
+            if (userManager.deleteUserMongo(selectedAuthor, "author")) {
+                if (!userManager.deleteUserN4J(selectedAuthor, "author"))
+                    actionTarget.setText("Error: unable to register");
+            } else {
+                actionTarget.setText("Error: unable to register");
+            }
             obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
             resetRightDetail();

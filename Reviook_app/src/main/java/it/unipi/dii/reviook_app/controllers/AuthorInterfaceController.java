@@ -36,6 +36,9 @@ public class AuthorInterfaceController {
     private Text usernameAuthor;
 
     @FXML
+    private Text actionTarget;
+
+    @FXML
     private JFXButton button;
     @FXML
     private JFXButton homeButton;
@@ -112,36 +115,46 @@ public class AuthorInterfaceController {
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
+        actionTarget.setText("");
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
-                session.getLoggedAuthor().getInteractions().getFollow().add(usernameAuthor.getText());
-                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author");
-                visualizedAuthor.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
-                visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() + 1);
+                if(!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
+                    actionTarget.setText("Error: unable to add follow");
+                else {
+                    session.getLoggedAuthor().getInteractions().getFollow().add(usernameAuthor.getText());
+                    session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
+                    visualizedAuthor.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
+                    visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() + 1);
+                }
             } else if (session.getLoggedUser() != null) {
-                session.getLoggedUser().getInteractions().getFollow().add(usernameAuthor.getText());
-                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author");
-
-                visualizedAuthor.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
-                visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() + 1);
+                if(!userManager.following(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author"))
+                    actionTarget.setText("Error: unable to add follow");
+                else {
+                    session.getLoggedUser().getInteractions().getFollow().add(usernameAuthor.getText());
+                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
+                    visualizedAuthor.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
+                    visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() + 1);
+                }
             }
         } else {
             if (session.getLoggedAuthor() != null) {
-                userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author");
-                session.getLoggedAuthor().getInteractions().getFollow().remove(usernameAuthor.getText());
-                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
-
-                visualizedAuthor.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
-                visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() - 1);
+                if(!userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
+                    actionTarget.setText("Error: unable to delete follow");
+                else {
+                    session.getLoggedAuthor().getInteractions().getFollow().remove(usernameAuthor.getText());
+                    session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
+                    visualizedAuthor.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
+                    visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() - 1);
+                }
             } else if (session.getLoggedUser() != null) {
-                userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author");
-                session.getLoggedUser().getInteractions().getFollow().remove(usernameAuthor.getText());
-                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
-
-                visualizedAuthor.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
-                visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() - 1);
+                if(!userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author"))
+                    actionTarget.setText("Error: unable to delete follow");
+                else {
+                    session.getLoggedUser().getInteractions().getFollow().remove(usernameAuthor.getText());
+                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
+                    visualizedAuthor.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
+                    visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() - 1);
+                }
             }
         }
     }
