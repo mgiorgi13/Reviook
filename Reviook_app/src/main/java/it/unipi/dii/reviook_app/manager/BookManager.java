@@ -131,7 +131,6 @@ public class BookManager {
         String reviewID = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-//        newReview.append("date_added", date);
         newReview.append("date_updated", date);
         newReview.append("review_id", reviewID);
         newReview.append("likes", 0);
@@ -164,9 +163,12 @@ public class BookManager {
         Bson getReview = eq("reviews.review_id", review_id);
         UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
         UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+        LocalDateTime now = LocalDateTime.now();
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        UpdateResult updateResult3 = books.updateOne(getReview, Updates.set("reviews.$.date_updated", date));
         Book bookToUpdate = getBookByID(book_id);
         Double newRating = updateRating(bookToUpdate.getReviews());
-        UpdateResult updateResult3 = books.updateOne(getBook, Updates.set("average_rating", newRating));
+        UpdateResult updateResult4 = books.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
     public void deleteReview(String review_id, String book_id) {
@@ -193,7 +195,6 @@ public class BookManager {
         for (Document r : reviews) {
             reviewsList.add(new Review(
                     r.getString("username"),
-                    r.get("date_added").toString(),
                     r.getString("review_id"),
                     r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
                     r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
