@@ -51,6 +51,20 @@ public class BookManager {
         this.userManager = new UserManager();
     }
 
+    public boolean removeBookFromList(String idBook, String Relation, String username, String Type) {
+        try (Session session = nd.getDriver().session()) {
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MATCH (n:" + Type + "{username: '" + username + "' })-[r:" + Relation + "]->" +
+                        "(c : Book{id: '" + idBook + "'}) " +
+                        "DELETE r");
+                return null;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
     public boolean verifyISBN(String ISBN) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
@@ -62,10 +76,19 @@ public class BookManager {
         return false;
     }
 
-    public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date, String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<DBObject> UsernameTagged) {
+    public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date, String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<Author> AuthorTagged) {
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
+
+        ArrayList<DBObject> authorsObj = new ArrayList<>();
+        for (Author a : AuthorTagged) {
+            DBObject author = new BasicDBObject();
+            author.put("author_name", (String) a.getName());
+            author.put("author_role", ""); // TODO da togliere
+            author.put("author_id", (String) a.getId());
+            authorsObj.add(author);
+        }
 
         //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
@@ -83,7 +106,7 @@ public class BookManager {
                 .append("average_rating", 0.0)
                 .append("ratings_count", 0)
                 .append("genres", Genre)
-                .append("authors", UsernameTagged)
+                .append("authors", authorsObj)
                 .append("reviews", reviews);
 
         md.getCollection(bookCollection).insertOne(doc);
@@ -92,22 +115,23 @@ public class BookManager {
         try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { id : $id, title: $title})", parameters("id", id, "title", title));
-                for (int i = 0; i < UsernameTagged.size(); i++) {
-                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.id = '" + UsernameTagged.get(i).get("author_id") + "' AND ee.id='" + id + "'" +
+                for (int i = 0; i < AuthorTagged.size(); i++) {
+                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.id = '" + AuthorTagged.get(i).getId() + "' AND ee.id='" + id + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
                 }
                 return null;
             });
         }
+
     }
 
-    public void AddReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+    public void addReviewToBook(String reviewText, Integer ratingBook, String book_id) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        newReview.append("date_added", date);
+//        newReview.append("date_added", date);
         newReview.append("date_updated", date);
         newReview.append("review_id", reviewID);
         newReview.append("likes", 0);
@@ -134,7 +158,7 @@ public class BookManager {
         UpdateResult updateResult2 = book.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
-    public void EditReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
+    public void editReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
@@ -145,7 +169,7 @@ public class BookManager {
         UpdateResult updateResult3 = books.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
-    public void DeleteReview(String review_id, String book_id) {
+    public void deleteReview(String review_id, String book_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
         //  Bson getReview = eq("reviews.review_id", review_id);
@@ -160,7 +184,7 @@ public class BookManager {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Document book = books.find(eq("book_id", book_id)).iterator().next();
 
-        ArrayList<String> authorsLis = new ArrayList<>();
+        ArrayList<Author> authorsLis = new ArrayList<>();
         ArrayList<Review> reviewsList = new ArrayList<>();
         ArrayList<Document> authors = (ArrayList<Document>) book.get("authors");
         ArrayList<Document> reviews = (ArrayList<Document>) book.get("reviews");
@@ -179,7 +203,18 @@ public class BookManager {
             ));
         }
         for (Document a : authors) {
-            authorsLis.add(a.getString("author_name"));
+            Author author = new Author(
+                    a.getString("author_id"),
+                    a.getString("author_name"),
+                    "",
+                    "",
+                    "",
+                    "",
+                    null,
+                    0
+            );
+            authorsLis.add(author);
+//            authorsLis.add(a.getString("author_name"));
         }
 
         Book outputBook = new Book(
