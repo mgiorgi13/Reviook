@@ -6,6 +6,8 @@ import com.jfoenix.controls.JFXListView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -135,11 +137,12 @@ public class AdminController {
         logsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 ) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2) {
                     Log selectedCell = (Log) logsList.getSelectionModel().getSelectedItem();
                     if (selectedCell == null) {
                         return;
                     }
+
                     adminManager.restoreLog(selectedCell);
                     adminManager.deleteLog(selectedCell);
                     obsListLog.remove(selectedCell);
@@ -190,20 +193,47 @@ public class AdminController {
         actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
-            bookManager.deleteBook(selectedBook.getBook_id());
-            if (!adminManager.deleteReport(selectedBook,false)) {
+            Book bookForBackup = bookManager.getBookByID(selectedBook.getBook_id());
+            if (bookManager.deleteBook(selectedBook.getBook_id())) {
+                // book deleted with success
+                if (adminManager.deleteReport(selectedBook, false)) {
+                    // report deleted with success
+                    obsBooksList.remove(selectedBook);
+                    addCustomFactory("book");
+                    resetRightDetail();
+                } else {
+                    // can't delete report -- reinsert book
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+                    String stringDate = bookForBackup.getPublication_day().toString()
+                            + "/" +
+                            bookForBackup.getPublication_month().toString()
+                            + "/" +
+                            bookForBackup.getPublication_year().toString();
+                    LocalDate date = LocalDate.parse(stringDate, formatter);
+                    bookManager.addBook(
+                            bookForBackup.getNum_pages(),
+                            bookForBackup.getImage_url(),
+                            bookForBackup.getLanguage_code(),
+                            date,
+                            bookForBackup.getBook_id(),
+                            bookForBackup.getTitle(),
+                            bookForBackup.getIsbn(),
+                            bookForBackup.getDescription(),
+                            bookForBackup.getGenres(),
+                            bookForBackup.getAuthors()
+                    );
+                    actionTarget.setText("Error: unable to remove Book");
+                }
+            } else {
                 actionTarget.setText("Error: unable to remove Book");
             }
-            obsBooksList.remove(selectedBook);
-            addCustomFactory("book");
-            resetRightDetail();
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
             if (userManager.deleteUserMongo(selectedUser, "user")) {
                 if (!userManager.deleteUserN4J(selectedUser, "user"))
-                    actionTarget.setText("Error: unable to register");
+                    actionTarget.setText("Error: unable to delete user");
             } else {
-                actionTarget.setText("Error: unable to register");
+                actionTarget.setText("Error: unable to delete user");
             }
             obsUserList.remove(selectedUser);
             addCustomFactory("user");
@@ -212,22 +242,31 @@ public class AdminController {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
             if (userManager.deleteUserMongo(selectedAuthor, "author")) {
                 if (!userManager.deleteUserN4J(selectedAuthor, "author"))
-                    actionTarget.setText("Error: unable to register");
+                    actionTarget.setText("Error: unable to delete author");
             } else {
-                actionTarget.setText("Error: unable to register");
+                actionTarget.setText("Error: unable to delete author");
             }
             obsAuthorList.remove(selectedAuthor);
             addCustomFactory("author");
             resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if (!adminManager.deleteReport(selectedReview,false)) {
+            if (bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id())) {
+                // review removed with success
+                if (adminManager.deleteReport(selectedReview, false)) {
+                    // report review removed with success
+                    obsListReview.remove(selectedReview);
+                    addCustomFactory("review");
+                    resetRightDetail();
+                } else {
+                    // can't remove report review -- restore review
+                    bookManager.addReviewToBook(selectedReview.getReview_text(), Integer.valueOf(selectedReview.getRating()), selectedReview.getBook_id());
+                    actionTarget.setText("Error: unable to remove Review");
+                }
+            } else {
+                // can't remove review
                 actionTarget.setText("Error: unable to remove Review");
             }
-            bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
-            obsListReview.remove(selectedReview);
-            addCustomFactory("review");
-            resetRightDetail();
         }
     }
 

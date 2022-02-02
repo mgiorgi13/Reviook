@@ -135,7 +135,7 @@ public class AdminManager {
         return reportedBook;
     }
 
-    public void restoreLog(Log log) {
+    public boolean restoreLog(Log log) {
         if (log.getType().equals("book")) {
             // add book
             ArrayList<DBObject> authorsObj = new ArrayList<>();
@@ -202,6 +202,9 @@ public class AdminManager {
             DBObject insertReview = new BasicDBObject("$push", elem);
             book.updateOne(getBook, (Bson) insertReview);
             Book bookToUpdate = bookManager.getBookByID(log.getBook_id());
+            if (bookToUpdate == null){
+                return false;
+            }
             Double newRating = bookManager.updateRating(bookToUpdate.getReviews());
             UpdateResult updateResult2 = book.updateOne(getBook, Updates.set("average_rating", newRating));
             if (userManager.verifyUsername(log.getUsername(), "", false) == 1) {
@@ -210,6 +213,7 @@ public class AdminManager {
                 userManager.readAdd("User", log.getUsername(), log.getBook_id()); // restore relation on N4J
             }
         }
+        return true;
     }
 
     public void deleteLog(Log log) {
@@ -335,6 +339,9 @@ public class AdminManager {
                     .append("authors", authorsList)
                     .append("genres", report.getGenres());
             InsertOneResult res = logs.insertOne(newLog);
+            if (!res.wasAcknowledged()) {
+                return false;
+            }
         } else if (report.getType().equals("review")) {
             Document newLog = new Document("id", UUID.randomUUID().toString())
                     .append("report_id", report.getReport_id())
@@ -349,6 +356,9 @@ public class AdminManager {
                     .append("username", report.getUsername())
                     .append("book_id", report.getBook_id());
             InsertOneResult res = logs.insertOne(newLog);
+            if (!res.wasAcknowledged()) {
+                return false;
+            }
         }
         return true;
     }
@@ -435,9 +445,17 @@ public class AdminManager {
         try {
             result = reports.deleteOne(eq("report_id", report.getReport_id()));
             if (unreport) {
-                addLog(report, "unreport");
+                if (addLog(report, "unreport")) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                addLog(report, "delete");
+                if (addLog(report, "delete")) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

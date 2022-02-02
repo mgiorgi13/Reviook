@@ -72,7 +72,7 @@ public class BookManager {
             while (cursor.hasNext()) {
                 return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -173,21 +173,31 @@ public class BookManager {
         UpdateResult updateResult4 = books.updateOne(getBook, Updates.set("average_rating", newRating));
     }
 
-    public void deleteReview(String review_id, String book_id) {
+    public boolean deleteReview(String review_id, String book_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
-        //  Bson getReview = eq("reviews.review_id", review_id);
         UpdateResult updateResult = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
         Book bookToUpdate = getBookByID(book_id);
+        if (bookToUpdate == null){
+            return true;
+        }
         Double newRating = updateRating(bookToUpdate.getReviews());
         UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
         removeLikeReview(review_id, book_id); // TODO funziona solo per i like miei a mie review, altrimenti non funziona
+        if (updateResult != null && updateResult2 != null) {
+            return true;
+        }
+        return false;
     }
 
     public Book getBookByID(String book_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        Document book = books.find(eq("book_id", book_id)).iterator().next();
-
+        Document book = new Document();
+        MongoCursor<Document> cursor = books.find(eq("book_id", book_id)).iterator();
+        if (!cursor.hasNext()) {
+            return null;
+        }
+        book = cursor.next();
         ArrayList<Author> authorsLis = new ArrayList<>();
         ArrayList<Review> reviewsList = new ArrayList<>();
         ArrayList<Document> authors = (ArrayList<Document>) book.get("authors");
