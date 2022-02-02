@@ -57,6 +57,12 @@ public class AdminController {
     private JFXButton searchButton;
 
     @FXML
+    private JFXButton logsButton;
+
+    @FXML
+    private JFXButton unReportButton;
+
+    @FXML
     private Text actionTarget;
 
     @FXML
@@ -76,6 +82,9 @@ public class AdminController {
 
     @FXML
     private JFXListView<Author> authorsList;
+
+    @FXML
+    private JFXListView<Log> logsList;
 
     @FXML
     private TextField usernameField;
@@ -110,6 +119,51 @@ public class AdminController {
     ObservableList<User> obsUserList = FXCollections.observableArrayList();
     ObservableList<Author> obsAuthorList = FXCollections.observableArrayList();
     ObservableList<Report> obsListReview = FXCollections.observableArrayList();
+    ObservableList<Log> obsListLog = FXCollections.observableArrayList();
+
+    @FXML
+    void logsAction() {
+        clearList();
+        unReportButton.setDisable(true);
+        ArrayList<Log> list = adminManager.loadLogs();
+        obsListLog.addAll(list);
+        logsList.setVisible(true);
+        bookList.setVisible(false);
+        authorsList.setVisible(false);
+        usersList.setVisible(false);
+        reviewList.setVisible(false);
+        logsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 ) {
+                    Log selectedCell = (Log) logsList.getSelectionModel().getSelectedItem();
+                    if (selectedCell == null) {
+                        return;
+                    }
+                    adminManager.restoreLog(selectedCell);
+                    adminManager.deleteLog(selectedCell);
+                    obsListLog.remove(selectedCell);
+                }
+            }
+        });
+        logsList.setCellFactory(new Callback<ListView<Log>, ListCell<Log>>() {
+            @Override
+            public ListCell<Log> call(ListView<Log> listView) {
+                return new ListCell<Log>() {
+                    @Override
+                    public void updateItem(Log item, boolean empty) {
+                        super.updateItem(item, empty);
+                        textProperty().unbind();
+                        if (item != null)
+                            setText(item.toString());
+                        else
+                            setText(null);
+                    }
+                };
+            }
+        });
+        //TODO fare sul doppio click destro un ripristino dei log
+    }
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
@@ -132,13 +186,14 @@ public class AdminController {
     }
 
     @FXML
-    void deleteElemAction(ActionEvent event) {
+    void deleteElemAction() {
         actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             bookManager.deleteBook(selectedBook.getBook_id());
-            if (!adminManager.deleteReport(selectedBook))
+            if (!adminManager.deleteReport(selectedBook,false)) {
                 actionTarget.setText("Error: unable to remove Book");
+            }
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
             resetRightDetail();
@@ -166,8 +221,9 @@ public class AdminController {
             resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if (!adminManager.deleteReport(selectedReview))
+            if (!adminManager.deleteReport(selectedReview,false)) {
                 actionTarget.setText("Error: unable to remove Review");
+            }
             bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
@@ -190,32 +246,20 @@ public class AdminController {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             int index = bookList.getSelectionModel().getSelectedIndex();
-            if (!adminManager.deleteReport(selectedBook))
+            if (!adminManager.deleteReport(selectedBook, true))
                 actionTarget.setText("Error: unable to remove bookReport");
             obsBooksList.remove(selectedBook);
             addCustomFactory("book");
             resetRightDetail();
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if (!adminManager.deleteReport(selectedReview))
+            if (!adminManager.deleteReport(selectedReview, true))
                 actionTarget.setText("Error: unable to remove reviewReport");
             obsListReview.remove(selectedReview);
             addCustomFactory("review");
             resetRightDetail();
         }
     }
-
-//    void deleteReviewAction() {
-//        Review selectedReview = (Review) reviewList.getSelectionModel().getSelectedItem();
-//        if (selectedReview != null && selectedBookID != null) {
-//            bookManager.deleteReview(selectedReview.getReview_id(), selectedBookID);
-//            Book book = bookManager.getBookByID(this.selectedBookID); // query to update review
-//            ObservableList<Review> obsListReview = FXCollections.observableArrayList();
-//            obsListReview.setAll(book.getReviews());
-//            this.reviewsListView.getItems().clear();
-//            this.reviewsListView.setItems(obsListReview);
-//        }
-//    }
 
     @FXML
     void searchAction() {
@@ -227,6 +271,7 @@ public class AdminController {
             authorsList.setVisible(false);
             usersList.setVisible(false);
             reviewList.setVisible(false);
+            logsList.setVisible(false);
             addCustomFactory("book");
         } else if (userOption.isSelected()) {
             ArrayList<User> list = searchManager.searchUser(usernameField.getText());
@@ -235,6 +280,7 @@ public class AdminController {
             authorsList.setVisible(false);
             usersList.setVisible(true);
             reviewList.setVisible(false);
+            logsList.setVisible(false);
             addCustomFactory("user");
         } else if (authorOption.isSelected()) {
             ArrayList<Author> list = searchManager.searchAuthor(usernameField.getText());
@@ -243,6 +289,7 @@ public class AdminController {
             authorsList.setVisible(true);
             usersList.setVisible(false);
             reviewList.setVisible(false);
+            logsList.setVisible(false);
             addCustomFactory("author");
         } else if (reviewOption.isSelected()) {
             ArrayList<Report> listRev = adminManager.loadReviewReported();
@@ -251,6 +298,7 @@ public class AdminController {
             authorsList.setVisible(false);
             bookList.setVisible(false);
             reviewList.setVisible(true);
+            logsList.setVisible(false);
             addCustomFactory("review");
         }
     }
@@ -360,6 +408,7 @@ public class AdminController {
         authorOption.setSelected(false);
         userOption.setSelected(false);
         reviewOption.setSelected(false);
+        unReportButton.setDisable(false);
     }
 
     @FXML
@@ -368,6 +417,7 @@ public class AdminController {
         userOption.setSelected(false);
         authorOption.setSelected(true);
         reviewOption.setSelected(false);
+        unReportButton.setDisable(true);
     }
 
     @FXML
@@ -376,6 +426,7 @@ public class AdminController {
         authorOption.setSelected(false);
         userOption.setSelected(true);
         reviewOption.setSelected(false);
+        unReportButton.setDisable(true);
     }
 
     @FXML
@@ -384,14 +435,15 @@ public class AdminController {
         authorOption.setSelected(false);
         userOption.setSelected(false);
         reviewOption.setSelected(true);
+        unReportButton.setDisable(false);
     }
 
-    //TODO clear all obs list
     private void clearList() {
         obsListReview.clear();
         obsBooksList.clear();
         obsUserList.clear();
         obsAuthorList.clear();
+        obsListLog.clear();
     }
 
     @FXML
@@ -401,5 +453,7 @@ public class AdminController {
         usersList.setItems(obsUserList);
         authorsList.setItems(obsAuthorList);
         bookList.setItems(obsBooksList);
+        logsList.setItems(obsListLog);
+        unReportButton.setDisable(true);
     }
 }

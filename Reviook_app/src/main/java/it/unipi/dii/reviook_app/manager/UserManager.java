@@ -422,7 +422,6 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
-
                 Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
@@ -461,7 +460,6 @@ public class UserManager {
     public ArrayList<User> similarUsers(String username, String type) {
         ArrayList<User> suggestion = new ArrayList<>();
         ArrayList<User> queryResult = new ArrayList<>();
-
         try (Session session = nd.getDriver().session()) {
             suggestion = session.readTransaction((TransactionWork<ArrayList<User>>) tx -> {
                 Result result = tx.run("MATCH (u1:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +

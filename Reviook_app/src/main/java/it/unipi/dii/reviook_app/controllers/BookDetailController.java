@@ -120,7 +120,7 @@ public class BookDetailController {
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
         actionTarget.setText("");
-        if (adminManager.reportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, visualizedBook.getAuthors(), visualizedBook.getGenres(), null)))
+        if(adminManager.reportBook(visualizedBook))
             actionTarget.setText("Book reported");
         else
             actionTarget.setText("Error: unable to report book");
@@ -543,7 +543,6 @@ public class BookDetailController {
         }
         if (adminManager.reportReview(selectedReview, book_id))
             actionTarget.setText("");
-
     }
 
 

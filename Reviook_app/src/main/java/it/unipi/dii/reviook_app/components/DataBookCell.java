@@ -60,13 +60,21 @@ public class DataBookCell {
             for (Author a : book.getAuthors()) {
                 authorsName.add(a.getName());
             }
-            String authors = String.join(", ", authorsName);
-            authorsField.setText(authors);
-//            authorsField.setText(book.getAuthors().get(0).getNickname());
+            if (authorsName.size()>=2){
+                authorsField.setText(authorsName.get(0)+" ,"+authorsName.get(1)+" ...");
+            } else {
+                String authors = String.join(", ", authorsName);
+                authorsField.setText(authors);
+            }
         } else {
             authorsField.setText("");
         }
-        reviewCounter.setText(String.valueOf(book.getReviews().size()));
+        if (book.getReviews().size()>99){
+            reviewCounter.setText("99+");
+        }else {
+            reviewCounter.setText(String.valueOf(book.getReviews().size()));
+        }
+
         Float ratingSum = 0.0f;
         DecimalFormat df = new DecimalFormat("#.#");
         if (book.getReviews().size() > 0) {

@@ -214,7 +214,6 @@ public class AddBookController {
         actual_stage.centerOnScreen();
     }
 
-
     public void addBookFunction() throws IOException {
         if (titleBook.getText().isEmpty()) {
             actiontarget.setText("You must enter the title");

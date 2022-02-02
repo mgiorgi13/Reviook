@@ -65,7 +65,6 @@ public class SearchManager {
             for (Document r : reviews) {
                 reviewsList.add(new Review(
                         r.getString("username"),
-                        r.get("date_added").toString(),
                         r.getString("review_id"),
                         r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
                         r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
@@ -163,7 +162,6 @@ public class SearchManager {
             for (Document r : reviews) {
                 reviewsList.add(new Review(
                         r.getString("username"),
-                        r.get("date_added").toString(),
                         r.getString("review_id"),
                         r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
                         r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
