@@ -120,7 +120,7 @@ public class BookDetailController {
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
         actionTarget.setText("");
-        if(adminManager.reportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, visualizedBook.getAuthors(), visualizedBook.getGenres(), null)))
+        if (adminManager.reportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, visualizedBook.getAuthors(), visualizedBook.getGenres(), null)))
             actionTarget.setText("Book reported");
         else
             actionTarget.setText("Error: unable to report book");
@@ -203,25 +203,35 @@ public class BookDetailController {
 
     @FXML
     void toRead(ActionEvent event) throws IOException {
+        actionTarget.setText("");
         String bookTitleText = bookTitle.getText();
         if (session.getLoggedAuthor() != null) {
-            userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
-            session.getLoggedAuthor().getBooks().getToRead().add(visualizedBook);
+            if (!userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedAuthor().getBooks().getToRead().add(visualizedBook);
         } else {
-            userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id);
-            session.getLoggedUser().getBooks().getToRead().add(visualizedBook);
+            if (!userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedUser().getBooks().getToRead().add(visualizedBook);
         }
     }
 
     @FXML
     void read(ActionEvent event) throws IOException {
+        actionTarget.setText("");
         String bookTitleText = bookTitle.getText();
         if (session.getLoggedAuthor() != null) {
-            userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
-            session.getLoggedAuthor().getBooks().getRead().add(visualizedBook);
+            if (!userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedAuthor().getBooks().getRead().add(visualizedBook);
         } else {
-            userManager.readAdd("User", session.getLoggedUser().getNickname(), this.book_id);
-            session.getLoggedUser().getBooks().getRead().add(visualizedBook);
+            if (!userManager.readAdd("User", session.getLoggedUser().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedUser().getBooks().getRead().add(visualizedBook);
         }
     }
 
@@ -531,7 +541,7 @@ public class BookDetailController {
         if (selectedReview == null) {
             return;
         }
-        if(adminManager.reportReview(selectedReview, book_id))
+        if (adminManager.reportReview(selectedReview, book_id))
             actionTarget.setText("");
 
     }

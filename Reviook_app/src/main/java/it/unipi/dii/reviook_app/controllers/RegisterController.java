@@ -64,7 +64,7 @@ public class RegisterController {
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";
-            if (!userManager.verifyEmail(email))
+            if (!userManager.verifyEmail(email,CheckAuthor.isSelected() ? "author":"user"))
                 return "Existing e-mail";
             if (!password.equals(repeatPsw))
                 return "Passwords must be the same";
