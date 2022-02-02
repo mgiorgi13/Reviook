@@ -29,6 +29,7 @@ public class User {
         this.listBooks = new ListBooks();
         this.listReviewID = new ArrayList<>();
         this.follower_count = 0;
+        this.statistics = null;
     }
 
     public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
@@ -43,6 +44,10 @@ public class User {
         this.listReviewID = listReviewID;
         this.follower_count = follower_count;
         this.statistics = null;
+    }
+
+    public User(String id, String name, String surname, String nickname, String email, String password) {
+        this(id, name, surname, nickname, email, password, null, 0);
     }
 
     public ArrayList<Genre> getStatistics() {
