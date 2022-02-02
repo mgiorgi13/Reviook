@@ -112,8 +112,7 @@ public class BookManager {
         md.getCollection(bookCollection).insertOne(doc);
 
         //N4J
-        try (
-                Session session = nd.getDriver().session()) {
+        try (Session session = nd.getDriver().session()) {
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("CREATE (ee: Book { id : $id, title: $title})", parameters("id", id, "title", title));
                 for (int i = 0; i < AuthorTagged.size(); i++) {
@@ -132,7 +131,7 @@ public class BookManager {
         String reviewID = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        newReview.append("date_added", date);
+//        newReview.append("date_added", date);
         newReview.append("date_updated", date);
         newReview.append("review_id", reviewID);
         newReview.append("likes", 0);

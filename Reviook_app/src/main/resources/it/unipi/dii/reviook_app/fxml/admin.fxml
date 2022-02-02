@@ -13,7 +13,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="848.0" prefWidth="1353.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AdminController">
     <children>
-        <JFXListView fx:id="usersList" layoutX="23.0" layoutY="154.0" prefHeight="674.0" prefWidth="654.0" />
+        <JFXListView fx:id="usersList" layoutX="23.0" layoutY="137.0" prefHeight="612.0" prefWidth="654.0" />
         <JFXCheckBox fx:id="userOption" layoutX="42.0" layoutY="69.0" onAction="#selectUserCheckAction" text="Users" />
         <JFXCheckBox fx:id="authorOption" layoutX="42.0" layoutY="100.0" onAction="#selectAuthorCheckAction" text="Authors" />
         <JFXButton fx:id="searchButton" layoutX="549.0" layoutY="81.0" onAction="#searchAction" style="-fx-font-weight: bold;" text="SEARCH" textFill="#2152b5">
@@ -30,9 +30,9 @@
             </font>
         </Text>
         <JFXCheckBox fx:id="bookOption" layoutX="151.0" layoutY="69.0" onAction="#selectBookCheckAction" text="Books" />
-        <Text layoutX="748.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name / Title:" />
+        <Text layoutX="748.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name / Title:" textAlignment="JUSTIFY" wrappingWidth="47.455078125" />
         <Text layoutX="753.0" layoutY="414.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Review Text" />
-        <JFXButton fx:id="deleteElemButton" layoutX="1140.0" layoutY="769.0" onAction="#deleteElemAction" style="-fx-font-weight: bold;" text="DELETE" textFill="#bc1b1b">
+        <JFXButton fx:id="deleteElemButton" layoutX="1120.0" layoutY="769.0" onAction="#deleteElemAction" style="-fx-font-weight: bold;" text="DELETE" textFill="#bc1b1b">
             <graphic>
                 <FontAwesomeIconView fill="#b51818" glyphName="TRASH" />
             </graphic>
@@ -40,17 +40,17 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </JFXButton>
-        <Text layoutX="748.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username: / Authors" />
+        <Text layoutX="748.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username / Authors:" textAlignment="JUSTIFY" wrappingWidth="66.58349609375" />
         <Text layoutX="748.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Follower:" />
         <Text layoutX="747.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
         <JFXButton fx:id="logoutButton" layoutX="1262.0" layoutY="2.0" onAction="#logoutActon" style="-fx-font-weight: bold;" text="LOGOUT">
          <graphic>
             <FontAwesomeIconView glyphName="UNDO" />
          </graphic></JFXButton>
-        <JFXListView fx:id="authorsList" layoutX="23.0" layoutY="155.0" prefHeight="674.0" prefWidth="654.0" />
-        <JFXListView fx:id="reviewList" layoutX="23.0" layoutY="154.0" prefHeight="674.0" prefWidth="654.0" />
+        <JFXListView fx:id="authorsList" layoutX="23.0" layoutY="138.0" prefHeight="612.0" prefWidth="654.0" />
+        <JFXListView fx:id="reviewList" layoutX="23.0" layoutY="137.0" prefHeight="612.0" prefWidth="654.0" />
         <Text fx:id="nameTitle" layoutX="830.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
-        <Text fx:id="username" layoutX="873.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
+        <Text fx:id="username" layoutX="827.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
         <Text fx:id="follower" layoutX="827.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
         <ScrollPane layoutX="827.0" layoutY="243.0" prefHeight="117.0" prefWidth="513.0">
             <content>
@@ -70,10 +70,10 @@
                 <Text fx:id="reviewText" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="555.13671875" />
             </content>
         </ScrollPane>
-        <JFXListView fx:id="bookList" layoutX="23.0" layoutY="154.0" prefHeight="674.0" prefWidth="654.0" />
+        <JFXListView fx:id="bookList" layoutX="23.0" layoutY="137.0" prefHeight="612.0" prefWidth="654.0" />
         <JFXCheckBox fx:id="reviewOption" layoutX="151.0" layoutY="100.0" onAction="#selectReviewCheckAction" text="Review" />
         <TextField fx:id="usernameField" layoutX="257.0" layoutY="81.0" prefHeight="25.0" prefWidth="264.0" />
-        <JFXButton fx:id="unReportButton" alignment="CENTER" layoutX="955.0" layoutY="769.0" onAction="#unReport" style="-fx-font-weight: bold;" text="FREE" textAlignment="CENTER" textFill="#0ebc4b">
+        <JFXButton fx:id="unReportButton" alignment="CENTER" layoutX="935.0" layoutY="769.0" onAction="#unReport" style="-fx-font-weight: bold;" text="FREE" textAlignment="CENTER" textFill="#0ebc4b">
             <graphic>
                 <FontAwesomeIconView fill="#1db247" glyphName="CHECK" />
             </graphic>
@@ -90,6 +90,10 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <JFXListView fx:id="logsList" layoutX="23.0" layoutY="154.0" prefHeight="674.0" prefWidth="654.0" />
+      <JFXListView fx:id="logsList" layoutX="23.0" layoutY="137.0" prefHeight="612.0" prefWidth="654.0" />
+      <Text layoutX="42.0" layoutY="770.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Double right mouse click on log cell to restore element (valid only for books and reviews)" wrappingWidth="505.359375" />
+      <Text layoutX="42.0" layoutY="789.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Double left mouse click on list cell to view detail on the right" wrappingWidth="393.359375" />
+      <Text layoutX="42.0" layoutY="808.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Press FREE button to remove elem from reports list (valid only for books and reviews)" wrappingWidth="505.359375" />
+      <Text layoutX="42.0" layoutY="828.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Press DELETE button to permanently delete elem from application (delete users and authors is not reversible)" wrappingWidth="588.0" />
     </children>
 </Pane>
