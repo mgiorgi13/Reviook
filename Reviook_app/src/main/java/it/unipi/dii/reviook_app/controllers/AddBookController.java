@@ -247,8 +247,9 @@ public class AddBookController {
         }
         String concat = ISBN_ + Title + session.getLoggedAuthor().getNickname();
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
-        bookManager.addBook(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged);
-        session.getLoggedAuthor().addToPublished(new Book(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged));
+        Book newBook = new Book(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged);
+        bookManager.addBookMongo(newBook);
+        session.getLoggedAuthor().addToPublished(newBook);
         actiontarget.setText("Congratulations you added a book!!");
         titleBook.clear();
         ISBN.clear();

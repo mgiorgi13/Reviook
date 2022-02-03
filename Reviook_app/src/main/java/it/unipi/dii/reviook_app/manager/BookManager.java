@@ -5,6 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.entity.*;
 import it.unipi.dii.reviook_app.MongoDriver;
@@ -78,13 +79,14 @@ public class BookManager {
         return false;
     }
 
-    public void addBook(Integer num_pages, String URL_image, String languageCode, LocalDate date, String id, String title, String ISBN, String Description, ArrayList<String> Genre, ArrayList<Author> AuthorTagged) {
+    public boolean addBookMongo(Book newBook) {
+        InsertOneResult result = null;
         //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
         ArrayList<DBObject> authorsObj = new ArrayList<>();
-        for (Author a : AuthorTagged) {
+        for (Author a : newBook.getAuthors()) {
             DBObject author = new BasicDBObject();
             author.put("author_name", (String) a.getName());
             author.put("author_role", ""); // TODO da togliere
@@ -92,39 +94,50 @@ public class BookManager {
             authorsObj.add(author);
         }
 
-        //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
         //MONGO DB
         ArrayList<Review> reviews = new ArrayList<Review>();
-        Document doc = new Document("language_code", languageCode)
-                .append("isbn", ISBN)
-                .append("description", Description)
-                .append("num_pages", num_pages)
-                .append("publication_day", date.getDayOfMonth())
-                .append("publication_month", date.getMonthValue())
-                .append("publication_year", date.getYear())
-                .append("image_url", URL_image)
-                .append("book_id", id)
-                .append("title", title)
+        Document doc = new Document("language_code", newBook.getLanguage_code())
+                .append("isbn", newBook.getIsbn())
+                .append("description", newBook.getDescription())
+                .append("num_pages", newBook.getNum_pages())
+                .append("publication_day", newBook.getPublication_day())
+                .append("publication_month", newBook.getPublication_month())
+                .append("publication_year", newBook.getPublication_year())
+                .append("image_url", newBook.getImage_url())
+                .append("book_id", newBook.getBook_id())
+                .append("title", newBook.getTitle())
                 .append("average_rating", 0.0)
                 .append("ratings_count", 0)
-                .append("genres", Genre)
+                .append("genres", newBook.getGenres())
                 .append("authors", authorsObj)
-                .append("reviews", reviews);
+                .append("reviews", newBook.getReviews());
+        try {
+            result = md.getCollection(bookCollection).insertOne(doc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (result != null)
+            return result.wasAcknowledged();
+        return false;
+    }
 
-        md.getCollection(bookCollection).insertOne(doc);
-
-        //N4J
+    public boolean addBookN4J(Book newBook) {
+        Boolean result;
         try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee: Book { id : $id, title: $title})", parameters("id", id, "title", title));
-                for (int i = 0; i < AuthorTagged.size(); i++) {
-                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.id = '" + AuthorTagged.get(i).getId() + "' AND ee.id='" + id + "'" +
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                tx.run("CREATE (ee: Book { id : $id, title: $title})", parameters("id", newBook.getBook_id(), "title", newBook.getTitle()));
+                for (int i = 0; i < newBook.getAuthors().size(); i++) {
+                    tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.id = '" + newBook.getAuthors().get(i).getId() + "' AND ee.id='" + newBook.getBook_id() + "'" +
                             "CREATE (dd)-[:WROTE]->(ee)");
                 }
-                return null;
+                return true;
             });
         }
-
+        if (!result) {
+            // can't add book into N4J --- delete book from MongoDB
+            deleteBook(newBook.getBook_id());
+        }
+        return result;
     }
 
     public void addReviewToBook(String reviewText, Integer ratingBook, String book_id) {
@@ -178,13 +191,14 @@ public class BookManager {
         Bson getBook = eq("book_id", book_id);
         UpdateResult updateResult = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
         Book bookToUpdate = getBookByID(book_id);
-        if (bookToUpdate == null){
+        if (bookToUpdate == null) {
             return true;
         }
         Double newRating = updateRating(bookToUpdate.getReviews());
         UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
-        removeLikeReview(review_id, book_id); // TODO funziona solo per i like miei a mie review, altrimenti non funziona
-        if (updateResult != null && updateResult2 != null) {
+        // TODO funziona solo per i like miei a mie review, altrimenti non funziona
+        removeLikeReview(review_id, book_id);
+        if (updateResult.getModifiedCount() == 1 && updateResult2.getModifiedCount() == 1) {
             return true;
         }
         return false;
