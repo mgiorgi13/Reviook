@@ -240,6 +240,7 @@ public class BookDetailController {
         Stage dialogNewReviewStage = new Stage();
         Parent dialogInterface;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
+        dialogNewReviewStage.getIcons().add(new Image("/book.jpg"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
         controller.setBook_id(this.book_id, this.reviewsList, this.observableList, this.ratingAVG);
@@ -358,6 +359,7 @@ public class BookDetailController {
                         Stage dialogNewReviewStage = new Stage();
                         Scene dialogScene = new Scene(dialogReview);
                         dialogNewReviewStage.setScene(dialogScene);
+                        dialogNewReviewStage.getIcons().add(new Image("/book.jpg"));
                         dialogNewReviewStage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
