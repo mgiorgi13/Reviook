@@ -3,6 +3,10 @@ package it.unipi.dii.reviook_app.controllers;
 import com.jfoenix.controls.JFXButton;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import it.unipi.dii.reviook_app.entity.Review;
@@ -26,6 +30,9 @@ public class PreviewReviewController {
     private JFXButton closeButton;
 
     @FXML
+    private Text dateUpdateField;
+
+    @FXML
     private Text ratingField;
 
     @FXML
@@ -44,6 +51,13 @@ public class PreviewReviewController {
         ratingField.setText(selectedReview.getRating());
         authorReviewField.setText(selectedReview.getUsername());
         reviewText.setText(selectedReview.getReview_text());
+        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy | hh:mm:ss");
+        try {
+            dateUpdateField.setText(outputFormat.format(inputFormat.parse(selectedReview.getDate_update())));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
