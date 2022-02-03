@@ -46,7 +46,10 @@
         <JFXButton fx:id="logoutButton" layoutX="1262.0" layoutY="2.0" onAction="#logoutActon" style="-fx-font-weight: bold;" text="LOGOUT">
          <graphic>
             <FontAwesomeIconView glyphName="UNDO" />
-         </graphic></JFXButton>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXButton>
         <JFXListView fx:id="authorsList" layoutX="23.0" layoutY="138.0" prefHeight="596.0" prefWidth="654.0" />
         <JFXListView fx:id="reviewList" layoutX="23.0" layoutY="137.0" prefHeight="596.0" prefWidth="654.0" />
         <Text fx:id="nameTitle" layoutX="830.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="366.015625" />
