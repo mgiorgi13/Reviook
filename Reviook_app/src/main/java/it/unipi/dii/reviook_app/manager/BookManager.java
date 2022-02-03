@@ -236,7 +236,6 @@ public class BookManager {
                     "",
                     "",
                     "",
-                    "",
                     null,
                     0
             );
@@ -390,7 +389,7 @@ public class BookManager {
                         "RETURN DISTINCT a2.id,a2.name,a2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Author(r.get("a2.id").asString(), r.get("a2.name").asString(), "", r.get("a2.username").asString(), "", "", new ArrayList<>(), 0));
+                    queryResult.add(new Author(r.get("a2.id").asString(), r.get("a2.name").asString(), r.get("a2.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });

@@ -10,10 +10,10 @@ import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.MongoDriver;
 import it.unipi.dii.reviook_app.Neo4jDriver;
+import it.unipi.dii.reviook_app.Session;
 import it.unipi.dii.reviook_app.entity.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
 import javax.print.Doc;
@@ -34,6 +34,8 @@ public class AdminManager {
     private MongoDriver md;
     private static Neo4jDriver nd;
 
+    private Session session = Session.getInstance();
+
     private static final String adminCollection = "admins";
     private static final String bookCollection = "books";
     private static final String reportsCollection = "reports";
@@ -41,6 +43,7 @@ public class AdminManager {
 
     BookManager bookManager = new BookManager();
     UserManager userManager = new UserManager();
+
 
     public AdminManager() {
         this.md = MongoDriver.getInstance();
@@ -99,7 +102,6 @@ public class AdminManager {
                         Author author = new Author(
                                 a.getString("author_id"),
                                 a.getString("author_name"),
-                                "",
                                 a.getString("author_username"),
                                 "",
                                 "",
@@ -141,7 +143,7 @@ public class AdminManager {
         if (log.getType().equals("book")) {
             // add book
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-            String stringDate =  "0" +log.getPublication_day().toString()
+            String stringDate = "0" + log.getPublication_day().toString()
                     + "/0" +
                     log.getPublication_month().toString()
                     + "/" +
@@ -249,7 +251,6 @@ public class AdminManager {
                         Author author = new Author(
                                 a.getString("author_id"),
                                 a.getString("author_name"),
-                                "",
                                 a.getString("author_username"),
                                 "",
                                 "",
@@ -310,7 +311,7 @@ public class AdminManager {
                     .append("report_id", report.getReport_id())
                     .append("date", date)
                     .append("operation", operation)
-                    .append("admin", "admin")
+                    .append("admin", session.getAdmin())
                     .append("type", report.getType())
                     .append("isbn", report.getIsbn() != null ? report.getIsbn() : "")
                     .append("asin", report.getAsin() != null ? report.getAsin() : "")
@@ -333,7 +334,7 @@ public class AdminManager {
                     .append("report_id", report.getReport_id())
                     .append("date", date)
                     .append("operation", operation)
-                    .append("admin", "admin")
+                    .append("admin", session.getAdmin())
                     .append("type", report.getType())
                     .append("review_id", report.getReview_id())
                     .append("review_text", report.getReview_text())

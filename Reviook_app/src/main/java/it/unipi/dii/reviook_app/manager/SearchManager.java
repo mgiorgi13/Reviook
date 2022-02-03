@@ -49,7 +49,7 @@ public class SearchManager {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Book result = null;
 
-        try(MongoCursor<Document> cursor = books.find(in("book_id", idBook)).iterator()){
+        try (MongoCursor<Document> cursor = books.find(in("book_id", idBook)).iterator()) {
 
             while (cursor.hasNext()) {
                 Document book = cursor.next();
@@ -79,7 +79,6 @@ public class SearchManager {
                             "",
                             "",
                             "",
-                            "",
                             null,
                             0
                     );
@@ -105,7 +104,7 @@ public class SearchManager {
                         reviewsList
                 ));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -179,12 +178,11 @@ public class SearchManager {
                             "",
                             "",
                             "",
-                            "",
                             null,
                             0
                     );
                     authorsLis.add(author);
-                //authorsLis.add(a.getString("author_name"));
+                    //authorsLis.add(a.getString("author_name"));
                 }
 
                 result.add(new Book(
@@ -206,10 +204,10 @@ public class SearchManager {
                         reviewsList
                 ));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if(cursor != null)
+        } finally {
+            if (cursor != null)
                 cursor.close();
         }
         return result;
@@ -229,7 +227,7 @@ public class SearchManager {
 
             for (Document r : queryResults) {
                 ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-                result.add(new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
+                result.add(new User(r.getString("user_id"), r.get("name").toString(), r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
             }
 
             //search on name or surname
@@ -238,12 +236,12 @@ public class SearchManager {
                 User us;
                 for (Document r : queryResults) {
                     ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-                    us = new User(r.getString("user_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
+                    us = new User(r.getString("user_id"), r.get("name").toString(), r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
                     if (!result.contains(us))
                         result.add(us);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -255,7 +253,7 @@ public class SearchManager {
         ArrayList<Author> result = new ArrayList<>();
 
         //search on exact username
-        try{
+        try {
             if (Username.equals("")) {
                 queryResults = author.find().into(new ArrayList());
             } else {
@@ -264,7 +262,7 @@ public class SearchManager {
 
             for (Document r : queryResults) {
                 ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-                result.add(new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
+                result.add(new Author(r.getString("author_id"), r.get("name").toString(), r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count")));
             }
 
             if (!Username.equals("")) {
@@ -273,12 +271,12 @@ public class SearchManager {
                 Author auth;
                 for (Document r : queryResults) {
                     ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
-                    auth = new Author(r.getString("author_id"), r.get("name").toString(), "", r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
+                    auth = new Author(r.getString("author_id"), r.get("name").toString(), r.get("username").toString(), r.get("email").toString(), r.get("password").toString(), listReviewID, (Integer) r.get("follower_count"));
                     if (!result.contains(auth))
                         result.add(auth);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -288,12 +286,12 @@ public class SearchManager {
         MongoCollection<Document> genres = md.getCollection(genreCollection);
         ArrayList<Genre> result = new ArrayList<>();
 
-        try(MongoCursor<Document> cursor = genres.find().iterator()) {
+        try (MongoCursor<Document> cursor = genres.find().iterator()) {
 
             while (cursor.hasNext()) {
                 result.add(new Genre(cursor.next().getString("_id")));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -308,7 +306,7 @@ public class SearchManager {
             while (cursor.hasNext()) {
                 result.add(cursor.next().getString("_id"));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -327,7 +325,7 @@ public class SearchManager {
                 Document y = cursor.next();
                 total_years.add(String.valueOf(y.getInteger("_id")));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return total_years;

@@ -10,8 +10,8 @@ public class Author extends User {
         this.published = new ArrayList<>();
     }
 
-    public Author(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
-        super(id, name, surname, nickname, email, password, listReviewID, follower_count);
+    public Author(String id, String name, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
+        super(id, name, nickname, email, password, listReviewID, follower_count);
         this.published = new ArrayList<>();
     }
 
