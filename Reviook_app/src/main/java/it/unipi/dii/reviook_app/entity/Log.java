@@ -46,9 +46,15 @@ public class Log extends Report {
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy | HH:mm:ss ");
+        String review_text;
+        if (this.getReview_text().length() > 80) {
+            review_text = this.getReview_text().substring(0, Math.min(this.getReview_text().length(), 80)) + " ...";
+        } else {
+            review_text = this.getReview_text();
+        }
         return "operation: " + this.operation.toUpperCase() + " - " + this.getType().toUpperCase() +
                 "\n\non date: " + sdf.format(this.date) +
-                "\n\n" + (this.getType().equals("review") ? "review text:  " + this.getReview_text() : "title:  " + this.getTitle()) +
+                "\n\n" + (this.getType().equals("review") ? "review text:  " + review_text : "title:  " + this.getTitle()) +
                 "\n\nby: " + this.admin;
     }
 }

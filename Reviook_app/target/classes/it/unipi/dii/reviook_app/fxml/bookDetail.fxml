@@ -14,13 +14,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="895.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.BookDetailController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="820.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.BookDetailController">
     <children>
-        <HBox layoutX="14.0" layoutY="15.0" prefHeight="870.0" prefWidth="799.0">
+        <HBox layoutX="14.0" layoutY="6.0" prefHeight="809.0" prefWidth="799.0">
             <children>
-                <Pane prefHeight="822.0" prefWidth="594.0">
+                <Pane prefHeight="811.0" prefWidth="592.0">
                     <children>
-                        <JFXButton fx:id="homeButton" layoutX="191.0" layoutY="844.0" mnemonicParsing="false" onAction="#homeAction" text="HOME">
+                        <JFXButton fx:id="homeButton" layoutX="198.0" layoutY="780.0" mnemonicParsing="false" onAction="#homeAction" text="HOME">
                             <graphic>
                                 <FontAwesomeIconView glyphName="HOME" />
                             </graphic>
@@ -28,7 +28,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </JFXButton>
-                        <JFXButton fx:id="searchButton" layoutX="313.0" layoutY="844.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
+                        <JFXButton fx:id="searchButton" layoutX="320.0" layoutY="780.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
                             <graphic>
                                 <FontAwesomeIconView glyphName="SEARCH" />
                             </graphic>
@@ -36,7 +36,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </JFXButton>
-                        <Pane prefHeight="351.0" prefWidth="594.0">
+                        <Pane prefHeight="338.0" prefWidth="594.0">
                             <children>
                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="124.0" layoutX="14.0" layoutY="12.0" stroke="#1f0fff" strokeType="INSIDE" strokeWidth="5.0" width="133.0" />
                                 <Text layoutX="159.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
@@ -50,7 +50,7 @@
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </JFXButton>
-                                <JFXButton layoutX="17.0" layoutY="222.0" onAction="#read" text="Readed">
+                                <JFXButton layoutX="17.0" layoutY="207.0" onAction="#read" text="Readed">
                                     <graphic>
                                         <FontAwesomeIconView glyphName="BOOK" />
                                     </graphic>
@@ -75,7 +75,7 @@
                                 </ScrollPane>
                                 <Text layoutX="157.0" layoutY="274.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
                                 <ImageView fx:id="imageContainer" fitHeight="107.0" fitWidth="72.0" layoutX="45.0" layoutY="21.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
-                                <ScrollPane layoutX="241.0" layoutY="256.0" prefHeight="86.0" prefWidth="354.0" vbarPolicy="NEVER">
+                                <ScrollPane layoutX="241.0" layoutY="256.0" prefHeight="74.0" prefWidth="354.0" vbarPolicy="NEVER">
                                     <content>
                                         <Text fx:id="bookDescription" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="337.0" />
                                     </content>
@@ -90,7 +90,7 @@
                                 <Text fx:id="languageCode" layoutX="276.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="215.4000244140625" />
                                 <Text layoutX="157.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Page" />
                                 <Text fx:id="totalPage" layoutX="276.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" wrappingWidth="92.451171875" />
-                                <JFXButton fx:id="deleteBook" layoutX="15.0" layoutY="310.0" mnemonicParsing="false" onAction="#deleteBookFun" prefHeight="25.0" prefWidth="100.0" text="Delete book" textFill="#ae2626">
+                                <JFXButton fx:id="deleteBook" layoutX="15.0" layoutY="257.0" mnemonicParsing="false" onAction="#deleteBookFun" prefHeight="25.0" prefWidth="100.0" text="Delete book" textFill="#ae2626">
                                     <graphic>
                                         <FontAwesomeIconView fill="#b22c2c" glyphName="TRASH" />
                                     </graphic>
@@ -98,7 +98,7 @@
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </JFXButton>
-                                <JFXButton fx:id="reportBookButton" layoutX="19.0" layoutY="266.0" onAction="#reportBookAction" text="Report Book">
+                                <JFXButton fx:id="reportBookButton" layoutX="20.0" layoutY="231.0" onAction="#reportBookAction" text="Report Book">
                                     <graphic>
                                         <FontAwesomeIconView glyphName="EXCLAMATION" />
                                     </graphic>
@@ -106,11 +106,12 @@
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </JFXButton>
+                        <Text layoutX="14.0" layoutY="335.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Review:" />
                             </children>
                         </Pane>
-                        <Pane fx:id="test" layoutY="343.0" prefHeight="488.0" prefWidth="594.0">
-                            <ListView fx:id="listView" layoutX="4.0" layoutY="38.0" prefHeight="418.0" prefWidth="586.0" />
-                            <JFXButton fx:id="addReviewButton" layoutX="298.0" layoutY="462.0" onAction="#addReviewAction" text="Add Review">
+                        <Pane fx:id="test" layoutY="343.0" prefHeight="428.0" prefWidth="594.0">
+                            <ListView fx:id="listView" layoutX="4.0" prefHeight="389.0" prefWidth="586.0" />
+                            <JFXButton fx:id="addReviewButton" layoutX="298.0" layoutY="396.0" onAction="#addReviewAction" text="Add Review">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="PLUS" />
                                 </graphic>
@@ -118,7 +119,7 @@
                                     <Cursor fx:constant="HAND" />
                                 </cursor>
                             </JFXButton>
-                            <JFXButton fx:id="editReviewButton" layoutX="385.0" layoutY="462.0" onAction="#editReviewAction" text="Edit Review">
+                            <JFXButton fx:id="editReviewButton" layoutX="385.0" layoutY="396.0" onAction="#editReviewAction" text="Edit Review">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="EDIT" />
                                 </graphic>
@@ -126,7 +127,7 @@
                                     <Cursor fx:constant="HAND" />
                                 </cursor>
                             </JFXButton>
-                            <JFXButton fx:id="deleteReviewButton" layoutX="475.0" layoutY="462.0" onAction="#deleteReviewAction" text="Delete Review" textAlignment="CENTER">
+                            <JFXButton fx:id="deleteReviewButton" layoutX="475.0" layoutY="396.0" onAction="#deleteReviewAction" text="Delete Review" textAlignment="CENTER">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="TRASH" />
                                 </graphic>
@@ -134,7 +135,7 @@
                                     <Cursor fx:constant="HAND" />
                                 </cursor>
                             </JFXButton>
-                            <JFXButton fx:id="likeButton" layoutX="518.0" layoutY="14.0" onAction="#putLikeAction" text="Like">
+                            <JFXButton fx:id="likeButton" layoutX="189.0" layoutY="396.0" onAction="#putLikeAction" text="Like">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="HEART" />
                                 </graphic>
@@ -142,7 +143,7 @@
                                     <Cursor fx:constant="HAND" />
                                 </cursor>
                             </JFXButton>
-                            <JFXButton fx:id="reportButton" layoutX="15.0" layoutY="462.0" onAction="#reportAction" text="Report Review">
+                            <JFXButton fx:id="reportButton" layoutX="15.0" layoutY="396.0" onAction="#reportAction" text="Report Review">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="EXCLAMATION" />
                                 </graphic>
@@ -291,7 +292,7 @@
                                 </HBox>
                             </children>
                         </VBox>
-                  <Text fx:id="actionTarget" layoutX="13.0" layoutY="807.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="169.9832592010498" />
+                  <Text fx:id="actionTarget" layoutX="17.0" layoutY="774.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="169.9832592010498" />
                     </children>
                 </Pane>
             </children>
