@@ -18,8 +18,10 @@ import org.neo4j.driver.TransactionWork;
 
 import javax.print.Doc;
 import javax.xml.transform.Result;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
@@ -135,53 +137,29 @@ public class AdminManager {
         return reportedBook;
     }
 
-    public void restoreLog(Log log) {
+    public boolean restoreLog(Log log) {
         if (log.getType().equals("book")) {
             // add book
-            ArrayList<DBObject> authorsObj = new ArrayList<>();
-            for (Author a : log.getAuthors()) {
-                DBObject author = new BasicDBObject();
-                author.put("author_name", (String) a.getName());
-                author.put("author_role", ""); // TODO da togliere
-                author.put("author_id", (String) a.getId());
-                authorsObj.add(author);
-            }
-
-            //TODO SISTEMARE CAMPI INSERITI SE NULL NON INSERIRE IL CAMPO
-            //MONGO DB
-            ArrayList<Review> reviews = new ArrayList<Review>();
-            Document doc = new Document("language_code", "")
-                    .append("description", log.getDescription())
-                    .append("num_pages", log.getNum_pages())
-                    .append("publication_day", log.getPublication_day())
-                    .append("publication_month", log.getPublication_month())
-                    .append("publication_year", log.getPublication_year())
-                    .append("image_url", log.getImage_url())
-                    .append("book_id", log.getBook_id())
-                    .append("title", log.getTitle())
-                    .append("average_rating", 0.0)
-                    .append("ratings_count", 0)
-                    .append("genres", log.getGenres())
-                    .append("authors", authorsObj)
-                    .append("reviews", reviews);
-            if (log.getIsbn() != null) {
-                doc.append("isbn", log.getIsbn());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+            String stringDate =  "0" +log.getPublication_day().toString()
+                    + "/0" +
+                    log.getPublication_month().toString()
+                    + "/" +
+                    log.getPublication_year().toString();
+            LocalDate date = LocalDate.parse(stringDate, formatter);
+            Book newBook = new Book(log.getNum_pages(), log.getImage_url(), "", date, log.getBook_id(), log.getTitle(), log.getIsbn().equals("") ? log.getAsin() : log.getIsbn(), log.getDescription(), log.getGenres(), log.getAuthors());
+            if (bookManager.addBookMongo(newBook)) {
+                // book restored in mongoDB with success
+                if (bookManager.addBookN4J(newBook)) {
+                    // book restore in N4J with success
+                    return true;
+                } else {
+                    // restore book failed
+                    return false;
+                }
             } else {
-                doc.append("asin", log.getAsin());
-            }
-
-            md.getCollection(bookCollection).insertOne(doc);
-
-            //N4J
-            try (Session session = nd.getDriver().session()) {
-                session.writeTransaction((TransactionWork<Void>) tx -> {
-                    tx.run("CREATE (ee: Book { id : $id, title: $title})", parameters("id", log.getBook_id(), "title", log.getTitle()));
-                    for (int i = 0; i < log.getAuthors().size(); i++) {
-                        tx.run("MATCH (dd:Author),(ee: Book) WHERE dd.id = '" + log.getAuthors().get(i).getId() + "' AND ee.id='" + log.getBook_id() + "'" +
-                                "CREATE (dd)-[:WROTE]->(ee)");
-                    }
-                    return null;
-                });
+                // restore book failed
+                return false;
             }
         } else if (log.getType().equals("review")) {
             // add review to book
@@ -189,7 +167,6 @@ public class AdminManager {
             Document newReview = new Document();
             LocalDateTime now = LocalDateTime.now();
             Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-//            newReview.append("date_added", date);
             newReview.append("date_updated", date);
             newReview.append("review_id", log.getReview_id());
             newReview.append("likes", 0);
@@ -202,6 +179,9 @@ public class AdminManager {
             DBObject insertReview = new BasicDBObject("$push", elem);
             book.updateOne(getBook, (Bson) insertReview);
             Book bookToUpdate = bookManager.getBookByID(log.getBook_id());
+            if (bookToUpdate == null) {
+                return false;
+            }
             Double newRating = bookManager.updateRating(bookToUpdate.getReviews());
             UpdateResult updateResult2 = book.updateOne(getBook, Updates.set("average_rating", newRating));
             if (userManager.verifyUsername(log.getUsername(), "", false) == 1) {
@@ -210,11 +190,21 @@ public class AdminManager {
                 userManager.readAdd("User", log.getUsername(), log.getBook_id()); // restore relation on N4J
             }
         }
+        return true;
     }
 
-    public void deleteLog(Log log) {
+    public boolean deleteLog(Log log) {
         MongoCollection<Document> reports = md.getCollection(logsCollection);
-        reports.deleteOne(eq("id", log.getId()));
+        DeleteResult result = null;
+        try {
+            result = reports.deleteOne(eq("id", log.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (result != null) {
+            return result.wasAcknowledged();
+        }
+        return false;
     }
 
     public ArrayList<Log> loadLogs() {
@@ -335,6 +325,9 @@ public class AdminManager {
                     .append("authors", authorsList)
                     .append("genres", report.getGenres());
             InsertOneResult res = logs.insertOne(newLog);
+            if (!res.wasAcknowledged()) {
+                return false;
+            }
         } else if (report.getType().equals("review")) {
             Document newLog = new Document("id", UUID.randomUUID().toString())
                     .append("report_id", report.getReport_id())
@@ -349,6 +342,9 @@ public class AdminManager {
                     .append("username", report.getUsername())
                     .append("book_id", report.getBook_id());
             InsertOneResult res = logs.insertOne(newLog);
+            if (!res.wasAcknowledged()) {
+                return false;
+            }
         }
         return true;
     }
@@ -406,8 +402,7 @@ public class AdminManager {
 
     public boolean reportReview(Review review, String book_id) {
         MongoCollection<Document> reports = md.getCollection("reports");
-        UpdateResult result = null;
-
+        InsertOneResult result = null;
         try (MongoCursor<Document> cursor = reports.find(and(eq("review_id", review.getReview_id()), eq("type", "review"))).iterator()) {
             if (!cursor.hasNext()) {
                 Document newReview = new Document();
@@ -419,7 +414,7 @@ public class AdminManager {
                 newReview.append("user_id", review.getUser_id());
                 newReview.append("username", review.getUsername());
                 newReview.append("book_id", book_id);
-                reports.insertOne(newReview);
+                result = reports.insertOne(newReview);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -435,9 +430,17 @@ public class AdminManager {
         try {
             result = reports.deleteOne(eq("report_id", report.getReport_id()));
             if (unreport) {
-                addLog(report, "unreport");
+                if (addLog(report, "unreport")) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                addLog(report, "delete");
+                if (addLog(report, "delete")) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
