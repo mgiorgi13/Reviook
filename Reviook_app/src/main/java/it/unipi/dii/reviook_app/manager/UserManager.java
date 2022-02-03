@@ -57,7 +57,7 @@ public class UserManager {
                 return true;
             });
         }
-        if(!result)
+        if (!result)
             deleteUserMongo(user, type);
         return result;
     }
@@ -71,7 +71,7 @@ public class UserManager {
                 return true;
             });
         }
-        if(!result)
+        if (!result)
             addNewUsers(user, type);
         return result;
     }
@@ -86,7 +86,7 @@ public class UserManager {
                     return true;
                 });
             }
-            if(result != true)
+            if (result != true)
                 decrementFollowerCount(username2);
         }
         return result;
@@ -103,7 +103,7 @@ public class UserManager {
                     return true;
                 });
             }
-            if(result != true)
+            if (result != true)
                 incrementFollowerCount(username2);
         }
         return result;
@@ -187,41 +187,6 @@ public class UserManager {
 
     //MongoDB ==========================================================================================================
 
-//    public DBObject paramAuthor(String Username) {
-//        MongoCollection<Document> authors = md.getCollection(authorCollection);
-//        DBObject author = new BasicDBObject();
-//        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-//            while (cursor.hasNext()) {
-//                Document user = cursor.next();
-//                author.put("author_name", (String) user.get("name"));
-//                author.put("author_role", "");
-//                author.put("author_id", (String) user.get("author_id"));
-//            }
-//        }
-//
-//        return author;
-////    }
-//
-//    public User retrieveUserInfo(String Username, String Type) {
-//        MongoCollection<Document> authors = md.getCollection(Type.equals("author") ? authorCollection : usersCollection);
-//        User result  = new User("");
-//        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-//            while (cursor.hasNext()) {
-//                Document user = cursor.next();
-//                result.setPassword(user.getString("password"));
-//                result.setName(user.getString("name"));
-//                result.setId(user.getString(Type.equals("author") ? "author_id" : "user_id"));
-//                result.setEmail(user.getString("email"));
-//                result.setNickname(user.getString("username"));
-//                result.getInteractions().setNumberFollow(Integer.valueOf(user.get("follower_count").toString()));
-//                result.setListReviewID((ArrayList<String>) user.get("liked_review"));
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-
     public int verifyUsername(String Username, String type, boolean loggingIn) {
         MongoCollection<Document> admins = md.getCollection(adminsCollection);
         MongoCollection<Document> users = md.getCollection(usersCollection);
@@ -231,6 +196,8 @@ public class UserManager {
             if (type.equals("admin")) {
                 cursor = admins.find(eq("username", Username)).iterator();
                 while (cursor.hasNext()) {
+                    Document admin = cursor.next();
+                    session.setAdmin(admin.getString("username"));
                     return 2;
                 }
 
@@ -241,7 +208,7 @@ public class UserManager {
                     Document user = cursor.next();
                     if (loggingIn) {
                         ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                        session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                        session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
                     }
                     return 1;
                 }
@@ -253,7 +220,7 @@ public class UserManager {
                     Document user = cursor.next();
                     if (loggingIn) {
                         ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                        session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                        session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
                     }
                     return 0;
                 }
@@ -296,7 +263,7 @@ public class UserManager {
         ArrayList<String> liked_review = new ArrayList<>();
         InsertOneResult result = null;
         try {
-            Document doc = new Document("name", user.getName() + " " + user.getSurname())
+            Document doc = new Document("name", user.getName())
                     .append("password", user.getPassword())
                     .append("follower_count", 0)
                     .append("liked_review", liked_review)
@@ -451,7 +418,7 @@ public class UserManager {
                 Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return topRated;
@@ -467,7 +434,7 @@ public class UserManager {
                         "RETURN DISTINCT u2.id,u2.name,u2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new User(r.get("u2.id").asString(), r.get("u2.name").asString(), "", r.get("u2.username").asString(), "", "", new ArrayList<>(), 0));
+                    queryResult.add(new User(r.get("u2.id").asString(), r.get("u2.name").asString(), r.get("u2.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });
@@ -485,7 +452,7 @@ public class UserManager {
                         "RETURN DISTINCT a.id,a.name,a.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Author(r.get("a.id").asString(), r.get("a.name").asString(), "", r.get("a.username").asString(), "", "", new ArrayList<>(), 0));
+                    queryResult.add(new Author(r.get("a.id").asString(), r.get("a.name").asString(), r.get("a.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });

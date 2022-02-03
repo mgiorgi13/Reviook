@@ -60,11 +60,11 @@ public class RegisterController {
             //convalid email
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher mEmail = p.matcher(email);
-            if (userManager.verifyUsername(nickname,CheckAuthor.isSelected() ? "author":"user", false) != -1)
+            if (userManager.verifyUsername(nickname, CheckAuthor.isSelected() ? "author" : "user", false) != -1)
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";
-            if (!userManager.verifyEmail(email,CheckAuthor.isSelected() ? "author":"user"))
+            if (!userManager.verifyEmail(email, CheckAuthor.isSelected() ? "author" : "user"))
                 return "Existing e-mail";
             if (!password.equals(repeatPsw))
                 return "Passwords must be the same";
@@ -112,19 +112,19 @@ public class RegisterController {
             actionTarget.setText(singIn);
             return;
         }
-        newUser = new User(id,Name,surname,nickname,email,password);
+        newUser = new User(id, Name + " " + surname, nickname, email, password);
         if (CheckAuthor.isSelected()) {
-            if(userManager.register(newUser,"Author")) {
-                if (!userManager.addNewUsers(newUser,"Author"))
+            if (userManager.register(newUser, "Author")) {
+                if (!userManager.addNewUsers(newUser, "Author"))
                     singIn = "Error: unable to register";
-            }else{
+            } else {
                 singIn = "Error: unable to register";
             }
         } else {
-            if(userManager.register(newUser,"User")) {
-                if (!userManager.addNewUsers(newUser,"User"))
+            if (userManager.register(newUser, "User")) {
+                if (!userManager.addNewUsers(newUser, "User"))
                     singIn = "Error: unable to register";
-            }else{
+            } else {
                 singIn = "Error: unable to register";
             }
         }
@@ -134,7 +134,8 @@ public class RegisterController {
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
 
     @FXML
@@ -144,5 +145,6 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 }
