@@ -129,7 +129,6 @@ public class RegisterController {
             }
         }
         actionTarget.setText(singIn);
-        Thread.sleep(1000);
         Parent login_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(login_scene));

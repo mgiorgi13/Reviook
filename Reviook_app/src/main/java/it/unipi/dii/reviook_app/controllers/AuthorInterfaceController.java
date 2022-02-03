@@ -542,19 +542,21 @@ public class AuthorInterfaceController {
                         return;
                     }
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    try {
-                        Parent bookInterface;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                        bookInterface = (Parent) fxmlLoader.load();
-                        BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo, false);
-                        Stage actual_stage = (Stage) listRead.getScene().getWindow();
-                        actual_stage.setScene(new Scene(bookInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                        actual_stage.centerOnScreen();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(allInfo != null){
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(allInfo, false);
+                            Stage actual_stage = (Stage) listRead.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
@@ -582,19 +584,21 @@ public class AuthorInterfaceController {
                         return;
                     }
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    try {
-                        Parent bookInterface;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                        bookInterface = (Parent) fxmlLoader.load();
-                        BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo, false);
-                        Stage actual_stage = (Stage) listToRead.getScene().getWindow();
-                        actual_stage.setScene(new Scene(bookInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                        actual_stage.centerOnScreen();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(allInfo != null){
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(allInfo, false);
+                            Stage actual_stage = (Stage) listToRead.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
@@ -661,19 +665,21 @@ public class AuthorInterfaceController {
                         return;
                     }
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    try {
-                        Parent bookInterface;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                        bookInterface = (Parent) fxmlLoader.load();
-                        BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo, false);
-                        Stage actual_stage = (Stage) listPublished.getScene().getWindow();
-                        actual_stage.setScene(new Scene(bookInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                        actual_stage.centerOnScreen();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(allInfo != null){
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(allInfo, false);
+                            Stage actual_stage = (Stage) listPublished.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
