@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.UserInterfaceController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.UserInterfaceController">
     <left>
         <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
@@ -87,6 +78,7 @@
                         <Font size="16.0" />
                     </font>
                 </Text>
+            <Text layoutX="10.0" layoutY="636.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="179.13671875" />
             </children>
         </Pane>
     </left>
@@ -254,14 +246,21 @@
                 <Pane prefHeight="138.0" prefWidth="260.0">
                     <children>
                         <JFXButton fx:id="editButtonUser" layoutX="8.0" mnemonicParsing="false" onAction="#viewEditButtonUser" prefHeight="47.0" prefWidth="93.0" text="MY PROFILE">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="USER" />
-                     </graphic></JFXButton>
-                      <JFXButton fx:id="rankingButton" layoutX="101.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="47.0" prefWidth="95.0" text="RANKING">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="SIGNAL" />
-                     </graphic>
-                  </JFXButton>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="USER" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
+                        <JFXButton fx:id="rankingButton" layoutX="101.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="47.0" prefWidth="95.0" text="RANKING">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="SIGNAL" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="423.0">
@@ -282,15 +281,18 @@
                         </VBox>
                     </children>
                 </Pane>
-            <Pane prefHeight="138.0" prefWidth="230.0">
-               <children>
+                <Pane prefHeight="138.0" prefWidth="230.0">
+                    <children>
                         <JFXButton fx:id="logoutButton" layoutX="146.0" onAction="#logoutActon" prefHeight="47.0" text="LOGOUT">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="UNDO" />
-                     </graphic>
-                  </JFXButton>
-               </children>
-            </Pane>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="UNDO" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
+                    </children>
+                </Pane>
             </children>
         </HBox>
     </top>
@@ -335,14 +337,22 @@
                         </content>
                     </Tab>
                 </TabPane>
-                <JFXButton fx:id="homeButton" layoutX="138.0" layoutY="618.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" >
-               <graphic>
-                  <FontAwesomeIconView glyphName="HOME" />
-               </graphic></JFXButton>
+                <JFXButton fx:id="homeButton" layoutX="138.0" layoutY="618.0" mnemonicParsing="false" onAction="#homeButton" text="HOME">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="HOME" />
+                    </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </JFXButton>
                 <JFXButton fx:id="searchButton" layoutX="301.0" layoutY="618.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
-               <graphic>
-                  <FontAwesomeIconView glyphName="SEARCH" />
-               </graphic></JFXButton>
+                    <graphic>
+                        <FontAwesomeIconView glyphName="SEARCH" />
+                    </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </JFXButton>
             </children>
         </Pane>
     </center>

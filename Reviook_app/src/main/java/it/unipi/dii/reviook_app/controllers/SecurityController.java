@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.controllers;
 
+import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
 import javafx.event.ActionEvent;
@@ -38,9 +39,9 @@ public class SecurityController {
 
     @FXML
     void acceptDeleteButton(ActionEvent event) throws IOException {
-        String username = session.getIsAuthor() ? session.getLoggedAuthor().getNickname() : session.getLoggedUser().getNickname();
+        User user = session.getIsAuthor() ? session.getLoggedAuthor() : session.getLoggedUser();
         String type = session.getIsAuthor() ? "author" : "user";
-        if (userManager.deleteUserMongo(username, type) && userManager.deleteUserN4J(username, type)) {
+        if (userManager.deleteUserMongo(user, type) && userManager.deleteUserN4J(user, type)) {
             Session session = Session.getInstance();
             session.setSession(null);
             session.setCurrentLoggedUser(null);
@@ -51,7 +52,8 @@ public class SecurityController {
             actual_stage.setResizable(false);
             actual_stage.setTitle("Create new account");
             actual_stage.show();
-actual_stage.centerOnScreen();        } else {
+            actual_stage.centerOnScreen();
+        } else {
             actiontarget.setText("Error during delete");
         }
     }
@@ -64,5 +66,6 @@ actual_stage.centerOnScreen();        } else {
         actual_stage.setResizable(false);
         actual_stage.setTitle("Are you sure you want to delete your account?");
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 }

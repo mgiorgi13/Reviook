@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AuthorInterfaceController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AuthorInterfaceController">
     <left>
         <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
@@ -87,6 +78,7 @@
                         <Font size="16.0" />
                     </font>
                 </Text>
+            <Text fx:id="actionTarget" layoutX="14.0" layoutY="639.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.13671875" />
             </children>
         </Pane>
     </left>
@@ -164,7 +156,7 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Text fill="#1e3bbc" layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED BOOK">
+                <Text fill="#1e3bbc" layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUGGESTED USER">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -257,17 +249,26 @@
                             <graphic>
                                 <FontAwesomeIconView glyphName="USER" />
                             </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
                         </JFXButton>
                         <JFXButton fx:id="addButtonBook" layoutX="99.0" mnemonicParsing="false" onAction="#addButtonBookFunction" prefHeight="47.0" prefWidth="119.0" text="ADD NEW BOOK">
                             <graphic>
                                 <FontAwesomeIconView glyphName="PLUS" />
                             </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
                         </JFXButton>
-                      <JFXButton fx:id="rankingButton" layoutX="218.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="47.0" prefWidth="86.0" text="RANKING">
-                          <graphic>
-                              <FontAwesomeIconView glyphName="SIGNAL" />
-                          </graphic>
-                      </JFXButton>
+                        <JFXButton fx:id="rankingButton" layoutX="218.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="47.0" prefWidth="86.0" text="RANKING">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="SIGNAL" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="333.0">
@@ -289,12 +290,16 @@
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="260.0">
-               <children>
+                    <children>
                         <JFXButton fx:id="logoutButton" layoutX="169.0" onAction="#logoutActon" prefHeight="47.0" text="LOGOUT">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="UNDO" />
-                     </graphic></JFXButton>
-               </children>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="UNDO" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
+                    </children>
                 </Pane>
             </children>
         </HBox>
@@ -351,11 +356,21 @@
                         </Tab>
                     </tabs>
                 </TabPane>
-                <JFXButton fx:id="homeButton" layoutX="169.0" layoutY="619.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" />
-                <JFXButton fx:id="searchButton" layoutX="220.0" layoutY="614.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
+                <JFXButton fx:id="homeButton" layoutX="137.0" layoutY="620.0" mnemonicParsing="false" onAction="#homeButton" text="HOME">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="HOME" />
+                    </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </JFXButton>
+                <JFXButton fx:id="searchButton" layoutX="300.0" layoutY="620.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
                     <graphic>
                         <FontAwesomeIconView glyphName="SEARCH" />
                     </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
                 </JFXButton>
             </children>
         </Pane>
