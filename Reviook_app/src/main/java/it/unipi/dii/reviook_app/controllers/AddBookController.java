@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-import com.mongodb.DBObject;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
@@ -26,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -55,7 +53,7 @@ public class AddBookController {
     private TextArea description;
 
     @FXML
-    private Text actiontarget;
+    private Text actionTarget;
 
     @FXML
     private ChoiceBox languageCode;
@@ -65,7 +63,6 @@ public class AddBookController {
 
 
     private Session session = Session.getInstance();
-    private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
     private BookManager bookManager = new BookManager();
     private ObservableList<String> availableChoices = FXCollections.observableArrayList();
@@ -216,15 +213,15 @@ public class AddBookController {
 
     public void addBookFunction() throws IOException {
         if (titleBook.getText().isEmpty()) {
-            actiontarget.setText("You must enter the title");
+            actionTarget.setText("You must enter the title");
             return;
         }
         if (ISBN.getText().isEmpty()) {
-            actiontarget.setText("You must enter the ISBN");
+            actionTarget.setText("You must enter the ISBN");
             return;
         }
         if (genreTag.getItems().isEmpty()) {
-            actiontarget.setText("You must enter the Genres");
+            actionTarget.setText("You must enter the Genres");
             return;
         }
         String Title = titleBook.getText();
@@ -242,15 +239,23 @@ public class AddBookController {
             param.add(userManager.paramAuthor(AuthorTagged.get(i)));
         }*/
         if (bookManager.verifyISBN(ISBN_)) {
-            actiontarget.setText("Existing ISBN");
+            actionTarget.setText("Existing ISBN");
             return;
         }
         String concat = ISBN_ + Title + session.getLoggedAuthor().getNickname();
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
         Book newBook = new Book(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged);
-        bookManager.addBookMongo(newBook);
-        session.getLoggedAuthor().addToPublished(newBook);
-        actiontarget.setText("Congratulations you added a book!!");
+        if(bookManager.addBookMongo(newBook)) {
+            if (bookManager.addBookN4J(newBook)) {
+                session.getLoggedAuthor().addToPublished(newBook);
+            }else{
+                actionTarget.setText("Error: unable to add book");
+                return;
+            }
+        }else{
+            actionTarget.setText("Error: unable to add book");
+            return;
+        }
         titleBook.clear();
         ISBN.clear();
         description.clear();

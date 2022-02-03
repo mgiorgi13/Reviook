@@ -17,7 +17,6 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
-import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
@@ -140,10 +139,11 @@ public class BookManager {
         return result;
     }
 
-    public void addReviewToBook(String reviewText, Integer ratingBook, String book_id) {
+    public boolean addReviewToBook(String reviewText, Integer ratingBook, String book_id) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Document newReview = new Document();
         String reviewID = UUID.randomUUID().toString();
+        UpdateResult addReview, rateUpdated;
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         newReview.append("date_updated", date);
@@ -154,22 +154,49 @@ public class BookManager {
         if (session.getLoggedUser() != null) {
             newReview.append("user_id", session.getLoggedUser().getId());
             newReview.append("username", session.getLoggedUser().getNickname());
-            //add that book to read list
-            userManager.readAdd("User", session.getLoggedUser().getNickname(), book_id);
         } else {
             newReview.append("user_id", session.getLoggedAuthor().getId());
             newReview.append("username", session.getLoggedAuthor().getNickname());
-            //add that book to read list
-            userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), book_id);
         }
         Bson getBook = eq("book_id", book_id);
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
         DBObject insertReview = new BasicDBObject("$push", elem);
-        book.updateOne(getBook, (Bson) insertReview);
+        addReview = book.updateOne(getBook, (Bson) insertReview);
 
         Book bookToUpdate = getBookByID(book_id);
         Double newRating = updateRating(bookToUpdate.getReviews());
-        UpdateResult updateResult2 = book.updateOne(getBook, Updates.set("average_rating", newRating));
+        rateUpdated = book.updateOne(getBook, Updates.set("average_rating", newRating));
+
+        if (addReview.getModifiedCount() == 1) {
+            if (rateUpdated.getModifiedCount() == 1) {
+                if (session.getLoggedUser() != null) {
+                    //add that book to read list
+                    if(userManager.readAdd("User", session.getLoggedUser().getNickname(), book_id)) {
+                        return true;
+                    }else{
+                        //delete review
+                        deleteReview(reviewID,book_id);
+                        //update rating
+                        newRating = updateRating(bookToUpdate.getReviews());
+                        book.updateOne(getBook, Updates.set("average_rating", newRating));
+                    }
+                } else {
+                    //add that book to read list
+                    if(userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), book_id)) {
+                        return true;
+                    }else{
+                        //delete review
+                        deleteReview(reviewID,book_id);
+                        //update rating
+                        newRating = updateRating(bookToUpdate.getReviews());
+                        book.updateOne(getBook, Updates.set("average_rating", newRating));
+                    }
+                }
+            }else{
+                deleteReview(reviewID,book_id);
+            }
+        }
+        return false;
     }
 
     public void editReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
@@ -207,11 +234,14 @@ public class BookManager {
     public Book getBookByID(String book_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Document book = new Document();
-        MongoCursor<Document> cursor = books.find(eq("book_id", book_id)).iterator();
-        if (!cursor.hasNext()) {
-            return null;
+        try (MongoCursor<Document> cursor = books.find(eq("book_id", book_id)).iterator()) {
+            if (!cursor.hasNext()) {
+                return null;
+            }
+            book = cursor.next();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        book = cursor.next();
         ArrayList<Author> authorsLis = new ArrayList<>();
         ArrayList<Review> reviewsList = new ArrayList<>();
         ArrayList<Document> authors = (ArrayList<Document>) book.get("authors");
@@ -241,7 +271,6 @@ public class BookManager {
                     0
             );
             authorsLis.add(author);
-//            authorsLis.add(a.getString("author_name"));
         }
 
         Book outputBook = new Book(
@@ -327,7 +356,7 @@ public class BookManager {
 
     }
 
-    public static boolean foundMyBook(String id_book, String id_author) {
+    public boolean foundMyBook(String id_book, String id_author) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Bson match = match(in("book_id", id_book));
         Bson project = project(fields(include("authors.author_id")));
@@ -432,6 +461,8 @@ public class BookManager {
                 Document y = result.next();
                 genres.add(new Genre(y.getString("_id"), Double.valueOf(y.get("counter").toString())));
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         return genres;
@@ -439,9 +470,10 @@ public class BookManager {
 
     public ArrayList<RankingObject> rankReview() {
         MongoCollection<Document> book = md.getCollection(bookCollection);
-        ArrayList<RankingObject> array = new ArrayList<>();
+        ArrayList<RankingObject> users = new ArrayList<>();
 
         Bson unwindReviews = unwind("$reviews");
+        //project likes : ($likes != null) $likes : $helpful
         Bson projectLikes = new Document("$project",
                 new Document("reviews.username", 1L)
                         .append("reviews.likes",
@@ -455,12 +487,14 @@ public class BookManager {
 
             while (result.hasNext()) {
                 Document document = result.next();
-                array.add(new RankingObject(document.getString("_id"),
+                users.add(new RankingObject(document.getString("_id"),
                         document.getInteger("reviews_number"),
                         document.getDouble("average_likes")));
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return array;
+        return users;
 
     }
 

@@ -114,8 +114,8 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
-    BookManager bookManager = new BookManager();
-    AdminManager adminManager = new AdminManager();
+    private BookManager bookManager = new BookManager();
+    private AdminManager adminManager = new AdminManager();
 
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
@@ -480,7 +480,7 @@ public class BookDetailController {
 
         deleteBook.setVisible(false);
         if (session.getLoggedAuthor() != null) {
-            if (BookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
+            if (bookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
                 deleteBook.setVisible(true);
         }
         // BOOK TITLE

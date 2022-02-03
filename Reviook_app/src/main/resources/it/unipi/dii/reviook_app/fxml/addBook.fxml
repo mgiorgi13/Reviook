@@ -29,7 +29,7 @@
                 <Cursor fx:constant="HAND"/>
             </cursor>
         </JFXButton>
-        <Text fx:id="actiontarget" layoutX="191.0" layoutY="643.0" strokeType="OUTSIDE" strokeWidth="0.0"
+        <Text fx:id="actionTarget" layoutX="191.0" layoutY="643.0" strokeType="OUTSIDE" strokeWidth="0.0"
               wrappingWidth="215.455078125"/>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
         <Text layoutX="269.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"

@@ -109,7 +109,7 @@ public class LoginController {
                 userInterfaceController.setUser(session.getLoggedUser());
 
 
-//                List<String> Follow = userManager.loadRelations("User", username);
+//                List<String> Follow = userManager.loadRelationsFollowing("User", username);
 //                session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
 //                for (int i = 0; i < Follow.size(); i++) {
 //                    session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
