@@ -8,7 +8,6 @@ public class User {
     @FXML
     private String id;
     private String name;
-    private String surname;
     private String nickname;
     private String email;
     private String password;
@@ -21,7 +20,6 @@ public class User {
     public User(String nickname){
         this.id = "";
         this.name = "";
-        this.surname = "";
         this.nickname = nickname;
         this.email = "";
         this.password = "";
@@ -32,10 +30,9 @@ public class User {
         this.statistics = null;
     }
 
-    public User(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
+    public User(String id, String name, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         this.id = id;
         this.name = name;
-        this.surname = surname;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
@@ -46,8 +43,8 @@ public class User {
         this.statistics = null;
     }
 
-    public User(String id, String name, String surname, String nickname, String email, String password) {
-        this(id, name, surname, nickname, email, password, null, 0);
+    public User(String id, String name, String nickname, String email, String password) {
+        this(id, name, nickname, email, password, null, 0);
     }
 
     public ArrayList<Genre> getStatistics() {
@@ -86,10 +83,6 @@ public class User {
         return name;
     }
 
-    public String getSurname() {
-        return surname;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -112,10 +105,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public void setNickname(String nickname) {
@@ -147,7 +136,6 @@ public class User {
         return "User{" +
                 "id='" + id + '\'' +  ",\n" +
                 "name='" + name + '\'' + ",\n" +
-                "surname='" + surname + '\'' + ",\n" +
                 "nickname='" + nickname + '\'' + ",\n" +
                 "email='" + email + '\'' + ",\n" +
                 "password='" + password + '\'' + ",\n" +

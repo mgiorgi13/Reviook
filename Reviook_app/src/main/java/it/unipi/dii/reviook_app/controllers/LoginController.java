@@ -107,18 +107,6 @@ public class LoginController {
                 user_scene = (Parent) fxmlLoader.load();
                 UserInterfaceController userInterfaceController = fxmlLoader.getController();
                 userInterfaceController.setUser(session.getLoggedUser());
-
-
-//                List<String> Follow = userManager.loadRelationsFollowing("User", username);
-//                session.getLoggedUser().getInteractions().setNumberFollow(Follow.size());
-//                for (int i = 0; i < Follow.size(); i++) {
-//                    session.getLoggedUser().getInteractions().setFollower(Follow.get(i));
-//                }
-//                List<String> Follower = userManager.loadRelationsFollower("User", username);
-//                session.getLoggedUser().getInteractions().setNumberFollow(Follower.size());
-//                for (int i = 0; i < Follower.size(); i++) {
-//                    session.getLoggedUser().getInteractions().setFollower(Follower.get(i));
-//                }
             }
         }
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();

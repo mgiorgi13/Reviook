@@ -13,6 +13,7 @@ public class Session {
     private User loggedUser = null;
     private Author loggedAuthor = null;
     private static Cache cache = new Cache();
+    private String admin;
 
     public static Session getSession() {
         return session;
@@ -33,7 +34,13 @@ public class Session {
     private Session() {
     }
 
-    // TODO inizializzarla in qualche modo con il tipo ADMIN
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
+    }
 
     public void clear() {
         this.loggedAuthor = null;
@@ -65,19 +72,19 @@ public class Session {
         return session;
     }
 
-    public void setLoggedUser(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
+    public void setLoggedUser(String id, String name, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedUser = new User(id, name, surname, nickname, email, password, listReviewID, follower_count);
+            session.loggedUser = new User(id, name, nickname, email, password, listReviewID, follower_count);
         }
     }
 
-    public void setLoggedAuthor(String id, String name, String surname, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
+    public void setLoggedAuthor(String id, String name, String nickname, String email, String password, ArrayList<String> listReviewID, Integer follower_count) {
         if (session == null) {
             new RuntimeException("Session is not active.");
         } else {
-            session.loggedAuthor = new Author(id, name, surname, nickname, email, password, listReviewID, follower_count);
+            session.loggedAuthor = new Author(id, name, nickname, email, password, listReviewID, follower_count);
         }
     }
 
