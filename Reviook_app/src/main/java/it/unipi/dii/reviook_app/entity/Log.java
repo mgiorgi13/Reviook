@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -44,8 +45,10 @@ public class Log extends Report {
 
     @Override
     public String toString() {
-        return "Operation: " + this.operation + " - " + this.getType() +
-                "   \n\n" + this.date + "\n\n" +
-                "   by: " + this.admin;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy | HH:mm:ss ");
+        return "operation: " + this.operation.toUpperCase() + " - " + this.getType().toUpperCase() +
+                "\n\non date: " + sdf.format(this.date) +
+                "\n\n" + (this.getType().equals("review") ? "review text:  " + this.getReview_text() : "title:  " + this.getTitle()) +
+                "\n\nby: " + this.admin;
     }
 }

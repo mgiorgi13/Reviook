@@ -6,6 +6,8 @@ import com.jfoenix.controls.JFXListView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -124,6 +126,7 @@ public class AdminController {
     @FXML
     void logsAction() {
         clearList();
+        deleteElemButton.setDisable(true);
         unReportButton.setDisable(true);
         ArrayList<Log> list = adminManager.loadLogs();
         obsListLog.addAll(list);
@@ -135,14 +138,27 @@ public class AdminController {
         logsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 ) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2) {
                     Log selectedCell = (Log) logsList.getSelectionModel().getSelectedItem();
                     if (selectedCell == null) {
                         return;
                     }
-                    adminManager.restoreLog(selectedCell);
-                    adminManager.deleteLog(selectedCell);
-                    obsListLog.remove(selectedCell);
+                    if (selectedCell.getOperation().equals("delete")) {
+                        if (adminManager.restoreLog(selectedCell)) {
+                            // reported element restored with success
+                            if (adminManager.deleteLog(selectedCell)) {
+                                // selected log deleted with success
+                                obsListLog.remove(selectedCell);
+                            } else {
+                                // can't delete selected log --- retry delete log
+                                adminManager.deleteLog(selectedCell);
+                                actionTarget.setText("Error: unable to restore selected element");
+                            }
+                        } else {
+                            // can't restore reported elem
+                            actionTarget.setText("Error: unable to restore selected element");
+                        }
+                    }
                 }
             }
         });
@@ -162,7 +178,6 @@ public class AdminController {
                 };
             }
         });
-        //TODO fare sul doppio click destro un ripristino dei log
     }
 
     @FXML
@@ -190,44 +205,92 @@ public class AdminController {
         actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
-            bookManager.deleteBook(selectedBook.getBook_id());
-            if (!adminManager.deleteReport(selectedBook,false)) {
+            if (selectedBook == null) {
+                return;
+            }
+            Book bookForBackup = bookManager.getBookByID(selectedBook.getBook_id());
+            if (bookManager.deleteBook(selectedBook.getBook_id())) {
+                // book deleted with success
+                if (adminManager.deleteReport(selectedBook, false)) {
+                    // report deleted with success
+                    obsBooksList.remove(selectedBook);
+                    addCustomFactory("book");
+                    resetRightDetail();
+                } else {
+                    // can't delete report -- reinsert book
+                    if (bookManager.addBookMongo(bookForBackup)) {
+                        // book restored in mongoDB with success
+                        bookManager.addBookN4J(bookForBackup);
+                    } else {
+                        // can't restore book
+                        actionTarget.setText("Error: unable to remove Book");
+                    }
+                    actionTarget.setText("Error: unable to remove Book");
+                }
+            } else {
                 actionTarget.setText("Error: unable to remove Book");
             }
-            obsBooksList.remove(selectedBook);
-            addCustomFactory("book");
-            resetRightDetail();
         } else if (userOption.isSelected()) {
             User selectedUser = (User) usersList.getSelectionModel().getSelectedItem();
-            if (userManager.deleteUserMongo(selectedUser, "user")) {
-                if (!userManager.deleteUserN4J(selectedUser, "user"))
-                    actionTarget.setText("Error: unable to register");
-            } else {
-                actionTarget.setText("Error: unable to register");
+            if (selectedUser == null) {
+                return;
             }
-            obsUserList.remove(selectedUser);
-            addCustomFactory("user");
-            resetRightDetail();
+            if (userManager.deleteUserMongo(selectedUser, "user")) {
+                // user delete with success from MongoDB
+                if (userManager.deleteUserN4J(selectedUser, "user")) {
+                    // user delete with success from N4J
+                    obsUserList.remove(selectedUser);
+                    addCustomFactory("user");
+                    resetRightDetail();
+                } else {
+                    // can't delete user from N4J
+                    actionTarget.setText("Error: unable to delete user");
+                }
+            } else {
+                // can't delete user form MongoDB
+                actionTarget.setText("Error: unable to delete user");
+            }
         } else if (authorOption.isSelected()) {
             Author selectedAuthor = (Author) authorsList.getSelectionModel().getSelectedItem();
-            if (userManager.deleteUserMongo(selectedAuthor, "author")) {
-                if (!userManager.deleteUserN4J(selectedAuthor, "author"))
-                    actionTarget.setText("Error: unable to register");
-            } else {
-                actionTarget.setText("Error: unable to register");
+            if (selectedAuthor == null) {
+                return;
             }
-            obsAuthorList.remove(selectedAuthor);
-            addCustomFactory("author");
-            resetRightDetail();
+            if (userManager.deleteUserMongo(selectedAuthor, "author")) {
+                // author delete with success from MongoDB
+                if (userManager.deleteUserN4J(selectedAuthor, "author")) {
+                    // author delete with success from N4J
+                    obsAuthorList.remove(selectedAuthor);
+                    addCustomFactory("author");
+                    resetRightDetail();
+                } else {
+                    // can't delete author from N4J
+                    actionTarget.setText("Error: unable to delete author");
+                }
+            } else {
+                // can't delete author form MongoDB
+                actionTarget.setText("Error: unable to delete author");
+            }
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if (!adminManager.deleteReport(selectedReview,false)) {
+            if (selectedReview == null) {
+                return;
+            }
+            if (bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id())) {
+                // review removed with success
+                if (adminManager.deleteReport(selectedReview, false)) {
+                    // report review removed with success
+                    obsListReview.remove(selectedReview);
+                    addCustomFactory("review");
+                    resetRightDetail();
+                } else {
+                    // can't remove report review -- restore review
+                    bookManager.addReviewToBook(selectedReview.getReview_text(), Integer.valueOf(selectedReview.getRating()), selectedReview.getBook_id());
+                    actionTarget.setText("Error: unable to remove Review");
+                }
+            } else {
+                // can't remove review
                 actionTarget.setText("Error: unable to remove Review");
             }
-            bookManager.deleteReview(selectedReview.getReview_id(), selectedReview.getBook_id());
-            obsListReview.remove(selectedReview);
-            addCustomFactory("review");
-            resetRightDetail();
         }
     }
 
@@ -245,25 +308,33 @@ public class AdminController {
     void unReport() {
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
-            int index = bookList.getSelectionModel().getSelectedIndex();
-            if (!adminManager.deleteReport(selectedBook, true))
-                actionTarget.setText("Error: unable to remove bookReport");
-            obsBooksList.remove(selectedBook);
-            addCustomFactory("book");
-            resetRightDetail();
+            if (adminManager.deleteReport(selectedBook, true)) {
+                // reported book deleted with success
+                obsBooksList.remove(selectedBook);
+                addCustomFactory("book");
+                resetRightDetail();
+            } else {
+                // can't delete reported book
+                actionTarget.setText("Error: unable to remove reported book");
+            }
         } else if (reviewOption.isSelected()) {
             Report selectedReview = (Report) reviewList.getSelectionModel().getSelectedItem();
-            if (!adminManager.deleteReport(selectedReview, true))
+            if (adminManager.deleteReport(selectedReview, true)) {
+                // reported review deleted with success
+                obsListReview.remove(selectedReview);
+                addCustomFactory("review");
+                resetRightDetail();
+            } else {
+                // can't delete reported review
                 actionTarget.setText("Error: unable to remove reviewReport");
-            obsListReview.remove(selectedReview);
-            addCustomFactory("review");
-            resetRightDetail();
+            }
         }
     }
 
     @FXML
     void searchAction() {
         clearList();
+        deleteElemButton.setDisable(false);
         if (bookOption.isSelected()) {
             ArrayList<Report> list = adminManager.loadBookReported();
             obsBooksList.addAll(list);
