@@ -126,7 +126,7 @@ public class UserManager {
         return readings;
     }
 
-    public List<String> loadRelations(String type, String username) {
+    public List<String> loadRelationsFollowing(String type, String username) {
         List<String> relationship = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             relationship = session.readTransaction((TransactionWork<List<String>>) tx -> {

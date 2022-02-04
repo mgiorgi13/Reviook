@@ -114,38 +114,44 @@ public class UserInterfaceController {
     public void addFollow(ActionEvent event) throws IOException {
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
-                session.getLoggedAuthor().getInteractions().getFollow().add(usernameUser.getText());
-                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
                 if(!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User"))
                     actionTarget.setText("Error: unable to add follow");
-                visualizedUser.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
+                else {
+                    session.getLoggedAuthor().getInteractions().getFollow().add(usernameUser.getText());
+                    session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
+                    visualizedUser.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
+                }
             } else if (session.getLoggedUser() != null) {
-                session.getLoggedUser().getInteractions().getFollow().add(usernameUser.getText());
-                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
                 if(!userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User"))
                     actionTarget.setText("Error: unable to add follow");
-                visualizedUser.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
+                else {
+                    session.getLoggedUser().getInteractions().getFollow().add(usernameUser.getText());
+                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
+                    visualizedUser.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
+                }
             }
 
         } else {
             if (session.getLoggedAuthor() != null) {
-                userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
-
-                session.getLoggedAuthor().getInteractions().getFollow().remove(usernameUser.getText());
-                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
-
-                visualizedUser.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
+                if(!userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to delete follow");
+                else{
+                    session.getLoggedAuthor().getInteractions().getFollow().remove(usernameUser.getText());
+                    session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
+                    visualizedUser.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
+                }
             } else if (session.getLoggedUser() != null) {
-                userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
-
-                session.getLoggedUser().getInteractions().getFollow().remove(usernameUser.getText());
-                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
-
-                visualizedUser.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
+                if(!userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to delete follow");
+                else{
+                    session.getLoggedUser().getInteractions().getFollow().remove(usernameUser.getText());
+                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
+                    visualizedUser.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
+                }
             }
         }
     }
@@ -407,7 +413,7 @@ public class UserInterfaceController {
         obsFollow.clear();
         List<String> Follow;
         if (visualizedUser.getInteractions().getFollow().isEmpty()) {
-            Follow = userManager.loadRelations("User", usernameUser.getText());
+            Follow = userManager.loadRelationsFollowing("User", usernameUser.getText());
             user.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 user.getInteractions().setFollow(Follow.get(i));
@@ -514,13 +520,15 @@ public class UserInterfaceController {
                     if (session.getLoggedUser() != null) {
                         if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
                             Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
-                            bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User");
-                            listToRead.getItems().remove(removeCell);
-                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
-                                if(visualizedUser.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
-                                    visualizedUser.getBooks().removeToRead();
-                                }
+                            if(bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User")) {
+                                listToRead.getItems().remove(removeCell);
+                                session.getLoggedUser().getBooks().getToRead().remove(removeCell);
                             }
+//                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
+//                                if(visualizedUser.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+//                                    visualizedUser.getBooks().removeToRead();
+//                                }
+//                            }
                         }
                     }
                 }
@@ -553,13 +561,15 @@ public class UserInterfaceController {
                     if (session.getLoggedUser() != null) {
                         if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
                             Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
-                            bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User");
-                            listRead.getItems().remove(removeCell);
-                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
-                                if(visualizedUser.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
-                                    visualizedUser.getBooks().removeRead();
-                                }
+                            if(bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User")) {
+                                listRead.getItems().remove(removeCell);
+                                session.getLoggedUser().getBooks().getRead().remove(removeCell);
                             }
+//                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
+//                                if(visualizedUser.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+//                                    visualizedUser.getBooks().removeRead();
+//                                }
+//                            }
                         }
                     }
                 }

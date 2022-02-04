@@ -115,7 +115,6 @@ public class AuthorInterfaceController {
 
     @FXML
     public void addFollow(ActionEvent event) throws IOException {
-        actionTarget.setText("");
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
                 if(!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
@@ -422,7 +421,7 @@ public class AuthorInterfaceController {
         obsFollow.clear();
         List<String> Follow;
         if (visualizedAuthor.getInteractions().getFollow().isEmpty()) {
-            Follow = userManager.loadRelations("Author", usernameAuthor.getText());
+            Follow = userManager.loadRelationsFollowing("Author", usernameAuthor.getText());
             author.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 author.getInteractions().setFollow(Follow.get(i));
@@ -563,13 +562,15 @@ public class AuthorInterfaceController {
                     if (session.getLoggedAuthor() != null) {
                         if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
                             Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
-                            bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameAuthor.getText(), "Author");
-                            listRead.getItems().remove(removeCell);
-                            for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
-                                if(visualizedAuthor.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
-                                    visualizedAuthor.getBooks().removeRead();
-                                }
+                            if(bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameAuthor.getText(), "Author")) {
+                                listRead.getItems().remove(removeCell);
+                                session.getLoggedAuthor().getBooks().getRead().remove(removeCell);
                             }
+//                            for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
+//                                if(visualizedAuthor.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+//                                    visualizedAuthor.getBooks().removeRead();
+//                                }
+//                            }
                         }
                     }
                 }
@@ -605,13 +606,15 @@ public class AuthorInterfaceController {
                     if (session.getLoggedAuthor() != null) {
                         if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
                             Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
-                            bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameAuthor.getText(), "Author");
-                            listToRead.getItems().remove(removeCell);
-                            for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
-                                if(visualizedAuthor.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
-                                    visualizedAuthor.getBooks().removeToRead();
-                                }
+                            if(bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameAuthor.getText(), "Author")) {
+                                listToRead.getItems().remove(removeCell);
+                                session.getLoggedAuthor().getBooks().getToRead().remove(removeCell);
                             }
+//                            for(int i = 0; i< visualizedAuthor.getBooks().getToRead().size();i++){
+//                                if(visualizedAuthor.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+//                                    visualizedAuthor.getBooks().removeToRead();
+//                                }
+//                            }
                         }
                     }
                 }
