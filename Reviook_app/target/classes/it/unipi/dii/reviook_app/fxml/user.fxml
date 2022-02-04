@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,7 +18,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import com.jfoenix.controls.JFXCheckBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="820.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.UserInterfaceController">
     <left>
         <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -313,7 +312,7 @@
         <Pane prefHeight="675.0" prefWidth="512.0" BorderPane.alignment="CENTER">
             <children>
                 <TabPane layoutX="-1.0" layoutY="-1.0" prefHeight="599.0" prefWidth="516.0" tabClosingPolicy="UNAVAILABLE">
-                    <Tab onSelectionChanged="#viewToRead" text="ToRead">
+                    <Tab onSelectionChanged="#viewToRead" text="TO READ">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
@@ -322,7 +321,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab onSelectionChanged="#viewRead" text="Read">
+                    <Tab onSelectionChanged="#viewRead" text="READ">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
@@ -331,7 +330,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab onSelectionChanged="#viewFollow" text="Follow">
+                    <Tab onSelectionChanged="#viewFollow" text="FOLLOW">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
@@ -340,7 +339,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab onSelectionChanged="#viewFollower" text="Follower">
+                    <Tab onSelectionChanged="#viewFollower" text="FOLLOWER">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>

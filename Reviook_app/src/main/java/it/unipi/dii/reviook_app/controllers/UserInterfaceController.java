@@ -439,12 +439,11 @@ public class UserInterfaceController {
 
     @FXML
     void viewFollow() {
-
         User user = visualizedUser;
         obsFollow.clear();
         List<String> Follow;
         if (visualizedUser.getInteractions().getFollow().isEmpty()) {
-            Follow = userManager.loadRelationsFollowing("User", usernameUser.getText());
+            Follow = userManager.loadRelationsFollowing("User", visualizedUser.getNickname());
             user.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 user.getInteractions().setFollow(Follow.get(i));
@@ -459,12 +458,11 @@ public class UserInterfaceController {
 
     @FXML
     void viewFollower() {
-
         User user = visualizedUser;
         obsFollower.clear();
         List<String> Follower;
         if (visualizedUser.getInteractions().getFollower().isEmpty()) {
-            Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
+            Follower = userManager.loadRelationsFollower("User", visualizedUser.getNickname());
             user.getInteractions().setNumberFollower(Follower.size());
             for (int i = 0; i < Follower.size(); i++) {
                 user.getInteractions().setFollower(Follower.get(i));
@@ -479,11 +477,10 @@ public class UserInterfaceController {
 
     @FXML
     void viewRead() {
-
         ArrayList<Book> read;
         obsRead.clear();
         if (visualizedUser.getBooks().getRead().isEmpty()) {
-            read = userManager.loadRelationsBook("User", usernameUser.getText(), "READ");
+            read = userManager.loadRelationsBook("User", visualizedUser.getNickname(), "READ");
             for (Book book : read) {
                 visualizedUser.getBooks().addToSetRead(book);
                 obsRead.add(book);
@@ -495,11 +492,10 @@ public class UserInterfaceController {
 
     @FXML
     void viewToRead() {
-
         ArrayList<Book> toRead;
         obsToRead.clear();
         if (visualizedUser.getBooks().getToRead().isEmpty()) {
-            toRead = userManager.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
+            toRead = userManager.loadRelationsBook("User", visualizedUser.getNickname(), "TO_READ");
             for (Book book : toRead) {
                 visualizedUser.getBooks().addToSetToRead(book);
                 obsToRead.add(book);

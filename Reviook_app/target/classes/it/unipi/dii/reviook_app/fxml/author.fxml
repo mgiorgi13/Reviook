@@ -348,7 +348,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#viewFollow" text="Follow">
+                        <Tab onSelectionChanged="#viewFollow" text="FOLLOW">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -357,7 +357,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#viewFollower" text="Follower">
+                        <Tab onSelectionChanged="#viewFollower" text="FOLLOWER">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
