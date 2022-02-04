@@ -50,7 +50,6 @@ public class AddAdminController {
 
     @FXML
     void addAdminAction(ActionEvent event) throws NoSuchAlgorithmException, IOException {
-        actionTarget.setText("");
         if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
             return;
         }

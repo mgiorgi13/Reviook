@@ -114,12 +114,11 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
-    BookManager bookManager = new BookManager();
-    AdminManager adminManager = new AdminManager();
+    private BookManager bookManager = new BookManager();
+    private AdminManager adminManager = new AdminManager();
 
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
-        actionTarget.setText("");
         if (adminManager.reportBook(visualizedBook))
             actionTarget.setText("Book reported");
         else
@@ -203,7 +202,6 @@ public class BookDetailController {
 
     @FXML
     void toRead(ActionEvent event) throws IOException {
-        actionTarget.setText("");
         String bookTitleText = bookTitle.getText();
         if (session.getLoggedAuthor() != null) {
             if (!userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id))
@@ -220,7 +218,6 @@ public class BookDetailController {
 
     @FXML
     void read(ActionEvent event) throws IOException {
-        actionTarget.setText("");
         String bookTitleText = bookTitle.getText();
         if (session.getLoggedAuthor() != null) {
             if (!userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id))
@@ -285,17 +282,12 @@ public class BookDetailController {
         if (session.getLoggedAuthor() != null && !selectedReview.getUsername().equals(session.getLoggedAuthor().getNickname())) {
             return;
         }
-        try {
-            bookManager.deleteReview(selectedReview.getReview_id(), this.book_id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Book book = bookManager.getBookByID(this.book_id); // query get update book
-            this.reviewsList = book.getReviews();
-            setListView();
-            DecimalFormat df = new DecimalFormat("#.#");
-            this.ratingAVG.setText(df.format(book.getAverage_rating()));
-        }
+        bookManager.deleteReview(selectedReview.getReview_id(), this.book_id);
+        Book book = bookManager.getBookByID(this.book_id); // query get update book
+        this.reviewsList = book.getReviews();
+        setListView();
+        DecimalFormat df = new DecimalFormat("#.#");
+        this.ratingAVG.setText(df.format(book.getAverage_rating()));
     }
 
     @FXML
@@ -480,7 +472,7 @@ public class BookDetailController {
 
         deleteBook.setVisible(false);
         if (session.getLoggedAuthor() != null) {
-            if (BookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
+            if (bookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
                 deleteBook.setVisible(true);
         }
         // BOOK TITLE
@@ -520,25 +512,33 @@ public class BookDetailController {
 
     @FXML
     void deleteBookFun(ActionEvent event) throws IOException {
-        if (BookManager.deleteBook(book_id)) {
-            Parent userInterface;
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            AuthorInterfaceController controller = fxmlLoader.getController();
-            if (session.getIsAuthor())
-                controller.setAuthor(session.getLoggedAuthor());
-            Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
-            actual_stage.setScene(new Scene(userInterface));
-            actual_stage.setResizable(false);
-            actual_stage.show();
-            actual_stage.centerOnScreen();
-        }
+        if (bookManager.deleteBookMongo(visualizedBook)) {
+            if(bookManager.deleteBookN4J(visualizedBook)) {
+                Parent userInterface;
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                userInterface = (Parent) fxmlLoader.load();
+                AuthorInterfaceController controller = fxmlLoader.getController();
+                if (session.getIsAuthor()) {
+                    //search of deleted book in listPublished and remove it
+                    session.getLoggedAuthor().setPublished(userManager.loadRelationsBook("Author",session.getLoggedAuthor().getNickname(),"WROTE"));
+                    controller.setAuthor(session.getLoggedAuthor());
+                }
+                Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
+                actual_stage.setScene(new Scene(userInterface));
+                actual_stage.setResizable(false);
+                actual_stage.show();
+                actual_stage.centerOnScreen();
+            }else {
+                bookManager.addBookMongo(visualizedBook);
+                actionTarget.setText("Error: can't delete book");
+            }
+        }else
+            actionTarget.setText("Error: can't delete book");
         return;
     }
 
     @FXML
     void reportAction() {
-        actionTarget.setText("");
         Review selectedReview = (Review) listView.getSelectionModel().getSelectedItem();
         if (selectedReview == null) {
             return;

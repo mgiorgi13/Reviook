@@ -151,7 +151,7 @@
 //        return result;
 //    }
 //
-//    public static synchronized void loadRelations(String type, String username) {
+//    public static synchronized void loadRelationsFollowing(String type, String username) {
 //        MongoCollection user;
 //        Bson getUsername = eq("username", username);
 //        int c = 0;
@@ -254,7 +254,7 @@
 ////                //                System.out.println(books);
 ////                addwrote(nick,books);
 //                // //update follower count
-//                 loadRelations("Author",nick);
+//                 loadRelationsFollowing("Author",nick);
 //
 //
 //                if (contatore % 100 == 0)
