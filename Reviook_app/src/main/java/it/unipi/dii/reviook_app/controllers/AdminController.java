@@ -176,6 +176,7 @@ public class AdminController {
                             } else {
                                 // can't delete selected log --- retry delete log
                                 adminManager.deleteLog(selectedCell);
+                                obsListLog.remove(selectedCell);
                                 actionTarget.setText("Error: unable to restore selected element");
                             }
                         } else {
