@@ -2,7 +2,7 @@ package it.unipi.dii.reviook_app.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.UUID;
 
 import com.jfoenix.controls.JFXButton;
@@ -212,6 +212,7 @@ public class AddBookController {
     }
 
     public void addBookFunction() throws IOException {
+        ArrayList<String> authorCheck = new ArrayList<>();
         if (titleBook.getText().isEmpty()) {
             actionTarget.setText("You must enter the title");
             return;
@@ -225,15 +226,21 @@ public class AddBookController {
             return;
         }
         String Title = titleBook.getText();
-        LocalDate date = publication_date.getValue();
-        String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String ISBN_ = ISBN.getText();
+        LocalDate date = (publication_date.getValue() == null) ? LocalDate.now() : publication_date.getValue();
+        String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String URL_image = URLImage.getText();
         Integer num_pages = numPage.getText() == null ? 0 : Integer.valueOf(numPage.getText());
         String Description = description.getText();
         ArrayList<String> Genre = new ArrayList<String>((ObservableList) genreTag.getItems());
         ArrayList<Author> AuthorTagged = new ArrayList<Author>((ObservableList) listTagged.getItems());
-        AuthorTagged.add(session.getLoggedAuthor()); // get author logged
+        for (Author a : AuthorTagged) {
+            authorCheck.add(a.getNickname());
+        }
+        if (!authorCheck.contains(session.getLoggedAuthor().getNickname())) {
+            // get author logged
+            AuthorTagged.add(session.getLoggedAuthor());
+        }
        /* ArrayList<DBObject> param = new ArrayList<DBObject>();
         for (int i = 0; i < AuthorTagged.size(); i++) {
             param.add(userManager.paramAuthor(AuthorTagged.get(i)));

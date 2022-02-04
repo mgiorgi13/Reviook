@@ -518,8 +518,11 @@ public class BookDetailController {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
                 userInterface = (Parent) fxmlLoader.load();
                 AuthorInterfaceController controller = fxmlLoader.getController();
-                if (session.getIsAuthor())
+                if (session.getIsAuthor()) {
+                    //search of deleted book in listPublished and remove it
+                    session.getLoggedAuthor().setPublished(userManager.loadRelationsBook("Author",session.getLoggedAuthor().getNickname(),"WROTE"));
                     controller.setAuthor(session.getLoggedAuthor());
+                }
                 Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
                 actual_stage.setScene(new Scene(userInterface));
                 actual_stage.setResizable(false);

@@ -138,6 +138,30 @@ public class AdminController {
         logsList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
+                    Log selectedCell = (Log) logsList.getSelectionModel().getSelectedItem();
+                    if (selectedCell != null) {
+                        if (selectedCell.getType().equals("book")) {
+                            nameTitle.setText(selectedCell.getTitle());
+                            ArrayList<Author> authors = selectedCell.getAuthors();
+                            ArrayList<String> authorsName = new ArrayList<>();
+                            for (Author a : authors) {
+                                authorsName.add(a.getName());
+                            }
+                            String author = String.join(", ", authorsName);
+                            username.setText(author);
+                            description.setText(selectedCell.getDescription());
+                            follower.setText("-");
+                            reviewText.setText("-");
+                        } else if (selectedCell.getType().equals("review")) {
+                            reviewText.setText(selectedCell.getReview_text());
+                            username.setText(selectedCell.getUsername());
+                            description.setText("-");
+                            follower.setText("-");
+                            nameTitle.setText("-");
+                        }
+                    }
+                }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2) {
                     Log selectedCell = (Log) logsList.getSelectionModel().getSelectedItem();
                     if (selectedCell == null) {
@@ -152,6 +176,7 @@ public class AdminController {
                             } else {
                                 // can't delete selected log --- retry delete log
                                 adminManager.deleteLog(selectedCell);
+                                obsListLog.remove(selectedCell);
                                 actionTarget.setText("Error: unable to restore selected element");
                             }
                         } else {
@@ -286,9 +311,13 @@ public class AdminController {
                     addCustomFactory("review");
                     resetRightDetail();
                 } else {
-                    // can't remove report review -- restore review
-                    bookManager.addReviewToBook(selectedReview.getReview_text(), Integer.valueOf(selectedReview.getRating()), selectedReview.getBook_id());
-                    actionTarget.setText("Error: unable to remove Review");
+                    // can't remove report review -- retry
+                    if (adminManager.deleteReport(selectedReview, false)) {
+                        // report review removed with success
+                        obsListReview.remove(selectedReview);
+                        addCustomFactory("review");
+                        resetRightDetail();
+                    }
                 }
             } else {
                 // can't remove review
