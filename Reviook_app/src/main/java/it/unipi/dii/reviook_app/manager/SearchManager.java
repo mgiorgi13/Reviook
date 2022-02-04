@@ -62,10 +62,20 @@ public class SearchManager {
 
 
                 for (Document r : reviews) {
+                    String date;
+                    if(r.get("date_updated") == null) {
+                        if (r.get("date_added") == null) {
+                            date = null;
+                        }else{
+                            date = r.get("date_added").toString();
+                        }
+                    }else {
+                        date = r.get("date_updated").toString();
+                    }
                     reviewsList.add(new Review(
                             r.getString("username"),
                             r.getString("review_id"),
-                            r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                            date,
                             r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
                             r.getString("user_id"),
                             r.get("rating").toString(),
@@ -161,10 +171,20 @@ public class SearchManager {
                 ArrayList<String> genres = (ArrayList<String>) book.get("genres");
 
                 for (Document r : reviews) {
+                    String date;
+                    if(r.get("date_updated") == null) {
+                        if (r.get("date_added") == null) {
+                            date = null;
+                        }else{
+                            date = r.get("date_added").toString();
+                        }
+                    }else {
+                        date = r.get("date_updated").toString();
+                    }
                     reviewsList.add(new Review(
                             r.getString("username"),
                             r.getString("review_id"),
-                            r.get("date_updated") == null ? "" : r.get("date_updated").toString(),
+                            date,
                             r.get("likes") == null ? r.getInteger("helpful") : r.getInteger("likes"),
                             r.getString("user_id"),
                             r.get("rating").toString(),
