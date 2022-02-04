@@ -369,7 +369,7 @@ public class UserInterfaceController {
             visualizedUser = user;
 
         this.nickname = visualizedUser.getNickname();
-        usernameUser.setText(this.nickname);
+        usernameUser.setText(visualizedUser.getName());
 
         if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()) {
             viewFollow();
@@ -387,7 +387,7 @@ public class UserInterfaceController {
         rankingButton.setVisible(true);
         homeButton.setDisable(true);
         if (session.getLoggedAuthor() != null) {
-            if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
+            if (!session.getLoggedAuthor().getNickname().equals(visualizedUser.getNickname())) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
@@ -401,7 +401,7 @@ public class UserInterfaceController {
                 }
             }
         } else if (session.getLoggedUser() != null) {
-            if (!session.getLoggedUser().getNickname().equals(nickname)) {
+            if (!session.getLoggedUser().getNickname().equals(visualizedUser.getNickname())) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);

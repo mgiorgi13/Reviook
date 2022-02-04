@@ -370,7 +370,7 @@ public class AuthorInterfaceController {
             visualizedAuthor = author;
 
         this.nickname = visualizedAuthor.getNickname();
-        usernameAuthor.setText(this.nickname);
+        usernameAuthor.setText(visualizedAuthor.getName());
 
         //set analytics result
         viewBookAnalytic();
@@ -385,7 +385,7 @@ public class AuthorInterfaceController {
             followerCount.setText(String.valueOf(visualizedAuthor.getInteractions().getFollower().size()));
         }
         rankingButton.setVisible(false);
-        if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
+        if (session.getLoggedAuthor() != null && visualizedAuthor.getNickname().equals(session.getLoggedAuthor().getNickname())) {
             addButtonBook.setVisible(true);
             rankingButton.setVisible(true);
             homeButton.setDisable(true);
