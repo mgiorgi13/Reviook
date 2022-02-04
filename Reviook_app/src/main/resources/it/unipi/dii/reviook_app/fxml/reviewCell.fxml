@@ -5,26 +5,15 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" prefHeight="135.0" prefWidth="553.0"
-      style="-fx-background-color: #9bafcc; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="pane" prefHeight="135.0" prefWidth="553.0" style="-fx-background-color: #9bafcc; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Circle fill="#ffffff00" layoutX="520.0" layoutY="113.0" radius="13.0" stroke="WHITE" strokeType="INSIDE"/>
-        <Circle fill="#ffffff00" layoutX="472.0" layoutY="113.0" radius="13.0" stroke="WHITE" strokeType="INSIDE"/>
-        <Text fx:id="helpful" fill="WHITE" layoutX="466.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="0" textAlignment="CENTER" wrappingWidth="12.9375"/>
-        <Text fx:id="like" fill="WHITE" layoutX="514.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"
-              textAlignment="CENTER" wrappingWidth="12.9375"/>
-        <Text fx:id="previewText" fill="WHITE" layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              wrappingWidth="531.13671875"/>
-        <Text fx:id="user" fill="WHITE" layoutX="27.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="user" wrappingWidth="183.330078125"/>
-        <Text fill="WHITE" layoutX="210.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="rating:"
-              textAlignment="CENTER" wrappingWidth="47.330078125"/>
-        <Text fill="WHITE" layoutX="1.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="By"
-              textAlignment="CENTER" wrappingWidth="26.0"/>
-        <Text fx:id="ratingField" fill="WHITE" layoutX="251.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="0" textAlignment="CENTER" wrappingWidth="34.330078125"/>
-        <FontAwesomeIconView fx:id="likeIcon" fill="#b90000" glyphName="HEART" layoutX="356.0" layoutY="117.0"/>
+        <Circle fill="#ffffff00" layoutX="520.0" layoutY="113.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
+        <Text fx:id="like" fill="WHITE" layoutX="514.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="12.9375" />
+        <Text fx:id="previewText" fill="WHITE" layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="531.13671875" />
+        <Text fx:id="user" fill="WHITE" layoutX="27.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user" wrappingWidth="183.330078125" />
+        <Text fill="WHITE" layoutX="210.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="rating:" textAlignment="CENTER" wrappingWidth="47.330078125" />
+        <Text fill="WHITE" layoutX="1.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="By" textAlignment="CENTER" wrappingWidth="26.0" />
+        <Text fx:id="ratingField" fill="WHITE" layoutX="251.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="34.330078125" />
+        <FontAwesomeIconView fx:id="likeIcon" fill="#b90000" glyphName="HEART" layoutX="356.0" layoutY="117.0" />
     </children>
 </Pane>
