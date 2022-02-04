@@ -249,6 +249,7 @@ public class AddBookController {
             if (bookManager.addBookN4J(newBook)) {
                 session.getLoggedAuthor().addToPublished(newBook);
             }else{
+                bookManager.deleteBookMongo(newBook);
                 actionTarget.setText("Error: unable to add book");
                 return;
             }

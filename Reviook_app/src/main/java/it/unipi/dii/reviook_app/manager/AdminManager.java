@@ -157,6 +157,7 @@ public class AdminManager {
                     return true;
                 } else {
                     // restore book failed
+                    bookManager.deleteBookMongo(newBook);
                     return false;
                 }
             } else {

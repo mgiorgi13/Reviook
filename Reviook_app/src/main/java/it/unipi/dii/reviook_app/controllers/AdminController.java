@@ -202,29 +202,32 @@ public class AdminController {
 
     @FXML
     void deleteElemAction() {
-        actionTarget.setText("");
         if (bookOption.isSelected()) {
             Report selectedBook = (Report) bookList.getSelectionModel().getSelectedItem();
             if (selectedBook == null) {
                 return;
             }
             Book bookForBackup = bookManager.getBookByID(selectedBook.getBook_id());
-            if (bookManager.deleteBook(selectedBook.getBook_id())) {
-                // book deleted with success
-                if (adminManager.deleteReport(selectedBook, false)) {
-                    // report deleted with success
-                    obsBooksList.remove(selectedBook);
-                    addCustomFactory("book");
-                    resetRightDetail();
-                } else {
-                    // can't delete report -- reinsert book
-                    if (bookManager.addBookMongo(bookForBackup)) {
-                        // book restored in mongoDB with success
-                        bookManager.addBookN4J(bookForBackup);
+            if (bookManager.deleteBookMongo(bookForBackup)) {
+                //book deleted from mongo
+                if(bookManager.deleteBookN4J(bookForBackup)) {
+                    // book deleted with success from NEO4J
+                    if (adminManager.deleteReport(selectedBook, false)) {
+                        // report deleted with success
+                        obsBooksList.remove(selectedBook);
+                        addCustomFactory("book");
+                        resetRightDetail();
                     } else {
-                        // can't restore book
-                        actionTarget.setText("Error: unable to remove Book");
+                        // can't delete report -- retry
+                        if (adminManager.deleteReport(selectedBook, false)) {
+                            // report deleted with success
+                            obsBooksList.remove(selectedBook);
+                            addCustomFactory("book");
+                            resetRightDetail();
+                        }
                     }
+                }else {
+                    bookManager.addBookMongo(bookForBackup);
                     actionTarget.setText("Error: unable to remove Book");
                 }
             } else {

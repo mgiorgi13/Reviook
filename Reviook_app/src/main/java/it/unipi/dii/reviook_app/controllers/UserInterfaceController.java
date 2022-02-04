@@ -520,9 +520,10 @@ public class UserInterfaceController {
                     if (session.getLoggedUser() != null) {
                         if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
                             Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
-                            bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User");
-                            listToRead.getItems().remove(removeCell);
-                            session.getLoggedUser().getBooks().getToRead().remove(removeCell);
+                            if(bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User")) {
+                                listToRead.getItems().remove(removeCell);
+                                session.getLoggedUser().getBooks().getToRead().remove(removeCell);
+                            }
 //                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
 //                                if(visualizedUser.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
 //                                    visualizedUser.getBooks().removeToRead();
@@ -560,9 +561,10 @@ public class UserInterfaceController {
                     if (session.getLoggedUser() != null) {
                         if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
                             Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
-                            bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User");
-                            listRead.getItems().remove(removeCell);
-                            session.getLoggedUser().getBooks().getRead().remove(removeCell);
+                            if(bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User")) {
+                                listRead.getItems().remove(removeCell);
+                                session.getLoggedUser().getBooks().getRead().remove(removeCell);
+                            }
 //                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
 //                                if(visualizedUser.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
 //                                    visualizedUser.getBooks().removeRead();

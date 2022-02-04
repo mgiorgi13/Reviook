@@ -17,6 +17,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionWork;
 
+import java.lang.reflect.Executable;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
@@ -134,7 +135,6 @@ public class BookManager {
         }
         if (!result) {
             // can't add book into N4J --- delete book from MongoDB
-            deleteBook(newBook.getBook_id());
         }
         return result;
     }
@@ -161,72 +161,72 @@ public class BookManager {
         Bson getBook = eq("book_id", book_id);
         DBObject elem = new BasicDBObject("reviews", new BasicDBObject(newReview));
         DBObject insertReview = new BasicDBObject("$push", elem);
-        addReview = book.updateOne(getBook, (Bson) insertReview);
 
-        Book bookToUpdate = getBookByID(book_id);
-        Double newRating = updateRating(bookToUpdate.getReviews());
-        rateUpdated = book.updateOne(getBook, Updates.set("average_rating", newRating));
+        try {
+            addReview = book.updateOne(getBook, (Bson) insertReview);
 
-        if (addReview.getModifiedCount() == 1) {
-            if (rateUpdated.getModifiedCount() == 1) {
-                if (session.getLoggedUser() != null) {
-                    //add that book to read list
-                    if(userManager.readAdd("User", session.getLoggedUser().getNickname(), book_id)) {
-                        return true;
-                    }else{
-                        //delete review
-                        deleteReview(reviewID,book_id);
-                        //update rating
-                        newRating = updateRating(bookToUpdate.getReviews());
-                        book.updateOne(getBook, Updates.set("average_rating", newRating));
-                    }
-                } else {
-                    //add that book to read list
-                    if(userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), book_id)) {
-                        return true;
-                    }else{
-                        //delete review
-                        deleteReview(reviewID,book_id);
-                        //update rating
-                        newRating = updateRating(bookToUpdate.getReviews());
-                        book.updateOne(getBook, Updates.set("average_rating", newRating));
-                    }
+            if (addReview.getModifiedCount() == 1) {
+                Book bookToUpdate = getBookByID(book_id);
+                Double newRating = updateRating(bookToUpdate.getReviews());
+                rateUpdated = book.updateOne(getBook, Updates.set("average_rating", newRating));
+                if (rateUpdated.getModifiedCount() == 1) {
+                    if (session.getLoggedUser() != null)
+                        userManager.readAdd("User", session.getLoggedUser().getNickname(), book_id);
+                    else
+                        userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), book_id);
+                    return true;
                 }
-            }else{
-                deleteReview(reviewID,book_id);
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return false;
     }
 
     public void editReview(String reviewText, Integer ratingBook, String book_id, String review_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
+        UpdateResult updateText, updateRating, updateDate, updateAvgRating;
         Bson getBook = eq("book_id", book_id);
         Bson getReview = eq("reviews.review_id", review_id);
-        UpdateResult updateResult = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
-        UpdateResult updateResult2 = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+        //get timestamp
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        UpdateResult updateResult3 = books.updateOne(getReview, Updates.set("reviews.$.date_updated", date));
+        //get book by id
         Book bookToUpdate = getBookByID(book_id);
+        //calculate rating
         Double newRating = updateRating(bookToUpdate.getReviews());
-        UpdateResult updateResult4 = books.updateOne(getBook, Updates.set("average_rating", newRating));
+
+        try {
+            updateText = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
+            updateRating = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));
+            updateDate = books.updateOne(getReview, Updates.set("reviews.$.date_updated", date));
+            if (updateRating.getModifiedCount() == 1)
+                updateAvgRating = books.updateOne(getBook, Updates.set("average_rating", newRating));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public boolean deleteReview(String review_id, String book_id) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
         Bson getBook = eq("book_id", book_id);
-        UpdateResult updateResult = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
-        Book bookToUpdate = getBookByID(book_id);
-        if (bookToUpdate == null) {
-            return true;
-        }
-        Double newRating = updateRating(bookToUpdate.getReviews());
-        UpdateResult updateResult2 = books.updateOne(getBook, Updates.set("average_rating", newRating));
-        // TODO funziona solo per i like miei a mie review, altrimenti non funziona
-        removeLikeReview(review_id, book_id);
-        if (updateResult.getModifiedCount() == 1 && updateResult2.getModifiedCount() == 1) {
-            return true;
+
+        try {
+            UpdateResult removeReview = books.updateOne(getBook, Updates.pull("reviews", new Document("review_id", review_id)));
+            Book bookToUpdate = getBookByID(book_id);
+            if (bookToUpdate == null) {
+                return true;
+            }
+            if (removeReview.getModifiedCount() == 1) {
+                Double newRating = updateRating(bookToUpdate.getReviews());
+                UpdateResult updateAvgRating = books.updateOne(getBook, Updates.set("average_rating", newRating));
+                removeLikeReview(review_id, book_id);
+                if (updateAvgRating.getModifiedCount() == 1) {
+                    return true;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return false;
     }
@@ -306,60 +306,66 @@ public class BookManager {
     }
 
     public void addLikeReview(String reviewID, String book_id) {
-        if (session.getLoggedAuthor() != null) {
-            MongoCollection<Document> authors = md.getCollection(authorCollection);
-            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
-            DBObject elem = new BasicDBObject("liked_review", reviewID);
-            DBObject insertRevID = new BasicDBObject("$push", elem);
-            authors.updateOne(getAuthor, (Bson) insertRevID);
-            //increment like review counter
-            MongoCollection<Document> books = md.getCollection(bookCollection);
-            Bson getBook = eq("book_id", book_id);
-            Bson getReview = eq("reviews.review_id", reviewID);
-            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
-        } else if (session.getLoggedUser() != null) {
-            MongoCollection<Document> users = md.getCollection(usersCollection);
-            Bson getUser = eq("user_id", session.getLoggedUser().getId());
-            DBObject elem = new BasicDBObject("liked_review", reviewID);
-            DBObject insertRevID = new BasicDBObject("$push", elem);
-            users.updateOne(getUser, (Bson) insertRevID);
-            //increment like review counter
-            MongoCollection<Document> books = md.getCollection(bookCollection);
-            Bson getBook = eq("book_id", book_id);
-            Bson getReview = eq("reviews.review_id", reviewID);
-            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
+        try {
+            if (session.getLoggedAuthor() != null) {
+                MongoCollection<Document> authors = md.getCollection(authorCollection);
+                Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+                DBObject elem = new BasicDBObject("liked_review", reviewID);
+                DBObject insertRevID = new BasicDBObject("$push", elem);
+                authors.updateOne(getAuthor, (Bson) insertRevID);
+                //increment like review counter
+                MongoCollection<Document> books = md.getCollection(bookCollection);
+                Bson getBook = eq("book_id", book_id);
+                Bson getReview = eq("reviews.review_id", reviewID);
+                UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
+            } else if (session.getLoggedUser() != null) {
+                MongoCollection<Document> users = md.getCollection(usersCollection);
+                Bson getUser = eq("user_id", session.getLoggedUser().getId());
+                DBObject elem = new BasicDBObject("liked_review", reviewID);
+                DBObject insertRevID = new BasicDBObject("$push", elem);
+                users.updateOne(getUser, (Bson) insertRevID);
+                //increment like review counter
+                MongoCollection<Document> books = md.getCollection(bookCollection);
+                Bson getBook = eq("book_id", book_id);
+                Bson getReview = eq("reviews.review_id", reviewID);
+                UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", 1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     public void removeLikeReview(String reviewID, String book_id) {
-        if (session.getLoggedAuthor() != null) {
-            MongoCollection<Document> authors = md.getCollection(authorCollection);
-            Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
-            authors.updateOne(getAuthor, Updates.pull("liked_review", reviewID));
-            //decrement like review counter
-            MongoCollection<Document> books = md.getCollection(bookCollection);
-            Bson getBook = eq("book_id", book_id);
-            Bson getReview = eq("reviews.review_id", reviewID);
-            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
-        } else if (session.getLoggedUser() != null) {
-            MongoCollection<Document> users = md.getCollection(usersCollection);
-            Bson getUser = eq("user_id", session.getLoggedUser().getId());
-            users.updateOne(getUser, Updates.pull("liked_review", reviewID));
-            //increment like review counter
-            MongoCollection<Document> books = md.getCollection(bookCollection);
-            Bson getBook = eq("book_id", book_id);
-            Bson getReview = eq("reviews.review_id", reviewID);
-            UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
+        try{
+            if (session.getLoggedAuthor() != null) {
+                MongoCollection<Document> authors = md.getCollection(authorCollection);
+                Bson getAuthor = eq("author_id", session.getLoggedAuthor().getId());
+                authors.updateOne(getAuthor, Updates.pull("liked_review", reviewID));
+                //decrement like review counter
+                MongoCollection<Document> books = md.getCollection(bookCollection);
+                Bson getBook = eq("book_id", book_id);
+                Bson getReview = eq("reviews.review_id", reviewID);
+                UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
+            } else if (session.getLoggedUser() != null) {
+                MongoCollection<Document> users = md.getCollection(usersCollection);
+                Bson getUser = eq("user_id", session.getLoggedUser().getId());
+                users.updateOne(getUser, Updates.pull("liked_review", reviewID));
+                //decrement like review counter
+                MongoCollection<Document> books = md.getCollection(bookCollection);
+                Bson getBook = eq("book_id", book_id);
+                Bson getReview = eq("reviews.review_id", reviewID);
+                UpdateResult updateResult = books.updateOne(getReview, Updates.inc("reviews.$.likes", -1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     public boolean foundMyBook(String id_book, String id_author) {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         Bson match = match(in("book_id", id_book));
         Bson project = project(fields(include("authors.author_id")));
-        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match, project)).iterator();) {
+        try (MongoCursor<Document> result = book.aggregate(Arrays.asList(match, project)).iterator()) {
             if (result.hasNext()) {
                 ArrayList<Document> myAuthor = (ArrayList<Document>) result.next().get("authors");
                 for (int i = 0; i < myAuthor.size(); i++) {
@@ -367,23 +373,35 @@ public class BookManager {
                         return true;
                 }
             }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return false;
     }
 
-    public static boolean deleteBook(String book_id) {
+    public boolean deleteBookMongo(Book book) {
         MongoCollection<Document> books = md.getCollection(bookCollection);
-        DeleteResult deleteResult = books.deleteOne(eq("book_id", book_id));
-        if (deleteResult.getDeletedCount() == 1) {
-            try (Session session = nd.getDriver().session()) {
-                session.writeTransaction((TransactionWork<Boolean>) tx -> {
-                    tx.run("MATCH (n : Book { id: '" + book_id + "'}) DETACH DELETE n");
-                    return true;
-                });
-            }
-            return true;
+        DeleteResult deleteResult = null;
+        Book backup = getBookByID(book.getBook_id());
+        try {
+            deleteResult = books.deleteOne(eq("book_id", book.getBook_id()));
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        if(deleteResult != null && deleteResult.getDeletedCount() == 1)
+            return true;
         return false;
+    }
+
+    public boolean deleteBookN4J(Book book) {
+        boolean result;
+        try (Session session = nd.getDriver().session()) {
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                tx.run("MATCH (n : Book { id: '" + book.getBook_id() + "'}) DETACH DELETE n");
+                return true;
+            });
+        }
+        return result;
     }
 
     //ANALYTICS ==========================================================================================================
@@ -460,7 +478,7 @@ public class BookManager {
                 Document y = result.next();
                 genres.add(new Genre(y.getString("_id"), Double.valueOf(y.get("counter").toString())));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -490,7 +508,7 @@ public class BookManager {
                         document.getInteger("reviews_number"),
                         document.getDouble("average_likes")));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return users;

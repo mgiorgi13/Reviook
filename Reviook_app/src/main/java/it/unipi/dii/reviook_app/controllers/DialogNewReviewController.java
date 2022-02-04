@@ -77,35 +77,25 @@ public class DialogNewReviewController {
         Integer ratingBook = bookStars.getValue() != null ? bookStars.getValue() : 0;
         String book_id = this.book_id;
         if (editMode) {
-            try {
-                bookManager.editReview(reviewText, ratingBook, book_id, this.reviewToEdit.getReview_id());
-            } catch (MongoException e) {
-                e.printStackTrace();
-            } finally {
-                Book book = bookManager.getBookByID(this.book_id); // retrieve updated book
-                this.previousList.clear();
-                this.previousList.addAll(book.getReviews());
-                this.previousObsList.setAll(book.getReviews());
-                DecimalFormat df = new DecimalFormat("#.#");
-                this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
-                Stage actual_stage = (Stage) addButton.getScene().getWindow();
-                actual_stage.close();
-            }
+            bookManager.editReview(reviewText, ratingBook, book_id, this.reviewToEdit.getReview_id());
+            Book book = bookManager.getBookByID(this.book_id); // retrieve updated book
+            this.previousList.clear();
+            this.previousList.addAll(book.getReviews());
+            this.previousObsList.setAll(book.getReviews());
+            DecimalFormat df = new DecimalFormat("#.#");
+            this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
+            Stage actual_stage = (Stage) addButton.getScene().getWindow();
+            actual_stage.close();
         } else {
-            try {
-                bookManager.addReviewToBook(reviewText, ratingBook, book_id);
-            } catch (MongoException e) {
-                e.printStackTrace();
-            } finally {
-                Book book = bookManager.getBookByID(this.book_id); // retrieve updated book
-                this.previousList.clear();
-                this.previousList.addAll(book.getReviews());
-                this.previousObsList.setAll(book.getReviews());
-                DecimalFormat df = new DecimalFormat("#.#");
-                this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
-                Stage actual_stage = (Stage) addButton.getScene().getWindow();
-                actual_stage.close();
-            }
+            bookManager.addReviewToBook(reviewText, ratingBook, book_id);
+            Book book = bookManager.getBookByID(this.book_id); // retrieve updated book
+            this.previousList.clear();
+            this.previousList.addAll(book.getReviews());
+            this.previousObsList.setAll(book.getReviews());
+            DecimalFormat df = new DecimalFormat("#.#");
+            this.previousRatingAVG.setText(df.format(book.getAverage_rating()));
+            Stage actual_stage = (Stage) addButton.getScene().getWindow();
+            actual_stage.close();
         }
 
     }
