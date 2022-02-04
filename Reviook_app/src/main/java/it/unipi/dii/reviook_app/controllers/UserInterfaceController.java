@@ -37,6 +37,30 @@ public class UserInterfaceController {
     private ResourceBundle resources;
 
     @FXML
+    private Text userFollowerCount1;
+
+    @FXML
+    private Text userFollowerCount2;
+
+    @FXML
+    private Text userFollowerCount3;
+
+    @FXML
+    private Text userFollowerCount4;
+
+    @FXML
+    private Text authorFollowerCount1;
+
+    @FXML
+    private Text authorFollowerCount2;
+
+    @FXML
+    private Text authorFollowerCount3;
+
+    @FXML
+    private Text authorFollowerCount4;
+
+    @FXML
     private Text usernameUser, followerCount, followCount;
 
     @FXML
@@ -213,7 +237,7 @@ public class UserInterfaceController {
 
     private String truckString(String input) {
         if (input.length() > 14) {
-            return input.substring(0, 14);
+            return input.substring(0, 12)+"..";
         }
         return input;
     }
@@ -277,22 +301,26 @@ public class UserInterfaceController {
 
         if (size >= 1) {
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            authorFollowerCount1.setText(String.valueOf(suggestedAuthors.get(0).getFollowerCount()));
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            authorFollowerCount2.setText(String.valueOf(suggestedAuthors.get(1).getFollowerCount()));
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            authorFollowerCount3.setText(String.valueOf(suggestedAuthors.get(2).getFollowerCount()));
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            authorFollowerCount4.setText(String.valueOf(suggestedAuthors.get(3).getFollowerCount()));
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
 
@@ -309,29 +337,32 @@ public class UserInterfaceController {
         int size = suggestedUsers.size();
         if (size >= 1) {
             HBUser1.setVisible(true);
-            suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
+            userFollowerCount1.setText(String.valueOf(suggestedUsers.get(0).getFollowerCount()));
+            suggestedUser1.setText(truckString(suggestedUsers.get(0).getName()));
             setOnMouseClicked(HBUser1, 0, "User");
         }
         if (size >= 2) {
             HBUser2.setVisible(true);
-            suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
+            userFollowerCount2.setText(String.valueOf(suggestedUsers.get(1).getFollowerCount()));
+            suggestedUser2.setText(truckString(suggestedUsers.get(1).getName()));
             setOnMouseClicked(HBUser2, 1, "User");
         }
         if (size >= 3) {
             HBUser3.setVisible(true);
-            suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
+            userFollowerCount3.setText(String.valueOf(suggestedUsers.get(2).getFollowerCount()));
+            suggestedUser3.setText(truckString(suggestedUsers.get(2).getName()));
             setOnMouseClicked(HBUser3, 2, "User");
         }
         if (size >= 4) {
             HBUser4.setVisible(true);
-            suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
+            userFollowerCount4.setText(String.valueOf(suggestedUsers.get(3).getFollowerCount()));
+            suggestedUser4.setText(truckString(suggestedUsers.get(3).getName()));
             setOnMouseClicked(HBUser4, 3, "User");
         }
 
     }
 
     public void setUser(User user) {
-        //TODO caricaListeLibri()
         if (!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
             visualizedUser = session.getLoggedUser();
         else
@@ -580,7 +611,6 @@ public class UserInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    System.out.println(selectedCell);
                     int result = userManager.verifyUsername(selectedCell, "", false);
                     if (result == -1 || result == 2)
                         return;

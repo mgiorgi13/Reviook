@@ -33,6 +33,30 @@ public class AuthorInterfaceController {
     private ResourceBundle resources;
 
     @FXML
+    private Text userFollowerCount1;
+
+    @FXML
+    private Text userFollowerCount2;
+
+    @FXML
+    private Text userFollowerCount3;
+
+    @FXML
+    private Text userFollowerCount4;
+
+    @FXML
+    private Text authorFollowerCount1;
+
+    @FXML
+    private Text authorFollowerCount2;
+
+    @FXML
+    private Text authorFollowerCount3;
+
+    @FXML
+    private Text authorFollowerCount4;
+
+    @FXML
     private Text usernameAuthor;
 
     @FXML
@@ -117,7 +141,7 @@ public class AuthorInterfaceController {
     public void addFollow(ActionEvent event) throws IOException {
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
-                if(!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
+                if (!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
                     actionTarget.setText("Error: unable to add follow");
                 else {
                     session.getLoggedAuthor().getInteractions().getFollow().add(usernameAuthor.getText());
@@ -126,7 +150,7 @@ public class AuthorInterfaceController {
                     visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() + 1);
                 }
             } else if (session.getLoggedUser() != null) {
-                if(!userManager.following(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author"))
+                if (!userManager.following(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author"))
                     actionTarget.setText("Error: unable to add follow");
                 else {
                     session.getLoggedUser().getInteractions().getFollow().add(usernameAuthor.getText());
@@ -137,7 +161,7 @@ public class AuthorInterfaceController {
             }
         } else {
             if (session.getLoggedAuthor() != null) {
-                if(!userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
+                if (!userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameAuthor.getText(), "Author"))
                     actionTarget.setText("Error: unable to delete follow");
                 else {
                     session.getLoggedAuthor().getInteractions().getFollow().remove(usernameAuthor.getText());
@@ -146,7 +170,7 @@ public class AuthorInterfaceController {
                     visualizedAuthor.getInteractions().setNumberFollower(visualizedAuthor.getInteractions().getNumberFollower() - 1);
                 }
             } else if (session.getLoggedUser() != null) {
-                if(!userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author"))
+                if (!userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameAuthor.getText(), "Author"))
                     actionTarget.setText("Error: unable to delete follow");
                 else {
                     session.getLoggedUser().getInteractions().getFollow().remove(usernameAuthor.getText());
@@ -160,7 +184,7 @@ public class AuthorInterfaceController {
 
     private String truckString(String input) {
         if (input.length() > 14) {
-            return input.substring(0, 14);
+            return input.substring(0, 12) + "..";
         }
         return input;
     }
@@ -276,22 +300,26 @@ public class AuthorInterfaceController {
 
         if (size >= 1) {
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            authorFollowerCount1.setText(String.valueOf(suggestedAuthors.get(0).getFollowerCount()));
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            authorFollowerCount2.setText(String.valueOf(suggestedAuthors.get(1).getFollowerCount()));
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            authorFollowerCount3.setText(String.valueOf(suggestedAuthors.get(2).getFollowerCount()));
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            authorFollowerCount4.setText(String.valueOf(suggestedAuthors.get(3).getFollowerCount()));
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
 
@@ -310,22 +338,26 @@ public class AuthorInterfaceController {
 
         if (size >= 1) {
             HBUser1.setVisible(true);
-            suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
+            userFollowerCount1.setText(String.valueOf(suggestedUsers.get(0).getFollowerCount()));
+            suggestedUser1.setText(truckString(suggestedUsers.get(0).getName()));
             setOnMouseClicked(HBUser1, 0, "User");
         }
         if (size >= 2) {
             HBUser2.setVisible(true);
-            suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
+            userFollowerCount2.setText(String.valueOf(suggestedUsers.get(1).getFollowerCount()));
+            suggestedUser2.setText(truckString(suggestedUsers.get(1).getName()));
             setOnMouseClicked(HBUser2, 1, "User");
         }
         if (size >= 3) {
             HBUser3.setVisible(true);
-            suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
+            userFollowerCount3.setText(String.valueOf(suggestedUsers.get(2).getFollowerCount()));
+            suggestedUser3.setText(truckString(suggestedUsers.get(2).getName()));
             setOnMouseClicked(HBUser3, 2, "User");
         }
         if (size >= 4) {
             HBUser4.setVisible(true);
-            suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
+            userFollowerCount4.setText(String.valueOf(suggestedUsers.get(3).getFollowerCount()));
+            suggestedUser4.setText(truckString(suggestedUsers.get(3).getName()));
             setOnMouseClicked(HBUser4, 3, "User");
         }
 
@@ -541,7 +573,7 @@ public class AuthorInterfaceController {
                         return;
                     }
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    if(allInfo != null){
+                    if (allInfo != null) {
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
@@ -560,7 +592,7 @@ public class AuthorInterfaceController {
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     if (session.getLoggedAuthor() != null) {
-                        if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
+                        if (session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
                             Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
                             if(bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameAuthor.getText(), "Author")) {
                                 listRead.getItems().remove(removeCell);
@@ -585,7 +617,7 @@ public class AuthorInterfaceController {
                         return;
                     }
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    if(allInfo != null){
+                    if (allInfo != null) {
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
@@ -604,7 +636,7 @@ public class AuthorInterfaceController {
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     if (session.getLoggedAuthor() != null) {
-                        if(session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
+                        if (session.getLoggedAuthor().getNickname().equals(usernameAuthor.getText())) {
                             Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
                             if(bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameAuthor.getText(), "Author")) {
                                 listToRead.getItems().remove(removeCell);
@@ -668,7 +700,7 @@ public class AuthorInterfaceController {
                         return;
                     }
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    if(allInfo != null){
+                    if (allInfo != null) {
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
