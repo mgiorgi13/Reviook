@@ -359,6 +359,7 @@ public class AdminController {
     @FXML
     void searchAction() {
         clearList();
+        resetRightDetail();
         deleteElemButton.setDisable(false);
         if (bookOption.isSelected()) {
             ArrayList<Report> list = adminManager.loadBookReported();
