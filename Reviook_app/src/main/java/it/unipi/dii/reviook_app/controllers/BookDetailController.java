@@ -372,8 +372,8 @@ public class BookDetailController {
     }
 
     private String truckString(String input) {
-        if (input.length() > 24) {
-            return input.substring(0, 24);
+        if (input.length() > 22) {
+            return input.substring(0, 20)+"..";
         }
         return input;
     }
@@ -388,22 +388,22 @@ public class BookDetailController {
         int size = suggestedAuthors.size();
         if (size >= 1) {
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
     }
