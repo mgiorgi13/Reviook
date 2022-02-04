@@ -107,7 +107,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: blue;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount1" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -126,7 +126,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #cd7818;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount2" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -142,7 +142,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #1eba22;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount3" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -158,7 +158,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #ba1e68;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount4" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -188,7 +188,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: blue;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount1" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -207,7 +207,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #cd7818;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount2" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -223,7 +223,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #1eba22;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount3" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -239,7 +239,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #ba1e68;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount4" fill="WHITE" layoutX="11.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
