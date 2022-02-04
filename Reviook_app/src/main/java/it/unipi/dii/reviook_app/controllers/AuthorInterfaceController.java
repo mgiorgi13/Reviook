@@ -60,6 +60,9 @@ public class AuthorInterfaceController {
     private Text usernameAuthor;
 
     @FXML
+    private Text authorName;
+
+    @FXML
     private Text actionTarget;
 
     @FXML
@@ -370,7 +373,8 @@ public class AuthorInterfaceController {
             visualizedAuthor = author;
 
         this.nickname = visualizedAuthor.getNickname();
-        usernameAuthor.setText(visualizedAuthor.getName());
+        usernameAuthor.setText(visualizedAuthor.getNickname());
+        authorName.setText(visualizedAuthor.getName());
 
         //set analytics result
         viewBookAnalytic();

@@ -294,11 +294,16 @@
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follow" />
                             </children>
                         </VBox>
-                        <JFXCheckBox fx:id="follow" layoutX="235.0" layoutY="42.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
-                        <Text fx:id="usernameAuthor" layoutX="44.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AUTHOR NAME" textAlignment="CENTER" wrappingWidth="159.0">
+                        <JFXCheckBox fx:id="follow" layoutX="235.0" layoutY="33.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
+                        <Text fx:id="authorName" layoutX="45.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AUTHOR NAME" textAlignment="CENTER" wrappingWidth="159.0">
                      <font>
                         <Font size="14.0" />
                      </font></Text>
+                  <Text fx:id="usernameAuthor" layoutX="45.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USERNAME" textAlignment="CENTER" wrappingWidth="159.0">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Text>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="260.0">
