@@ -274,8 +274,8 @@
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="423.0">
                     <children>
-                        <JFXCheckBox fx:id="follow" layoutX="299.0" layoutY="43.0" mnemonicParsing="false" onAction="#addFollow" text="add follow" />
-                        <Text fx:id="usernameUser" layoutX="113.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USER PROFILE" textAlignment="CENTER" wrappingWidth="159.0">
+                        <JFXCheckBox fx:id="follow" layoutX="299.0" layoutY="34.0" mnemonicParsing="false" onAction="#addFollow" text="add follow" />
+                        <Text fx:id="userName" layoutX="107.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USER PROFILE" textAlignment="CENTER" wrappingWidth="159.0">
                      <font>
                         <Font size="14.0" />
                      </font></Text>
@@ -291,6 +291,11 @@
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follow" />
                             </children>
                         </VBox>
+                  <Text fx:id="usernameUser" layoutX="107.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="username" textAlignment="CENTER" wrappingWidth="159.0">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Text>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="230.0">
