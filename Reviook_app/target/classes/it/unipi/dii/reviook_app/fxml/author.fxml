@@ -294,8 +294,16 @@
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follow" />
                             </children>
                         </VBox>
-                        <JFXCheckBox fx:id="follow" layoutX="172.0" layoutY="51.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
-                        <Text fx:id="usernameAuthor" layoutX="75.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="89.0" />
+                        <JFXCheckBox fx:id="follow" layoutX="235.0" layoutY="33.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
+                        <Text fx:id="authorName" layoutX="45.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AUTHOR NAME" textAlignment="CENTER" wrappingWidth="159.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Text>
+                  <Text fx:id="usernameAuthor" layoutX="45.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USERNAME" textAlignment="CENTER" wrappingWidth="159.0">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Text>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="260.0">
@@ -345,7 +353,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#viewFollow" text="Follow">
+                        <Tab onSelectionChanged="#viewFollow" text="FOLLOW">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -354,7 +362,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#viewFollower" text="Follower">
+                        <Tab onSelectionChanged="#viewFollower" text="FOLLOWER">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>

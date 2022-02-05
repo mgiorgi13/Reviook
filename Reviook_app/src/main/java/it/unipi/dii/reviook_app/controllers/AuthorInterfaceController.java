@@ -60,6 +60,9 @@ public class AuthorInterfaceController {
     private Text usernameAuthor;
 
     @FXML
+    private Text authorName;
+
+    @FXML
     private Text actionTarget;
 
     @FXML
@@ -370,7 +373,8 @@ public class AuthorInterfaceController {
             visualizedAuthor = author;
 
         this.nickname = visualizedAuthor.getNickname();
-        usernameAuthor.setText(this.nickname);
+        usernameAuthor.setText(visualizedAuthor.getNickname());
+        authorName.setText(visualizedAuthor.getName());
 
         //set analytics result
         viewBookAnalytic();
@@ -385,7 +389,7 @@ public class AuthorInterfaceController {
             followerCount.setText(String.valueOf(visualizedAuthor.getInteractions().getFollower().size()));
         }
         rankingButton.setVisible(false);
-        if (session.getLoggedAuthor() != null && usernameAuthor.getText().equals(session.getLoggedAuthor().getNickname())) {
+        if (session.getLoggedAuthor() != null && visualizedAuthor.getNickname().equals(session.getLoggedAuthor().getNickname())) {
             addButtonBook.setVisible(true);
             rankingButton.setVisible(true);
             homeButton.setDisable(true);
@@ -446,14 +450,13 @@ public class AuthorInterfaceController {
         actual_stage.centerOnScreen();
     }
 
-
     @FXML
     void viewFollow() {
         Author author = visualizedAuthor;
         obsFollow.clear();
         List<String> Follow;
         if (visualizedAuthor.getInteractions().getFollow().isEmpty()) {
-            Follow = userManager.loadRelationsFollowing("Author", usernameAuthor.getText());
+            Follow = userManager.loadRelationsFollowing("Author", visualizedAuthor.getNickname());
             author.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 author.getInteractions().setFollow(Follow.get(i));
@@ -472,7 +475,7 @@ public class AuthorInterfaceController {
         ArrayList<Book> read;
         obsRead.clear();
         if (visualizedAuthor.getBooks().getRead().isEmpty()) {
-            read = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "READ");
+            read = userManager.loadRelationsBook("Author", visualizedAuthor.getNickname(), "READ");
             for (Book book : read) {
                 visualizedAuthor.getBooks().addToSetRead(book);
                 obsRead.add(book);
@@ -489,7 +492,7 @@ public class AuthorInterfaceController {
         ArrayList<Book> toRead;
         obsToRead.clear();
         if (visualizedAuthor.getBooks().getToRead().isEmpty()) {
-            toRead = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "TO_READ");
+            toRead = userManager.loadRelationsBook("Author", visualizedAuthor.getNickname(), "TO_READ");
             for (Book book : toRead) {
                 visualizedAuthor.getBooks().addToSetToRead(book);
                 obsToRead.add(book);
@@ -509,7 +512,7 @@ public class AuthorInterfaceController {
         ArrayList<Book> published;
         obsPublished.clear();
         if (visualizedAuthor.getPublished().isEmpty()) {
-            published = userManager.loadRelationsBook("Author", usernameAuthor.getText(), "WROTE");
+            published = userManager.loadRelationsBook("Author", visualizedAuthor.getNickname(), "WROTE");
             for (Book book : published) {
                 visualizedAuthor.addToSetPublished(book);
                 obsPublished.add(book);
@@ -531,14 +534,13 @@ public class AuthorInterfaceController {
         actual_stage.centerOnScreen();
     }
 
-
     @FXML
     void viewFollower() {
         Author author = visualizedAuthor;
         obsFollower.clear();
         List<String> Follower;
         if (visualizedAuthor.getInteractions().getFollower().isEmpty()) {
-            Follower = userManager.loadRelationsFollower("Author", usernameAuthor.getText());
+            Follower = userManager.loadRelationsFollower("Author", visualizedAuthor.getNickname());
             author.getInteractions().setNumberFollower(Follower.size());
             for (int i = 0; i < Follower.size(); i++) {
                 author.getInteractions().setFollower(Follower.get(i));
@@ -549,7 +551,6 @@ public class AuthorInterfaceController {
             obsFollower.addAll(author.getInteractions().getFollower());
             followerCount.setText(String.valueOf(author.getInteractions().getNumberFollower()));
         }
-        //  System.out.println(Follower.size()+ " "+session.getLoggedAuthor().getInteractions().getFollower()+" "+ session.getLoggedAuthor().getInteractions().getNumberFollower());
     }
 
     @FXML
