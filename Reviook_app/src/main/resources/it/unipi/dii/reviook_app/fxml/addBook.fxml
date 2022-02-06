@@ -11,71 +11,100 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AddBookController">
-   <children>
-      <Text layoutX="41.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title book" />
-      <TextField fx:id="titleBook" layoutX="42.0" layoutY="76.0" prefHeight="25.0" prefWidth="258.0" />
-      <TextField fx:id="numPage" layoutX="325.0" layoutY="76.0" prefHeight="25.0" prefWidth="258.0" />
-      <TextArea fx:id="description" layoutX="184.0" layoutY="468.0" prefHeight="124.0" prefWidth="258.0" />
-      <JFXButton fx:id="addBookButton" layoutX="180.0" layoutY="592.0" mnemonicParsing="false" onAction="#addBookFunction" prefHeight="25.0" prefWidth="264.0" text="Add your book">
-         <graphic>
-            <FontAwesomeIconView glyphName="PLUS" />
-         </graphic></JFXButton>
-      <Text fx:id="actiontarget" layoutX="191.0" layoutY="643.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="215.455078125" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text layoutX="269.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="NEW BOOK">
-         <font>
-            <Font size="14.0" />
-         </font></Text>
-      <TextField fx:id="ISBN" layoutX="43.0" layoutY="117.0" prefHeight="25.0" prefWidth="258.0" />
-      <Text layoutX="42.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
-      <JFXButton fx:id="backButton" layoutX="20.0" layoutY="613.0" onAction="#backFunction" prefHeight="25.0" prefWidth="69.0" text="HOME">
-         <graphic>
-            <FontAwesomeIconView glyphName="HOME" />
-         </graphic></JFXButton>
-      <Text layoutX="282.0" layoutY="464.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
-      <Text layoutX="326.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Num pages" />
-      <DatePicker fx:id="publication_date" layoutX="325.0" layoutY="160.0" prefHeight="25.0" prefWidth="258.0" />
-      <Text layoutX="327.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Publication date" />
-      <TextField fx:id="URLImage" layoutX="326.0" layoutY="117.0" prefHeight="25.0" prefWidth="258.0" />
-      <Text layoutX="327.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="URL image" />
-      <Text layoutX="42.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language Code" />
-      <Pane layoutX="30.0" layoutY="191.0" prefHeight="229.0" prefWidth="570.0">
-         <children>
-            <Pane layoutX="14.0" layoutY="78.0" prefHeight="145.0" prefWidth="149.0">
-               <children>
-                  <JFXListView fx:id="genreTag" layoutY="3.0" prefHeight="138.0" prefWidth="149.0" />
-               </children>
-            </Pane>
-            <Pane layoutX="198.0" layoutY="89.0" prefHeight="124.0" prefWidth="174.0">
-               <children>
-                  <JFXListView fx:id="genreList" prefHeight="124.0" prefWidth="174.0" />
-                  <JFXListView fx:id="authorsList" prefHeight="124.0" prefWidth="174.0" />
-               </children>
-            </Pane>
-            <Pane layoutX="406.0" layoutY="78.0" prefHeight="145.0" prefWidth="156.0">
-               <children>
-                  <JFXListView fx:id="listTagged" layoutX="5.0" layoutY="4.0" prefHeight="138.0" prefWidth="149.0" />
-               </children>
-            </Pane>
-            <Text layoutX="413.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author Tag" />
-            <TextField fx:id="authorTag" layoutX="406.0" layoutY="31.0" prefHeight="25.0" prefWidth="156.0" />
-            <JFXButton layoutX="529.0" layoutY="31.0" onAction="#searchAction" prefHeight="25.0" prefWidth="22.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView glyphName="SEARCH" />
-               </graphic></JFXButton>
-            <Text layoutX="413.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tagged*:" />
-            <TextField fx:id="searchGenres" layoutX="11.0" layoutY="31.0" prefHeight="25.0" prefWidth="156.0" />
-            <JFXButton layoutX="130.0" layoutY="31.0" onAction="#searchActionGenres" prefHeight="25.0" prefWidth="25.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView glyphName="SEARCH" />
-               </graphic></JFXButton>
-            <Text layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres" />
-            <Text layoutX="10.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres added*:" />
-            <Text fx:id="actiontarget1" layoutX="26.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Delete with double tap" />
-            <Text fx:id="actiontarget11" layoutX="421.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Delete with double tap" />
-         </children>
-      </Pane>
-      <ChoiceBox fx:id="languageCode" layoutX="41.0" layoutY="160.0" prefHeight="25.0" prefWidth="258.0" />
-   </children>
+<?import javafx.scene.Cursor?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.unipi.dii.reviook_app.controllers.AddBookController">
+    <children>
+        <Text layoutX="41.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title book"/>
+        <TextField fx:id="titleBook" layoutX="42.0" layoutY="76.0" prefHeight="25.0" prefWidth="258.0"/>
+        <TextField fx:id="numPage" layoutX="325.0" layoutY="76.0" prefHeight="25.0" prefWidth="258.0"/>
+        <TextArea fx:id="description" layoutX="184.0" layoutY="468.0" prefHeight="124.0" prefWidth="258.0"/>
+        <JFXButton fx:id="addBookButton" layoutX="180.0" layoutY="592.0" mnemonicParsing="false"
+                   onAction="#addBookFunction" prefHeight="25.0" prefWidth="264.0" text="Add your book">
+            <graphic>
+                <FontAwesomeIconView glyphName="PLUS"/>
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </JFXButton>
+        <Text fx:id="actionTarget" layoutX="191.0" layoutY="643.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              wrappingWidth="215.455078125"/>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+        <Text layoutX="269.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;"
+              text="NEW BOOK">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
+        <TextField fx:id="ISBN" layoutX="43.0" layoutY="117.0" prefHeight="25.0" prefWidth="258.0"/>
+        <Text layoutX="42.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN"/>
+        <JFXButton fx:id="backButton" layoutX="20.0" layoutY="613.0" onAction="#backFunction" prefHeight="25.0"
+                   prefWidth="69.0" text="HOME">
+            <graphic>
+                <FontAwesomeIconView glyphName="HOME"/>
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </JFXButton>
+        <Text layoutX="282.0" layoutY="464.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description"/>
+        <Text layoutX="326.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Num pages"/>
+        <DatePicker fx:id="publication_date" layoutX="325.0" layoutY="160.0" prefHeight="25.0" prefWidth="258.0"/>
+        <Text layoutX="327.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Publication date"/>
+        <TextField fx:id="URLImage" layoutX="326.0" layoutY="117.0" prefHeight="25.0" prefWidth="258.0"/>
+        <Text layoutX="327.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="URL image"/>
+        <Text layoutX="42.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language Code"/>
+        <Pane layoutX="30.0" layoutY="191.0" prefHeight="229.0" prefWidth="570.0">
+            <children>
+                <Pane layoutX="14.0" layoutY="78.0" prefHeight="145.0" prefWidth="149.0">
+                    <children>
+                        <JFXListView fx:id="genreTag" layoutY="3.0" prefHeight="138.0" prefWidth="149.0"/>
+                    </children>
+                </Pane>
+                <Pane layoutX="198.0" layoutY="89.0" prefHeight="124.0" prefWidth="174.0">
+                    <children>
+                        <JFXListView fx:id="genreList" prefHeight="124.0" prefWidth="174.0"/>
+                        <JFXListView fx:id="authorsList" prefHeight="124.0" prefWidth="174.0"/>
+                    </children>
+                </Pane>
+                <Pane layoutX="406.0" layoutY="78.0" prefHeight="145.0" prefWidth="156.0">
+                    <children>
+                        <JFXListView fx:id="listTagged" layoutX="5.0" layoutY="4.0" prefHeight="138.0"
+                                     prefWidth="149.0"/>
+                    </children>
+                </Pane>
+                <Text layoutX="413.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author Tag"/>
+                <TextField fx:id="authorTag" layoutX="406.0" layoutY="31.0" prefHeight="25.0" prefWidth="156.0"/>
+                <JFXButton layoutX="529.0" layoutY="31.0" onAction="#searchAction" prefHeight="25.0" prefWidth="22.0"
+                           text=" ">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="SEARCH"/>
+                    </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </JFXButton>
+                <Text layoutX="413.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tagged*:"/>
+                <TextField fx:id="searchGenres" layoutX="11.0" layoutY="31.0" prefHeight="25.0" prefWidth="156.0"/>
+                <JFXButton layoutX="130.0" layoutY="31.0" onAction="#searchActionGenres" prefHeight="25.0"
+                           prefWidth="25.0" text=" ">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="SEARCH"/>
+                    </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </JFXButton>
+                <Text layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres"/>
+                <Text layoutX="10.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genres added*:"/>
+                <Text fx:id="actiontarget1" layoutX="26.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="*Delete with double tap"/>
+                <Text fx:id="actiontarget11" layoutX="421.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="*Delete with double tap"/>
+            </children>
+        </Pane>
+        <ChoiceBox fx:id="languageCode" layoutX="41.0" layoutY="160.0" prefHeight="25.0" prefWidth="258.0"/>
+    </children>
 </Pane>

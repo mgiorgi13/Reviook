@@ -1,5 +1,7 @@
 package it.unipi.dii.reviook_app.controllers;
 
+import it.unipi.dii.reviook_app.entity.Author;
+import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -58,11 +60,11 @@ public class RegisterController {
             //convalid email
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher mEmail = p.matcher(email);
-            if (userManager.verifyUsername(nickname,CheckAuthor.isSelected() ? "author":"user", false) != -1)
+            if (userManager.verifyUsername(nickname, CheckAuthor.isSelected() ? "author" : "user", false) != -1)
                 return "Existing username";
             if (!mEmail.find())
                 return "Invalid email";
-            if (!userManager.verifyEmail(email))
+            if (!userManager.verifyEmail(email, CheckAuthor.isSelected() ? "author" : "user"))
                 return "Existing e-mail";
             if (!password.equals(repeatPsw))
                 return "Passwords must be the same";
@@ -97,6 +99,7 @@ public class RegisterController {
         nickname = singInUName.getText();
         password = singInPassword.getText();
         repeatPsw = singInRepeatPsw.getText();
+        User newUser = null;
         if (singInName.getText().isEmpty() || singInSurname.getText().isEmpty() || singInEmail.getText().isEmpty() || singInUName.getText().isEmpty() || singInPassword.getText().isEmpty() || singInRepeatPsw.getText().isEmpty()) {
             actionTarget.setText("You must fill in all fields");
             return;
@@ -109,21 +112,30 @@ public class RegisterController {
             actionTarget.setText(singIn);
             return;
         }
+        newUser = new User(id, Name + " " + surname, nickname, email, password);
         if (CheckAuthor.isSelected()) {
-            userManager.addNewUsers("Author", id, Name+surname, nickname);
-            userManager.register(Name, surname, email, nickname, password, "Author", id);
+            if (userManager.register(newUser, "Author")) {
+                if (!userManager.addNewUsers(newUser, "Author"))
+                    singIn = "Error: unable to register";
+            } else {
+                singIn = "Error: unable to register";
+            }
         } else {
-            userManager.addNewUsers("User", id, Name+surname, nickname);
-            userManager.register(Name, surname, email, nickname, password, "User", id);
+            if (userManager.register(newUser, "User")) {
+                if (!userManager.addNewUsers(newUser, "User"))
+                    singIn = "Error: unable to register";
+            } else {
+                singIn = "Error: unable to register";
+            }
         }
         actionTarget.setText(singIn);
-        Thread.sleep(1000);
         Parent login_scene = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 
 
     @FXML
@@ -133,5 +145,6 @@ actual_stage.centerOnScreen();    }
         actual_stage.setScene(new Scene(login_scene));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();
+    }
 }

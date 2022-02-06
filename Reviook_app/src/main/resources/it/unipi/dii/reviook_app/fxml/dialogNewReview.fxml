@@ -7,16 +7,29 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.DialogNewReviewController">
+<?import javafx.scene.Cursor?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.unipi.dii.reviook_app.controllers.DialogNewReviewController">
     <children>
-        <TextArea fx:id="newReviewText" layoutX="12.0" layoutY="54.0" prefHeight="234.0" prefWidth="576.0" />
-        <JFXButton fx:id="exitButton" layoutX="416.0" layoutY="361.0" onAction="#exitDialogAction" style="-fx-font-weight: bold;" text="Exit" textFill="#ab2121" />
-        <JFXButton fx:id="addButton" layoutX="498.0" layoutY="361.0" onAction="#addReviewAction" style="-fx-font-weight: bold;" text="Add" textFill="#168a50">
-         <graphic>
-            <FontAwesomeIconView fill="#13973d" glyphName="PLUS" />
-         </graphic></JFXButton>
-        <Text layoutX="261.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add new Review" />
-      <Text layoutX="14.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Book stars" />
-      <ChoiceBox fx:id="bookStars" layoutX="77.0" layoutY="295.0" prefHeight="25.0" prefWidth="44.0" />
+        <TextArea fx:id="newReviewText" layoutX="12.0" layoutY="54.0" prefHeight="234.0" prefWidth="576.0"/>
+        <JFXButton fx:id="exitButton" layoutX="416.0" layoutY="361.0" onAction="#exitDialogAction"
+                   style="-fx-font-weight: bold;" text="Exit" textFill="#ab2121">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </JFXButton>
+        <JFXButton fx:id="addButton" layoutX="498.0" layoutY="361.0" onAction="#addReviewAction"
+                   style="-fx-font-weight: bold;" text="Add" textFill="#168a50">
+            <graphic>
+                <FontAwesomeIconView fill="#13973d" glyphName="PLUS"/>
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </JFXButton>
+        <Text layoutX="261.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add new Review"/>
+        <Text layoutX="14.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Book stars"/>
+        <ChoiceBox fx:id="bookStars" layoutX="77.0" layoutY="295.0" prefHeight="25.0" prefWidth="44.0"/>
     </children>
 </Pane>

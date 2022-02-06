@@ -4,12 +4,13 @@
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.SearchInterfaceController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="820.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.SearchInterfaceController">
     <children>
         <VBox layoutX="6.0" layoutY="4.0" prefHeight="814.0" prefWidth="757.0">
             <children>
@@ -17,9 +18,13 @@
                     <children>
                         <TextField fx:id="searchText" layoutX="26.0" layoutY="38.0" prefHeight="47.0" prefWidth="402.0" />
                         <JFXButton layoutX="667.0" layoutY="46.0" onAction="#searchAction" text="SEARCH">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="SEARCH" />
-                     </graphic></JFXButton>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="SEARCH" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
                         <JFXCheckBox fx:id="bookCheck" layoutX="591.0" layoutY="30.0" mnemonicParsing="false" onAction="#selectBookCheckAction" text="Book" />
                         <JFXCheckBox fx:id="authorCheck" layoutX="591.0" layoutY="53.0" mnemonicParsing="false" onAction="#selectAuthorCheckAction" text="Author" />
                         <JFXCheckBox fx:id="userCheck" layoutX="591.0" layoutY="77.0" mnemonicParsing="false" onAction="#selectUserCheckAction" text="Users" />
@@ -32,9 +37,13 @@
                         <JFXListView fx:id="usersList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
                         <JFXListView fx:id="authorsList" layoutX="22.0" layoutY="15.0" prefHeight="597.0" prefWidth="713.0" />
                         <JFXButton fx:id="homeButton" layoutX="346.0" layoutY="633.0" onAction="#homeInterface" text="HOME">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="HOME" />
-                     </graphic></JFXButton>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="HOME" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
                     </children>
                 </Pane>
             </children>

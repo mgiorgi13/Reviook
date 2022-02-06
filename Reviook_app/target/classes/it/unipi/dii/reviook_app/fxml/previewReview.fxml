@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
@@ -8,13 +9,19 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.PreviewReviewController">
     <children>
         <ScrollPane fx:id="scrollPane" layoutX="19.0" layoutY="77.0" prefHeight="434.0" prefWidth="694.0">
-         <content>
-            <Text fx:id="reviewText" strokeType="OUTSIDE" strokeWidth="0.0" text="text" wrappingWidth="677.916015625" />
-         </content></ScrollPane>
+            <content>
+                <Text fx:id="reviewText" strokeType="OUTSIDE" strokeWidth="0.0" text="text" wrappingWidth="677.916015625" />
+            </content>
+        </ScrollPane>
         <Text layoutX="26.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="By" />
-        <Text fx:id="authorReviewField" layoutX="50.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="author review" />
+        <Text fx:id="authorReviewField" layoutX="50.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="author review" wrappingWidth="282.29296875" />
         <Text layoutX="26.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="rating:" />
         <Text fx:id="ratingField" layoutX="79.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-        <JFXButton fx:id="closeButton" layoutX="638.0" layoutY="519.0" onAction="#closeDialogAction" text="Close" />
+        <JFXButton fx:id="closeButton" layoutX="638.0" layoutY="519.0" onAction="#closeDialogAction" text="Close">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </JFXButton>
+      <Text fx:id="dateUpdateField" layoutX="535.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="dd mmm yyyy | hh:mm:ss" textAlignment="CENTER" wrappingWidth="171.13671875" />
     </children>
 </Pane>

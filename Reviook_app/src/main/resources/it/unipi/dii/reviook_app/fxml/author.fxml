@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="819.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AuthorInterfaceController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="820.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.AuthorInterfaceController">
     <left>
         <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
@@ -87,6 +87,7 @@
                         <Font size="16.0" />
                     </font>
                 </Text>
+            <Text fx:id="actionTarget" layoutX="14.0" layoutY="639.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.13671875" />
             </children>
         </Pane>
     </left>
@@ -106,7 +107,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: blue;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount1" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -125,7 +126,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #cd7818;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount2" fill="WHITE" layoutX="11.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -141,7 +142,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #1eba22;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount3" fill="WHITE" layoutX="11.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -157,7 +158,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #ba1e68;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="userFollowerCount4" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -187,7 +188,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: blue;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount1" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -206,7 +207,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#cd781800" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #cd7818;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount2" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -222,7 +223,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #1eba22;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount3" fill="WHITE" layoutX="11.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -238,7 +239,7 @@
                                             </cursor>
                                         </Text>
                                         <Circle fill="#ffffff00" layoutX="27.0" layoutY="27.0" radius="27.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" style="-fx-fill: #ba1e68;" />
-                                        <Text fill="WHITE" layoutX="20.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" />
+                                        <Text fx:id="authorFollowerCount4" fill="WHITE" layoutX="11.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="11" textAlignment="CENTER" wrappingWidth="32.8046875" />
                                     </children>
                                 </Pane>
                             </children>
@@ -257,17 +258,26 @@
                             <graphic>
                                 <FontAwesomeIconView glyphName="USER" />
                             </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
                         </JFXButton>
                         <JFXButton fx:id="addButtonBook" layoutX="99.0" mnemonicParsing="false" onAction="#addButtonBookFunction" prefHeight="47.0" prefWidth="119.0" text="ADD NEW BOOK">
                             <graphic>
                                 <FontAwesomeIconView glyphName="PLUS" />
                             </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
                         </JFXButton>
-                      <JFXButton fx:id="rankingButton" layoutX="218.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="47.0" prefWidth="86.0" text="RANKING">
-                          <graphic>
-                              <FontAwesomeIconView glyphName="SIGNAL" />
-                          </graphic>
-                      </JFXButton>
+                        <JFXButton fx:id="rankingButton" layoutX="218.0" mnemonicParsing="false" onAction="#selectRanking" prefHeight="47.0" prefWidth="86.0" text="RANKING">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="SIGNAL" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="333.0">
@@ -284,17 +294,29 @@
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Follow" />
                             </children>
                         </VBox>
-                        <JFXCheckBox fx:id="follow" layoutX="172.0" layoutY="51.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
-                        <Text fx:id="usernameAuthor" layoutX="75.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="89.0" />
+                        <JFXCheckBox fx:id="follow" layoutX="235.0" layoutY="33.0" mnemonicParsing="false" onAction="#addFollow" text="follow" />
+                        <Text fx:id="authorName" layoutX="45.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AUTHOR NAME" textAlignment="CENTER" wrappingWidth="159.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Text>
+                  <Text fx:id="usernameAuthor" layoutX="45.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USERNAME" textAlignment="CENTER" wrappingWidth="159.0">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Text>
                     </children>
                 </Pane>
                 <Pane prefHeight="138.0" prefWidth="260.0">
-               <children>
+                    <children>
                         <JFXButton fx:id="logoutButton" layoutX="169.0" onAction="#logoutActon" prefHeight="47.0" text="LOGOUT">
-                     <graphic>
-                        <FontAwesomeIconView glyphName="UNDO" />
-                     </graphic></JFXButton>
-               </children>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="UNDO" />
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </JFXButton>
+                    </children>
                 </Pane>
             </children>
         </HBox>
@@ -331,7 +353,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#viewFollow" text="Follow">
+                        <Tab onSelectionChanged="#viewFollow" text="FOLLOW">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -340,7 +362,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab onSelectionChanged="#viewFollower" text="Follower">
+                        <Tab onSelectionChanged="#viewFollower" text="FOLLOWER">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -351,11 +373,21 @@
                         </Tab>
                     </tabs>
                 </TabPane>
-                <JFXButton fx:id="homeButton" layoutX="169.0" layoutY="619.0" mnemonicParsing="false" onAction="#homeButton" text="HOME" />
-                <JFXButton fx:id="searchButton" layoutX="220.0" layoutY="614.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
+                <JFXButton fx:id="homeButton" layoutX="137.0" layoutY="620.0" mnemonicParsing="false" onAction="#homeButton" text="HOME">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="HOME" />
+                    </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </JFXButton>
+                <JFXButton fx:id="searchButton" layoutX="300.0" layoutY="620.0" mnemonicParsing="false" onAction="#searchInterface" text="SEARCH">
                     <graphic>
                         <FontAwesomeIconView glyphName="SEARCH" />
                     </graphic>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
                 </JFXButton>
             </children>
         </Pane>

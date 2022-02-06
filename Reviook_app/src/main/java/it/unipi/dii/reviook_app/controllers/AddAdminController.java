@@ -3,10 +3,8 @@ package it.unipi.dii.reviook_app.controllers;
 import com.jfoenix.controls.JFXButton;
 
 import java.io.IOException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ResourceBundle;
 
 import it.unipi.dii.reviook_app.manager.AdminManager;
 import javafx.event.ActionEvent;
@@ -27,6 +25,9 @@ public class AddAdminController {
     private JFXButton addAdminButton;
 
     @FXML
+    private Text actionTarget;
+
+    @FXML
     private JFXButton loginButton;
 
     @FXML
@@ -45,7 +46,7 @@ public class AddAdminController {
         actual_stage.setScene(new Scene(loginInterface));
         actual_stage.setResizable(false);
         actual_stage.show();
-actual_stage.centerOnScreen();actual_stage.centerOnScreen();    }
+        actual_stage.centerOnScreen();actual_stage.centerOnScreen();    }
 
     @FXML
     void addAdminAction(ActionEvent event) throws NoSuchAlgorithmException, IOException {
@@ -57,7 +58,9 @@ actual_stage.centerOnScreen();actual_stage.centerOnScreen();    }
         //md.update(signUpPassword.getText().getBytes());
         md.update(passwordField.getText().getBytes());
         byte[] digest = md.digest();
-        adminManager.AddNewAdmin(usernameField.getText(), DatatypeConverter.printHexBinary(digest).toUpperCase());
-        loginAction();
+        if(adminManager.addNewAdmin(usernameField.getText(), DatatypeConverter.printHexBinary(digest).toUpperCase()))
+            loginAction();
+        else
+            actionTarget.setText("Error: can't add new admin");
     }
 }

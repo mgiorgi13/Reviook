@@ -6,6 +6,7 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
@@ -41,7 +42,6 @@ public class UserManager {
     private static final String authorCollection = "authors";
     private static final String bookCollection = "books";
     private static final String adminsCollection = "admins";
-    private static final String genreCollection = "genres";
 
     public UserManager() {
         this.md = MongoDriver.getInstance();
@@ -49,54 +49,64 @@ public class UserManager {
     }
 
     // N4J
-    public void addNewUsers(String type, String id, String name, String username) {
+    public boolean addNewUsers(User user, String type) {
+        boolean result;
         try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", id, "name", name, "username", username));
-                return null;
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                tx.run("CREATE (ee:" + type + " { id: $id,  name: $name, username: $username})", parameters("id", user.getId(), "name", user.getName(), "username", user.getNickname()));
+                return true;
             });
         }
+        if (!result)
+            deleteUserMongo(user, type);
+        return result;
     }
 
-    public boolean deleteUserN4J(String username, String type) {
-        boolean result = false;
-//        String username;
-//        String type = this.session.getIsAuthor() ? "Author" : "User";
-//        if (this.session.getIsAuthor())
-//            username = this.session.getLoggedAuthor().getNickname();
-//        else
-//            username = this.session.getLoggedUser().getNickname();
+    public boolean deleteUserN4J(User user, String type) {
+        boolean result;
         String t = type.equals("author") ? "Author" : "User";
         try (Session session = nd.getDriver().session()) {
             result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
-                tx.run("MATCH (n : " + t + " { username: '" + username + "'}) DETACH DELETE n");
+                tx.run("MATCH (n : " + t + " { username: '" + user.getNickname() + "'}) DETACH DELETE n");
                 return true;
             });
+        }
+        if (!result)
+            addNewUsers(user, type);
+        return result;
+    }
+
+    public boolean following(String username1, String type1, String username2, String type2) {
+        boolean result = false;
+        if (incrementFollowerCount(username2)) {
+            try (Session session = nd.getDriver().session()) {
+                result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                    tx.run("MATCH (n:" + type1 + "),(nn:" + type2 + ") WHERE n.username ='" + username1 + "' AND nn.username='" + username2 + "'" +
+                            "CREATE (n)-[:FOLLOW]->(nn)");
+                    return true;
+                });
+            }
+            if (result != true)
+                decrementFollowerCount(username2);
         }
         return result;
     }
 
-    public void following(String username1, String type1, String username2, String type2) {
-        try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (n:" + type1 + "),(nn:" + type2 + ") WHERE n.username ='" + username1 + "' AND nn.username='" + username2 + "'" +
-                        "CREATE (n)-[:FOLLOW]->(nn)");
-                return null;
-            });
+    public boolean deleteFollowing(String username1, String type1, String username2, String type2) {
+        boolean result = false;
+        if (decrementFollowerCount(username2)) {
+            try (Session session = nd.getDriver().session()) {
+                result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
+                    tx.run("MATCH (n:" + type1 + " { username: '" + username1 + "' })-[r:FOLLOW]-> " +
+                            "(c :" + type2 + " { username: '" + username2 + "' })" +
+                            "DELETE r");
+                    return true;
+                });
+            }
+            if (result != true)
+                incrementFollowerCount(username2);
         }
-        incrementFollowerCount(username2);
-    }
-
-    public void deleteFollowing(String username1, String type1, String username2, String type2) {
-        try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (n:" + type1 + " { username: '" + username1 + "' })-[r:FOLLOW]-> " +
-                        "(c :" + type2 + " { username: '" + username2 + "' })" +
-                        "DELETE r");
-                return null;
-            });
-        }
-        decrementFollowerCount(username2);
+        return result;
     }
 
     public ArrayList<Book> loadRelationsBook(String type, String username, String read) {
@@ -112,15 +122,12 @@ public class UserManager {
                 }
                 return books;
             });
-
-
         }
         return readings;
     }
 
-    public List<String> loadRelations(String type, String username) {
-
-        List<String> relationship;
+    public List<String> loadRelationsFollowing(String type, String username) {
+        List<String> relationship = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             relationship = session.readTransaction((TransactionWork<List<String>>) tx -> {
                 Result result = tx.run("MATCH (ee:" + type + ")-[:FOLLOW]->(friends) where ee.username = '" + username + "' " +
@@ -137,7 +144,7 @@ public class UserManager {
     }
 
     public List<String> loadRelationsFollower(String type, String username) {
-        List<String> relationship;
+        List<String> relationship = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             relationship = session.readTransaction((TransactionWork<List<String>>) tx -> {
                 Result result = tx.run("MATCH (ee:" + type + ")<-[:FOLLOW]-(friends) where ee.username = '" + username + "' " +
@@ -153,97 +160,77 @@ public class UserManager {
         return relationship;
     }
 
-    public void toReadAdd(String type, String username, String book_id) {
+    public boolean toReadAdd(String type, String username, String book_id) {
+        boolean result = false;
         try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.id='" + book_id + "'" +
                         "MERGE (n)-[:TO_READ]->(nn)");
-                return null;
+                return true;
             });
         }
-
-
+        return result;
     }
 
-    public void readAdd(String type, String username, String book_id) {
+    public boolean readAdd(String type, String username, String book_id) {
+        boolean result = false;
         try (Session session = nd.getDriver().session()) {
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-
+            result = session.writeTransaction((TransactionWork<Boolean>) tx -> {
                 tx.run("MATCH (n:" + type + "),(nn:Book) WHERE n.username ='" + username + "' AND nn.id='" + book_id + "'" +
                         "MERGE (n)-[:READ]->(nn)");
-                return null;
+                return true;
             });
         }
-
-
+        return result;
     }
     //==================================================================================================================
 
     //MongoDB ==========================================================================================================
 
-    public DBObject paramAuthor(String Username) {
-        MongoCollection<Document> authors = md.getCollection(authorCollection);
-        DBObject author = new BasicDBObject();
-        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                author.put("author_name", (String) user.get("name"));
-                author.put("author_role", "");
-                author.put("author_id", (String) user.get("author_id"));
-            }
-        }
-
-        return author;
-    }
-
-    public String retrieveID(String Username) {
-        MongoCollection<Document> authors = md.getCollection(authorCollection);
-        String ID = null;
-        try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
-            while (cursor.hasNext()) {
-                Document user = cursor.next();
-                ID = user.get("author_id").toString();
-
-            }
-        }
-        return ID;
-    }
-
     public int verifyUsername(String Username, String type, boolean loggingIn) {
         MongoCollection<Document> admins = md.getCollection(adminsCollection);
         MongoCollection<Document> users = md.getCollection(usersCollection);
         MongoCollection<Document> authors = md.getCollection(authorCollection);
-
-        if (type.equals("admin")) {
-            try (MongoCursor<Document> cursor = admins.find(eq("username", Username)).iterator()) {
+        MongoCursor<Document> cursor = null;
+        try {
+            if (type.equals("admin")) {
+                cursor = admins.find(eq("username", Username)).iterator();
                 while (cursor.hasNext()) {
+                    Document admin = cursor.next();
+                    session.setAdmin(admin.getString("username"));
                     return 2;
                 }
+
             }
-        }
-        if (type.equals("author")||type.equals("")) {
-            try (MongoCursor<Document> cursor = authors.find(eq("username", Username)).iterator()) {
+            if (type.equals("author") || type.equals("")) {
+                cursor = authors.find(eq("username", Username)).iterator();
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
                     if (loggingIn) {
                         ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                        session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                        session.setLoggedAuthor(user.getString("author_id"), user.get("name").toString(), user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
                     }
                     return 1;
                 }
+
             }
-        }
-        if(type.equals("user")||type.equals("")){
-            try (MongoCursor<Document> cursor = users.find(eq("username", Username)).iterator()) {
+            if (type.equals("user") || type.equals("")) {
+                cursor = users.find(eq("username", Username)).iterator();
                 while (cursor.hasNext()) {
                     Document user = cursor.next();
                     if (loggingIn) {
                         ArrayList<String> listReviewID = (ArrayList<String>) user.get("liked_review");
-                        session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), "", user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
+                        session.setLoggedUser(user.getString("user_id"), user.get("name").toString(), user.get("username").toString(), user.get("email").toString(), user.get("password").toString(), listReviewID, (Integer) user.get("follower_count"));
                     }
                     return 0;
                 }
+
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
         return -1;
     }
@@ -254,98 +241,120 @@ public class UserManager {
             while (cursor.hasNext()) {
                 return true;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
 
-    public boolean verifyEmail(String Email) {
-        MongoCollection<Document> users = md.getCollection(usersCollection);
-        MongoCollection<Document> authors = md.getCollection(authorCollection);
+    public boolean verifyEmail(String Email, String type) {
+        MongoCollection<Document> users = md.getCollection(type.equals("author") ? authorCollection : usersCollection);
         try (MongoCursor<Document> cursor = users.find(eq("email", Email)).iterator()) {
             while (cursor.hasNext()) {
                 return false;
             }
-        }
-        try (MongoCursor<Document> cursor = authors.find(eq("email", Email)).iterator()) {
-            while (cursor.hasNext()) {
-                return false;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return true;
     }
 
-    public void register(String name, String surname, String email, String nickname, String password, String type, String id) {
+    public boolean register(User user, String type) {
         ArrayList<String> liked_review = new ArrayList<>();
-        Document doc = new Document("name", name + " " + surname)
-                .append("password", password)
-                .append("follower_count", 0)
-                .append("liked_review", liked_review)
-                .append("email", email)
-                .append("username", nickname);
-
-
-        if (type.equals("Author")) {
-            doc.append("author_id", id);
-            md.getCollection(authorCollection).insertOne(doc);
-        } else {
-            doc.append("user_id", id);
-            md.getCollection(usersCollection).insertOne(doc);
+        InsertOneResult result = null;
+        try {
+            Document doc = new Document("name", user.getName())
+                    .append("password", user.getPassword())
+                    .append("follower_count", 0)
+                    .append("liked_review", liked_review)
+                    .append("email", user.getEmail())
+                    .append("username", user.getNickname());
+            if (type.equals("Author")) {
+                doc.append("author_id", user.getId());
+                result = md.getCollection(authorCollection).insertOne(doc);
+            } else {
+                doc.append("user_id", user.getId());
+                result = md.getCollection(usersCollection).insertOne(doc);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
+        if (result != null)
+            return result.wasAcknowledged();
+        return false;
     }
 
-    public boolean deleteUserMongo(String username, String type) {
+    public boolean deleteUserMongo(User userDel, String type) {
         MongoCollection<Document> user = md.getCollection(type.equals("author") ? authorCollection : usersCollection);
-//        String username;
-//        if (session.getIsAuthor())
-//            username = session.getLoggedAuthor().getNickname();
-//        else
-//            username = session.getLoggedUser().getNickname();
-
-        DeleteResult deleteResult = user.deleteOne(eq("username", username));
-        if (deleteResult.getDeletedCount() == 1)
+        DeleteResult deleteResult = null;
+        try {
+            deleteResult = user.deleteOne(eq("username", userDel.getNickname()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (deleteResult != null && deleteResult.getDeletedCount() == 1)
             return true;
         return false;
     }
 
     public boolean updatePassword(String newPassword) {
         MongoCollection<Document> user = md.getCollection(session.getIsAuthor() ? authorCollection : usersCollection);
+        UpdateResult updateResult = null;
         String username;
-        if (session.getIsAuthor())
-            username = session.getLoggedAuthor().getNickname();
-        else
-            username = session.getLoggedUser().getNickname();
-
-        UpdateResult updateResult = user.updateOne(eq("username", username), Updates.set("password", newPassword));
-        if (updateResult.getModifiedCount() == 1)
+        try {
+            if (session.getIsAuthor())
+                username = session.getLoggedAuthor().getNickname();
+            else
+                username = session.getLoggedUser().getNickname();
+            updateResult = user.updateOne(eq("username", username), Updates.set("password", newPassword));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (updateResult != null & updateResult.getModifiedCount() == 1)
             return true;
         return false;
     }
 
-    private void incrementFollowerCount(String id) {
+    private boolean incrementFollowerCount(String id) {
         //increment follower count
-        if (session.getIsAuthor() != null) {
-            MongoCollection<Document> authors = md.getCollection(authorCollection);
-            Bson getAuthor = eq("author_id", id);
-            authors.updateOne(getAuthor, Updates.inc("follower_count", 1));
-        } else if (session.getLoggedUser() != null) {
-            MongoCollection<Document> users = md.getCollection(usersCollection);
-            Bson getUser = eq("user_id", id);
-            users.updateOne(getUser, Updates.inc("follower_count", 1));
+        UpdateResult result = null;
+        try {
+            if (session.getIsAuthor() != null) {
+                MongoCollection<Document> authors = md.getCollection(authorCollection);
+                Bson getAuthor = eq("author_id", id);
+                result = authors.updateOne(getAuthor, Updates.inc("follower_count", 1));
+            } else if (session.getLoggedUser() != null) {
+                MongoCollection<Document> users = md.getCollection(usersCollection);
+                Bson getUser = eq("user_id", id);
+                result = users.updateOne(getUser, Updates.inc("follower_count", 1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        if (result != null)
+            return result.wasAcknowledged();
+        return false;
     }
 
-    private void decrementFollowerCount(String id) {
+    private boolean decrementFollowerCount(String id) {
         //increment follower count
-        if (session.getIsAuthor() != null) {
-            MongoCollection<Document> authors = md.getCollection(authorCollection);
-            Bson getAuthor = eq("author_id", id);
-            authors.updateOne(getAuthor, Updates.inc("follower_count", -1));
-        } else if (session.getLoggedUser() != null) {
-            MongoCollection<Document> users = md.getCollection(usersCollection);
-            Bson getUser = eq("user_id", id);
-            users.updateOne(getUser, Updates.inc("follower_count", -1));
+        UpdateResult result = null;
+        try {
+            if (session.getIsAuthor() != null) {
+                MongoCollection<Document> authors = md.getCollection(authorCollection);
+                Bson getAuthor = eq("author_id", id);
+                result = authors.updateOne(getAuthor, Updates.inc("follower_count", -1));
+            } else if (session.getLoggedUser() != null) {
+                MongoCollection<Document> users = md.getCollection(usersCollection);
+                Bson getUser = eq("user_id", id);
+                result = users.updateOne(getUser, Updates.inc("follower_count", -1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        if (result != null)
+            return result.wasAcknowledged();
+        return false;
     }
 
     //==================================================================================================================
@@ -366,6 +375,9 @@ public class UserManager {
             while (cursor.hasNext()) {
                 author_id = cursor.next().getString("author_id");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return topRated;
         }
         if (author_id == null)
             return null;
@@ -377,10 +389,11 @@ public class UserManager {
             while (cursor.hasNext()) {
                 Document stat = cursor.next();
                 Double avg = Math.round((stat.getDouble("average_rating")) * 100) / 100.0;
-
                 Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return topRated;
     }
@@ -405,6 +418,8 @@ public class UserManager {
                 Genre genre = new Genre(stat.getString("_id"), Double.valueOf(avg));
                 topRated.add(genre);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return topRated;
     }
@@ -412,7 +427,6 @@ public class UserManager {
     public ArrayList<User> similarUsers(String username, String type) {
         ArrayList<User> suggestion = new ArrayList<>();
         ArrayList<User> queryResult = new ArrayList<>();
-
         try (Session session = nd.getDriver().session()) {
             suggestion = session.readTransaction((TransactionWork<ArrayList<User>>) tx -> {
                 Result result = tx.run("MATCH (u1:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +
@@ -420,7 +434,7 @@ public class UserManager {
                         "RETURN DISTINCT u2.id,u2.name,u2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new User(r.get("u2.id").asString(), r.get("u2.name").asString(), "", r.get("u2.username").asString(), "", "", new ArrayList<>(), 0));
+                    queryResult.add(new User(r.get("u2.id").asString(), r.get("u2.name").asString(), r.get("u2.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });
@@ -438,7 +452,7 @@ public class UserManager {
                         "RETURN DISTINCT a.id,a.name,a.username");
                 while (result.hasNext()) {
                     Record r = result.next();
-                    queryResult.add(new Author(r.get("a.id").asString(), r.get("a.name").asString(), "", r.get("a.username").asString(), "", "", new ArrayList<>(), 0));
+                    queryResult.add(new Author(r.get("a.id").asString(), r.get("a.name").asString(), r.get("a.username").asString(), "", "", new ArrayList<>(), 0));
                 }
                 return queryResult;
             });

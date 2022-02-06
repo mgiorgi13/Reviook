@@ -11,6 +11,7 @@ import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
 import it.unipi.dii.reviook_app.entity.User;
+import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.SearchManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
 import it.unipi.dii.reviook_app.Session;
@@ -36,7 +37,34 @@ public class UserInterfaceController {
     private ResourceBundle resources;
 
     @FXML
-    private Text usernameUser, followerCount, followCount;
+    private Text userFollowerCount1;
+
+    @FXML
+    private Text userFollowerCount2;
+
+    @FXML
+    private Text userFollowerCount3;
+
+    @FXML
+    private Text userFollowerCount4;
+
+    @FXML
+    private Text authorFollowerCount1;
+
+    @FXML
+    private Text authorFollowerCount2;
+
+    @FXML
+    private Text authorFollowerCount3;
+
+    @FXML
+    private Text authorFollowerCount4;
+
+    @FXML
+    private Text usernameUser, userName, followerCount, followCount;
+
+    @FXML
+    private Text actionTarget;
 
     @FXML
     private JFXListView<String> listFollow, listFollower;
@@ -82,6 +110,7 @@ public class UserInterfaceController {
 
     private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
+    private BookManager bookManager = new BookManager();
 
     private Session session = Session.getInstance();
 
@@ -109,38 +138,44 @@ public class UserInterfaceController {
     public void addFollow(ActionEvent event) throws IOException {
         if (follow.isSelected()) {
             if (session.getLoggedAuthor() != null) {
-                session.getLoggedAuthor().getInteractions().getFollow().add(usernameUser.getText());
-                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
-
-                visualizedUser.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()+1);
+                if (!userManager.following(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to add follow");
+                else {
+                    session.getLoggedAuthor().getInteractions().getFollow().add(usernameUser.getText());
+                    session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() + 1);
+                    visualizedUser.getInteractions().getFollower().add(session.getLoggedAuthor().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
+                }
             } else if (session.getLoggedUser() != null) {
-                session.getLoggedUser().getInteractions().getFollow().add(usernameUser.getText());
-                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
-                userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
-
-                visualizedUser.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()+1);
+                if (!userManager.following(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to add follow");
+                else {
+                    session.getLoggedUser().getInteractions().getFollow().add(usernameUser.getText());
+                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() + 1);
+                    visualizedUser.getInteractions().getFollower().add(session.getLoggedUser().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() + 1);
+                }
             }
 
         } else {
             if (session.getLoggedAuthor() != null) {
-                userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User");
-
-                session.getLoggedAuthor().getInteractions().getFollow().remove(usernameUser.getText());
-                session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
-
-                visualizedUser.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()-1);
+                if (!userManager.deleteFollowing(session.getLoggedAuthor().getNickname(), "Author", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to delete follow");
+                else {
+                    session.getLoggedAuthor().getInteractions().getFollow().remove(usernameUser.getText());
+                    session.getLoggedAuthor().getInteractions().setNumberFollow(session.getLoggedAuthor().getInteractions().getNumberFollow() - 1);
+                    visualizedUser.getInteractions().getFollower().remove(session.getLoggedAuthor().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
+                }
             } else if (session.getLoggedUser() != null) {
-                userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User");
-
-                session.getLoggedUser().getInteractions().getFollow().remove(usernameUser.getText());
-                session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
-
-                visualizedUser.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
-                visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower()-1);
+                if (!userManager.deleteFollowing(session.getLoggedUser().getNickname(), "User", usernameUser.getText(), "User"))
+                    actionTarget.setText("Error: unable to delete follow");
+                else {
+                    session.getLoggedUser().getInteractions().getFollow().remove(usernameUser.getText());
+                    session.getLoggedUser().getInteractions().setNumberFollow(session.getLoggedUser().getInteractions().getNumberFollow() - 1);
+                    visualizedUser.getInteractions().getFollower().remove(session.getLoggedUser().getNickname());
+                    visualizedUser.getInteractions().setNumberFollower(visualizedUser.getInteractions().getNumberFollower() - 1);
+                }
             }
         }
     }
@@ -202,7 +237,7 @@ public class UserInterfaceController {
 
     private String truckString(String input) {
         if (input.length() > 14) {
-            return input.substring(0, 14);
+            return input.substring(0, 12) + "..";
         }
         return input;
     }
@@ -263,25 +298,33 @@ public class UserInterfaceController {
         HBAuthor4.setVisible(false);
 
         int size = suggestedAuthors.size();
-
+        List<String> Follower;
         if (size >= 1) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(0).getNickname());
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            authorFollowerCount1.setText(String.valueOf(Follower.size()));
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(1).getNickname());
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            authorFollowerCount2.setText(String.valueOf(Follower.size()));
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(2).getNickname());
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            authorFollowerCount3.setText(String.valueOf(Follower.size()));
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(3).getNickname());
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            authorFollowerCount4.setText(String.valueOf(Follower.size()));
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
 
@@ -298,41 +341,45 @@ public class UserInterfaceController {
         int size = suggestedUsers.size();
         if (size >= 1) {
             HBUser1.setVisible(true);
-            suggestedUser1.setText(truckString(suggestedUsers.get(0).getNickname()));
+            userFollowerCount1.setText(String.valueOf(suggestedUsers.get(0).getFollowerCount()));
+            suggestedUser1.setText(truckString(suggestedUsers.get(0).getName()));
             setOnMouseClicked(HBUser1, 0, "User");
         }
         if (size >= 2) {
             HBUser2.setVisible(true);
-            suggestedUser2.setText(truckString(suggestedUsers.get(1).getNickname()));
+            userFollowerCount2.setText(String.valueOf(suggestedUsers.get(1).getFollowerCount()));
+            suggestedUser2.setText(truckString(suggestedUsers.get(1).getName()));
             setOnMouseClicked(HBUser2, 1, "User");
         }
         if (size >= 3) {
             HBUser3.setVisible(true);
-            suggestedUser3.setText(truckString(suggestedUsers.get(2).getNickname()));
+            userFollowerCount3.setText(String.valueOf(suggestedUsers.get(2).getFollowerCount()));
+            suggestedUser3.setText(truckString(suggestedUsers.get(2).getName()));
             setOnMouseClicked(HBUser3, 2, "User");
         }
         if (size >= 4) {
             HBUser4.setVisible(true);
-            suggestedUser4.setText(truckString(suggestedUsers.get(3).getNickname()));
+            userFollowerCount4.setText(String.valueOf(suggestedUsers.get(3).getFollowerCount()));
+            suggestedUser4.setText(truckString(suggestedUsers.get(3).getName()));
             setOnMouseClicked(HBUser4, 3, "User");
         }
 
     }
 
     public void setUser(User user) {
-        //TODO caricaListeLibri()
-        if(!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
+        if (!session.getIsAuthor() && user.getNickname().equals(session.getLoggedUser().getNickname()))
             visualizedUser = session.getLoggedUser();
         else
             visualizedUser = user;
 
         this.nickname = visualizedUser.getNickname();
-        usernameUser.setText(this.nickname);
+        usernameUser.setText(visualizedUser.getNickname());
+        userName.setText(visualizedUser.getName());
 
-        if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()){
+        if (visualizedUser.getInteractions().getFollow().isEmpty() && visualizedUser.getInteractions().getFollower().isEmpty()) {
             viewFollow();
             viewFollower();
-        }else{
+        } else {
             followCount.setText(String.valueOf(visualizedUser.getInteractions().getFollow().size()));
             followerCount.setText(String.valueOf(visualizedUser.getInteractions().getFollower().size()));
         }
@@ -343,13 +390,13 @@ public class UserInterfaceController {
         viewSuggestedUsers();
 
         rankingButton.setVisible(true);
-        homeButton.setVisible(false);
+        homeButton.setDisable(true);
         if (session.getLoggedAuthor() != null) {
-            if (!session.getLoggedAuthor().getNickname().equals(nickname)) {
+            if (!session.getLoggedAuthor().getNickname().equals(visualizedUser.getNickname())) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
-                homeButton.setVisible(true);
+                homeButton.setDisable(false);
             }
             if (!session.getLoggedAuthor().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedAuthor().getInteractions().getFollow().size(); i++) {
@@ -359,11 +406,11 @@ public class UserInterfaceController {
                 }
             }
         } else if (session.getLoggedUser() != null) {
-            if (!session.getLoggedUser().getNickname().equals(nickname)) {
+            if (!session.getLoggedUser().getNickname().equals(visualizedUser.getNickname())) {
                 follow.setVisible(true);
                 editButtonUser.setVisible(false);
                 rankingButton.setVisible(false);
-                homeButton.setVisible(true);
+                homeButton.setDisable(false);
             }
             if (!session.getLoggedUser().getInteractions().getFollow().isEmpty()) {
                 for (int i = 0; i < session.getLoggedUser().getInteractions().getFollow().size(); i++) {
@@ -397,19 +444,18 @@ public class UserInterfaceController {
 
     @FXML
     void viewFollow() {
-
         User user = visualizedUser;
         obsFollow.clear();
         List<String> Follow;
-        if(visualizedUser.getInteractions().getFollow().isEmpty()){
-            Follow = userManager.loadRelations("User", usernameUser.getText());
+        if (visualizedUser.getInteractions().getFollow().isEmpty()) {
+            Follow = userManager.loadRelationsFollowing("User", visualizedUser.getNickname());
             user.getInteractions().setNumberFollow(Follow.size());
             for (int i = 0; i < Follow.size(); i++) {
                 user.getInteractions().setFollow(Follow.get(i));
                 obsFollow.add(Follow.get(i));
             }
             followCount.setText(String.valueOf(Follow.size()));
-        }else{
+        } else {
             obsFollow.addAll(user.getInteractions().getFollow());
             followCount.setText(String.valueOf(user.getInteractions().getNumberFollow()));
         }
@@ -417,19 +463,18 @@ public class UserInterfaceController {
 
     @FXML
     void viewFollower() {
-
         User user = visualizedUser;
         obsFollower.clear();
         List<String> Follower;
-        if(visualizedUser.getInteractions().getFollower().isEmpty()){
-            Follower = userManager.loadRelationsFollower("User", usernameUser.getText());
+        if (visualizedUser.getInteractions().getFollower().isEmpty()) {
+            Follower = userManager.loadRelationsFollower("User", visualizedUser.getNickname());
             user.getInteractions().setNumberFollower(Follower.size());
             for (int i = 0; i < Follower.size(); i++) {
                 user.getInteractions().setFollower(Follower.get(i));
                 obsFollower.add(Follower.get(i));
             }
             followerCount.setText(String.valueOf(Follower.size()));
-        }else{
+        } else {
             obsFollower.addAll(user.getInteractions().getFollower());
             followerCount.setText(String.valueOf(user.getInteractions().getNumberFollower()));
         }
@@ -437,11 +482,10 @@ public class UserInterfaceController {
 
     @FXML
     void viewRead() {
-
         ArrayList<Book> read;
         obsRead.clear();
         if (visualizedUser.getBooks().getRead().isEmpty()) {
-            read = userManager.loadRelationsBook("User", usernameUser.getText(), "READ");
+            read = userManager.loadRelationsBook("User", visualizedUser.getNickname(), "READ");
             for (Book book : read) {
                 visualizedUser.getBooks().addToSetRead(book);
                 obsRead.add(book);
@@ -453,11 +497,10 @@ public class UserInterfaceController {
 
     @FXML
     void viewToRead() {
-
         ArrayList<Book> toRead;
         obsToRead.clear();
         if (visualizedUser.getBooks().getToRead().isEmpty()) {
-            toRead = userManager.loadRelationsBook("User", usernameUser.getText(), "TO_READ");
+            toRead = userManager.loadRelationsBook("User", visualizedUser.getNickname(), "TO_READ");
             for (Book book : toRead) {
                 visualizedUser.getBooks().addToSetToRead(book);
                 obsToRead.add(book);
@@ -488,32 +531,36 @@ public class UserInterfaceController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     Book selectedCell = (Book) listToRead.getSelectionModel().getSelectedItem();
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    try {
-                        Parent bookInterface;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                        bookInterface = (Parent) fxmlLoader.load();
-                        BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo, false);
-                        Stage actual_stage = (Stage) listToRead.getScene().getWindow();
-                        actual_stage.setScene(new Scene(bookInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                        actual_stage.centerOnScreen();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (allInfo != null) {
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(allInfo, false);
+                            Stage actual_stage = (Stage) listToRead.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     if (session.getLoggedUser() != null) {
-                        if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
+                        if (session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
                             Book removeCell = (Book) listToRead.getSelectionModel().getSelectedItem();
-                            searchManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User");
-                            listToRead.getItems().remove(removeCell);
-                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
-                                if(visualizedUser.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
-                                    visualizedUser.getBooks().removeToRead();
-                                }
+                            if (bookManager.removeBookFromList(removeCell.getBook_id(), "TO_READ", usernameUser.getText(), "User")) {
+                                listToRead.getItems().remove(removeCell);
+                                session.getLoggedUser().getBooks().getToRead().remove(removeCell);
                             }
+//                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
+//                                if(visualizedUser.getBooks().getToRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+//                                    visualizedUser.getBooks().removeToRead();
+//                                }
+//                            }
                         }
                     }
                 }
@@ -525,32 +572,36 @@ public class UserInterfaceController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     Book selectedCell = (Book) listRead.getSelectionModel().getSelectedItem();
                     Book allInfo = searchManager.searchIdBook(selectedCell.getBook_id());
-                    try {
-                        Parent bookInterface;
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
-                        bookInterface = (Parent) fxmlLoader.load();
-                        BookDetailController bookController = fxmlLoader.getController();
-                        bookController.setInfoBook(allInfo, false);
-                        Stage actual_stage = (Stage) listRead.getScene().getWindow();
-                        actual_stage.setScene(new Scene(bookInterface));
-                        actual_stage.setResizable(false);
-                        actual_stage.show();
-                        actual_stage.centerOnScreen();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (allInfo != null) {
+                        try {
+                            Parent bookInterface;
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
+                            bookInterface = (Parent) fxmlLoader.load();
+                            BookDetailController bookController = fxmlLoader.getController();
+                            bookController.setInfoBook(allInfo, false);
+                            Stage actual_stage = (Stage) listRead.getScene().getWindow();
+                            actual_stage.setScene(new Scene(bookInterface));
+                            actual_stage.setResizable(false);
+                            actual_stage.show();
+                            actual_stage.centerOnScreen();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     if (session.getLoggedUser() != null) {
-                        if(session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
+                        if (session.getLoggedUser().getNickname().equals(usernameUser.getText())) {
                             Book removeCell = (Book) listRead.getSelectionModel().getSelectedItem();
-                            searchManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User");
-                            listRead.getItems().remove(removeCell);
-                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
-                                if(visualizedUser.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
-                                    visualizedUser.getBooks().removeRead();
-                                }
+                            if (bookManager.removeBookFromList(removeCell.getBook_id(), "READ", usernameUser.getText(), "User")) {
+                                listRead.getItems().remove(removeCell);
+                                session.getLoggedUser().getBooks().getRead().remove(removeCell);
                             }
+//                            for(int i = 0; i< visualizedUser.getBooks().getToRead().size();i++){
+//                                if(visualizedUser.getBooks().getRead().get(i).getBook_id().equals(removeCell.getBook_id())){
+//                                    visualizedUser.getBooks().removeRead();
+//                                }
+//                            }
                         }
                     }
                 }
@@ -561,7 +612,6 @@ public class UserInterfaceController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = (String) listFollower.getSelectionModel().getSelectedItem();
-                    System.out.println(selectedCell);
                     int result = userManager.verifyUsername(selectedCell, "", false);
                     if (result == -1 || result == 2)
                         return;

@@ -17,12 +17,12 @@ public class Book {
     private String book_id;
     private Integer ratings_count;
     private String title;
-    private ArrayList<String> authors;
+    private ArrayList<Author> authors;
     private ArrayList<String> genres;
     private ArrayList<Review> reviews;
 
 
-    public Book(String isbn, String language_code, String asin, Double average_rating, String description, Integer num_pages, Integer publication_day, Integer publication_month, Integer publication_year, String image_url, String book_id, Integer ratings_count, String title, ArrayList<String> authors, ArrayList<String> genres, ArrayList<Review> reviews) {
+    public Book(String isbn, String language_code, String asin, Double average_rating, String description, Integer num_pages, Integer publication_day, Integer publication_month, Integer publication_year, String image_url, String book_id, Integer ratings_count, String title, ArrayList<Author> authors, ArrayList<String> genres, ArrayList<Review> reviews) {
         this.isbn = isbn;
         this.language_code = language_code;
         this.asin = asin;
@@ -41,7 +41,7 @@ public class Book {
         this.reviews = reviews;
     }
 
-    public Book(Integer num_pages, String URL_image, String selectedChoice, LocalDate date, String id, String title, String isbn, String description, ArrayList<String> genres, ArrayList<String> authors) {
+    public Book(Integer num_pages, String URL_image, String selectedChoice, LocalDate date, String id, String title, String isbn, String description, ArrayList<String> genres, ArrayList<Author> authors) {
         this(isbn, selectedChoice, "", 0.0, description, num_pages, date.getDayOfMonth(), date.getMonthValue(), date.getYear(), URL_image, id, 0, title, authors, genres, new ArrayList());
     }
 
@@ -153,11 +153,11 @@ public class Book {
         this.title = title;
     }
 
-    public ArrayList<String> getAuthors() {
+    public ArrayList<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(ArrayList<String> authors) {
+    public void setAuthors(ArrayList<Author> authors) {
         this.authors = authors;
     }
 
@@ -179,6 +179,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return title;
+        return title + "\n";
     }
 }

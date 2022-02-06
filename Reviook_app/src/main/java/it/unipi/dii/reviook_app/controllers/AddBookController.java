@@ -2,12 +2,11 @@ package it.unipi.dii.reviook_app.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.UUID;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-import com.mongodb.DBObject;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Genre;
@@ -26,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -46,7 +44,7 @@ public class AddBookController {
     JFXButton backButton;
 
     @FXML
-    private JFXListView<String> listTagged;
+    private JFXListView<Author> listTagged;
 
     @FXML
     private TextField authorTag, titleBook, ISBN, numPage, URLImage;
@@ -55,7 +53,7 @@ public class AddBookController {
     private TextArea description;
 
     @FXML
-    private Text actiontarget;
+    private Text actionTarget;
 
     @FXML
     private ChoiceBox languageCode;
@@ -65,7 +63,6 @@ public class AddBookController {
 
 
     private Session session = Session.getInstance();
-    private UserManager userManager = new UserManager();
     private SearchManager searchManager = new SearchManager();
     private BookManager bookManager = new BookManager();
     private ObservableList<String> availableChoices = FXCollections.observableArrayList();
@@ -104,7 +101,6 @@ public class AddBookController {
                 boolean check = false;
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     Author selectedCell = (Author) authorsList.getSelectionModel().getSelectedItem();
-
                     for (int i = 0; i < contatoreUsername; i++) {
                         if (listTagged.getItems().get(i).equals(selectedCell.getNickname())) {
                             check = true;
@@ -113,16 +109,32 @@ public class AddBookController {
                     }
                     if (check)
                         return;
-                    listTagged.getItems().addAll(selectedCell.getNickname());
+                    listTagged.getItems().addAll(selectedCell);
                     contatoreUsername++;
                 }
+            }
+        });
+        listTagged.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>() {
+            @Override
+            public ListCell<Author> call(ListView<Author> listView) {
+                return new ListCell<Author>() {
+                    @Override
+                    public void updateItem(Author item, boolean empty) {
+                        super.updateItem(item, empty);
+                        textProperty().unbind();
+                        if (item != null)
+                            setText(item.getNickname());
+                        else
+                            setText(null);
+                    }
+                };
             }
         });
         listTagged.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
-                    String removeCell = (String) listTagged.getSelectionModel().getSelectedItem();
+                    Author removeCell = (Author) listTagged.getSelectionModel().getSelectedItem();
                     listTagged.getItems().remove(removeCell);
                     contatoreUsername--;
                 }
@@ -161,7 +173,6 @@ public class AddBookController {
                 boolean check = false;
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String selectedCell = genreList.getSelectionModel().getSelectedItem().getType();
-
                     for (int i = 0; i < contatoreGener; i++) {
                         if (genreTag.getItems().get(i).equals(selectedCell)) {
                             check = true;
@@ -180,8 +191,6 @@ public class AddBookController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2 /*&& (mouseEvent.getTarget() instanceof Text)*/) {
                     String removeCell = genreTag.getSelectionModel().getSelectedItem();
-                    //System.out.println(selectedCell.getNickname());
-
                     genreTag.getItems().remove(removeCell);
                     contatoreGener--;
                 }
@@ -202,48 +211,59 @@ public class AddBookController {
         actual_stage.centerOnScreen();
     }
 
-    @FXML
-    void initialize() {
-        availableChoices.addAll(searchManager.searchLanguageCode());
-        languageCode.setItems(availableChoices);
-    }
-
     public void addBookFunction() throws IOException {
+        ArrayList<String> authorCheck = new ArrayList<>();
         if (titleBook.getText().isEmpty()) {
-            actiontarget.setText("You must enter the title");
+            actionTarget.setText("You must enter the title");
             return;
         }
         if (ISBN.getText().isEmpty()) {
-            actiontarget.setText("You must enter the ISBN");
+            actionTarget.setText("You must enter the ISBN");
             return;
         }
         if (genreTag.getItems().isEmpty()) {
-            actiontarget.setText("You must enter the Genres");
+            actionTarget.setText("You must enter the Genres");
             return;
         }
         String Title = titleBook.getText();
-        LocalDate date = publication_date.getValue();
-        String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String ISBN_ = ISBN.getText();
+        LocalDate date = (publication_date.getValue() == null) ? LocalDate.now() : publication_date.getValue();
+        String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String URL_image = URLImage.getText();
         Integer num_pages = numPage.getText() == null ? 0 : Integer.valueOf(numPage.getText());
         String Description = description.getText();
         ArrayList<String> Genre = new ArrayList<String>((ObservableList) genreTag.getItems());
-        ArrayList<String> UsernameTagged = new ArrayList<String>((ObservableList) listTagged.getItems());
-        UsernameTagged.add(session.getLoggedAuthor().getNickname());
-        ArrayList<DBObject> param = new ArrayList<DBObject>();
-        for (int i = 0; i < UsernameTagged.size(); i++) {
-            param.add(userManager.paramAuthor(UsernameTagged.get(i)));
+        ArrayList<Author> AuthorTagged = new ArrayList<Author>((ObservableList) listTagged.getItems());
+        for (Author a : AuthorTagged) {
+            authorCheck.add(a.getNickname());
         }
+        if (!authorCheck.contains(session.getLoggedAuthor().getNickname())) {
+            // get author logged
+            AuthorTagged.add(session.getLoggedAuthor());
+        }
+       /* ArrayList<DBObject> param = new ArrayList<DBObject>();
+        for (int i = 0; i < AuthorTagged.size(); i++) {
+            param.add(userManager.paramAuthor(AuthorTagged.get(i)));
+        }*/
         if (bookManager.verifyISBN(ISBN_)) {
-            actiontarget.setText("Existing ISBN");
+            actionTarget.setText("Existing ISBN");
             return;
         }
-        String concat = ISBN_ + Title + UsernameTagged;
+        String concat = ISBN_ + Title + session.getLoggedAuthor().getNickname();
         String id = UUID.nameUUIDFromBytes(concat.getBytes()).toString();
-        bookManager.addBook( num_pages, URL_image, selectedChoice, date,id,  Title,  ISBN_,  Description,  Genre, param);
-        session.getLoggedAuthor().addToPublished(new Book(num_pages,URL_image,selectedChoice,date,id,  Title,  ISBN_,  Description,  Genre, UsernameTagged));
-        actiontarget.setText("Congratulations you added a book!!");
+        Book newBook = new Book(num_pages, URL_image, selectedChoice, date, id, Title, ISBN_, Description, Genre, AuthorTagged);
+        if(bookManager.addBookMongo(newBook)) {
+            if (bookManager.addBookN4J(newBook)) {
+                session.getLoggedAuthor().addToPublished(newBook);
+            }else{
+                bookManager.deleteBookMongo(newBook);
+                actionTarget.setText("Error: unable to add book");
+                return;
+            }
+        }else{
+            actionTarget.setText("Error: unable to add book");
+            return;
+        }
         titleBook.clear();
         ISBN.clear();
         description.clear();
@@ -252,6 +272,10 @@ public class AddBookController {
         backFunction();
     }
 
-    
+    @FXML
+    void initialize() {
+        availableChoices.addAll(searchManager.searchLanguageCode());
+        languageCode.setItems(availableChoices);
+    }
 
 }

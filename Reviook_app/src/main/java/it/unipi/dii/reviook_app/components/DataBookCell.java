@@ -1,5 +1,6 @@
 package it.unipi.dii.reviook_app.components;
 
+import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class DataBookCell {
@@ -54,11 +56,25 @@ public class DataBookCell {
         }
 //        titleField.setText(book.getTitle());
         if (book.getAuthors().size() > 0) {
-            authorsField.setText(book.getAuthors().get(0));
+            ArrayList<String> authorsName = new ArrayList<>();
+            for (Author a : book.getAuthors()) {
+                authorsName.add(a.getName());
+            }
+            if (authorsName.size()>=2){
+                authorsField.setText(authorsName.get(0)+" ,"+authorsName.get(1)+" ...");
+            } else {
+                String authors = String.join(", ", authorsName);
+                authorsField.setText(authors);
+            }
         } else {
             authorsField.setText("");
         }
-        reviewCounter.setText(String.valueOf(book.getReviews().size()));
+        if (book.getReviews().size()>99){
+            reviewCounter.setText("99+");
+        }else {
+            reviewCounter.setText(String.valueOf(book.getReviews().size()));
+        }
+
         Float ratingSum = 0.0f;
         DecimalFormat df = new DecimalFormat("#.#");
         if (book.getReviews().size() > 0) {

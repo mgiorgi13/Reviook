@@ -2,88 +2,77 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane prefHeight="414.0" prefWidth="522.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.UpdateController">
+<Pane prefHeight="465.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.reviook_app.controllers.UpdateController">
     <children>
-        <GridPane alignment="center" hgap="10" layoutY="104.0" prefHeight="200.0" prefWidth="522.0" vgap="10">
-            <padding>
-                <Insets bottom="10" left="25" right="25" top="25" />
-            </padding>
-            <Label alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="Password" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Label>
 
-            <Label style="-fx-font-weight: bold;" text="User Name:" GridPane.rowIndex="2">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Label>
-
-            <PasswordField fx:id="passwordUpdate" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Text fx:id="usernameUpdate" text="text username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <PasswordField fx:id="repeatPasswordUpdate" GridPane.columnIndex="3" />
-            <Label style="-fx-font-weight: bold;" text="Repeat Password" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Label>
-            <Text fx:id="nameUpdate" text="text name" GridPane.columnIndex="1" />
-            <Text fx:id="emailUpdate" text="text email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label style="-fx-font-weight: bold;" text="Name">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Label>
-            <Label style="-fx-font-weight: bold;" text="e-mail" GridPane.rowIndex="1">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Label>
-            <JFXButton fx:id="updateButton" onAction="#updateButtonFun" prefHeight="25.0" prefWidth="123.0" text="Update" textFill="#198347" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-            <graphic>
-               <FontAwesomeIconView fill="#188657" glyphName="CHECK" />
-            </graphic></JFXButton>
-            <columnConstraints>
-                <ColumnConstraints maxWidth="86.0" minWidth="10.0" prefWidth="83.0" />
-                <ColumnConstraints maxWidth="176.7999969482422" minWidth="76.0000244140625" prefWidth="107.0" />
-                <ColumnConstraints maxWidth="163.99997558593748" minWidth="10.0" prefWidth="119.0" />
-                <ColumnConstraints maxWidth="187.19997558593752" minWidth="132.0" prefWidth="132.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-            </rowConstraints>
-        </GridPane>
-
-        <Text layoutX="221.0" layoutY="44.0" style="-fx-font-weight: bold;" text="Welcome" textAlignment="CENTER">
+        <Text layoutX="260.0" layoutY="44.0" style="-fx-font-weight: bold;" text="Welcome" textAlignment="CENTER">
             <font>
                 <Font size="18.0" />
             </font>
         </Text>
-        <JFXButton fx:id="deleteButton" layoutX="399.0" layoutY="359.0" onAction="#deleteAccountButton" text="Delete account" textFill="#a81f1f">
-         <graphic>
-            <FontAwesomeIconView fill="#b52828" glyphName="TRASH" />
-         </graphic></JFXButton>
-      <Text fx:id="actiontarget" layoutX="226.0" layoutY="330.0" style="-fx-font-weight: bold;" textAlignment="CENTER" wrappingWidth="85.0" />
-      <JFXButton fx:id="homeButton" layoutX="228.0" layoutY="359.0" onAction="#homeAction" text="HOME">
-         <graphic>
-            <FontAwesomeIconView glyphName="HOME" />
-         </graphic></JFXButton>
+        <JFXButton fx:id="deleteButton" layoutX="502.0" layoutY="415.0" onAction="#deleteAccountButton" text="Delete account" textFill="#a81f1f">
+            <graphic>
+                <FontAwesomeIconView fill="#b52828" glyphName="TRASH" />
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </JFXButton>
+        <Text fx:id="actiontarget" layoutX="201.0" layoutY="350.0" style="-fx-font-weight: bold;" textAlignment="CENTER" wrappingWidth="198.0" />
+        <JFXButton fx:id="homeButton" layoutX="23.0" layoutY="415.0" onAction="#homeAction" text="HOME">
+            <graphic>
+                <FontAwesomeIconView glyphName="HOME" />
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </JFXButton>
+         <Label alignment="CENTER_RIGHT" layoutX="108.0" layoutY="234.0" text="Password:">
+             <font>
+                 <Font size="14.0" />
+             </font>
+         </Label>
+
+         <Label layoutX="107.0" layoutY="146.0" text="Username:">
+             <font>
+                 <Font size="14.0" />
+             </font>
+         </Label>
+
+         <PasswordField fx:id="passwordUpdate" layoutX="324.0" layoutY="232.0" prefHeight="25.0" prefWidth="259.0" />
+         <Text fx:id="usernameUpdate" layoutX="324.0" layoutY="160.0" text="text username" wrappingWidth="259.0" />
+         <PasswordField fx:id="repeatPasswordUpdate" layoutX="324.0" layoutY="283.0" prefHeight="25.0" prefWidth="259.0" />
+         <Label layoutX="106.0" layoutY="285.0" text="Repeat Password:">
+             <font>
+                 <Font size="14.0" />
+             </font>
+         </Label>
+         <Text fx:id="nameUpdate" layoutX="324.0" layoutY="116.0" text="text name" wrappingWidth="259.0" />
+         <Text fx:id="emailUpdate" layoutX="324.0" layoutY="204.0" text="text email" wrappingWidth="259.0" />
+         <Label layoutX="108.0" layoutY="101.0" text="Name:">
+             <font>
+                 <Font size="14.0" />
+             </font>
+         </Label>
+         <Label layoutX="107.0" layoutY="189.0" text="E-mail:">
+             <font>
+                 <Font size="14.0" />
+             </font>
+         </Label>
+         <JFXButton fx:id="updateButton" layoutX="257.0" layoutY="415.0" onAction="#updateButtonFun" prefHeight="25.0" prefWidth="85.0" text="Update" textFill="#198347">
+             <graphic>
+                 <FontAwesomeIconView fill="#188657" glyphName="CHECK" />
+             </graphic>
+             <cursor>
+                 <Cursor fx:constant="HAND" />
+             </cursor>
+         </JFXButton>
     </children>
 </Pane>

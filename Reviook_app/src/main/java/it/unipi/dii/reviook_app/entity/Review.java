@@ -1,7 +1,6 @@
 package it.unipi.dii.reviook_app.entity;
 
 public class Review {
-    private String date_added;
     private String review_id;
     private String date_update;
     private String user_id;
@@ -11,8 +10,7 @@ public class Review {
     private Integer likes;
     private Boolean liked;
 
-    public Review(String username, String date_added, String review_id, String date_update, Integer likes, String user_id, String rating, String review_text) {
-        this.date_added = date_added;
+    public Review(String username,  String review_id, String date_update, Integer likes, String user_id, String rating, String review_text) {
         this.review_id = review_id;
         this.date_update = date_update;
         this.likes = likes;
@@ -21,6 +19,14 @@ public class Review {
         this.review_text = review_text;
         this.liked = false;
         this.username = username;
+    }
+
+    public void incrementLike() {
+        this.likes += 1;
+    }
+
+    public void decrementLike() {
+        this.likes -= 1;
     }
 
     public void setLiked() {
@@ -33,18 +39,6 @@ public class Review {
 
     public Boolean getLiked() {
         return this.liked;
-    }
-
-    public String getDate_added() {
-        return date_added;
-    }
-
-    public String date_addedProperty() {
-        return date_added;
-    }
-
-    public void setDate_added(String date_added) {
-        this.date_added = date_added;
     }
 
     public String getReview_id() {
@@ -126,7 +120,6 @@ public class Review {
     @Override
     public String toString() {
         return "Review{" +
-                "date_added='" + date_added + '\'' +
                 ", review_id='" + review_id + '\'' +
                 ", date_update='" + date_update + '\'' +
                 ", user_id='" + user_id + '\'' +

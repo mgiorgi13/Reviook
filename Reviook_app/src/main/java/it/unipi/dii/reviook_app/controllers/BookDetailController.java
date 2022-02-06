@@ -5,7 +5,6 @@ import it.unipi.dii.reviook_app.components.ListReview;
 import it.unipi.dii.reviook_app.entity.Author;
 import it.unipi.dii.reviook_app.entity.Book;
 import it.unipi.dii.reviook_app.entity.Review;
-import it.unipi.dii.reviook_app.entity.User;
 import it.unipi.dii.reviook_app.manager.AdminManager;
 import it.unipi.dii.reviook_app.manager.BookManager;
 import it.unipi.dii.reviook_app.manager.UserManager;
@@ -18,7 +17,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -52,6 +50,9 @@ public class BookDetailController {
 
     @FXML
     private ImageView imageContainer;
+
+    @FXML
+    private Text actionTarget;
 
     @FXML
     private URL location;
@@ -113,12 +114,15 @@ public class BookDetailController {
 
     private ObservableList<Review> observableList = FXCollections.observableArrayList();
 
-    BookManager bookManager = new BookManager();
-    AdminManager adminManager = new AdminManager();
+    private BookManager bookManager = new BookManager();
+    private AdminManager adminManager = new AdminManager();
 
     @FXML
     public void reportBookAction(ActionEvent actionEvent) {
-        adminManager.ReportBook(new Book("", "", "", 0.0, description, 0, 0, 0, 0, "", book_id, 0, title, null, null, null));
+        if (adminManager.reportBook(visualizedBook))
+            actionTarget.setText("Book reported");
+        else
+            actionTarget.setText("Error: unable to report book");
     }
 
     private void setOnMouseClicked(HBox HbSuggestion, Integer index, String type) {
@@ -128,7 +132,6 @@ public class BookDetailController {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
                     if (type.equals("Book")) {
                         Book bookSuggested = suggestedBooks.get(index);
-
                         try {
                             Parent bookInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/bookDetail.fxml"));
@@ -145,7 +148,6 @@ public class BookDetailController {
                         }
                     } else {
                         Author authorSuggested = suggestedAuthors.get(index);
-
                         try {
                             Parent authorInterface;
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
@@ -202,11 +204,15 @@ public class BookDetailController {
     void toRead(ActionEvent event) throws IOException {
         String bookTitleText = bookTitle.getText();
         if (session.getLoggedAuthor() != null) {
-            userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
-            session.getLoggedAuthor().getBooks().getToRead().add(visualizedBook);
+            if (!userManager.toReadAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedAuthor().getBooks().getToRead().add(visualizedBook);
         } else {
-            userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id);
-            session.getLoggedUser().getBooks().getToRead().add(visualizedBook);
+            if (!userManager.toReadAdd("User", session.getLoggedUser().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedUser().getBooks().getToRead().add(visualizedBook);
         }
     }
 
@@ -214,11 +220,15 @@ public class BookDetailController {
     void read(ActionEvent event) throws IOException {
         String bookTitleText = bookTitle.getText();
         if (session.getLoggedAuthor() != null) {
-            userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id);
-            session.getLoggedAuthor().getBooks().getRead().add(visualizedBook);
+            if (!userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedAuthor().getBooks().getRead().add(visualizedBook);
         } else {
-            userManager.readAdd("User", session.getLoggedUser().getNickname(), this.book_id);
-            session.getLoggedUser().getBooks().getRead().add(visualizedBook);
+            if (!userManager.readAdd("User", session.getLoggedUser().getNickname(), this.book_id))
+                actionTarget.setText("Error:unable to add book");
+            else
+                session.getLoggedUser().getBooks().getRead().add(visualizedBook);
         }
     }
 
@@ -227,6 +237,7 @@ public class BookDetailController {
         Stage dialogNewReviewStage = new Stage();
         Parent dialogInterface;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/dialogNewReview.fxml"));
+        dialogNewReviewStage.getIcons().add(new Image("/book.jpg"));
         dialogInterface = (Parent) fxmlLoader.load();
         DialogNewReviewController controller = fxmlLoader.getController();
         controller.setBook_id(this.book_id, this.reviewsList, this.observableList, this.ratingAVG);
@@ -271,17 +282,12 @@ public class BookDetailController {
         if (session.getLoggedAuthor() != null && !selectedReview.getUsername().equals(session.getLoggedAuthor().getNickname())) {
             return;
         }
-        try {
-            bookManager.DeleteReview(selectedReview.getReview_id(), this.book_id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Book book = bookManager.getBookByID(this.book_id); // query get update book
-            this.reviewsList = book.getReviews();
-            setListView();
-            DecimalFormat df = new DecimalFormat("#.#");
-            this.ratingAVG.setText(df.format(book.getAverage_rating()));
-        }
+        bookManager.deleteReview(selectedReview.getReview_id(), this.book_id);
+        Book book = bookManager.getBookByID(this.book_id); // query get update book
+        this.reviewsList = book.getReviews();
+        setListView();
+        DecimalFormat df = new DecimalFormat("#.#");
+        this.ratingAVG.setText(df.format(book.getAverage_rating()));
     }
 
     @FXML
@@ -295,18 +301,22 @@ public class BookDetailController {
                 // I already liked it
                 session.getLoggedUser().removeReviewID(selectedReview.getReview_id());
                 bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.decrementLike();
             } else {
                 session.getLoggedUser().addReviewID(selectedReview.getReview_id());
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.incrementLike();
             }
         } else if (session.getLoggedAuthor() != null) {
             if (selectedReview.getLiked()) {
                 // I already liked it
                 session.getLoggedAuthor().removeReviewID(selectedReview.getReview_id());
                 bookManager.removeLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.decrementLike();
             } else {
                 session.getLoggedAuthor().addReviewID(selectedReview.getReview_id());
                 bookManager.addLikeReview(selectedReview.getReview_id(), this.book_id);
+                selectedReview.incrementLike();
             }
         }
         setListView();
@@ -316,10 +326,8 @@ public class BookDetailController {
         this.observableList.clear();
         this.observableList.setAll(this.reviewsList);
         listView.setItems(this.observableList);
-
         visualizedBook.setReviews(this.reviewsList);
         visualizedBook.setAverage_rating(Double.valueOf(ratingAVG.getText().replace(",", ".")));
-
         listView.setCellFactory(new Callback<ListView<Review>, javafx.scene.control.ListCell<Review>>() {
             @Override
             public ListCell<Review> call(ListView<Review> listView) {
@@ -343,6 +351,7 @@ public class BookDetailController {
                         Stage dialogNewReviewStage = new Stage();
                         Scene dialogScene = new Scene(dialogReview);
                         dialogNewReviewStage.setScene(dialogScene);
+                        dialogNewReviewStage.getIcons().add(new Image("/book.jpg"));
                         dialogNewReviewStage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -363,8 +372,8 @@ public class BookDetailController {
     }
 
     private String truckString(String input) {
-        if (input.length() > 24) {
-            return input.substring(0, 24);
+        if (input.length() > 22) {
+            return input.substring(0, 20)+"..";
         }
         return input;
     }
@@ -379,22 +388,22 @@ public class BookDetailController {
         int size = suggestedAuthors.size();
         if (size >= 1) {
             HBAuthor1.setVisible(true);
-            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getNickname()));
+            suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
-            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getNickname()));
+            suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
-            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getNickname()));
+            suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
-            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getNickname()));
+            suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
     }
@@ -463,15 +472,19 @@ public class BookDetailController {
 
         deleteBook.setVisible(false);
         if (session.getLoggedAuthor() != null) {
-            if (BookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
+            if (bookManager.foundMyBook(bookSelected.getBook_id(), session.getLoggedAuthor().getId()))
                 deleteBook.setVisible(true);
         }
         // BOOK TITLE
         this.title = bookSelected.getTitle();
         bookTitle.setText(this.title);
         // AUTHORS LIST
-        ArrayList<String> authors = bookSelected.getAuthors();
-        this.author = String.join(", ", authors);
+        ArrayList<Author> authors = bookSelected.getAuthors();
+        ArrayList<String> authorsName = new ArrayList<>();
+        for (Author a : authors) {
+            authorsName.add(a.getName());
+        }
+        this.author = String.join(", ", authorsName);
         bookAuthor.setText(this.author);
         // CATEGORIES LIST
         ArrayList<String> genres = bookSelected.getGenres();
@@ -499,19 +512,28 @@ public class BookDetailController {
 
     @FXML
     void deleteBookFun(ActionEvent event) throws IOException {
-        if (BookManager.deleteBook(book_id)) {
-            Parent userInterface;
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
-            userInterface = (Parent) fxmlLoader.load();
-            AuthorInterfaceController controller = fxmlLoader.getController();
-            if(session.getIsAuthor())
-                controller.setAuthor(session.getLoggedAuthor());
-            Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
-            actual_stage.setScene(new Scene(userInterface));
-            actual_stage.setResizable(false);
-            actual_stage.show();
-            actual_stage.centerOnScreen();
-        }
+        if (bookManager.deleteBookMongo(visualizedBook)) {
+            if(bookManager.deleteBookN4J(visualizedBook)) {
+                Parent userInterface;
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it/unipi/dii/reviook_app/fxml/author.fxml"));
+                userInterface = (Parent) fxmlLoader.load();
+                AuthorInterfaceController controller = fxmlLoader.getController();
+                if (session.getIsAuthor()) {
+                    //search of deleted book in listPublished and remove it
+                    session.getLoggedAuthor().setPublished(userManager.loadRelationsBook("Author",session.getLoggedAuthor().getNickname(),"WROTE"));
+                    controller.setAuthor(session.getLoggedAuthor());
+                }
+                Stage actual_stage = (Stage) deleteBook.getScene().getWindow();
+                actual_stage.setScene(new Scene(userInterface));
+                actual_stage.setResizable(false);
+                actual_stage.show();
+                actual_stage.centerOnScreen();
+            }else {
+                bookManager.addBookMongo(visualizedBook);
+                actionTarget.setText("Error: can't delete book");
+            }
+        }else
+            actionTarget.setText("Error: can't delete book");
         return;
     }
 
@@ -521,7 +543,10 @@ public class BookDetailController {
         if (selectedReview == null) {
             return;
         }
-        adminManager.ReportReview(selectedReview, book_id);
+        if (!adminManager.reportReview(selectedReview, book_id))
+            actionTarget.setText("Can't report selected review");
+        else
+            actionTarget.setText("Review reported");
     }
 
 
