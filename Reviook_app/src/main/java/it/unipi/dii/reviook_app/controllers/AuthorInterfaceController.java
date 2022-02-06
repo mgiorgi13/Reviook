@@ -291,7 +291,7 @@ public class AuthorInterfaceController {
     }
 
     private void viewSuggestedAuthors() {
-        suggestedAuthors = userManager.similarAuthors(nickname, "Author");
+        suggestedAuthors = userManager.similarAuthors(nickname, "Author", session.getIsAuthor() ? session.getLoggedAuthor().getNickname() : session.getLoggedUser().getNickname(), session.getIsAuthor() ? "Author" : "User");
         Collections.shuffle(suggestedAuthors);
 
         HBAuthor1.setVisible(false);
@@ -329,7 +329,7 @@ public class AuthorInterfaceController {
     }
 
     private void viewSuggestedUsers() {
-        suggestedUsers = userManager.similarUsers(nickname, "Author");
+        suggestedUsers = userManager.similarUsers(nickname, "Author", session.getIsAuthor() ? session.getLoggedAuthor().getNickname() : session.getLoggedUser().getNickname(), session.getIsAuthor() ? "Author" : "User");
         Collections.shuffle(suggestedUsers);
 
         HBUser1.setVisible(false);

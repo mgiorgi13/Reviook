@@ -28,7 +28,7 @@
 //    public static int writeCount = 0;
 //    public static String target = "authorsDocument";
 //    public static String newFileName = "Document";
-//    private static int ntread = 500;
+//    private static int ntread = 50;
 //    private static volatile Integer contatore = 0;
 //    private static ArrayList<Author> author = new ArrayList();
 //    private static ArrayList<User> user = new ArrayList();
@@ -175,9 +175,9 @@
 //    private static void insertUsers() {
 //        SearchManager sm = new SearchManager();
 //        UserManager um = new UserManager();
-//       author = sm.searchAuthor("");
-//        // user = sm.searchUser("");
-////        book = sm.searchBooks("","");
+////       author = sm.searchAuthor("");
+//         user = sm.searchUser("");
+//        book = sm.searchBooks("","");
 //
 //        int size = book.size();
 //
@@ -185,37 +185,37 @@
 //        Runnable myRunnable = new Runnable(){
 //        public void run(){
 ////            ArrayList<Author> copyA = author;
-//            ArrayList<String> books = new ArrayList<>();
+//            ArrayList<Book> books = book;
 //            while (true){
 //                String id , name, nick , nick2,nick3,nick4;
 //                String book1, book2, book3, book4, book5, book6;
 //                int i = (int) (Math.random()* size);
 //
 //                synchronized (contatore) {
-//                    synchronized (author) {
-//                        if (contatore >= author.size()) { // user
+//                    synchronized (user) {
+//                        if (contatore >= 50) { // user
 //                            // System.out.println(Thread.currentThread().getId() + " : " + contatore);
 //                            break;
 //                        }
 ////                        //new author
-//                       id = author.get(contatore).getId();
+////                       id = author.get(contatore).getId();
 //                    //    name = author.get(contatore).getName();
-//                       nick = author.get(contatore).getNickname();
+////                       nick = author.get(contatore).getNickname();
 ////                        //new user
 ////                        id = user.get(contatore).getId();
 ////                        name = user.get(contatore).getName();
-//                        // nick = user.get(contatore).getNickname();
+//                         nick = user.get(contatore).getNickname();
 ////                        //book
 ////                        id = book.get(contatore).getBook_id();
 ////                        name = book.get(contatore).getTitle();
 //
-////                        //toread read
-////                        book1 = books.get(i).getBook_id();
-////                        book2 = books.get((i+1)%size).getBook_id();
-////                        book3 = books.get((i+2)%size).getBook_id();
-////                        book4 = books.get((i+3)%size).getBook_id();
-////                        book5 = books.get((i+4)%size).getBook_id();
-////                        book6 = books.get((i+5)%size).getBook_id();
+//                        //toread read
+//                        book1 = books.get(i).getBook_id();
+//                        book2 = books.get((i+1)%size).getBook_id();
+//                        book3 = books.get((i+2)%size).getBook_id();
+//                        book4 = books.get((i+3)%size).getBook_id();
+//                        book5 = books.get((i+4)%size).getBook_id();
+//                        book6 = books.get((i+5)%size).getBook_id();
 //
 //                        contatore++;
 //                    }
@@ -238,15 +238,15 @@
 //
 //
 //
-////                //to read read
-////
-////                um.toReadAdd("User",nick,book1);
-////                um.toReadAdd("User",nick,book2);
-////                um.toReadAdd("User",nick,book3);
-////
-////                um.readAdd("User",nick,book4);
-////                um.readAdd("User",nick,book5);
-////                um.readAdd("User",nick,book6);
+//                //to read read
+//
+//                um.toReadAdd("User",nick,book1);
+//                um.toReadAdd("User",nick,book2);
+//                um.toReadAdd("User",nick,book3);
+//
+//                um.readAdd("User",nick,book4);
+//                um.readAdd("User",nick,book5);
+//                um.readAdd("User",nick,book6);
 //
 ////                //add wrote relation
 ////                books = searchBooksAuthor(id);
@@ -254,7 +254,7 @@
 ////                //                System.out.println(books);
 ////                addwrote(nick,books);
 //                // //update follower count
-//                 loadRelationsFollowing("Author",nick);
+////                 loadRelationsFollowing("User",nick);
 //
 //
 //                if (contatore % 100 == 0)
