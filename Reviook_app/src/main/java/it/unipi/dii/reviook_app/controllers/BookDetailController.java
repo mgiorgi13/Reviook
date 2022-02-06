@@ -379,7 +379,7 @@ public class BookDetailController {
     }
 
     private void viewSuggestedAuthors(String book_id) {
-        suggestedAuthors = bookManager.similarAuthors(book_id);
+        suggestedAuthors = bookManager.suggestedAuthors(book_id, session.getIsAuthor() ? session.getLoggedAuthor().getNickname() : session.getLoggedUser().getNickname(), session.getIsAuthor() ? "Author" : "User");
         Collections.shuffle(suggestedAuthors);
         HBAuthor1.setVisible(false);
         HBAuthor2.setVisible(false);
@@ -409,7 +409,7 @@ public class BookDetailController {
     }
 
     private void viewSuggestedBooks(String book_id) {
-        suggestedBooks = bookManager.similarBooks(book_id);
+        suggestedBooks = bookManager.similarBooks(book_id, session.getIsAuthor() ? session.getLoggedAuthor().getNickname() : session.getLoggedUser().getNickname(), session.getIsAuthor() ? "Author" : "User");
         Collections.shuffle(suggestedBooks);
 
         HBBook1.setVisible(false);

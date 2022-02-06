@@ -416,14 +416,17 @@ public class BookManager {
 
     //ANALYTICS ==========================================================================================================
 
-    public ArrayList<Book> similarBooks(String book_id) {
+    public ArrayList<Book> similarBooks(String book_id,String myUsername, String myType) {
         ArrayList<Book> suggestion = new ArrayList<>();
         ArrayList<Book> queryResult = new ArrayList<>();
 
         try (Session session = nd.getDriver().session()) {
             suggestion = session.readTransaction((TransactionWork<ArrayList<Book>>) tx -> {
-                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a:Author)-[:WROTE]->(b2:Book) " +
+                Result result = tx.run("OPTIONAL MATCH (u1:" + myType + "{username:'" + myUsername + "'})-[:READ|:TO_READ]->(b:Book) " +
+                        "WITH collect(b) as readings " +
+                        "MATCH (b1:Book)<-[:WROTE]-(a:Author)-[:WROTE]->(b2:Book) " +
                         "WHERE b1.id = '" + book_id + "' AND b1<>b2 " +
+                        "AND NOT b2 IN readings " +
                         "RETURN DISTINCT b2.id,b2.title");
                 while (result.hasNext()) {
                     Record r = result.next();
@@ -435,14 +438,18 @@ public class BookManager {
         return suggestion;
     }
 
-    public ArrayList<Author> similarAuthors(String book_id) {
+    public ArrayList<Author> suggestedAuthors(String book_id, String myUsername, String myType) {
         ArrayList<Author> suggestion;
         ArrayList<Author> queryResult = new ArrayList<>();
 
         try (Session session = nd.getDriver().session()) {
             suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
-                Result result = tx.run("MATCH (b1:Book)<-[:WROTE]-(a1:Author)-[:WROTE]->(b2:Book)<-[:WROTE]-(a2:Author) " +
+                Result result = tx.run("MATCH (u1:" + myType + "{username:'" + myUsername + "'}) " +
+                        "OPTIONAL MATCH (u1)-[:FOLLOW]->(f:Author) " +
+                        "WITH u1,collect(f) as followed " +
+                        "MATCH (b1:Book)<-[:WROTE]-(a1:Author)-[:WROTE]->(b2:Book)<-[:WROTE]-(a2:Author) " +
                         "WHERE b1.id = '" + book_id + "' AND b1<>b2 AND a1<>a2 " +
+                        "AND NOT a2 IN followed AND u1<>a2 " +
                         "RETURN DISTINCT a2.id,a2.name,a2.username");
                 while (result.hasNext()) {
                     Record r = result.next();

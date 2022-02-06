@@ -424,13 +424,17 @@ public class UserManager {
         return topRated;
     }
 
-    public ArrayList<User> similarUsers(String username, String type) {
+    public ArrayList<User> similarUsers(String username, String type, String myUsername, String myType) {
         ArrayList<User> suggestion = new ArrayList<>();
         ArrayList<User> queryResult = new ArrayList<>();
+
         try (Session session = nd.getDriver().session()) {
             suggestion = session.readTransaction((TransactionWork<ArrayList<User>>) tx -> {
-                Result result = tx.run("MATCH (u1:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +
-                        "WHERE u1.username = '" + username + "' AND u1<>u2 " +
+                Result result = tx.run("MATCH (u:" + myType + "{username:'" + myUsername + "'}) " +
+                        "OPTIONAL MATCH (u)-[:FOLLOW]->(f:User) " +
+                        "WITH u, collect(f) as followed " +
+                        "MATCH (u1:" + type + "{username:'" + username + "'})-[:READ|:TO_READ]->(b:Book)<-[]-(u2:User) " +
+                        "WHERE u1<>u2 AND u<>u2 AND NOT u2 IN followed " +
                         "RETURN DISTINCT u2.id,u2.name,u2.username");
                 while (result.hasNext()) {
                     Record r = result.next();
@@ -442,13 +446,16 @@ public class UserManager {
         return suggestion;
     }
 
-    public ArrayList<Author> similarAuthors(String username, String type) {
+    public ArrayList<Author> similarAuthors(String username, String type, String myUsername, String myType) {
         ArrayList<Author> suggestion;
         ArrayList<Author> queryResult = new ArrayList<>();
         try (Session session = nd.getDriver().session()) {
             suggestion = (ArrayList<Author>) session.readTransaction((TransactionWork<ArrayList<Author>>) tx -> {
-                Result result = tx.run("MATCH (u:" + type + ")-[:READ|:TO_READ]->(b:Book)<-[:READ|:TO_READ]-(a:Author) " +
-                        "WHERE u.username = '" + username + "' AND u<>a " +
+                Result result = tx.run("MATCH (u:" + myType + "{username:'" + myUsername + "'}) " +
+                        "OPTIONAL MATCH (u)-[:FOLLOW]->(f:Author) " +
+                        "WITH u, collect(f) as followed " +
+                        "MATCH (u1:" + type + "{username:'" + username + "'})-[:READ|:TO_READ]->(b:Book)<-[:READ|:TO_READ]-(a:Author) " +
+                        "WHERE u1<>a AND u<>a AND NOT a IN followed " +
                         "RETURN DISTINCT a.id,a.name,a.username");
                 while (result.hasNext()) {
                     Record r = result.next();
