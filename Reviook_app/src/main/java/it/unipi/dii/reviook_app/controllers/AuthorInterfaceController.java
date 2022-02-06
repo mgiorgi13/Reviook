@@ -303,25 +303,25 @@ public class AuthorInterfaceController {
 
         if (size >= 1) {
             HBAuthor1.setVisible(true);
-            authorFollowerCount1.setText(String.valueOf(suggestedAuthors.get(0).getFollowerCount()));
+            authorFollowerCount1.setText(String.valueOf(userManager.loadRelationsFollower("Author",suggestedAuthors.get(0).getNickname()).size()));
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
             HBAuthor2.setVisible(true);
-            authorFollowerCount2.setText(String.valueOf(suggestedAuthors.get(1).getFollowerCount()));
+            authorFollowerCount2.setText(String.valueOf(userManager.loadRelationsFollower("Author",suggestedAuthors.get(1).getNickname()).size()));
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
             HBAuthor3.setVisible(true);
-            authorFollowerCount3.setText(String.valueOf(suggestedAuthors.get(2).getFollowerCount()));
+            authorFollowerCount3.setText(String.valueOf(userManager.loadRelationsFollower("Author",suggestedAuthors.get(2).getNickname()).size()));
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
             HBAuthor4.setVisible(true);
-            authorFollowerCount4.setText(String.valueOf(suggestedAuthors.get(3).getFollowerCount()));
+            authorFollowerCount4.setText(String.valueOf(userManager.loadRelationsFollower("Author",suggestedAuthors.get(3).getNickname()).size()));
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
@@ -341,25 +341,25 @@ public class AuthorInterfaceController {
 
         if (size >= 1) {
             HBUser1.setVisible(true);
-            userFollowerCount1.setText(String.valueOf(suggestedUsers.get(0).getFollowerCount()));
+            userFollowerCount1.setText(String.valueOf(userManager.loadRelationsFollower("User",suggestedUsers.get(0).getNickname()).size()));
             suggestedUser1.setText(truckString(suggestedUsers.get(0).getName()));
             setOnMouseClicked(HBUser1, 0, "User");
         }
         if (size >= 2) {
             HBUser2.setVisible(true);
-            userFollowerCount2.setText(String.valueOf(suggestedUsers.get(1).getFollowerCount()));
+            userFollowerCount2.setText(String.valueOf(userManager.loadRelationsFollower("User",suggestedUsers.get(1).getNickname()).size()));
             suggestedUser2.setText(truckString(suggestedUsers.get(1).getName()));
             setOnMouseClicked(HBUser2, 1, "User");
         }
         if (size >= 3) {
             HBUser3.setVisible(true);
-            userFollowerCount3.setText(String.valueOf(suggestedUsers.get(2).getFollowerCount()));
+            userFollowerCount3.setText(String.valueOf(userManager.loadRelationsFollower("User",suggestedUsers.get(2).getNickname()).size()));
             suggestedUser3.setText(truckString(suggestedUsers.get(2).getName()));
             setOnMouseClicked(HBUser3, 2, "User");
         }
         if (size >= 4) {
             HBUser4.setVisible(true);
-            userFollowerCount4.setText(String.valueOf(suggestedUsers.get(3).getFollowerCount()));
+            userFollowerCount4.setText(String.valueOf(userManager.loadRelationsFollower("User",suggestedUsers.get(3).getNickname()).size()));
             suggestedUser4.setText(truckString(suggestedUsers.get(3).getName()));
             setOnMouseClicked(HBUser4, 3, "User");
         }
