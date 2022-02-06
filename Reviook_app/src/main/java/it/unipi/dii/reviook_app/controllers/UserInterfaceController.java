@@ -298,28 +298,32 @@ public class UserInterfaceController {
         HBAuthor4.setVisible(false);
 
         int size = suggestedAuthors.size();
-
+        List<String> Follower;
         if (size >= 1) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(0).getNickname());
             HBAuthor1.setVisible(true);
-            authorFollowerCount1.setText(String.valueOf(suggestedAuthors.get(0).getFollowerCount()));
+            authorFollowerCount1.setText(String.valueOf(Follower.size()));
             suggestedAuthor1.setText(truckString(suggestedAuthors.get(0).getName()));
             setOnMouseClicked(HBAuthor1, 0, "Author");
         }
         if (size >= 2) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(1).getNickname());
             HBAuthor2.setVisible(true);
-            authorFollowerCount2.setText(String.valueOf(suggestedAuthors.get(1).getFollowerCount()));
+            authorFollowerCount2.setText(String.valueOf(Follower.size()));
             suggestedAuthor2.setText(truckString(suggestedAuthors.get(1).getName()));
             setOnMouseClicked(HBAuthor2, 1, "Author");
         }
         if (size >= 3) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(2).getNickname());
             HBAuthor3.setVisible(true);
-            authorFollowerCount3.setText(String.valueOf(suggestedAuthors.get(2).getFollowerCount()));
+            authorFollowerCount3.setText(String.valueOf(Follower.size()));
             suggestedAuthor3.setText(truckString(suggestedAuthors.get(2).getName()));
             setOnMouseClicked(HBAuthor3, 2, "Author");
         }
         if (size >= 4) {
+            Follower = userManager.loadRelationsFollower("Author", suggestedAuthors.get(3).getNickname());
             HBAuthor4.setVisible(true);
-            authorFollowerCount4.setText(String.valueOf(suggestedAuthors.get(3).getFollowerCount()));
+            authorFollowerCount4.setText(String.valueOf(Follower.size()));
             suggestedAuthor4.setText(truckString(suggestedAuthors.get(3).getName()));
             setOnMouseClicked(HBAuthor4, 3, "Author");
         }
