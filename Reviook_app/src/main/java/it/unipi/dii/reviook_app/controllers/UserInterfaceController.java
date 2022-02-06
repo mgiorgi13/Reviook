@@ -330,6 +330,7 @@ public class UserInterfaceController {
 
     }
 
+
     private void viewSuggestedUsers() {
         suggestedUsers = userManager.similarUsers(nickname, "User");
         Collections.shuffle(suggestedUsers);
@@ -337,29 +338,33 @@ public class UserInterfaceController {
         HBUser2.setVisible(false);
         HBUser3.setVisible(false);
         HBUser4.setVisible(false);
-
+        List<String> Follower;
         int size = suggestedUsers.size();
         if (size >= 1) {
+            Follower = userManager.loadRelationsFollower("User", suggestedUsers.get(0).getNickname());
             HBUser1.setVisible(true);
-            userFollowerCount1.setText(String.valueOf(suggestedUsers.get(0).getFollowerCount()));
+            userFollowerCount1.setText(String.valueOf(Follower.size()));
             suggestedUser1.setText(truckString(suggestedUsers.get(0).getName()));
             setOnMouseClicked(HBUser1, 0, "User");
         }
         if (size >= 2) {
+            Follower = userManager.loadRelationsFollower("User", suggestedUsers.get(1).getNickname());
             HBUser2.setVisible(true);
-            userFollowerCount2.setText(String.valueOf(suggestedUsers.get(1).getFollowerCount()));
+            userFollowerCount2.setText(String.valueOf(Follower.size()));
             suggestedUser2.setText(truckString(suggestedUsers.get(1).getName()));
             setOnMouseClicked(HBUser2, 1, "User");
         }
         if (size >= 3) {
+            Follower = userManager.loadRelationsFollower("User", suggestedUsers.get(2).getNickname());
             HBUser3.setVisible(true);
-            userFollowerCount3.setText(String.valueOf(suggestedUsers.get(2).getFollowerCount()));
+            userFollowerCount3.setText(String.valueOf(Follower.size()));
             suggestedUser3.setText(truckString(suggestedUsers.get(2).getName()));
             setOnMouseClicked(HBUser3, 2, "User");
         }
         if (size >= 4) {
+            Follower = userManager.loadRelationsFollower("User", suggestedUsers.get(3).getNickname());
             HBUser4.setVisible(true);
-            userFollowerCount4.setText(String.valueOf(suggestedUsers.get(3).getFollowerCount()));
+            userFollowerCount4.setText(String.valueOf(Follower.size()));
             suggestedUser4.setText(truckString(suggestedUsers.get(3).getName()));
             setOnMouseClicked(HBUser4, 3, "User");
         }
