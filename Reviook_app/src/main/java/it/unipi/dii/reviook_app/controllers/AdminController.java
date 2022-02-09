@@ -272,6 +272,7 @@ public class AdminController {
                     resetRightDetail();
                 } else {
                     // can't delete user from N4J
+                    userManager.register(selectedUser, "user");
                     actionTarget.setText("Error: unable to delete user");
                 }
             } else {
@@ -292,6 +293,7 @@ public class AdminController {
                     resetRightDetail();
                 } else {
                     // can't delete author from N4J
+                    userManager.register(selectedAuthor, "author");
                     actionTarget.setText("Error: unable to delete author");
                 }
             } else {

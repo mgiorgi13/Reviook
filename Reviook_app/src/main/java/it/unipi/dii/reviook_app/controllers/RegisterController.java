@@ -116,6 +116,7 @@ public class RegisterController {
         if (CheckAuthor.isSelected()) {
             if (userManager.register(newUser, "Author")) {
                 if (!userManager.addNewUsers(newUser, "Author"))
+                    userManager.deleteUserMongo(newUser,"Author");
                     singIn = "Error: unable to register";
             } else {
                 singIn = "Error: unable to register";
@@ -123,6 +124,7 @@ public class RegisterController {
         } else {
             if (userManager.register(newUser, "User")) {
                 if (!userManager.addNewUsers(newUser, "User"))
+                    userManager.deleteUserMongo(newUser,"Author");
                     singIn = "Error: unable to register";
             } else {
                 singIn = "Error: unable to register";

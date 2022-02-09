@@ -19,26 +19,26 @@ public class MongoDriver {
     private MongoClient client;
     private MongoDatabase database;
     private ConnectionString uri;
-//    private MongoDriver() {
-//        client = MongoClients.create("mongodb://localhost:27017/");
-//        database = client.getDatabase("reviook");
-//    }
     private MongoDriver() {
-        try {
-            uri = new ConnectionString("mongodb://172.16.4.102:27020,172.16.4.103:27020,172.16.4.104:27020/");
-            MongoClientSettings msc = MongoClientSettings.builder()
-                    .applyConnectionString(uri)
-                    .readPreference(ReadPreference.nearest())
-                    .retryWrites(true)
-                    .writeConcern(WriteConcern.MAJORITY).build();
-            client = MongoClients.create(msc);
-            database = client.getDatabase("reviook");
-            System.out.println("Connected to MongoDB");
-        }catch (Exception e){
-            System.out.println(e);
-        }
-        System.out.println("Servers are ready");
+        client = MongoClients.create("mongodb://localhost:27017/");
+        database = client.getDatabase("reviook");
     }
+//    private MongoDriver() {
+//        try {
+//            uri = new ConnectionString("mongodb://172.16.4.102:27020,172.16.4.103:27020,172.16.4.104:27020/");
+//            MongoClientSettings msc = MongoClientSettings.builder()
+//                    .applyConnectionString(uri)
+//                    .readPreference(ReadPreference.nearest())
+//                    .retryWrites(true)
+//                    .writeConcern(WriteConcern.MAJORITY).build();
+//            client = MongoClients.create(msc);
+//            database = client.getDatabase("reviook");
+//            System.out.println("Connected to MongoDB");
+//        }catch (Exception e){
+//            System.out.println(e);
+//        }
+//        System.out.println("Servers are ready");
+//    }
 
     public static MongoDriver getInstance() {
         if(driver == null)
