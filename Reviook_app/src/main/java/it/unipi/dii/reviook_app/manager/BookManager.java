@@ -81,7 +81,6 @@ public class BookManager {
 
     public boolean addBookMongo(Book newBook) {
         InsertOneResult result = null;
-        //TODO controllare se il formato dei campi inseriti corrisponde a quelli di mongo
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
@@ -195,7 +194,7 @@ public class BookManager {
         Book bookToUpdate = getBookByID(book_id);
         //calculate rating
         Double newRating = updateRating(bookToUpdate.getReviews());
-
+//TODO spostare get book id in if
         try {
             updateText = books.updateOne(getReview, Updates.set("reviews.$.review_text", reviewText));
             updateRating = books.updateOne(getReview, Updates.set("reviews.$.rating", ratingBook));

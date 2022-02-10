@@ -123,7 +123,6 @@ public class SearchManager {
     }
 
     public ArrayList<Book> searchBooks(String searchField, String genre) {
-
         MongoCollection<Document> books = md.getCollection(bookCollection);
         MongoCursor<Document> cursor = null;
         ArrayList<Book> result = new ArrayList<>();
