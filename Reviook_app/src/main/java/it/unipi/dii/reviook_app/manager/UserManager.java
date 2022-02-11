@@ -57,8 +57,6 @@ public class UserManager {
                 return true;
             });
         }
-        if (!result)
-            deleteUserMongo(user, type);
         return result;
     }
 
@@ -71,8 +69,6 @@ public class UserManager {
                 return true;
             });
         }
-        if (!result)
-            addNewUsers(user, type);
         return result;
     }
 

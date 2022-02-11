@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Report {
     private String report_id;
     private String type;
-
     private String isbn;
     private String asin;
     private String book_id;
@@ -18,7 +17,6 @@ public class Report {
     private String image_url;
     private ArrayList<Author> authors;
     private ArrayList<String> genres;
-
     private String review_id;
     private String review_text;
     private String rating;

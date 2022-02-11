@@ -2,6 +2,7 @@ package it.unipi.dii.reviook_app.entity;
 
 import it.unipi.dii.reviook_app.manager.UserManager;
 import javafx.fxml.FXML;
+
 import java.util.ArrayList;
 
 public class User {
@@ -17,7 +18,7 @@ public class User {
     private ArrayList<Genre> statistics;
     private ListBooks listBooks;
 
-    public User(String nickname){
+    public User(String nickname) {
         this.id = "";
         this.name = "";
         this.nickname = nickname;
@@ -134,7 +135,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +  ",\n" +
+                "id='" + id + '\'' + ",\n" +
                 "name='" + name + '\'' + ",\n" +
                 "nickname='" + nickname + '\'' + ",\n" +
                 "email='" + email + '\'' + ",\n" +

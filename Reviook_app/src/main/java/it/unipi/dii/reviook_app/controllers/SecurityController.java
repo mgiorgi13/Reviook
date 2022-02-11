@@ -41,18 +41,23 @@ public class SecurityController {
     void acceptDeleteButton(ActionEvent event) throws IOException {
         User user = session.getIsAuthor() ? session.getLoggedAuthor() : session.getLoggedUser();
         String type = session.getIsAuthor() ? "author" : "user";
-        if (userManager.deleteUserMongo(user, type) && userManager.deleteUserN4J(user, type)) {
-            Session session = Session.getInstance();
-            session.setSession(null);
-            session.setCurrentLoggedUser(null);
-            session.setCurrentLoggedAuthor(null);
-            Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
-            Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
-            actual_stage.setScene(new Scene(login));
-            actual_stage.setResizable(false);
-            actual_stage.setTitle("Create new account");
-            actual_stage.show();
-            actual_stage.centerOnScreen();
+        if (userManager.deleteUserMongo(user, type)) {
+            if(userManager.deleteUserN4J(user, type)) {
+                Session session = Session.getInstance();
+                session.setSession(null);
+                session.setCurrentLoggedUser(null);
+                session.setCurrentLoggedAuthor(null);
+                Parent login = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
+                Stage actual_stage = (Stage) acceptDelete.getScene().getWindow();
+                actual_stage.setScene(new Scene(login));
+                actual_stage.setResizable(false);
+                actual_stage.setTitle("Create new account");
+                actual_stage.show();
+                actual_stage.centerOnScreen();
+            }else{
+                userManager.register(user, type);
+                actiontarget.setText("Error during delete");
+            }
         } else {
             actiontarget.setText("Error during delete");
         }

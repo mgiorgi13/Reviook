@@ -3,6 +3,7 @@ package it.unipi.dii.reviook_app.manager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.*;
+import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
@@ -484,8 +485,8 @@ public class BookManager {
         MongoCollection<Document> bookGenres = md.getCollection(bookCollection);
 
         ArrayList<Genre> genres = new ArrayList<>();
-        Bson match = match(in("publication_year", year));
-        Bson unwind = unwind("$genres");
+        Bson match = match(eq("publication_year", year));
+        Bson unwind = unwind("$genres", new UnwindOptions().preserveNullAndEmptyArrays(false));
         Bson group = group("$genres", sum("counter", 1));
 
         try (MongoCursor<Document> result = bookGenres.aggregate(Arrays.asList(match, unwind, group)).iterator()) {
@@ -505,7 +506,7 @@ public class BookManager {
         MongoCollection<Document> book = md.getCollection(bookCollection);
         ArrayList<RankingObject> users = new ArrayList<>();
 
-        Bson unwindReviews = unwind("$reviews");
+        Bson unwindReviews = unwind("$reviews", new UnwindOptions().preserveNullAndEmptyArrays(false));
         //project likes : ($likes != null) $likes : $helpful
         Bson projectLikes = new Document("$project",
                 new Document("reviews.username", 1L)
