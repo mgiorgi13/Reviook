@@ -207,7 +207,6 @@ public class AdminController {
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
-        // TODO va invalidata la sessione
         session.clear();
         Parent loginInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         Stage actual_stage = (Stage) logoutButton.getScene().getWindow();

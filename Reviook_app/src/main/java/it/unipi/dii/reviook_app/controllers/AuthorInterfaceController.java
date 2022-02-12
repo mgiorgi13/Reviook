@@ -503,11 +503,6 @@ public class AuthorInterfaceController {
     }
 
     public void viewPublished() {
-//        if (session.getLoggedAuthor() != null)
-//            session.getLoggedAuthor().getBooks().listBooksClear();
-//        else
-//            session.getLoggedUser().getBooks().listBooksClear();
-        // TODO recuperare id  autore e fare la ricerca con quello
 
         ArrayList<Book> published;
         obsPublished.clear();
@@ -524,7 +519,6 @@ public class AuthorInterfaceController {
 
     @FXML
     void logoutActon(ActionEvent event) throws IOException {
-        // TODO va invalidata la sessione
         session.clear();
         Parent loginInterface = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         Stage actual_stage = (Stage) logoutButton.getScene().getWindow();

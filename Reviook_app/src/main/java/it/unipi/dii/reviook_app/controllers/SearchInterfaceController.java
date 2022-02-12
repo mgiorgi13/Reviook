@@ -92,7 +92,6 @@ public class SearchInterfaceController {
 
         if (checkCacheValid()) {
             //inizializzo le liste se ho la cache piena
-            //TODO eliminare ripetizione codice dei cell factory
             if (session.getCache().getSearchType() != null && session.getCache().getSearchType().equals("book") && session.getCache().getSearchedBooks() != null) {
 //            System.out.println("book: "+session.getCache().getSearchedBooks().size());
                 obsBooksList.addAll(session.getCache().getSearchedBooks());
@@ -153,7 +152,6 @@ public class SearchInterfaceController {
 
     @FXML
     public void searchAction(ActionEvent actionEvent) {
-        //TODO formattare meglio i risultati
         clearList();
 
         if (bookCheck.isSelected()) {
