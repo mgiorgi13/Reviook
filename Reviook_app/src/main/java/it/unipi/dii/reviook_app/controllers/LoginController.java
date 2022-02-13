@@ -112,8 +112,8 @@ public class LoginController {
         Stage actual_stage = (Stage) loginButton.getScene().getWindow();
         actual_stage.setScene(new Scene(user_scene));
         actual_stage.setResizable(false);
-        actual_stage.show();
         actual_stage.centerOnScreen();
+        actual_stage.show();
     }
 
 
