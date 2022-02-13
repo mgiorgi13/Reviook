@@ -89,7 +89,6 @@ public class BookManager {
         for (Author a : newBook.getAuthors()) {
             DBObject author = new BasicDBObject();
             author.put("author_name", (String) a.getName());
-            author.put("author_role", ""); // TODO da togliere
             author.put("author_id", (String) a.getId());
             authorsObj.add(author);
         }
@@ -132,9 +131,6 @@ public class BookManager {
                 }
                 return true;
             });
-        }
-        if (!result) {
-            // can't add book into N4J --- delete book from MongoDB
         }
         return result;
     }

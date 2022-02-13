@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Accumulators.sum;
 import static com.mongodb.client.model.Aggregates.*;
@@ -251,7 +252,9 @@ public class SearchManager {
 
             //search on name or surname
             if (!Username.equals("")) {
-                queryResults = user.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+//                queryResults = user.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+                queryResults = user.find(new Document().append("name", Pattern.compile("^(?i)"+Pattern.quote(Username)))).into(new ArrayList());
+
                 User us;
                 for (Document r : queryResults) {
                     ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");
@@ -286,7 +289,9 @@ public class SearchManager {
 
             if (!Username.equals("")) {
                 //search on name or surname
-                queryResults = author.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+//                queryResults = author.find(text("\"" + Username + "\"", new TextSearchOptions().caseSensitive(false))).into(new ArrayList());
+                queryResults = author.find(new Document().append("name", Pattern.compile("^(?i)"+Pattern.quote(Username)))).into(new ArrayList());
+
                 Author auth;
                 for (Document r : queryResults) {
                     ArrayList<String> listReviewID = (ArrayList<String>) r.get("liked_review");

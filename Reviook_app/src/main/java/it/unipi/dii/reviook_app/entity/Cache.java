@@ -29,7 +29,6 @@ public class Cache {
         this.searchedBooks = null;
         this.searchedUsers = null;
         this.searchType = null;
-        // TODO gestire anche gli altri campi
     }
 
     public Date getLastUpdate() {
