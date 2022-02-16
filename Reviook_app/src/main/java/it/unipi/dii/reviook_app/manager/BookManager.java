@@ -165,13 +165,14 @@ public class BookManager {
                 Book bookToUpdate = getBookByID(book_id);
                 Double newRating = updateRating(bookToUpdate.getReviews());
                 rateUpdated = book.updateOne(getBook, Updates.set("average_rating", newRating));
-                if (rateUpdated.getModifiedCount() == 1) {
-                    if (session.getLoggedUser() != null)
-                        userManager.readAdd("User", session.getLoggedUser().getNickname(), book_id);
-                    else
-                        userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), book_id);
-                    return true;
+                if (session.getLoggedUser() != null) {
+                    userManager.readAdd("User", session.getLoggedUser().getNickname(), book_id);
+                    session.getLoggedUser().getBooks().getRead().add(bookToUpdate);
+                }else {
+                    userManager.readAdd("Author", session.getLoggedAuthor().getNickname(), book_id);
+                    session.getLoggedAuthor().getBooks().getRead().add(bookToUpdate);
                 }
+                return true;
             }
         }catch (Exception e){
             e.printStackTrace();

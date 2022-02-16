@@ -14,7 +14,7 @@ import java.text.ParseException;
 public class Reviook extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException, ParseException {
+    public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/it/unipi/dii/reviook_app/fxml/login.fxml"));
         stage.setTitle("Reviook");
         stage.setResizable(false);
@@ -23,10 +23,17 @@ public class Reviook extends Application {
         stage.show();
     }
 
-//    public static void main(String[] args) {
-//        launch();
-//
-//    }
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void stop() {
+        MongoDriver md = MongoDriver.getInstance();
+        Neo4jDriver nd = Neo4jDriver.getInstance();
+        md.close();
+        nd.close();
+    }
 
 }
 

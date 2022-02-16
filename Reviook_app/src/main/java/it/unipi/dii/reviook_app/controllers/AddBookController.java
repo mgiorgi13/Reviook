@@ -230,7 +230,7 @@ public class AddBookController {
         LocalDate date = (publication_date.getValue() == null) ? LocalDate.now() : publication_date.getValue();
         String selectedChoice = languageCode.getSelectionModel().getSelectedItem() == null ? "" : languageCode.getSelectionModel().getSelectedItem().toString();
         String URL_image = URLImage.getText();
-        Integer num_pages = numPage.getText() == null ? 0 : Integer.valueOf(numPage.getText());
+        Integer num_pages = numPage.getText().equals("") ? 0 : Integer.valueOf(numPage.getText());
         String Description = description.getText();
         ArrayList<String> Genre = new ArrayList<String>((ObservableList) genreTag.getItems());
         ArrayList<Author> AuthorTagged = new ArrayList<Author>((ObservableList) listTagged.getItems());

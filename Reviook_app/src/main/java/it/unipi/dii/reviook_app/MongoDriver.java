@@ -30,7 +30,7 @@ public class MongoDriver {
                     .applyConnectionString(uri)
                     .readPreference(ReadPreference.nearest())
                     .retryWrites(true)
-                    .writeConcern(WriteConcern.MAJORITY).build();
+                    .writeConcern(WriteConcern.W1).build();
             client = MongoClients.create(msc);
             database = client.getDatabase("reviook");
             System.out.println("Connected to MongoDB");
