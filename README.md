@@ -36,4 +36,4 @@ Reviook offers the following features:
 
 ## Screenshot
 
-![Screenshot of Reviook](https://myoctocat.com/assets/images/base-octocat.svg)
+![Screenshot of Reviook](https://github.com/mgiorgi13/Reviook/blob/main/Screenshot%20of%20application.png)
